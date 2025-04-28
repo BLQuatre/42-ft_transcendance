@@ -95,12 +95,12 @@ function updateGame() {
 	// Collide paddles (very simple version)
 	gameState.players.forEach(player => {
 		if (player.id === 1 && gameState.ball.x <= 30) { // left paddle
-			if (Math.abs(gameState.ball.y - player.y) < 50) { // paddle size = 100
+			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx < 0) { // paddle size = 100
 				gameState.ball.vx *= -1;
 			}
 		}
 		if (player.id === 2 && gameState.ball.x >= 770) { // right paddle (field width 800)
-			if (Math.abs(gameState.ball.y - player.y) < 50) {
+			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx > 0) {
 				gameState.ball.vx *= -1;
 			}
 		}

@@ -1,7 +1,6 @@
 {
   "name": "gateway",
   "version": "1.0.0",
-  "type": "module",
   "main": "src/server.ts",
   "scripts": {
     "dev": "tsx watch src/server.ts",

@@ -35,8 +35,6 @@ app.register(async function (app) {
 	});
 })
 
-
-
 app.listen({ port: 3000 }, (err, address) => {
 	if (err) throw err;
 	console.log(`Gateway is listening at ${address}`);

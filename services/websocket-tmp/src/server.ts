@@ -15,18 +15,18 @@ app.get('/', async (request, reply) => {
 
 app.register(async function (app) {
 	app.get('/ws', { websocket: true }, (connection, req) => {
-		connection.socket.on('message', (message: Buffer) => {
+		connection.on('message', (message: Buffer) => {
 			const textMessage = message.toString();
 			console.log(`Mesage get: ${textMessage}`);
 
-			connection.socket.send(`Server get: ${textMessage}`);
+			connection.send(`Server get: ${textMessage}`);
 		});
 
-		connection.socket.on('close', () => {
+		connection.on('close', () => {
 			console.log('Client disconnected');
 		});
 		
-		connection.socket.send('Connected to websocket');
+		connection.send('Connected to websocket');
 	});
 });
   

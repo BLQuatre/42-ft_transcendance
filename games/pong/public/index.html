@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pong Test Client</title>
+	<style>
+		canvas {
+			background: black;
+			display: block;
+			margin: 0 auto;
+		}
+		body {
+			text-align: center;
+			font-family: sans-serif;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Pong Client</h1>
+	<canvas id="gameCanvas" width="800" height="600"></canvas>
+	<br>
+	<button onclick="moveUp()">Move Up</button>
+	<button onclick="moveDown()">Move Down</button>
+
+	<script>
+		const socket = new WebSocket('ws://localhost:3000');
+
+		let gameState = null;
+		let playerId = 1; // You can change to 2 if you want to control player 2
+
+		socket.onopen = () => {
+			console.log('Connected to server');
+		};
+
+		socket.onmessage = (event) => {
+			gameState = JSON.parse(event.data);
+			draw();
+		};
+
+		function moveUp() {
+			socket.send(JSON.stringify({ playerId: playerId, direction: 'up' }));
+		}
+
+		function moveDown() {
+			socket.send(JSON.stringify({ playerId: playerId, direction: 'down' }));
+		}
+
+		const canvas = document.getElementById('gameCanvas');
+		const ctx = canvas.getContext('2d');
+
+		function draw() {
+			if (!gameState) return;
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			// Draw ball
+			ctx.fillStyle = 'white';
+			ctx.beginPath();
+			ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
+			ctx.fill();
+
+			// Draw paddles
+			gameState.players.forEach(player => {
+				ctx.fillRect(
+					player.id === 1 ? 10 : canvas.width - 20,
+					player.y - 50,
+					10,
+					100
+				);
+			});
+
+			// Draw scores
+			ctx.font = '30px Arial';
+			ctx.fillText(gameState.players[0].score, canvas.width / 4, 50);
+			ctx.fillText(gameState.players[1].score, 3 * canvas.width / 4, 50);
+		}
+	</script>
+</body>
+</html>

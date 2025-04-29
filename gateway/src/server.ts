@@ -12,7 +12,7 @@ app.register(websocket);
 
 app.register(async function (app) {
 	app.get('/ws', { websocket: true}, (connection, req) => {
-		const upstream = new WebSocket('http://localhost:3003/ws');
+		const upstream = new WebSocket('http://0.0.0.0:3003/ws');
 
 		upstream.on('open', () => {
 			console.log('Connexion au microservice réussi');
@@ -35,7 +35,11 @@ app.register(async function (app) {
 	});
 })
 
-app.listen({ port: 3000 }, (err, address) => {
+app.get('/ping', async (request, reply) => {
+	return 'pong\n'
+})
+
+app.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
 	if (err) throw err;
 	console.log(`Gateway is listening at ${address}`);
 })

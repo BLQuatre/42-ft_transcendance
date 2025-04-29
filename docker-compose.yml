@@ -2,27 +2,29 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: transcendance
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_POSTGRES}
+    ports:
+      - "5432:5432"
     volumes:
-      - postgres_data:/home/cauvray/data/postgres
-    networks:
-      - transcendance
+      - postgres-data:/var/lib/postgresql/data
+    # networks:
+    #   - transcendance
     restart: always
 
-  gateway:
-    container_name: gateway
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    # depends_on:
-    #   - transcendance
-    networks:
-      - transcendance
-    restart: always
+  # gateway:
+  #   container_name: gateway
+  #   build:
+  #     context: ./gateway
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   # depends_on:
+  #   #   - transcendance
+  #   networks:
+  #     - transcendance
+  #   restart: always
 
 
   # nginx:
@@ -88,13 +90,8 @@ services:
   #     - transcendance
 
 
-networks:
-  transcendance:
+# networks:
+#   transcendance:
 
 volumes:
-  postgres_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/cauvray/data/postgres
+  postgres-data:

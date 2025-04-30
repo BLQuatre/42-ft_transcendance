@@ -129,14 +129,26 @@ function updateGame() {
 
 	// Paddle collision
 	[player1, player2].forEach(player => {
-		if (player.id === 1 && ball.x <= 40) {
-			if (Math.abs(ball.y - player.y) < 50 && ball.vx < 0) {
-				ball.vx *= -1;
-			}
-		}
-		if (player.id === 2 && ball.x >= 760) {
-			if (Math.abs(ball.y - player.y) < 50 && ball.vx > 0) {
-				ball.vx *= -1;
+		// Check for collision
+		if ((player.id === 1 && ball.x <= 40 && ball.vx < 0) || (player.id === 2 && ball.x >= 760 && ball.vx > 0)) {
+			// Check if the ball is within the paddle's vertical range
+			if (Math.abs(ball.y - player.y) < 50) {
+				const paddleCenter = player.y;
+				const distanceFromCenter = ball.y - paddleCenter;
+				const normalizedOffset = distanceFromCenter / 50; // Between -1 and 1
+				const angleInfluence = 5; // Adjust how much paddle hit influences direction
+				
+				// 1. Determine new direction
+				const angle = normalizedOffset * (Math.PI / 4); // max ±45°
+				const direction = ball.vx > 0 ? Math.PI - angle : angle; // Reflect X
+				
+				// 2. Increase total speed
+				let speed = Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
+				speed *= 1.05; // slightly faster on each paddle hit
+				
+				// 3. Set new velocity vector with same speed, new angle
+				ball.vx = Math.cos(direction) * speed;
+				ball.vy = Math.sin(direction) * speed;
 			}
 		}
 	});

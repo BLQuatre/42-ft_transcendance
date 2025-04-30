@@ -5,6 +5,7 @@ interface Player {
 	id: number;
 	y: number;
 	score: number;
+	socket: WebSocket | null;
 }
 
 interface Ball {
@@ -15,130 +16,162 @@ interface Ball {
 }
 
 interface GameState {
-	players: Player[];
+	players: Omit<Player, 'socket'>[];
 	ball: Ball;
 }
 
-let gameState: GameState = {
-	players: [
-		{ id: 1, y: 250, score: 0 },
-		{ id: 2, y: 250, score: 0 }
-	],
-	ball: {
-		x: 400,
-		y: 300,
-		vx: 5,
-		vy: 5
-	}
+const fastify = Fastify();
+
+let player1: Player = { id: 1, y: 250, score: 0, socket: null };
+let player2: Player = { id: 2, y: 250, score: 0, socket: null };
+
+let ball: Ball = {
+	x: 400,
+	y: 300,
+	vx: 5,
+	vy: 5
 };
 
-import http from 'http';
+let gameInterval: NodeJS.Timeout | null = null;
 
-const fastify = Fastify();
-const server = http.createServer(fastify.server as any);
-const wss = new WebSocketServer({ server });
-
-const connections: { socket: WebSocket, playerId: number }[] = [];
+const getGameState = (): GameState => ({
+	players: [
+		{ id: 1, y: player1.y, score: player1.score },
+		{ id: 2, y: player2.y, score: player2.score }
+	],
+	ball
+});
 
 fastify.get('/', async (request, reply) => {
 	return { pong: 'it works' };
 });
 
-function assignPlayerId(): number {
-	const connectedIds = connections.map(c => c.playerId);
-	if (!connectedIds.includes(1)) return 1;
-	if (!connectedIds.includes(2)) return 2;
-	return -1; // Game full
-}
+const start = async () => {
+	await fastify.listen({ port: 3000 });
+	console.log('Server running on http://localhost:3000');
 
-wss.on('connection', (ws) => {
-	const playerId = assignPlayerId();
+	const wss = new WebSocketServer({ server: fastify.server });
 
-	if (playerId === -1) {
-		ws.send(JSON.stringify({ type: 'error', message: 'Game is full' }));
-		ws.close();
-		return;
-	}
+	wss.on('connection', (ws) => {
+		console.log('Client connected');
 
-	console.log(`Player ${playerId} connected`);
-	connections.push({ socket: ws, playerId });
+		let assignedPlayer: Player | null = null;
 
-	// Inform client which player they are
-	ws.send(JSON.stringify({ type: 'assign', playerId }));
+		// Assign player slot
+		if (!player1.socket) {
+			player1.socket = ws;
+			assignedPlayer = player1;
+		} else if (!player2.socket) {
+			player2.socket = ws;
+			assignedPlayer = player2;
+		} else {
+			ws.close(); // refuse extra connections
+			return;
+		}
 
-	ws.on('message', (message) => {
-		const data = JSON.parse(message.toString());
+		// Tell client its player ID
+		ws.send(JSON.stringify({ type: 'assign', playerId: assignedPlayer.id }));
 
-		if (data.type === 'move') {
-			const player = gameState.players.find(p => p.id === data.playerId);
-			if (player) {
+		if (player1.socket && player2.socket) {
+			startGame();
+		}
+
+		ws.on('message', (message) => {
+			const data = JSON.parse(message.toString());
+
+			if (data.type === 'move' && data.playerId && data.direction) {
+				const player = data.playerId === 1 ? player1 : player2;
+
 				if (data.direction === 'up') player.y -= 10;
 				if (data.direction === 'down') player.y += 10;
+
 				if (player.y < 0) player.y = 0;
 				if (player.y > 600) player.y = 600;
 			}
-		}
-	});
+		});
 
-	ws.on('close', () => {
-		console.log(`Player ${playerId} disconnected`);
-		const index = connections.findIndex(c => c.socket === ws);
-		if (index > -1) connections.splice(index, 1);
-	});
-});
+		ws.on('close', () => {
+			console.log('Client disconnected');
 
-setInterval(() => {
-	updateGame();
-	broadcastGame();
-}, 1000 / 60);
+			if (assignedPlayer) assignedPlayer.socket = null;
+
+			stopGame();
+		});
+	});
+};
+
+function startGame() {
+	if (gameInterval) return;
+
+	console.log('Game started');
+	gameInterval = setInterval(() => {
+		updateGame();
+		broadcastGame();
+	}, 1000 / 60);
+}
+
+function stopGame() {
+	if (gameInterval) {
+		console.log('Game paused');
+		clearInterval(gameInterval);
+		gameInterval = null;
+	}
+}
 
 function updateGame() {
-	gameState.ball.x += gameState.ball.vx;
-	gameState.ball.y += gameState.ball.vy;
+	// Move ball
+	ball.x += ball.vx;
+	ball.y += ball.vy;
 
-	if (gameState.ball.y <= 0 || gameState.ball.y >= 600) {
-		gameState.ball.vy *= -1;
+	if (ball.y <= 0 || ball.y >= 600) {
+		ball.vy *= -1;
 	}
 
-	gameState.players.forEach(player => {
-		if (player.id === 1 && gameState.ball.x <= 30) {
-			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx < 0) {
-				gameState.ball.vx *= -1;
+	// Paddle collision
+	[player1, player2].forEach(player => {
+		if (player.id === 1 && ball.x <= 40) {
+			if (Math.abs(ball.y - player.y) < 50 && ball.vx < 0) {
+				ball.vx *= -1;
 			}
 		}
-		if (player.id === 2 && gameState.ball.x >= 770) {
-			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx > 0) {
-				gameState.ball.vx *= -1;
+		if (player.id === 2 && ball.x >= 760) {
+			if (Math.abs(ball.y - player.y) < 50 && ball.vx > 0) {
+				ball.vx *= -1;
 			}
 		}
 	});
 
-	if (gameState.ball.x < 0) {
-		gameState.players[1].score += 1;
+	// Scoring
+	if (ball.x < 0) {
+		player2.score += 1;
 		resetBall();
 	}
-	if (gameState.ball.x > 800) {
-		gameState.players[0].score += 1;
+	if (ball.x > 800) {
+		player1.score += 1;
 		resetBall();
 	}
 }
 
 function resetBall() {
-	gameState.ball.x = 400;
-	gameState.ball.y = 300;
-	gameState.ball.vx = 5 * (Math.random() > 0.5 ? 1 : -1);
-	gameState.ball.vy = 5 * (Math.random() > 0.5 ? 1 : -1);
+	ball.x = 400;
+	ball.y = 300;
+	ball.vx = 5 * (Math.random() > 0.5 ? 1 : -1);
+	ball.vy = 5 * (Math.random() > 0.5 ? 1 : -1);
 }
 
 function broadcastGame() {
-	const state = JSON.stringify({ type: 'state', gameState });
-	connections.forEach(({ socket }) => {
-		if (socket.readyState === WebSocket.OPEN) {
-			socket.send(state);
+	const state = {
+		type: 'state',
+		gameState: getGameState()
+	};
+
+	const data = JSON.stringify(state);
+
+	[player1, player2].forEach(player => {
+		if (player.socket && player.socket.readyState === player.socket.OPEN) {
+			player.socket.send(data);
 		}
 	});
 }
 
-server.listen(3000, () => {
-	console.log('Server running on http://localhost:3000');
-});
+start();

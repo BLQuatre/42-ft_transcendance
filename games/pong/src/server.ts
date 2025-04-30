@@ -1,3 +1,6 @@
+import Fastify from 'fastify';
+import { WebSocketServer, WebSocket } from 'ws';
+
 interface Player {
 	id: number;
 	y: number;
@@ -29,90 +32,93 @@ let gameState: GameState = {
 	}
 };
 
-
-import Fastify from 'fastify';
-import { WebSocketServer, WebSocket } from 'ws';
+import http from 'http';
 
 const fastify = Fastify();
-const connections: WebSocket[] = [];
+const server = http.createServer(fastify.server as any);
+const wss = new WebSocketServer({ server });
+
+const connections: { socket: WebSocket, playerId: number }[] = [];
 
 fastify.get('/', async (request, reply) => {
 	return { pong: 'it works' };
 });
 
-const start = async () => {
-	await fastify.listen({ port: 3000 });
-	console.log('Server running on http://localhost:3000');
+function assignPlayerId(): number {
+	const connectedIds = connections.map(c => c.playerId);
+	if (!connectedIds.includes(1)) return 1;
+	if (!connectedIds.includes(2)) return 2;
+	return -1; // Game full
+}
 
-	const wss = new WebSocketServer({ server: fastify.server });
+wss.on('connection', (ws) => {
+	const playerId = assignPlayerId();
 
-	wss.on('connection', (ws) => {
-		console.log('Client connected');
-		connections.push(ws);
-		
-		ws.on('message', (message) => {
-			const data = JSON.parse(message.toString());
-		
-			if (data.playerId && data.direction) {
-				const player = gameState.players.find(p => p.id === data.playerId);
-				if (player) {
-					if (data.direction === 'up') {
-						player.y -= 10;
-					}
-					if (data.direction === 'down') {
-						player.y += 10;
-					}
+	if (playerId === -1) {
+		ws.send(JSON.stringify({ type: 'error', message: 'Game is full' }));
+		ws.close();
+		return;
+	}
 
-					if (player.y < 0) player.y = 0;
-					if (player.y > 600) player.y = 600;
-				}
+	console.log(`Player ${playerId} connected`);
+	connections.push({ socket: ws, playerId });
+
+	// Inform client which player they are
+	ws.send(JSON.stringify({ type: 'assign', playerId }));
+
+	ws.on('message', (message) => {
+		const data = JSON.parse(message.toString());
+
+		if (data.type === 'move') {
+			const player = gameState.players.find(p => p.id === data.playerId);
+			if (player) {
+				if (data.direction === 'up') player.y -= 10;
+				if (data.direction === 'down') player.y += 10;
+				if (player.y < 0) player.y = 0;
+				if (player.y > 600) player.y = 600;
 			}
-		});
-
-		ws.on('close', () => {
-			console.log('Client disconnected');
-			const index = connections.indexOf(ws);
-			if (index > -1) connections.splice(index, 1);
-		});
+		}
 	});
 
-	setInterval(() => {
-		updateGame();
-		broadcastGame();
-	}, 1000 / 60);
-};
+	ws.on('close', () => {
+		console.log(`Player ${playerId} disconnected`);
+		const index = connections.findIndex(c => c.socket === ws);
+		if (index > -1) connections.splice(index, 1);
+	});
+});
+
+setInterval(() => {
+	updateGame();
+	broadcastGame();
+}, 1000 / 60);
 
 function updateGame() {
-	// Move ball
 	gameState.ball.x += gameState.ball.vx;
 	gameState.ball.y += gameState.ball.vy;
-	
-	// Collide top/bottom
-	if (gameState.ball.y <= 0 || gameState.ball.y >= 600) { // assuming field height = 600
+
+	if (gameState.ball.y <= 0 || gameState.ball.y >= 600) {
 		gameState.ball.vy *= -1;
 	}
-	
-	// Collide paddles (very simple version)
+
 	gameState.players.forEach(player => {
-		if (player.id === 1 && gameState.ball.x <= 30) { // left paddle
-			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx < 0) { // paddle size = 100
+		if (player.id === 1 && gameState.ball.x <= 30) {
+			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx < 0) {
 				gameState.ball.vx *= -1;
 			}
 		}
-		if (player.id === 2 && gameState.ball.x >= 770) { // right paddle (field width 800)
+		if (player.id === 2 && gameState.ball.x >= 770) {
 			if (Math.abs(gameState.ball.y - player.y) < 50 && gameState.ball.vx > 0) {
 				gameState.ball.vx *= -1;
 			}
 		}
 	});
-	
-	// Score
+
 	if (gameState.ball.x < 0) {
-		gameState.players[1].score += 1; // player 2 scores
+		gameState.players[1].score += 1;
 		resetBall();
 	}
 	if (gameState.ball.x > 800) {
-		gameState.players[0].score += 1; // player 1 scores
+		gameState.players[0].score += 1;
 		resetBall();
 	}
 }
@@ -125,12 +131,14 @@ function resetBall() {
 }
 
 function broadcastGame() {
-	const state = JSON.stringify(gameState);
-	connections.forEach(ws => {
-		if (ws.readyState === ws.OPEN) {
-			ws.send(state);
+	const state = JSON.stringify({ type: 'state', gameState });
+	connections.forEach(({ socket }) => {
+		if (socket.readyState === WebSocket.OPEN) {
+			socket.send(state);
 		}
 	});
 }
 
-start();
+server.listen(3000, () => {
+	console.log('Server running on http://localhost:3000');
+});

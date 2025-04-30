@@ -2,79 +2,85 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Pong Test Client</title>
+	<title>Pong Game</title>
 	<style>
-		canvas {
-			background: black;
-			display: block;
-			margin: 0 auto;
-		}
 		body {
+			background: white;
+			margin: 0;
 			text-align: center;
-			font-family: sans-serif;
+		}
+		canvas {
+			border: 1px solid black;
 			margin-top: 20px;
 		}
 	</style>
 </head>
 <body>
-	<h1>Pong Client</h1>
-	<canvas id="gameCanvas" width="800" height="600"></canvas>
-	<br>
-	<button onclick="moveUp()">Move Up</button>
-	<button onclick="moveDown()">Move Down</button>
+	<h1>Pong Game</h1>
+	<canvas id="game" width="800" height="600"></canvas>
 
 	<script>
+		const canvas = document.getElementById('game');
+		const ctx = canvas.getContext('2d');
+
 		const socket = new WebSocket('ws://localhost:3000');
-		
+		let playerId = null;
 		let gameState = null;
-		let playerId = 1; // Change to 2 if you want to control the other paddle
-		
-		socket.onopen = () => {
+
+		socket.addEventListener('open', () => {
 			console.log('Connected to server');
-		};
-		
-		socket.onmessage = (event) => {
-			gameState = JSON.parse(event.data);
-			draw();
-		};
-		
-		document.addEventListener('keydown', (event) => {
-			if (event.key === 'w' || event.key === 'ArrowUp') {
-				socket.send(JSON.stringify({ playerId: playerId, direction: 'up' }));
-			} else if (event.key === 's' || event.key === 'ArrowDown') {
-				socket.send(JSON.stringify({ playerId: playerId, direction: 'down' }));
+		});
+
+		socket.addEventListener('message', event => {
+			const msg = JSON.parse(event.data);
+
+			if (msg.type === 'assign') {
+				playerId = msg.playerId;
+				console.log(`You are player ${playerId}`);
+			}
+
+			if (msg.type === 'state') {
+				gameState = msg.gameState;
+				drawGame();
 			}
 		});
-		
-		const canvas = document.getElementById('gameCanvas');
-		const ctx = canvas.getContext('2d');
-		
-		function draw() {
-			if (!gameState) return;
-		
+
+		function drawGame() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
+
+			if (!gameState) return;
+
+			// Draw paddles
+			ctx.fillStyle = 'black';
+			gameState.players.forEach(player => {
+				ctx.fillRect(
+					player.id === 1 ? 20 : 760,		// x position
+					player.y - 50,					// center paddle
+					20,								// width
+					100								// height
+				);
+			});
+
 			// Draw ball
-			ctx.fillStyle = 'white';
 			ctx.beginPath();
 			ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
 			ctx.fill();
-		
-			// Draw paddles
-			gameState.players.forEach(player => {
-				ctx.fillRect(
-					player.id === 1 ? 10 : canvas.width - 20,
-					player.y - 50,
-					10,
-					100
-				);
-			});
-		
+
 			// Draw scores
-			ctx.font = '30px Arial';
-			ctx.fillText(gameState.players[0].score, canvas.width / 4, 50);
-			ctx.fillText(gameState.players[1].score, 3 * canvas.width / 4, 50);
+			ctx.font = '24px Arial';
+			ctx.fillText(`${gameState.players[0].score}`, 300, 40);
+			ctx.fillText(`${gameState.players[1].score}`, 480, 40);
 		}
+
+		document.addEventListener('keydown', e => {
+			if (!playerId) return;
+			if (e.key === 'ArrowUp' || e.key === 'w') {
+				socket.send(JSON.stringify({ type: 'move', playerId, direction: 'up' }));
+			}
+			if (e.key === 'ArrowDown' || e.key === 's') {
+				socket.send(JSON.stringify({ type: 'move', playerId, direction: 'down' }));
+			}
+		});
 	</script>
 </body>
 </html>

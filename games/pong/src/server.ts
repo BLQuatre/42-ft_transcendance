@@ -153,10 +153,21 @@ function updateGame() {
 }
 
 function resetBall() {
+	const speed = 7; // you can tweak this
+	let angle: number;
+
+	// Avoid angles too close to horizontal or vertical (e.g., 0°, 90°, 180°, 270°)
+	do {
+		angle = Math.random() * 2 * Math.PI;
+	} while (
+		Math.abs(Math.cos(angle)) < 0.3 || // too vertical
+		Math.abs(Math.sin(angle)) < 0.3    // too horizontal
+	);
+
 	ball.x = 400;
 	ball.y = 300;
-	ball.vx = 5 * (Math.random() > 0.5 ? 1 : -1);
-	ball.vy = 5 * (Math.random() > 0.5 ? 1 : -1);
+	ball.vx = Math.cos(angle) * speed;
+	ball.vy = Math.sin(angle) * speed;
 }
 
 function broadcastGame() {

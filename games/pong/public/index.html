@@ -22,65 +22,91 @@
 	<script>
 		const canvas = document.getElementById('game');
 		const ctx = canvas.getContext('2d');
-
+	
 		const socket = new WebSocket('ws://localhost:3000');
 		let playerId = null;
 		let gameState = null;
-
+	
+		const keysPressed = {
+			up: false,
+			down: false
+		};
+	
 		socket.addEventListener('open', () => {
 			console.log('Connected to server');
 		});
-
+	
 		socket.addEventListener('message', event => {
 			const msg = JSON.parse(event.data);
-
+	
 			if (msg.type === 'assign') {
 				playerId = msg.playerId;
 				console.log(`You are player ${playerId}`);
 			}
-
+	
 			if (msg.type === 'state') {
 				gameState = msg.gameState;
-				drawGame();
 			}
 		});
-
+	
 		function drawGame() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+	
 			if (!gameState) return;
-
+	
 			// Draw paddles
 			ctx.fillStyle = 'black';
 			gameState.players.forEach(player => {
 				ctx.fillRect(
-					player.id === 1 ? 20 : 760,		// x position
-					player.y - 50,					// center paddle
-					20,								// width
-					100								// height
+					player.id === 1 ? 20 : 760,
+					player.y - 50,
+					20,
+					100
 				);
 			});
-
+	
 			// Draw ball
 			ctx.beginPath();
 			ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
 			ctx.fill();
-
+	
 			// Draw scores
 			ctx.font = '24px Arial';
 			ctx.fillText(`${gameState.players[0].score}`, 300, 40);
 			ctx.fillText(`${gameState.players[1].score}`, 480, 40);
 		}
-
-		document.addEventListener('keydown', e => {
+	
+		// Send movement updates based on key states
+		function handleInput() {
 			if (!playerId) return;
-			if (e.key === 'ArrowUp' || e.key === 'w') {
+	
+			if (keysPressed.up) {
 				socket.send(JSON.stringify({ type: 'move', playerId, direction: 'up' }));
 			}
-			if (e.key === 'ArrowDown' || e.key === 's') {
+			if (keysPressed.down) {
 				socket.send(JSON.stringify({ type: 'move', playerId, direction: 'down' }));
 			}
+		}
+	
+		// Game loop
+		function gameLoop() {
+			drawGame();
+			handleInput();
+			requestAnimationFrame(gameLoop);
+		}
+	
+		gameLoop();
+	
+		// Keyboard controls (no delay)
+		document.addEventListener('keydown', e => {
+			if (e.key === 'ArrowUp' || e.key === 'w') keysPressed.up = true;
+			if (e.key === 'ArrowDown' || e.key === 's') keysPressed.down = true;
 		});
-	</script>
+	
+		document.addEventListener('keyup', e => {
+			if (e.key === 'ArrowUp' || e.key === 'w') keysPressed.up = false;
+			if (e.key === 'ArrowDown' || e.key === 's') keysPressed.down = false;
+		});
+	</script>	
 </body>
 </html>

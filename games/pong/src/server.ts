@@ -81,13 +81,15 @@ const start = async () => {
 
 			if (data.type === 'move' && data.playerId && data.direction) {
 				const player = data.playerId === 1 ? player1 : player2;
-
-				if (data.direction === 'up') player.y -= 10;
-				if (data.direction === 'down') player.y += 10;
-
-				if (player.y < 0) player.y = 0;
-				if (player.y > 600) player.y = 600;
-			}
+			
+				const moveSpeed = 6; // Tune this value for faster/slower movement
+			
+				if (data.direction === 'up') player.y -= moveSpeed;
+				if (data.direction === 'down') player.y += moveSpeed;
+			
+				// Clamp position to stay within canvas
+				player.y = Math.max(0, Math.min(600, player.y));
+			}			
 		});
 
 		ws.on('close', () => {

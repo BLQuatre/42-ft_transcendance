@@ -1,7 +1,7 @@
 import 'reflect-metadata'; // Assure-toi que c’est au tout début du point d'entrée, si ce fichier est exécuté directement
 
 import { DataSource } from 'typeorm';
-import { User } from './entities/User';
+import { UserEntity } from './entities/User';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -16,6 +16,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_POSTGRES,
   synchronize: true,
+  // dropSchema: true,
   logging: false,
-  entities: [User],
+  entities: [UserEntity],
 });

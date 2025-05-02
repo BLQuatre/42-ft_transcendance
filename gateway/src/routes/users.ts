@@ -9,10 +9,10 @@ export const usersRoutes: FastifyPluginAsync = async (fastify) => {
 	});
 };
 
-export const userRoutes: FastifyPluginAsync = async (fastify) => {
-	fastify.register(httpProxy, {
-		upstream: 'http://localhost:3001',
-		prefix: '/user/:id',
-		rewritePrefix: '/user/:id'
-	})
-}
+// export const userRoutes: FastifyPluginAsync = async (fastify) => {
+// 	fastify.register(httpProxy, {
+// 		upstream: 'http://localhost:3001',
+// 		prefix: '/user/:id',
+// 		rewritePrefix: '/user/:id'
+// 	})
+// }

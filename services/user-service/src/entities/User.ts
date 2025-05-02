@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from "typeorm"
 import { IsEmail } from 'class-validator'
 
-@Entity()
-export class User {
+@Entity("user")
+export class UserEntity {
     @PrimaryGeneratedColumn("uuid")
     id!: string;
 
@@ -19,10 +19,18 @@ export class User {
     email!: string;
 
     @Column({
+        nullable: false
+    })
+    password_hash!: string
+
+    @Column({
         default: false
     })
     is_email_verified!: boolean
 
     @CreateDateColumn()
     created_at!: Date
+
+    @CreateDateColumn()
+    updated_at!: Date
 }

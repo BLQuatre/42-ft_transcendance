@@ -11,6 +11,7 @@ export const validateBody = <T extends object>(dtoClass: new () => T) => {
     if (errors.length > 0) {
       res.status(400).send({
         message: 'Validation failed',
+        statusCode: 400,
         errors: errors.map(err => ({
           property: err.property,
           constraints: err.constraints,

@@ -5,44 +5,17 @@ import { validateBody } from "../utils/validate";
 import { CreateUserDto } from "../entities/CreateUserDto";
 import bcrypt from 'bcryptjs';
 import { removePassword, PublicUser, isLoginWithName, getenvVar } from "../utils/functions";
-import { loginWithEmail, loginWithName} from "../utils/interface";
+import { loginWithEmail, loginWithName } from "../utils/interface";
 import dotenv from 'dotenv';
 import path from "path";
 
 (dotenv.config({ path: path.resolve(__dirname, '../../../.env') }));
-// type PublicUser = Omit<UserEntity, 'password_hash'>
+
 const User = AppDataSource.getRepository(UserEntity);
 
 
-export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => {
-    const users = await User.find();
-    const publicUsers : PublicUser[] | [] = users.map(removePassword);
-    return reply.code(200).send({
-        message: 'All users',
-        statusCode: 200,
-        publicUsers
-    });
-};
-
-export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
-    const {id} = req.params as { id: string};
-    const user = await User.findOneBy({
-        id: id
-    })
-    if (!user)
-        return reply.code(404).send({
-            message: "unable to find user",
-            statusCode: 404 
-        });
-    const publicUser : PublicUser = removePassword(user)
-    return reply.code(200).send({
-        message: 'User find',
-        statusCode: 200,
-        publicUser
-    });
-}
 // dans le auth-service
-export const signUp = async (req: FastifyRequest, reply: FastifyReply) => {
+export const signUp = async (req: FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
     const isValid = await validateBody(CreateUserDto)(req, reply);
     if (!isValid) return;
     const savedUser = req.body as CreateUserDto;
@@ -90,8 +63,4 @@ export const login = async (req: FastifyRequest<{ Body : loginWithEmail | loginW
             return reply.code(202).send({message: "User is logged", statusCode: 202, publicUser});
         }
     }
-}
-
-export const updateUser = async (req: FastifyRequest, reply: FastifyReply) => {
-
 }

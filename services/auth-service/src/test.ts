@@ -52,3 +52,4 @@ app.post('/auth/refresh', async (req, reply) => {
 });
 
 app.listen({ port: 3001 });
+

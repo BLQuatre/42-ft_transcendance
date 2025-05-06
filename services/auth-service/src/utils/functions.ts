@@ -1,5 +1,5 @@
 import { UserEntity } from "../entities/User";
-import { loginWithName } from "./interface";
+import { loginWithNameInterface } from "./interface";
 export type PublicUser = Omit<UserEntity, 'password_hash'> | null;
 
 export function removePassword(user: UserEntity | null): PublicUser | null {
@@ -9,7 +9,7 @@ export function removePassword(user: UserEntity | null): PublicUser | null {
 	return rest;
 }
 
-export function isLoginWithName(body: any): body is loginWithName {
+export function isLoginWithName(body: any): body is loginWithNameInterface {
     return 'name' in body && 'password' in body;
 }
 

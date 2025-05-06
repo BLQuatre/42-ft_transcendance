@@ -75,7 +75,7 @@ export function MainNav() {
         {isLoggedIn ? (
           <>
             <div className="flex items-center">
-              <div className="mr-2 font-pixel text-xs text-game-orange hidden sm:block">1250 COINS</div>
+              <div className="mr-2 font-pixel text-xs text-game-orange hidden sm:block">1250</div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"

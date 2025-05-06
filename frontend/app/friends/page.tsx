@@ -163,7 +163,7 @@ export default function FriendsPage() {
         </div>
 
         <Tabs defaultValue="friends" className="space-y-4">
-          <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
+          <TabsList className="font-pixel text-xs w-full flex-nowrap">
             <TabsTrigger value="friends">MY FRIENDS</TabsTrigger>
             <TabsTrigger value="requests">
               FRIEND REQUESTS

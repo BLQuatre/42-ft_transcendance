@@ -20,7 +20,7 @@ export class UserEntity {
     @Column({
         nullable: false
     })
-    password_hash!: string
+    password!: string
 
     @Column({
         default: false

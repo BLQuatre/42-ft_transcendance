@@ -1,12 +1,12 @@
 import { FastifyPluginAsync } from "fastify";
 import httpProxy from "@fastify/http-proxy";
 
-const postsRoutes: FastifyPluginAsync = async (fastify) => {
+const authRoutes: FastifyPluginAsync = async (fastify) => {
 	fastify.register(httpProxy, {
 		upstream: 'http://localhost:3002',
-		prefix: '/posts',
-		rewritePrefix: '/posts',
+		prefix: '/auth',
+		rewritePrefix: '/auth'
 	});
 };
 
-export default postsRoutes;
+export default authRoutes;

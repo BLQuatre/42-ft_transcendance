@@ -1,11 +1,12 @@
+import { JwtPayload } from "jsonwebtoken";
 import { UserEntity } from "../entities/User";
 import { loginWithNameInterface } from "./interface";
-export type PublicUser = Omit<UserEntity, 'password_hash'> | null;
+export type PublicUser = Omit<UserEntity, 'password'>;
 
-export function removePassword(user: UserEntity | null): PublicUser | null {
+export function removePassword(user: UserEntity): PublicUser{
 	if (!user)
 		return user;
-	const { password_hash, ...rest} = user;
+	const { password, ...rest} = user;
 	return rest;
 }
 
@@ -19,4 +20,12 @@ export function getenvVar(key: string): string {
 		throw new Error(`Missing environment variable: ${key}`);
 	}
 	return value;
+}
+
+export function isJwtPayload(payload: string | JwtPayload): payload is JwtPayload {
+	return typeof payload !== 'string';
+}
+
+export function isUserEntity(user: UserEntity | null): user is UserEntity{
+	return typeof user !== null;
 }

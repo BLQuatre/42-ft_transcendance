@@ -46,7 +46,7 @@ export const signUp = async (req: FastifyRequest, reply: FastifyReply) => {
     const isValid = await validateBody(CreateUserDto)(req, reply);
     if (!isValid) return;
     const savedUser = req.body as CreateUserDto;
-    savedUser.password_hash = await bcrypt.hash(savedUser.password_hash, 10);
+    savedUser.password = await bcrypt.hash(savedUser.password, 10);
     const result = await User.save(savedUser);
     const publicUser: PublicUser = removePassword(result);
     return reply.code(201).send({
@@ -66,7 +66,7 @@ export const login = async (req: FastifyRequest<{ Body : loginWithEmail | loginW
                 message: 'User not found',
                 statusCode: 404
             })
-        const verif = await bcrypt.compare(req.body.password, user.password_hash);
+        const verif = await bcrypt.compare(req.body.password, user.password);
         if (!verif)
             return reply.code(401).send({message: "unable to login, identifiant incorrect", statusCode: 401});
         else{
@@ -82,7 +82,7 @@ export const login = async (req: FastifyRequest<{ Body : loginWithEmail | loginW
                 message: 'User not found',
                 statusCode: 404
             })
-        const verif = await bcrypt.compare(req.body.password, user.password_hash);
+        const verif = await bcrypt.compare(req.body.password, user.password);
         if (!verif)
             return reply.code(401).send({message: "unable to login, identifiant incorrect", statusCode: 401});
         else{

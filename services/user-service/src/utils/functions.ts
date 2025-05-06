@@ -1,11 +1,11 @@
 import { UserEntity } from "../entities/User";
 import { loginWithName } from "./interface";
-export type PublicUser = Omit<UserEntity, 'password_hash'> | null;
+export type PublicUser = Omit<UserEntity, 'password'> | null;
 
 export function removePassword(user: UserEntity | null): PublicUser | null {
 	if (!user)
 		return user;
-	const { password_hash, ...rest} = user;
+	const { password, ...rest} = user;
 	return rest;
 }
 

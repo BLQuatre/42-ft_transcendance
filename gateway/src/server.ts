@@ -1,14 +1,14 @@
 import fastify from "fastify";
 import websocket from '@fastify/websocket';
 import WebSocket from 'ws';
-import {usersRoutes} from './routes/users';
-import postsRoutes from './routes/posts';
+import { usersRoutes } from './routes/users';
+import authRoutes from "./routes/auth";
 
 const app = fastify();
 
 // app.register(userRoutes);
 app.register(usersRoutes);
-app.register(postsRoutes);
+app.register(authRoutes);
 app.register(websocket);
 
 app.register(async function (app) {

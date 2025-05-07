@@ -27,7 +27,7 @@ export const accessAuthentication = async ( req: AuthRequest, reply: FastifyRepl
         reply.code(200).send({
             message: 'authenticated',
             statusCode: 200,
-            decode
+            id: decode.id
         })
     } catch (err) {
         if (err instanceof TokenExpiredError)
@@ -35,7 +35,7 @@ export const accessAuthentication = async ( req: AuthRequest, reply: FastifyRepl
         else if (err instanceof JsonWebTokenError)
             return reply.code(401).send({ message: 'Invalid access token', statusCode: 401});
         else
-            return reply.code(500).send({ message: 'Acces token verification failed', statusCode: 500});
+            return reply.code(500).send({ message: 'Access token verification failed', statusCode: 500});
     }
 }
 

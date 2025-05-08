@@ -52,18 +52,18 @@
 		function drawGame() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
-			if (!gameState) return;
+			if (!gameState) return ;
 	
 			// Draw paddles
-			ctx.fillStyle = 'black';
-			gameState.players.forEach(player => {
-				ctx.fillRect(
-					player.id === 1 ? 20 : 760,
-					player.y - 50,
-					20,
-					100
-				);
-			});
+			ctx.fillStyle = 'black' ;
+			gameState.left_team.players.forEach(player => {
+				ctx.fillRect(20, player.top, 20, (player.bot - player.top)) ;
+						/*	xSRT,	ySRT,	xLEN,	yLEN	*/ // TODO: find a way to make this prettier
+			}) ;
+			gameState.right_team.players.forEach(player => {
+				ctx.fillRect(760, player.top, 20, (player.bot - player.top)) ;
+						/*	xSRT,	ySRT,	xLEN,	yLEN	*/
+			}) ;
 	
 			// Draw ball
 			ctx.beginPath();
@@ -72,8 +72,8 @@
 	
 			// Draw scores
 			ctx.font = '24px Arial';
-			ctx.fillText(`${gameState.players[0].score}`, 300, 40);
-			ctx.fillText(`${gameState.players[1].score}`, 480, 40);
+			ctx.fillText(`${gameState.left_team.score}`, 300, 40);
+			ctx.fillText(`${gameState.right_team.score}`, 480, 40);
 		}
 	
 		// Send movement updates based on key states

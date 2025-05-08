@@ -4,13 +4,13 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { FloatingChat } from "@/components/floating-chat"
+import { SimpleChat } from "@/components/simple-chat"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Retro Games Hub",
-  description: "Play classic games like Pong and Dino with friends",
+  title: "ft_transcendance",
+  description: "Play classic games like Pong and Dino with friends"
 }
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           {children}
-          <FloatingChat />
+          <SimpleChat />
           <Toaster />
         </ThemeProvider>
       </body>

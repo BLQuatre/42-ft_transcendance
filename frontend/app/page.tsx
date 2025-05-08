@@ -2,6 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
+import { Footer } from "@/components/footer"
 
 export default function HomePage() {
   return (
@@ -15,7 +16,7 @@ export default function HomePage() {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="font-pixel text-3xl md:text-5xl lg:text-6xl bg-gradient-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
-                  RETRO ARCADE
+                  ft_transcendance
                 </h1>
                 <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto">
                   CHALLENGE YOUR FRIENDS IN CLASSIC GAMES
@@ -169,17 +170,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="border-t border-muted py-6">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <span className="font-pixel text-sm text-game-blue">RETRO</span>
-              <span className="font-pixel text-sm text-game-orange">GAMES</span>
-            </div>
-            <p className="font-pixel text-xs text-muted-foreground">© 2023 RETRO GAMES. ALL RIGHTS RESERVED.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

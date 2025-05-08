@@ -14,8 +14,9 @@ export function MainNav() {
   return (
     <div className="flex justify-between items-center w-full px-4 py-3 bg-game-dark border-b-4 border-game-blue">
       <Link href="/" className="flex items-center space-x-2">
-        <span className="font-pixel text-xl text-game-blue">RETRO</span>
-        <span className="font-pixel text-xl text-game-orange">GAMES</span>
+        <span className="font-pixel text-xl bg-gradient-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
+          FT_TRANSCENDANCE
+        </span>
       </Link>
 
       <nav className="hidden md:flex items-center space-x-6">

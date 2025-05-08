@@ -86,7 +86,7 @@ export default function CGUPage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-2">
-              <span className="font-pixel text-sm bg-gradient-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
+              <span className="font-pixel text-sm bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
                 FT_TRANSCENDANCE
               </span>
             </div>

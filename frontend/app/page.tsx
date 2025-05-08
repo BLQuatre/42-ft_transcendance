@@ -15,7 +15,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="font-pixel text-3xl md:text-5xl lg:text-6xl bg-gradient-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
+                <h1 className="font-pixel text-3xl md:text-5xl lg:text-6xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
                   ft_transcendance
                 </h1>
                 <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto">

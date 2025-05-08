@@ -63,7 +63,7 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="remember" className="h-4 w-4 rounded border-gray-300" />
+                  <input type="checkbox" id="remember" className="h-4 w-4 rounded-sm border-gray-300" />
                   <Label htmlFor="remember" className="font-pixel text-xs">
                     Remember me
                   </Label>
@@ -109,7 +109,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="relative hidden md:block bg-gradient-to-br from-game-dark to-black overflow-hidden">
+          <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
             <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#4A9DFF_50%)]"></div>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
               <Image

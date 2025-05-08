@@ -108,7 +108,7 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <div className="relative hidden md:block bg-gradient-to-br from-game-dark to-black overflow-hidden">
+          <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
             <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#FFD700_50%)]"></div>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
               <Image

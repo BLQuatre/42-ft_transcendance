@@ -473,7 +473,7 @@ export function SimpleChat() {
                               </div>
                             ) : (
                               <>
-                                <Avatar className="h-6 w-6 flex-shrink-0">
+                                <Avatar className="h-6 w-6 shrink-0">
                                   <AvatarImage src="/placeholder.svg?height=40&width=40" alt={message.sender} />
                                   <AvatarFallback className="font-pixel text-[10px]">
                                     {message.sender.substring(0, 2)}

@@ -66,14 +66,6 @@ const config = {
         },
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
         blink: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
@@ -84,8 +76,6 @@ const config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
         blink: "blink 1s step-end infinite",
         pixelate: "pixelate 0.5s ease-out forwards",
       },

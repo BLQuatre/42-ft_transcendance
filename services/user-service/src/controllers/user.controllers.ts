@@ -16,7 +16,7 @@ const User = AppDataSource.getRepository(UserEntity);
 
 
 export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => {
-    console.log(` id :${req.headers['x-user-id']}`);
+    // console.log(` id :${req.headers['x-user-id']}`);
     const usersFind = await User.find();
     const Users : PublicUser[] | [] = usersFind.map(removePassword);
     return reply.code(200).send({
@@ -31,6 +31,7 @@ export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
     const user = await User.findOneBy({
         id: id
     })
+    console.log(user);
     if (!user)
         return reply.code(404).send({
             message: "unable to find user",

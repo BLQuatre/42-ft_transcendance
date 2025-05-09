@@ -3,42 +3,44 @@ import websocket from '@fastify/websocket';
 import WebSocket from 'ws';
 import { usersRoutes } from './routes/users';
 import authRoutes from "./routes/auth";
+import { friendRoutes } from "./routes/friend";
 
 const app = fastify();
 
 // app.register(userRoutes);
-app.register(usersRoutes);
 app.register(authRoutes);
-app.register(websocket);
+app.register(usersRoutes);
+app.register(friendRoutes);
+// app.register(websocket);
 
-app.register(async function (app) {
-	app.get('/ws', { websocket: true}, (connection, req) => {
-		const upstream = new WebSocket('http://0.0.0.0:3003/ws');
+// app.register(async function (app) {
+// 	app.get('/ws', { websocket: true}, (connection, req) => {
+// 		const upstream = new WebSocket('http://0.0.0.0:3003/ws');
 
-		upstream.on('open', () => {
-			console.log('Connexion au microservice réussi');
-		});
+// 		upstream.on('open', () => {
+// 			console.log('Connexion au microservice réussi');
+// 		});
 
-		upstream.on('error', (err) => {
-			console.error('Error on connection at microservice');
-		});
+// 		upstream.on('error', (err) => {
+// 			console.error('Error on connection at microservice');
+// 		});
 
-		connection.on('message', (msg : any) => {
-			upstream.readyState === 1 && upstream.send(msg);
-		});
+// 		connection.on('message', (msg : any) => {
+// 			upstream.readyState === 1 && upstream.send(msg);
+// 		});
 
-		upstream.on('message', (msg : any) => {
-			connection.send(msg.toString());
-		});
+// 		upstream.on('message', (msg : any) => {
+// 			connection.send(msg.toString());
+// 		});
 
-		upstream.on('close', () => connection.close());
-		connection.on('close', () => upstream.close());
-	});
-})
+// 		upstream.on('close', () => connection.close());
+// 		connection.on('close', () => upstream.close());
+// 	});
+// })
 
-app.get('/ping', async (request, reply) => {
-	return 'pong\n'
-})
+// app.get('/ping', async (request, reply) => {
+// 	return 'pong\n'
+// })
 
 app.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
 	if (err) throw err;

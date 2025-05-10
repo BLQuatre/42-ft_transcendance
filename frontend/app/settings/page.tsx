@@ -21,6 +21,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 // Import the SkinSelector component
 import { SkinSelector } from "@/components/skin-selector"
+import { Footer } from "@/components/footer"
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -424,6 +425,7 @@ export default function SettingsPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   )
 }

@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { Footer } from "@/components/footer"
 
 // Sample friends data
 const friendsData = [
@@ -357,6 +358,7 @@ export default function FriendsPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   )
 }

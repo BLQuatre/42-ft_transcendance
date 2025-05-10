@@ -8,6 +8,7 @@ import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Re
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Footer } from "@/components/footer"
 
 // Sample data for charts
 const gamePlayData = [
@@ -525,6 +526,7 @@ export default function DashboardPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   )
 }

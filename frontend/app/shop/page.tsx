@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { useToast } from "@/components/ui/use-toast"
+import { Footer } from "@/components/footer"
 
 // Sample shop items
 const characterSkins = [
@@ -318,6 +319,7 @@ export default function ShopPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   )
 }

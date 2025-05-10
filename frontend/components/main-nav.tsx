@@ -58,15 +58,6 @@ export function MainNav() {
             >
               STATS
             </Link>
-            <Link
-              href="/settings"
-              className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue",
-                pathname.startsWith("/settings") ? "text-game-blue" : "text-muted-foreground",
-              )}
-            >
-              SETTINGS
-            </Link>
           </>
         )}
       </nav>

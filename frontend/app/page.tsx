@@ -26,9 +26,6 @@ export default function HomePage() {
                 <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
                   <Link href="/games">PLAY NOW</Link>
                 </Button>
-                <Button asChild variant="outline" className="font-pixel">
-                  <Link href="/dashboard">VIEW STATS</Link>
-                </Button>
               </div>
             </div>
           </div>

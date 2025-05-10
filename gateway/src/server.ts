@@ -11,7 +11,7 @@ const app = fastify();
 app.register(authRoutes);
 app.register(usersRoutes);
 app.register(friendRoutes);
-// app.register(websocket);
+app.register(websocket);
 
 // app.register(async function (app) {
 // 	app.get('/ws', { websocket: true}, (connection, req) => {

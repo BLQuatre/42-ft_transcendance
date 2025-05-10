@@ -30,10 +30,11 @@ type Friend = {
   unread: number
 }
 
-type PrivateConversation = {
-  messages: Message[]
-  friend: Friend
-}
+// TODO: See if usefull
+// type PrivateConversation = {
+//   messages: Message[]
+//   friend: Friend
+// }
 
 // Données de test
 const initialMessages: Message[] = [

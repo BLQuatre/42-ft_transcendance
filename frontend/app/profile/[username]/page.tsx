@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, Clock, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import Link from "next/link"
 
 // Sample user data - in a real app, this would come from an API
 const userData = {
@@ -235,6 +236,7 @@ const userData = {
 export default function UserProfilePage() {
   const params = useParams()
   const username = params.username as string
+  // TODO: Remove this any when interface will be implemented
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [isFriend, setIsFriend] = useState(false)
@@ -288,10 +290,10 @@ export default function UserProfilePage() {
         <div className="flex-1 container py-8 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1 className="font-pixel text-2xl mb-4">UTILISATEUR NON TROUVÉ</h1>
           <p className="font-pixel text-sm text-muted-foreground mb-6">
-            L'utilisateur "{username}" n'existe pas ou a été supprimé.
+            {"L'utilisateur " + username + " n'existe pas ou a été supprimé."}
           </p>
           <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
-            <a href="/">RETOUR À L'ACCUEIL</a>
+            <Link href="/">{"RETOUR À L'ACCUEIL"}</Link>
           </Button>
         </div>
         <Footer />

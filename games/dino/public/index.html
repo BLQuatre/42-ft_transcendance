@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Dino Game</title>
+	<style>
+		body {
+			background: white;
+			margin: 0;
+			text-align: center;
+		}
+		canvas {
+			border: 1px solid black;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Dino Game</h1>
+	<canvas id="game" width="800" height="600"></canvas>
+
+	<script>
+		const canvas = document.getElementById('game');
+		const ctx = canvas.getContext('2d');
+		
+		const socket = new WebSocket('ws://localhost:3001');
+		let playerId = null;
+		let gameState = null;
+		
+		const DINOWIDTH = 50 ;
+		const DINOHEIGHT = 50 ;
+		const dinoImage = new Image() ;
+		dinoImage.src = 'chrome_dino.png' ;
+		
+		const keysPressed = {
+			jump: false
+		};
+	
+		socket.addEventListener('open', () => {
+			console.log('Connected to server');
+		});
+	
+		socket.addEventListener('message', event => {
+			const msg = JSON.parse(event.data);
+	
+			if (msg.type === 'assign') {
+				playerId = msg.playerId;
+				console.log(`You are player ${playerId}`);
+			}
+	
+			if (msg.type === 'state') {
+				gameState = msg.gameState ;
+				// console.log('received msg') ;
+				// console.log(msg) ;
+			}
+		});
+	
+		function drawGame() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+			if (!gameState) return ;
+	
+			const offset = 600 / (gameState.dinos.length + 1) ; // TODO: find a way to make this prettier
+
+			ctx.fillStyle = '#555' ;
+			let i = 1 ;
+			gameState.dinos.forEach(dino => {
+				console.log(`dino n${i} in forEach`) ;
+
+				ctx.fillRect(20, (offset * i), (canvas.width - 40), 2) ;
+				
+				if (dinoImage.complete) {
+					ctx.drawImage(dinoImage, 40, ((offset * i) - DINOHEIGHT - dino.y), DINOWIDTH, DINOHEIGHT) ;
+				}
+
+				i++ ;
+			}) ;
+	
+			// // Draw scores
+			// ctx.font = '24px Arial';
+			// ctx.fillText(`${gameState.left_team.score}`, 300, 40);
+			// ctx.fillText(`${gameState.right_team.score}`, 480, 40);
+		}
+	
+		// Send movement updates based on key states
+		function handleInput() {
+			if (!playerId) return;
+	
+			if (keysPressed.jump) {
+				socket.send(JSON.stringify({ type: 'jump', playerId }));
+			}
+		}
+	
+		// Game loop
+		function gameLoop() {
+			drawGame();
+			handleInput();
+			requestAnimationFrame(gameLoop);
+		}
+	
+		gameLoop();
+	
+		// Keyboard controls (no delay)
+		document.addEventListener('keydown', e => {
+			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = true;
+		});
+	
+		document.addEventListener('keyup', e => {
+			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = false;
+		});
+	</script>	
+</body>
+</html>

@@ -15,12 +15,13 @@ let id = 0 ;
 const FPS = 60 ;
 
 fastify.get('/', async (request, reply) => {
-	return { pong: 'it works' } ;
-}) ; // TODO:check utility
+	return { status: 'Pong server is running' };
+});
 
 const start = async () => {
-	await fastify.listen({ port: 3000 }) ;
-	console.log('Server running on http://localhost:3000') ;
+	await fastify.listen({ port: 3001 }).catch(console.error) ;
+
+	console.log('Server running on http://localhost:3001') ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 
@@ -38,7 +39,7 @@ const start = async () => {
 		}
 
 		// Tell client its player ID
-		ws.send(JSON.stringify({ type: 'assign', playerId: assignedPlayer.id })) ;
+		ws.send(JSON.stringify({ type: 'assign', playerId: assignedPlayer.get_id() })) ;
 
 		// Start game when 2 players are here
 		if (game.getNumberPlayer() === 2)
@@ -47,16 +48,8 @@ const start = async () => {
 		ws.on('message', (message) => {
 			const data = JSON.parse(message.toString()) ;
 
-			// TODO: prevent players from moving before the game start
-			if (data.type === 'move' && data.playerId && data.direction) {
-				const player = game.getPlayerById(data.playerId) ;
-				if (player === undefined)
-					return ;
-			
-				const moveSpeed = 6 ; // Tune this value for faster/slower movement
-				if (data.direction === 'up')	player.move(-moveSpeed) ;
-				if (data.direction === 'down')	player.move(moveSpeed) ;
-			}			
+			if (data.type === 'jump' && data.playerId)
+				game.getPlayerById(data.playerId)?.jump() ;
 		}) ;
 
 		ws.on('close', () => {
@@ -76,7 +69,6 @@ function startGame() {
 
 	console.log('Game started') ;
 	gameInterval = setInterval(() => {
-		game.update() ;
 		broadcastGame() ;
 	}, 1000 / FPS) ;
 }
@@ -98,11 +90,15 @@ function broadcastGame() {
 
 	const data = JSON.stringify(state) ;
 
-	[ ... game.left_team.players, ... game.right_team.players].forEach(player => {
-		if (player.socket && player.socket.readyState === player.socket.OPEN) {
-			player.socket.send(data) ;
+	game.dinos.forEach(dino => {
+		const socket = dino.player.socket ;
+		if (socket && socket.readyState === socket.OPEN) {
+			socket.send(data) ;
 		}
 	}) ;
 }
 
-start() ;
+start().catch(err => {
+	console.error('Failed to start server:', err);
+	process.exit(1);
+}) ;

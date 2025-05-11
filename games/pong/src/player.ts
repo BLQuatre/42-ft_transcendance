@@ -7,7 +7,7 @@ export class Player {
 	paddle: Range ;
 	zone: Range ;
 
-	socket?: WebSocket ;
+	socket?: WebSocket ; // TODO: check utility
 
 
 	constructor(id: number = 0, socket?: WebSocket) {

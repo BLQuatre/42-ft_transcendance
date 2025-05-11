@@ -9,22 +9,76 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    # networks:
-    #   - transcendance
+    networks:
+      - transcendance
     restart: always
 
-  # gateway:
-  #   container_name: gateway
-  #   build:
-  #     context: ./gateway
-  #     dockerfile: Dockerfile
-  #   env_file:
-  #     - .env
-  #   # depends_on:
-  #   #   - transcendance
-  #   networks:
-  #     - transcendance
-  #   restart: always
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - transcendance
+    restart: always
+
+  auth_service:
+    container_name: auth_service
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
+  user_service:
+    container_name: user_service
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
+  chat_service:
+    container_name: chat_service
+    build:
+      context: ./services/chat-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
+  friend_service:
+    container_name: friend_service
+    build:
+      context: ./services/friend-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
+
 
 
   # nginx:
@@ -54,29 +108,6 @@ services:
   #   networks:
   #     - transcendance
 
-
-
-  # auth:
-  #   build: ./services/auth
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendance
-
-  # user:
-  #   build: ./services/user
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendance
-
-  # chat:
-  #   build: ./services/chat
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendance
-
   # game:
   #   build: ./services/game
   #   env_file:
@@ -90,8 +121,8 @@ services:
   #     - transcendance
 
 
-# networks:
-#   transcendance:
+networks:
+  transcendance:
 
 volumes:
   postgres-data:

@@ -32,4 +32,10 @@ del_images_none:
 del_images:
 	for i in $$(docker images | grep "$(NAME)-" | awk '{print $$3}'); do docker rmi $$i; done
 
+del_node_modules:
+	find . -type d -name "node_modules" -prune -exec rm -rf '{}' +
+
+del_dist:
+	find . -type d -name "dist" -prune -exec rm -rf '{}' +
+
 .PHONY: all up down stop start restart re test del_images_none del_images

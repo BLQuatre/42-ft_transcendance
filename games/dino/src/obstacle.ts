@@ -1,6 +1,6 @@
 const FPS = 30 ;
 const SCREEN_WIDTH = 800 ;
-const OBSTCL_BASE_SPD = 3 ;
+const OBSTCL_BASE_SPD = 5 ;
 const SPD_SCALE_DIV = 30 ;
 
 export class Obstacle {

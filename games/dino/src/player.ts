@@ -1,8 +1,9 @@
 import { WebSocket } from 'ws';
 
 const FPS = 30 ;
-const MAX_Y = 50 ; // idk, shall tweak this according to preferences
-const JUMP_SPEED = 3 ; // same comment as above
+const MAX_Y = 75 ;
+const FAST_ZONE_Y = 60 ;
+const JUMP_SPEED = 8 ;
 
 export class Player {
 	private id: number ;
@@ -29,11 +30,14 @@ export class Player {
 		
 		setInterval(() => {
 			if (this.in_jump && this.y_pos < MAX_Y)
-				this.y_pos += JUMP_SPEED ;
-			else if (this.y_pos >= MAX_Y)
+				this.y_pos += this.y_pos < FAST_ZONE_Y ? JUMP_SPEED : JUMP_SPEED / 2 ;
+			else if (this.in_jump && this.y_pos >= MAX_Y)
 				this.in_jump = false ;
-			if (!this.in_jump && this.y_pos > 0)
-				this.y_pos -= JUMP_SPEED ;
+			else if (!this.in_jump && this.y_pos > 0)
+				this.y_pos -= this.y_pos < FAST_ZONE_Y ? JUMP_SPEED : JUMP_SPEED / 2 ;
+
+			if (this.y_pos > MAX_Y)	this.y_pos = MAX_Y ;
+			if (this.y_pos < 0)		this.y_pos = 0 ;
 		}, interval) ;
 	}
 
@@ -42,7 +46,7 @@ export class Player {
 	get_y_pos() { return this.y_pos ; }
 	
 	jump() {
-		if (this.y_pos === 0)
+		if (this.y_pos <= 0)
 			this.in_jump = true ;
 	}
 }

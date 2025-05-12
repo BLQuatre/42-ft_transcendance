@@ -4,8 +4,8 @@ import { Obstacle } from './obstacle' ;
 const FPS = 30 ;
 const SCREEN_WIDTH = 800 ;
 const CACTUSWIDTH = 30 ;
-const MIN_OBSTCL_SPAN = 6 ;
-const DIFFICULTY_COEFF = 100 ;
+const MIN_OBSTCL_SPAN = 10 ;
+const DIFFICULTY_COEFF = 20 ;
 
 export class Game {
 	score: number ; // Ramping up constantly, attributed to a player when he "loses"

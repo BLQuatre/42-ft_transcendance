@@ -19,20 +19,20 @@ export class ChatController {
 	async handleConnection(connection: WebSocket, request: FastifyRequest) {
 		const userId = request.headers['x-user-id'] as string;
 
-		if (!userId) {
+		if (/*!userId ||*/ !userId) {
 			connection.close(4000, 'User ID is required');
 			return;
 		}
 		try {
 			const dataUserId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${userId}`)
 
-		this.activeConnections.set(userId, { userId, socket: connection });
+			this.activeConnections.set(userId, { userId, socket: connection });
 
-		connection.on('close', () => {
-			this.activeConnections.delete(userId);
-		});
+			connection.on('close', () => {
+				this.activeConnections.delete(userId);
+			});
 
-		connection.on('message', async (message: string) => {
+			connection.on('message', async (message: string) => {
 				const {type , data} = JSON.parse(message);
 
 				switch (type) {
@@ -48,14 +48,13 @@ export class ChatController {
 							data: { message: 'Unknow message type' }
 						}));
 				}
-		})
+			})
 		} catch (err) {
 				connection.send(JSON.stringify({
 					type: 'ERROR',
 					message: 'user not found'
 				}))
 		}
-
 	}
 
 	private async handleSendMessage(senderId: string, receiverId: string, content: string, senderName: string) {

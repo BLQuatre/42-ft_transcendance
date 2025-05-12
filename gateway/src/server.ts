@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth";
 import { friendRoutes } from "./routes/friend";
 import dotenv from 'dotenv';
 import path from 'path';
+import { chatRoutes } from "./routes/chat";
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
@@ -14,10 +15,11 @@ const app = fastify({
 });
 
 // app.register(userRoutes);
+app.register(websocket);
 app.register(authRoutes);
 app.register(usersRoutes);
 app.register(friendRoutes);
-app.register(websocket);
+app.register(chatRoutes);
 
 // app.register(async function (app) {
 // 	app.get('/ws', { websocket: true}, (connection, req) => {

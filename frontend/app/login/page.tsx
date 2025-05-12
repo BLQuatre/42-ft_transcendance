@@ -77,15 +77,15 @@ export default function LoginPage() {
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="remember" className="h-4 w-4 rounded-sm border-gray-300" />
+                  {/* <input type="checkbox" id="remember" className="h-4 w-4 rounded-sm border-gray-300" />
                   <Label htmlFor="remember" className="font-pixel text-xs">
                     Remember me
-                  </Label>
+					</Label> */}
+					<Link href="/forgot-password" className="font-pixel text-xs text-game-blue hover:underline">
+					  Forgot password?
+					</Link>
                 </div>
 
-                <Link href="/forgot-password" className="font-pixel text-xs text-game-blue hover:underline">
-                  Forgot password?
-                </Link>
               </div>
 
               <Button
@@ -115,7 +115,7 @@ export default function LoginPage() {
               SIGN IN WITH GOOGLE
             </Button>
 
-            <p className="mt-4 text-center text-sm font-pixel text-muted-foreground">
+            <p className="mt-4 text-center text-xs font-pixel text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link href="/register" className="text-game-blue hover:underline">
                 Register

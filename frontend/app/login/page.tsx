@@ -31,6 +31,20 @@ export default function LoginPage() {
 
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 bg-card rounded-lg overflow-hidden pixel-border">
+
+          <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#4A9DFF_50%)]"></div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
+              <Image
+                src="/placeholder.svg?height=300&width=300"
+                alt="Game character"
+                width={300}
+                height={300}
+                className="pixel-art"
+              />
+            </div>
+          </div>
+
           <div className="p-8 flex flex-col justify-center">
             <h1 className="font-pixel text-3xl text-center mb-8">LOGIN</h1>
 
@@ -109,18 +123,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#4A9DFF_50%)]"></div>
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
-              <Image
-                src="/placeholder.svg?height=300&width=300"
-                alt="Game character"
-                width={300}
-                height={300}
-                className="pixel-art"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </div>

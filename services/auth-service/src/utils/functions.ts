@@ -11,7 +11,7 @@ export function removePassword(user: UserEntity): PublicUser{
 }
 
 export function isLoginWithName(body: any): body is loginWithNameInterface {
-    return 'name' in body && 'password' in body;
+	return 'name' in body && 'password' in body;
 }
 
 export function getenvVar(key: string): string {

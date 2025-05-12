@@ -10,6 +10,7 @@ export function Footer() {
               FT_TRANSCENDANCE
             </span>
           </div>
+          <p className="font-pixel text-xs text-muted-foreground">© 2025 FT_TRANSCENDANCE</p>
           <div className="flex items-center space-x-4">
             <Link href="/cgu" className="font-pixel text-xs text-muted-foreground hover:text-game-blue">
               CGU
@@ -18,7 +19,6 @@ export function Footer() {
               CONFIDENTIALITÉ
             </Link>
           </div>
-          <p className="font-pixel text-xs text-muted-foreground">© 2025 FT_TRANSCENDANCE. TOUS DROITS RÉSERVÉS.</p>
         </div>
       </div>
     </footer>

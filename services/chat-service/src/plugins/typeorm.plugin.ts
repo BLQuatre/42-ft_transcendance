@@ -1,4 +1,4 @@
-import fastify, { FastifyPluginAsync } from "fastify";
+import { FastifyPluginAsync } from "fastify";
 import { AppDataSource } from "../data-source";
 
 const typeormPlugin: FastifyPluginAsync = async (fastify) => {

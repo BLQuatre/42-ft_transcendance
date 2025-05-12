@@ -17,6 +17,6 @@ export class Message{
 	@CreateDateColumn()
 	created_at!: Date;
 
-	@Column({ default: false})
+	@Column({ default: false })
 	isRead!: boolean
 }

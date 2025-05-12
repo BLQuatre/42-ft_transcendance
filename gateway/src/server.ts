@@ -4,8 +4,14 @@ import WebSocket from 'ws';
 import { usersRoutes } from './routes/users';
 import authRoutes from "./routes/auth";
 import { friendRoutes } from "./routes/friend";
+import dotenv from 'dotenv';
+import path from 'path';
 
-const app = fastify();
+dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
+
+const app = fastify({
+	logger: process.env.DEBUG === 'true',
+});
 
 // app.register(userRoutes);
 app.register(authRoutes);
@@ -42,7 +48,10 @@ app.register(websocket);
 // 	return 'pong\n'
 // })
 
-app.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
+app.listen({
+	host: process.env.GATEWAY_HOST,
+	port: parseInt(process.env.GATEWAY_PORT || '0', 10)
+}, (err, address) => {
 	if (err) throw err;
-	console.log(`Gateway is listening at ${address}`);
+	app.log.info(`[GATEWAY] Running on http://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT} (${address})`);
 })

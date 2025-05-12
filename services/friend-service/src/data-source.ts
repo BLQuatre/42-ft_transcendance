@@ -15,6 +15,6 @@ export const AppDataSource = new DataSource({
 	database: process.env.DB_POSTGRES,
 	synchronize: true,
 	// dropSchema: true,
-	logging: false,
+	logging: process.env.DEBUG === 'true',
 	entities: [FriendEntity],
 })

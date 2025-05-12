@@ -1,24 +1,16 @@
 import { Entity, PrimaryColumn, CreateDateColumn, Column } from "typeorm";
-import { friendRequestEnum } from "../utils/interface";
+import { FriendRequestStatus } from "../utils/interface";
 
 @Entity("friend")
 export class FriendEntity {
-	@PrimaryColumn({
-		nullable: false
-	})
+	@PrimaryColumn({ nullable: false })
 	sender_id!: string;
 
-	@PrimaryColumn({
-		nullable: false
-	})
+	@PrimaryColumn({ nullable: false })
 	receiver_id!: string;
 
-	@Column({
-		type: "enum",
-		enum: friendRequestEnum,
-		default: friendRequestEnum.PENDING
-	})
-	status!: friendRequestEnum
+	@Column({ type: "enum", enum: FriendRequestStatus, default: FriendRequestStatus.PENDING })
+	status!: FriendRequestStatus
 
 	@CreateDateColumn()
 	created_at!: Date

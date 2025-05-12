@@ -50,6 +50,8 @@ const start = async () => {
 
 			if (data.type === 'jump' && data.playerId)
 				game.getPlayerById(data.playerId)?.jump() ;
+			if (data.type === 'fall' && data.playerId)
+				game.getPlayerById(data.playerId)?.fall() ;
 		}) ;
 
 		ws.on('close', () => {

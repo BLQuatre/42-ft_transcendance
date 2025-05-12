@@ -36,7 +36,8 @@
 		cactusImage.src = 'chrome_cactus.png' ;
 		
 		const keysPressed = {
-			jump: false
+			jump: false,
+			fall: false
 		} ;
 	
 		socket.addEventListener('open', () => {
@@ -51,11 +52,8 @@
 				console.log(`You are player ${playerId}`) ;
 			}
 	
-			if (msg.type === 'state') {
+			if (msg.type === 'state')
 				gameState = msg.gameState ;
-				// console.log('received msg') ;
-				// console.log(msg) ;
-			}
 		});
 	
 		function drawGame() {
@@ -93,9 +91,9 @@
 		function handleInput() {
 			if (!playerId) return ;
 	
-			if (keysPressed.jump) {
-				socket.send(JSON.stringify({ type: 'jump', playerId })) ;
-			}
+			if (keysPressed.jump) socket.send(JSON.stringify({ type: 'jump', playerId })) ;
+			
+			if (keysPressed.fall) socket.send(JSON.stringify({ type: 'fall', playerId })) ;
 		}
 	
 		// Game loop
@@ -110,10 +108,12 @@
 		// Keyboard controls (no delay)
 		document.addEventListener('keydown', e => {
 			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = true ;
+			if (e.key === 'ArrowDown') keysPressed.fall = true ;
 		}) ;
 	
 		document.addEventListener('keyup', e => {
 			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = false ;
+			if (e.key === 'ArrowDown') keysPressed.fall = false ;
 		}) ;
 	</script>
 </body>

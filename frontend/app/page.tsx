@@ -88,7 +88,7 @@ export default function HomePage() {
         </section>
 
         {/* Features Section */}
-        <section className="py-12 md:py-24 lg:py-32 bg-muted">
+        <section className="py-12 md:py-24 lg:py-32 bg-game-dark">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center mb-12">
               <h2 className="font-pixel text-2xl md:text-3xl text-game-blue">FEATURES</h2>

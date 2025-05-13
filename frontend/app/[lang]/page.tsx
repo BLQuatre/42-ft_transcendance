@@ -69,6 +69,9 @@ export default async function HomePage({
                   <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
                     <Link href="/games/pong">PLAY PONG</Link>
                   </Button>
+				  <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 ml-5">
+                    <Link href="/games/">GAME RULES</Link>
+                  </Button>
                 </div>
               </div>
 
@@ -92,6 +95,9 @@ export default async function HomePage({
                   </p>
                   <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90">
                     <Link href="/games/dino">PLAY DINO</Link>
+                  </Button>
+				  <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 ml-5">
+                    <Link href="/games/">GAME RULES</Link>
                   </Button>
                 </div>
               </div>

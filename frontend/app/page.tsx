@@ -44,9 +44,9 @@ export default function HomePage() {
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=400&width=600"
+                    src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
                     alt="Pong Game"
-                    width={600}
+                    width={700}
                     height={400}
                     className="object-cover transition-transform group-hover:scale-105"
                   />
@@ -66,9 +66,9 @@ export default function HomePage() {
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=400&width=600"
+                    src="https://archive.org/download/dino-run/dino-run.jpg"
                     alt="Dino Game"
-                    width={600}
+                    width={700}
                     height={400}
                     className="object-cover transition-transform group-hover:scale-105"
                   />

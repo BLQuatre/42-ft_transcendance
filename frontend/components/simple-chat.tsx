@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, Send, X, ChevronLeft, Search } from "lucide-react"
+import { MessageSquare, Send, X, ChevronLeft, Search, Users, Home } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
@@ -29,12 +28,6 @@ type Friend = {
   lastMessage?: string
   unread: number
 }
-
-// TODO: See if usefull
-// type PrivateConversation = {
-//   messages: Message[]
-//   friend: Friend
-// }
 
 // Données de test
 const initialMessages: Message[] = [
@@ -312,7 +305,7 @@ export function SimpleChat() {
       {isOpen && (
         <Card
           ref={chatRef}
-          className="mb-2 flex flex-col shadow-lg pixel-border w-[320px] h-[400px] transition-all duration-200 ease-in-out"
+          className="mb-2 flex flex-col shadow-lg w-[400] h-[400px] transition-all duration-200 ease-in-out border-2"
         >
           <CardHeader className="p-3 border-b flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
@@ -341,27 +334,52 @@ export function SimpleChat() {
               ) : (
                 <>
                   <MessageSquare className="h-5 w-5" />
-                  <span className="font-pixel text-sm">{activeView === "general" ? "CHAT GÉNÉRAL" : "MESSAGES"}</span>
+                  <span className="font-pixel text-sm">{activeView === "general" ? "GENERAL CHAT" : "PRIVATE MESSAGES"}</span>
                 </>
               )}
             </div>
             <div className="flex items-center space-x-1">
-              {activeView !== "friends" && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setActiveView("friends")}
-                  title="Liste d'amis"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                </Button>
-              )}
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsOpen(false)} title="Fermer">
                 <X className="h-4 w-4" />
               </Button>
             </div>
           </CardHeader>
+
+          {/* Navigation Bar */}
+          <div className="border-b px-1 py-1 flex justify-center bg-muted/30">
+			<div className="flex space-x-2">
+            <Button
+              variant={activeView === "general" ? "secondary" : "ghost"}
+              size="sm"
+              className="h-8 px-2"
+              onClick={() => {
+                setActiveView("general")
+                setActiveFriend(null)
+              }}
+            >
+              <Home className="h-4 w-4 mr-1" />
+              <span className="font-pixel text-xs">Global</span>
+            </Button>
+
+            <Button
+              variant={activeView === "friends" ? "secondary" : "ghost"}
+              size="sm"
+              className="h-8 px-2"
+              onClick={() => {
+                setActiveView("friends")
+                setActiveFriend(null)
+              }}
+            >
+              <Users className="h-4 w-4 mr-1" />
+              <span className="font-pixel text-xs">Friends</span>
+              {totalUnread > 0 && (
+                <Badge className="bg-game-red text-white font-pixel text-[10px] h-4 min-w-4 flex items-center justify-center p-0">
+                  {totalUnread}
+                </Badge>
+              )}
+            </Button>
+			</div>
+          </div>
 
           {activeView === "friends" ? (
             // Vue liste d'amis
@@ -376,85 +394,56 @@ export function SimpleChat() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Tabs defaultValue="messages" className="w-full">
-                  <TabsList className="w-full font-pixel text-xs">
-                    <TabsTrigger value="messages" className="flex-1">
-                      MESSAGES
-                    </TabsTrigger>
-                    <TabsTrigger value="general" className="flex-1">
-                      GÉNÉRAL
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="messages" className="mt-2">
-                    <ScrollArea className="h-[280px]">
-                      <div className="space-y-1">
-                        {filteredFriends.length === 0 ? (
-                          <p className="text-center font-pixel text-xs text-muted-foreground py-4">Aucun ami trouvé</p>
-                        ) : (
-                          filteredFriends.map((friend) => (
-                            <div key={friend.id}>
-                              <button
-                                className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
-                                onClick={() => openPrivateChat(friend)}
-                              >
-                                <div className="relative">
-                                  <Avatar className="h-8 w-8">
-                                    <AvatarImage src={friend.avatar || "/placeholder.svg"} alt={friend.username} />
-                                    <AvatarFallback className="font-pixel text-xs">
-                                      {friend.username.substring(0, 2)}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <span
-                                    className={`absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background ${
-                                      friend.status === "online"
-                                        ? "bg-green-500"
-                                        : friend.status === "away"
-                                          ? "bg-yellow-500"
-                                          : "bg-gray-500"
-                                    }`}
-                                  />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex justify-between items-center">
-                                    <p className="font-pixel text-xs truncate">{friend.username}</p>
-                                    {friend.unread > 0 && (
-                                      <Badge className="bg-game-red text-white font-pixel text-[10px] h-4 min-w-4 flex items-center justify-center p-0">
-                                        {friend.unread}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  {friend.lastMessage && (
-                                    <p className="font-pixel text-[10px] text-muted-foreground truncate">
-                                      {friend.lastMessage}
-                                    </p>
-                                  )}
-                                </div>
-                              </button>
-                              <Separator className="my-1" />
+                <ScrollArea className="h-[280px]">
+                  <div className="space-y-1">
+                    {filteredFriends.length === 0 ? (
+                      <p className="text-center font-pixel text-xs text-muted-foreground py-4">Aucun ami trouvé</p>
+                    ) : (
+                      filteredFriends.map((friend) => (
+                        <div key={friend.id}>
+                          <button
+                            className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
+                            onClick={() => openPrivateChat(friend)}
+                          >
+                            <div className="relative">
+                              <Avatar className="h-8 w-8">
+                                <AvatarImage src={friend.avatar || "/placeholder.svg"} alt={friend.username} />
+                                <AvatarFallback className="font-pixel text-xs">
+                                  {friend.username.substring(0, 2)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span
+                                className={`absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background ${
+                                  friend.status === "online"
+                                    ? "bg-green-500"
+                                    : friend.status === "away"
+                                      ? "bg-yellow-500"
+                                      : "bg-gray-500"
+                                }`}
+                              />
                             </div>
-                          ))
-                        )}
-                      </div>
-                    </ScrollArea>
-                  </TabsContent>
-                  <TabsContent value="general" className="mt-2">
-                    <button
-                      className="w-full flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors"
-                      onClick={() => setActiveView("general")}
-                    >
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Chat Général" />
-                        <AvatarFallback className="font-pixel text-xs">CG</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="font-pixel text-xs text-left">CHAT GÉNÉRAL</p>
-                        <p className="font-pixel text-[10px] text-muted-foreground text-left">
-                          Discutez avec tous les joueurs
-                        </p>
-                      </div>
-                    </button>
-                  </TabsContent>
-                </Tabs>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-center">
+                                <p className="font-pixel text-xs truncate">{friend.username}</p>
+                                {friend.unread > 0 && (
+                                  <Badge className="bg-game-red text-white font-pixel text-[10px] h-4 min-w-4 flex items-center justify-center p-0">
+                                    {friend.unread}
+                                  </Badge>
+                                )}
+                              </div>
+                              {friend.lastMessage && (
+                                <p className="font-pixel text-[10px] text-muted-foreground truncate">
+                                  {friend.lastMessage}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                          <Separator className="my-1" />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </ScrollArea>
               </div>
             </CardContent>
           ) : (
@@ -468,7 +457,7 @@ export function SimpleChat() {
                           <div key={message.id} className="flex items-start space-x-2">
                             {message.isSystem ? (
                               <div className="w-full text-center">
-                                <p className="font-pixel text-[10px] text-muted-foreground bg-muted inline-block px-2 py-1 rounded-md">
+                                <p className="font-pixel text-[10px] text-muted-foreground bg-muted inline-block px-2 py-1 rounded-md border border-border">
                                   {message.content}
                                 </p>
                               </div>
@@ -492,7 +481,9 @@ export function SimpleChat() {
                                     </p>
                                     <p className="font-pixel text-[10px] text-muted-foreground">{message.timestamp}</p>
                                   </div>
-                                  <p className="font-pixel text-xs mt-0.5">{message.content}</p>
+                                  <p className="font-pixel text-xs mt-0.5 p-1.5 bg-muted/40 rounded-md border border-border/50">
+                                    {message.content}
+                                  </p>
                                 </div>
                               </>
                             )}
@@ -506,8 +497,10 @@ export function SimpleChat() {
                           >
                             <div
                               className={`max-w-[80%] ${
-                                message.sender === "PLAYER_ONE" ? "bg-game-blue text-white" : "bg-muted"
-                              } rounded-lg p-2`}
+                                message.sender === "PLAYER_ONE"
+                                  ? "bg-game-blue text-white border border-game-blue/30"
+                                  : "bg-muted border border-border/50"
+                              } rounded-lg p-2 shadow-sm`}
                             >
                               <p className="font-pixel text-[10px] text-muted-foreground/70">{message.timestamp}</p>
                               <p className="font-pixel text-xs mt-0.5">{message.content}</p>
@@ -550,7 +543,7 @@ export function SimpleChat() {
 
       {/* Chat Button */}
       <Button
-        className="bg-game-blue hover:bg-game-blue/90 shadow-lg pixel-border relative"
+        className="bg-game-blue hover:bg-game-blue/90 shadow-lg border-2 relative"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
       >

@@ -9,8 +9,7 @@ import { SimpleChat } from "@/components/simple-chat"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ft_transcendance",
-  description: "Play classic games like Pong and Dino with friends"
+  title: "Home - Transcendance",
 }
 
 export default function RootLayout({

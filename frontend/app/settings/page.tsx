@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import axios from "axios"
 
 // Add language selection to the settings page and update the color theme UI
 
@@ -121,7 +122,18 @@ export default function SettingsPage() {
     event.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
+    axios.get('/api/auth/access', {
+      headers: {
+        Authorization: `token_here`
+      }
+    })
+    .then(response => {
+      console.log('Token valid:', response.data);
+    })
+    .catch(error => {
+      console.error('Token invalid:', error.response?.data || error.message);
+    });
+
     setTimeout(() => {
       setIsLoading(false)
     }, 1000)

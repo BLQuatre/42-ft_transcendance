@@ -6,6 +6,10 @@ DOCKER_COMPOSE_PATH	=	docker-compose.yml
 all: up
 
 up:
+	@if [ ! -d "proxy/certs" ]; then \
+		make cert; \
+	fi
+
 	@if [ -f ".env" ]; then \
 		COMPOSE_BAKE=true $(DOCKER_COMPOSE_CMD) -p $(NAME) -f $(DOCKER_COMPOSE_PATH) up --build -d; \
 	else \
@@ -24,7 +28,14 @@ start:
 restart:
 	$(DOCKER_COMPOSE_CMD) -p $(NAME) -f $(DOCKER_COMPOSE_PATH) restart
 
-re: down all
+re: down cert all
+
+cert:
+	mkdir -p proxy/certs
+	openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \
+		-keyout proxy/certs/localhost.key -out proxy/certs/localhost.crt \
+		-subj "/CN=localhost" \
+		-addext "subjectAltName=DNS:localhost"
 
 del_images_none:
 	for i in $$(docker images | grep "<none>" | awk '{print $$3}'); do docker rmi $$i; done

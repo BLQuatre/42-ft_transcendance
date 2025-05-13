@@ -5,8 +5,6 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_POSTGRES}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -24,8 +22,6 @@ services:
     build:
       context: ./gateway
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
     env_file:
       - .env
     depends_on:
@@ -90,6 +86,32 @@ services:
     networks:
       - transcendance
     restart: always
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - transcendance
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    depends_on:
+      - frontend
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
 
   # nginx:
   #   container_name: nginx

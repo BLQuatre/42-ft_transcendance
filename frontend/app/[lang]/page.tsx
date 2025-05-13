@@ -3,8 +3,16 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
+import { getDictionary } from "@/dictionnaries"
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ lang: 'en' | 'fr' }>
+}) {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -19,7 +27,7 @@ export default function HomePage() {
                   ft_transcendance
                 </h1>
                 <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto">
-                  CHALLENGE YOUR FRIENDS IN CLASSIC GAMES
+                  CHALLENGE YOUR FRIENDS IN CLASSIC GAMES {dict.products.cart}
                 </p>
               </div>
               <div className="space-x-4">

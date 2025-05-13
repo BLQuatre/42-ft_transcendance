@@ -165,8 +165,14 @@ export function SimpleChat() {
 
   // Handle click outside to close chat
   useEffect(() => {
+    const chatButton = document.querySelector("[data-chat-button]")
+
     function handleClickOutside(event: MouseEvent) {
-      if (chatRef.current && !chatRef.current.contains(event.target as Node)) {
+      if (
+        chatRef.current &&
+        !chatRef.current.contains(event.target as Node) &&
+        !chatButton?.contains(event.target as Node)
+      ) {
         setIsOpen(false)
       }
     }
@@ -334,7 +340,9 @@ export function SimpleChat() {
               ) : (
                 <>
                   <MessageSquare className="h-5 w-5" />
-                  <span className="font-pixel text-sm">{activeView === "general" ? "GENERAL CHAT" : "PRIVATE MESSAGES"}</span>
+                  <span className="font-pixel text-sm">
+                    {activeView === "general" ? "GENERAL CHAT" : "PRIVATE MESSAGES"}
+                  </span>
                 </>
               )}
             </div>
@@ -347,38 +355,38 @@ export function SimpleChat() {
 
           {/* Navigation Bar */}
           <div className="border-b px-1 py-1 flex justify-center bg-muted/30">
-			<div className="flex space-x-2">
-            <Button
-              variant={activeView === "general" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-8 px-2"
-              onClick={() => {
-                setActiveView("general")
-                setActiveFriend(null)
-              }}
-            >
-              <Home className="h-4 w-4 mr-1" />
-              <span className="font-pixel text-xs">Global</span>
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                variant={activeView === "general" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 px-2"
+                onClick={() => {
+                  setActiveView("general")
+                  setActiveFriend(null)
+                }}
+              >
+                <Home className="h-4 w-4 mr-1" />
+                <span className="font-pixel text-xs">Global</span>
+              </Button>
 
-            <Button
-              variant={activeView === "friends" ? "secondary" : "ghost"}
-              size="sm"
-              className="h-8 px-2"
-              onClick={() => {
-                setActiveView("friends")
-                setActiveFriend(null)
-              }}
-            >
-              <Users className="h-4 w-4 mr-1" />
-              <span className="font-pixel text-xs">Friends</span>
-              {totalUnread > 0 && (
-                <Badge className="bg-game-red text-white font-pixel text-[10px] h-4 min-w-4 flex items-center justify-center p-0">
-                  {totalUnread}
-                </Badge>
-              )}
-            </Button>
-			</div>
+              <Button
+                variant={activeView === "friends" ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 px-2"
+                onClick={() => {
+                  setActiveView("friends")
+                  setActiveFriend(null)
+                }}
+              >
+                <Users className="h-4 w-4 mr-1" />
+                <span className="font-pixel text-xs">Friends</span>
+                {totalUnread > 0 && (
+                  <Badge className="bg-game-red text-white font-pixel text-[10px] h-4 min-w-4 flex items-center justify-center p-0">
+                    {totalUnread}
+                  </Badge>
+                )}
+              </Button>
+            </div>
           </div>
 
           {activeView === "friends" ? (
@@ -546,6 +554,7 @@ export function SimpleChat() {
         className="bg-game-blue hover:bg-game-blue/90 shadow-lg border-2 relative"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
+        data-chat-button
       >
         <MessageSquare className="h-5 w-5" />
         {totalUnread > 0 && (

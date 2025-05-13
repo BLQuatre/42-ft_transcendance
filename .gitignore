@@ -1,5 +1,5 @@
-# Node modules
-node_modules
+# dependencies
+node_modules/
 .pnpm-store
 
 # Logs
@@ -18,14 +18,19 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 
+
+# next.js
+.next/
+out/
+
+# Output folders
+dist/
+build/
+
 # OS & tooling
 *.swp
 *.swo
 
-# Output folders
-dist
-build
-
-# Misc
-coverage
+# typescript
 *.tsbuildinfo
+next-env.d.ts

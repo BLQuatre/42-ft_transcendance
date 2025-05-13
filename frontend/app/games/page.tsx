@@ -82,7 +82,7 @@ export default function HomePage() {
                   </div>
                   <div className="aspect-auto overflow-hidden bg-black/5">
                     <Image
-                      src="/placeholder.svg?key=98xdh"
+                      src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
                       alt="Pong Game"
                       width={800}
                       height={600}
@@ -99,7 +99,7 @@ export default function HomePage() {
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="order-2 md:order-1 aspect-auto overflow-hidden bg-black/5">
                     <Image
-                      src="/placeholder.svg?key=rgjg1"
+                      src="https://archive.org/download/dino-run/dino-run.jpg"
                       alt="Dino Game"
                       width={800}
                       height={600}

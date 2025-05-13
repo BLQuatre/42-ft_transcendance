@@ -78,7 +78,7 @@ export default async function HomePage({
               {/* Dino Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-				<Link href="/games/dino">
+				<Link href="/games">
                   <Image
                     src="https://archive.org/download/dino-run/dino-run.jpg"
                     alt="Dino Game"

@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, Clock, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
+import { Achievement, AchievementRarity, DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/User"
 
 // Sample user data - in a real app, this would come from an API
-const userData = {
+const userData: Record<string, User> = {
   GAMER42: {
     username: "GAMER42",
     displayName: "The Gamer",
@@ -46,11 +47,11 @@ const userData = {
       },
     },
     recentGames: [
-      { game: "Pong", opponent: "PIXEL_MASTER", result: "WIN", score: "10-5", date: "04/20/2023" },
-      { game: "Dino", score: 1542, date: "04/18/2023" },
-      { game: "Pong", opponent: "RETRO_FAN", result: "LOSS", score: "7-10", date: "04/15/2023" },
-      { game: "Dino", score: 1245, date: "04/12/2023" },
-      { game: "Pong", opponent: "ARCADE_PRO", result: "WIN", score: "10-2", date: "04/10/2023" },
+      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.WIN, score: "10-5", date: "04/20/2023" },
+      { type: GameType.DINO, score: 1542, date: "04/18/2023", distance: 1000 },
+      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "7-10", date: "04/15/2023" },
+      { type: GameType.DINO, score: 1245, date: "04/12/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-2", date: "04/10/2023" },
     ],
     achievements: [
       {
@@ -59,7 +60,7 @@ const userData = {
         description: "Win your first game",
         icon: "trophy",
         date: "04/15/2022",
-        rarity: "common",
+        rarity: AchievementRarity.COMMON,
       },
       {
         id: "a2",
@@ -67,7 +68,7 @@ const userData = {
         description: "Win 10 games in a row",
         icon: "medal",
         date: "06/22/2022",
-        rarity: "rare",
+        rarity: AchievementRarity.RARE
       },
       {
         id: "a3",
@@ -75,7 +76,7 @@ const userData = {
         description: "Score 500+ points in Dino Run",
         icon: "flame",
         date: "08/03/2022",
-        rarity: "uncommon",
+        rarity: AchievementRarity.UNCOMMON,
       },
       {
         id: "a4",
@@ -83,7 +84,7 @@ const userData = {
         description: "Win 50 Pong games",
         icon: "award",
         date: "09/15/2022",
-        rarity: "epic",
+        rarity: AchievementRarity.EPIC,
       },
     ],
   },
@@ -118,11 +119,11 @@ const userData = {
       },
     },
     recentGames: [
-      { game: "Dino", score: 1876, date: "05/01/2023" },
-      { game: "Pong", opponent: "GAMER42", result: "WIN", score: "10-8", date: "04/28/2023" },
-      { game: "Pong", opponent: "RETRO_FAN", result: "WIN", score: "10-6", date: "04/25/2023" },
-      { game: "Dino", score: 1654, date: "04/22/2023" },
-      { game: "Pong", opponent: "ARCADE_PRO", result: "WIN", score: "10-4", date: "04/20/2023" },
+      { type: GameType.DINO, score: 1876, date: "05/01/2023", distance: 1000 },
+      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-8", date: "04/28/2023" },
+      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "10-6", date: "04/25/2023" },
+      { type: GameType.DINO, score: 1654, date: "04/22/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-4", date: "04/20/2023" },
     ],
     achievements: [
       {
@@ -131,7 +132,7 @@ const userData = {
         description: "Win your first game",
         icon: "trophy",
         date: "03/05/2022",
-        rarity: "common",
+        rarity: AchievementRarity.COMMON,
       },
       {
         id: "a2",
@@ -139,7 +140,7 @@ const userData = {
         description: "Win 10 games in a row",
         icon: "medal",
         date: "04/10/2022",
-        rarity: "rare",
+        rarity: AchievementRarity.RARE
       },
       {
         id: "a3",
@@ -147,7 +148,7 @@ const userData = {
         description: "Score 500+ points in Dino Run",
         icon: "flame",
         date: "05/15/2022",
-        rarity: "uncommon",
+        rarity: AchievementRarity.UNCOMMON,
       },
       {
         id: "a4",
@@ -155,7 +156,7 @@ const userData = {
         description: "Win 50 Pong games",
         icon: "award",
         date: "06/20/2022",
-        rarity: "epic",
+        rarity: AchievementRarity.EPIC,
       },
       {
         id: "a5",
@@ -163,7 +164,7 @@ const userData = {
         description: "Reach level 30",
         icon: "star",
         date: "10/10/2022",
-        rarity: "legendary",
+        rarity: AchievementRarity.LEGENDARY
       },
     ],
   },
@@ -198,11 +199,11 @@ const userData = {
       },
     },
     recentGames: [
-      { game: "Pong", opponent: "GAMER42", result: "WIN", score: "10-7", date: "04/15/2023" },
-      { game: "Dino", score: 1324, date: "04/12/2023" },
-      { game: "Pong", opponent: "PIXEL_MASTER", result: "LOSS", score: "6-10", date: "04/25/2023" },
-      { game: "Dino", score: 1102, date: "04/08/2023" },
-      { game: "Pong", opponent: "ARCADE_PRO", result: "LOSS", score: "5-10", date: "04/05/2023" },
+      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-7", date: "04/15/2023" },
+      { type: GameType.DINO, score: 1324, date: "04/12/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.LOSE, score: "6-10", date: "04/25/2023" },
+      { type: GameType.DINO, score: 1102, date: "04/08/2023", distance: 100 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.LOSE, score: "5-10", date: "04/05/2023" },
     ],
     achievements: [
       {
@@ -211,7 +212,7 @@ const userData = {
         description: "Win your first game",
         icon: "trophy",
         date: "06/20/2022",
-        rarity: "common",
+        rarity: AchievementRarity.COMMON
       },
       {
         id: "a3",
@@ -219,7 +220,7 @@ const userData = {
         description: "Score 500+ points in Dino Run",
         icon: "flame",
         date: "07/15/2022",
-        rarity: "uncommon",
+        rarity: AchievementRarity.UNCOMMON
       },
       {
         id: "a6",
@@ -227,7 +228,7 @@ const userData = {
         description: "Unlock 5 different skins",
         icon: "package",
         date: "09/10/2022",
-        rarity: "rare",
+        rarity: AchievementRarity.RARE
       },
     ],
   },
@@ -237,7 +238,7 @@ export default function UserProfilePage() {
   const params = useParams()
   const username = params.username as string
   // TODO: Remove this any when interface will be implemented
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isFriend, setIsFriend] = useState(false)
   const { toast } = useToast()
@@ -258,7 +259,7 @@ export default function UserProfilePage() {
     setIsFriend(true)
     toast({
       title: "Demande d'ami envoyée",
-      description: `Une demande d'ami a été envoyée à ${user.username}`,
+      description: user ? `Une demande d'ami a été envoyée à ${user.username}` : `Erreur lors de l'envoi de la demande d'ami`,
       duration: 3000,
     })
   }
@@ -266,7 +267,7 @@ export default function UserProfilePage() {
   const handleMessage = () => {
     toast({
       title: "Message",
-      description: `Ouverture de la conversation avec ${user.username}`,
+      description: user ? `Ouverture de la conversation avec ${user.username}` : `Erreur lors de l'ouverture de la conversation`,
       duration: 3000,
     })
   }
@@ -425,18 +426,18 @@ export default function UserProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {user.recentGames.slice(0, 3).map((game: any, index: number) => (
+                    {user.recentGames.slice(0, 3).map((game: Game, index: number) => (
                       <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
                         <div className="flex items-center space-x-2">
-                          {game.game === "Pong" ? (
+                          {game.type === GameType.PONG ? (
                             <>
                               <div
                                 className={`w-2 h-2 rounded-full ${
-                                  game.result === "WIN" ? "bg-game-green" : "bg-game-red"
+                                  game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
                                 }`}
                               ></div>
                               <p className="font-pixel text-xs">
-                                {game.game} VS. {game.opponent}
+                                {game.type.toUpperCase()} VS. {game.opponent}
                               </p>
                             </>
                           ) : (
@@ -455,15 +456,15 @@ export default function UserProfilePage() {
                               >
                                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                               </svg>
-                              <p className="font-pixel text-xs">{game.game}</p>
+                              <p className="font-pixel text-xs">{game.type.toUpperCase()}</p>
                             </>
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
-                          {game.game === "Pong" ? (
+                          {game.type === GameType.PONG ? (
                             <p
                               className={`font-pixel text-xs ${
-                                game.result === "WIN" ? "text-game-blue" : "text-game-red"
+                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
                               }`}
                             >
                               {game.score}
@@ -488,30 +489,30 @@ export default function UserProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {user.achievements.slice(0, 3).map((achievement: any) => (
+                    {user.achievements.slice(0, 3).map((achievement: Achievement) => (
                       <div key={achievement.id} className="flex items-center space-x-4 p-2 bg-muted rounded-md">
                         <div
                           className={`p-2 rounded-full ${
-                            achievement.rarity === "common"
+                            achievement.rarity === AchievementRarity.COMMON
                               ? "bg-gray-500/20"
-                              : achievement.rarity === "uncommon"
+                              : achievement.rarity === AchievementRarity.UNCOMMON
                                 ? "bg-game-green/20"
-                                : achievement.rarity === "rare"
+                                : achievement.rarity === AchievementRarity.RARE
                                   ? "bg-game-blue/20"
-                                  : achievement.rarity === "epic"
+                                  : achievement.rarity === AchievementRarity.EPIC
                                     ? "bg-game-orange/20"
                                     : "bg-game-red/20"
                           }`}
                         >
                           <Trophy
                             className={`h-4 w-4 ${
-                              achievement.rarity === "common"
+                              achievement.rarity === AchievementRarity.COMMON
                                 ? "text-gray-500"
-                                : achievement.rarity === "uncommon"
+                                : achievement.rarity === AchievementRarity.UNCOMMON
                                   ? "text-game-green"
-                                  : achievement.rarity === "rare"
+                                  : achievement.rarity === AchievementRarity.RARE
                                     ? "text-game-blue"
-                                    : achievement.rarity === "epic"
+                                    : achievement.rarity === AchievementRarity.EPIC
                                       ? "text-game-orange"
                                       : "text-game-red"
                             }`}
@@ -598,30 +599,30 @@ export default function UserProfilePage() {
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2">
-                  {user.achievements.map((achievement: any) => (
+                  {user.achievements.map((achievement: Achievement) => (
                     <div key={achievement.id} className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
                       <div
                         className={`p-2 rounded-full ${
-                          achievement.rarity === "common"
+                          achievement.rarity === AchievementRarity.COMMON
                             ? "bg-gray-500/20"
-                            : achievement.rarity === "uncommon"
+                            : achievement.rarity === AchievementRarity.UNCOMMON
                               ? "bg-game-green/20"
-                              : achievement.rarity === "rare"
+                              : achievement.rarity === AchievementRarity.RARE
                                 ? "bg-game-blue/20"
-                                : achievement.rarity === "epic"
+                                : achievement.rarity === AchievementRarity.EPIC
                                   ? "bg-game-orange/20"
                                   : "bg-game-red/20"
                         }`}
                       >
                         <Trophy
                           className={`h-6 w-6 ${
-                            achievement.rarity === "common"
+                            achievement.rarity === AchievementRarity.COMMON
                               ? "text-gray-500"
-                              : achievement.rarity === "uncommon"
+                              : achievement.rarity === AchievementRarity.UNCOMMON
                                 ? "text-game-green"
-                                : achievement.rarity === "rare"
+                                : achievement.rarity === AchievementRarity.RARE
                                   ? "text-game-blue"
-                                  : achievement.rarity === "epic"
+                                  : achievement.rarity === AchievementRarity.EPIC
                                     ? "text-game-orange"
                                     : "text-game-red"
                           }`}
@@ -652,13 +653,13 @@ export default function UserProfilePage() {
                 <CardContent>
                   <div className="space-y-3">
                     {user.recentGames
-                      .filter((game: any) => game.game === "Pong")
-                      .map((game: any, index: number) => (
+                      .filter((game: Game) => game.type === GameType.PONG)
+                      .map((game: PongGame, index: number) => (
                         <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
                           <div className="flex items-center space-x-2">
                             <div
                               className={`w-2 h-2 rounded-full ${
-                                game.result === "WIN" ? "bg-game-green" : "bg-game-red"
+                                game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
                               }`}
                             ></div>
                             <p className="font-pixel text-xs">VS. {game.opponent}</p>
@@ -666,7 +667,7 @@ export default function UserProfilePage() {
                           <div className="flex items-center space-x-2">
                             <p
                               className={`font-pixel text-xs ${
-                                game.result === "WIN" ? "text-game-blue" : "text-game-red"
+                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
                               }`}
                             >
                               {game.score}
@@ -689,8 +690,8 @@ export default function UserProfilePage() {
                 <CardContent>
                   <div className="space-y-3">
                     {user.recentGames
-                      .filter((game: any) => game.game === "Dino")
-                      .map((game: any, index: number) => (
+                      .filter((game: Game) => game.type === GameType.DINO)
+                      .map((game: DinoGame, index: number) => (
                         <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
                           <div className="flex items-center space-x-2">
                             <svg

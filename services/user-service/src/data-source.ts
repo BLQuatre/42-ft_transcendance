@@ -6,6 +6,8 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
+console.log(`chemin de merde ${process.env.DB_HOST}`);
+
 export const AppDataSource = new DataSource({
 	type: 'postgres',
 	host: process.env.DB_HOST || 'localhost',
@@ -14,7 +16,7 @@ export const AppDataSource = new DataSource({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_POSTGRES,
 	synchronize: true,
-	// dropSchema: true,
-	logging: process.env.DEBUG === 'true',
+	dropSchema: true,
+	// logging: process.env.DEBUG === 'true',
 	entities: [UserEntity],
 });

@@ -12,6 +12,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
 const app = fastify({
 	logger: process.env.DEBUG === 'true',
+	
 });
 
 // app.register(userRoutes);

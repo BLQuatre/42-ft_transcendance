@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { AppDataSource} from '../data-source';
 import { UserEntity } from "../entities/User";
 import { validateBody } from "../utils/validate";
@@ -6,6 +6,8 @@ import { CreateUserDto } from "../entities/CreateUserDto";
 import bcrypt from 'bcryptjs';
 import { removePassword, PublicUser } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
+import { UUID } from "crypto";
+import { loginWithEmail, loginWithName } from "../utils/interface";
 
 const User = AppDataSource.getRepository(UserEntity);
 
@@ -21,6 +23,7 @@ export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => 
 
 export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
+
 	try {
 		const user = await User.findOneBy({ id: id })
 		if (!user) {
@@ -36,7 +39,6 @@ export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
 			statusCode: 200,
 			user: {...publicUser}
 		});
-
 	} catch {
 		return reply.code(404).send({
 			message: 'unable to find user',
@@ -55,7 +57,6 @@ export const confirmPassword = async(req:FastifyRequest<{Body: {password: string
 			statusCode: 401
 		});
 	}
-
 	const user = await User.findOneBy({ id: id })
 	if (!user) {
 		return reply.code(404).send({
@@ -63,7 +64,6 @@ export const confirmPassword = async(req:FastifyRequest<{Body: {password: string
 			statusCode: 404
 		});
 	}
-
 	const verif = await bcrypt.compare(req.body.password, user.password);
 	if (!verif) {
 		return reply.code(401).send({
@@ -173,4 +173,62 @@ export const delUser = async (req: FastifyRequest, reply: FastifyReply) => {
 		message: 'User deleted',
 		statusCode: 200
 	});
+}
+
+export const badRoute = async (req: FastifyRequest, reply: FastifyReply) => {
+	return reply.code(404).send({
+		message: "unknow route",
+		statusCode: 404
+	});
+}
+
+export const createUser = async(req: FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
+	const user = req.body as CreateUserDto;
+	const isNameAlreadyUsed = await User.findOneBy({name: user.name});
+	if (isNameAlreadyUsed)
+		return reply.code(401).send({message: 'Name or email already used', statosCode: 401});
+	const newUser = await User.save(user);
+
+	if (!newUser){
+		return reply.code(500).send({
+			message: "Error internal server",
+			statusCode: 500
+		})
+	}
+	return reply.code(201).send({
+		message: "User created",
+		statusCode: 201,
+		newUser
+
+	})
+}
+
+export const logWithEmail = async(req: FastifyRequest<{Body: loginWithEmail}>, reply: FastifyReply) => {
+	const user = await User.findOneBy({ email: req.body.email})
+	if (!user) {
+		return reply.code(404).send({
+			message: "User not found",
+			statusCode: 404
+		})
+	}
+	return reply.code(200).send({
+		message: 'User Found',
+		statusCode: 200,
+		user
+	})
+}
+
+export const logWithName = async (req: FastifyRequest<{Body: loginWithName}>, reply: FastifyReply) => {
+	const user = await User.findOneBy({ name: req.body.name})
+	if (!user) {
+		return reply.code(404).send({
+			message:"User not found",
+			statusCode: 404
+		})
+	}
+	return reply.code(200).send({
+		message: "User Found",
+		statusCode: 200,
+		user
+	})
 }

@@ -35,7 +35,8 @@ export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply
 			statusCode: 500
 		})
 	})
-	if (result){
+
+	if (result) {
 		const accessToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
 		const refreshToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_REFRESH, { expiresIn: '7D' });
 		const publicUser: PublicUser = removePassword(result.data.newUser);

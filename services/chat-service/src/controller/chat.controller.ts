@@ -50,10 +50,10 @@ export class ChatController {
 				}
 			})
 		} catch (err) {
-				connection.send(JSON.stringify({
-					type: 'ERROR',
-					message: 'user not found'
-				}))
+			connection.send(JSON.stringify({
+				type: 'ERROR',
+				message: 'user not found'
+			}))
 		}
 	}
 
@@ -62,12 +62,13 @@ export class ChatController {
 		const recId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${receiverId}`)
 		.catch(() => {
 			this.sendToUser(senderId, {
+
 				type: 'ERROR',
 				data: { message: 'undefined user'}
 			})
 		})
-		if (recId){
 
+		if (recId) {
 			this.sendToUser(senderId, {
 				type: 'MESSAGE_SENT',
 				data: message,

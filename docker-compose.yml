@@ -12,6 +12,12 @@ services:
     networks:
       - transcendance
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
   gateway:
     container_name: gateway
@@ -23,7 +29,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - transcendance
     restart: always
@@ -36,7 +43,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - gateway
+      postgres:
+        condition: service_healthy
     networks:
       - transcendance
     restart: always
@@ -49,7 +57,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - gateway
+      postgres:
+        condition: service_healthy
     networks:
       - transcendance
     restart: always
@@ -62,7 +71,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - gateway
+      postgres:
+        condition: service_healthy
     networks:
       - transcendance
     restart: always
@@ -75,13 +85,11 @@ services:
     env_file:
       - .env
     depends_on:
-      - gateway
+      postgres:
+        condition: service_healthy
     networks:
       - transcendance
     restart: always
-
-
-
 
   # nginx:
   #   container_name: nginx

@@ -19,7 +19,7 @@ export default async function HomePage({
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-12 md:py-24 lg:py-32 bg-game-dark">
+        {/* <section className="py-12 md:py-24 lg:py-32 bg-game-dark">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
@@ -30,14 +30,9 @@ export default async function HomePage({
                   CHALLENGE YOUR FRIENDS IN CLASSIC GAMES {dict.products.cart}
                 </p>
               </div>
-              <div className="space-x-4">
-                <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
-                  <Link href="/games">PLAY NOW</Link>
-                </Button>
-              </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Games Section */}
         <section className="py-12 md:py-24 lg:py-32">
@@ -78,7 +73,7 @@ export default async function HomePage({
               {/* Dino Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-				<Link href="/games">
+				<Link href="/games/dino">
                   <Image
                     src="https://archive.org/download/dino-run/dino-run.jpg"
                     alt="Dino Game"

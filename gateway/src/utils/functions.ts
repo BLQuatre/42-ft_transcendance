@@ -1,5 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export function isAxiosResponse(res: AxiosResponse | undefined): res is AxiosResponse{
 	return res !== undefined
@@ -7,7 +11,7 @@ export function isAxiosResponse(res: AxiosResponse | undefined): res is AxiosRes
 
 export const authPreHandler = async (request: FastifyRequest, reply: FastifyReply) => {
 	try {
-		const response = await axios.get('http://localhost:3002/auth/access', {
+		const response = await axios.get(`http://${process.env.AUTH_HOST}:${process.env.AUTH_PORT}/auth/access`, {
 			headers: {
 				Authorization: request.headers.authorization || '',
 			},

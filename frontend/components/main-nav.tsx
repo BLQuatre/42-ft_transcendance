@@ -9,13 +9,14 @@ import { User, Users } from "lucide-react"
 export function MainNav() {
   const pathname = usePathname()
 
-  const isLoggedIn = pathname !== "/login" && pathname !== "/register"
+//   const isLoggedIn = pathname !== "/login" && pathname !== "/register"
+	const isLoggedIn = true
 
   return (
     <div className="flex justify-between items-center w-full px-4 py-3 bg-game-dark border-b-4 border-game-blue">
       <Link href="/" className="flex items-center space-x-2">
         <span className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
-          FT_TRANSCENDANCE
+          ft_transcendance
         </span>
       </Link>
 

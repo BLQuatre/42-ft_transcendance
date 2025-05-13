@@ -23,7 +23,7 @@ export default function HomePage() {
             </div>
 
             {/* Pong Game Feature */}
-            <div className="mb-20">
+            <div className="mb-20" id="pong">
               <div className="rounded-xl pixel-border bg-card overflow-hidden">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="p-8 md:p-10 flex flex-col justify-center">
@@ -94,7 +94,7 @@ export default function HomePage() {
             </div>
 
             {/* Dino Game Feature */}
-            <div>
+            <div id="dino">
               <div className="rounded-xl pixel-border bg-card overflow-hidden">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="order-2 md:order-1 aspect-auto overflow-hidden bg-black/5">

@@ -93,11 +93,42 @@
 	},
 
 	"footer": {
-		"cgu": "CGU",
+		"terms": "Terms",
 		"privacy": "Privacy"
 	},
 
 	"common": {
-		"play": "PLAY"
+		"play": "PLAY",
+		"back": "Back",
+		"loading": "Loading...",
+		"total": "Total"
+	},
+
+	"profile": {
+		"notFound": "User %user% not found",
+		"memberSince": "Member since %date%",
+		"addFriend": "Add Friend",
+		"sendMessage": "Send Message",
+
+		"sections": {
+			"overview": {
+				"title": "Overview",
+
+				"recentGames": "Recent Games"
+			},
+			"stats": {
+				"title": "Statistics",
+				"gamesPlayed": "Games Played",
+				"winRate": "Win Rate",
+				"bestScore": "Best Score",
+				"wins": "Wins",
+				"losses": "Losses",
+				"averageScore": "Average Score",
+				"totalDistance": "Total Distance"
+			},
+			"history": {
+				"title": "Game History"
+			}
+		}
 	}
 }

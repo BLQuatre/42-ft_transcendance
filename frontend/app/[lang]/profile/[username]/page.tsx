@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/types"
 import { useDictionary } from "@/hooks/use-dictionnary"
+import Loading from "@/components/loading"
 
 // Sample user data - in a real app, this would come from an API
 const userData: Record<string, User> = {
@@ -164,13 +165,7 @@ export default function UserProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <MainNav />
-        <div className="flex-1 container py-8 px-4 md:px-6 flex items-center justify-center">
-          <div className="font-pixel text-xl animate-pulse">CHARGEMENT...</div>
-        </div>
-        <Footer dict={dict} />
-      </div>
+      <Loading dict={dict} />
     )
   }
 
@@ -179,12 +174,9 @@ export default function UserProfilePage() {
       <div className="min-h-screen bg-background flex flex-col">
         <MainNav />
         <div className="flex-1 container py-8 px-4 md:px-6 flex flex-col items-center justify-center">
-          <h1 className="font-pixel text-2xl mb-4">UTILISATEUR NON TROUVÉ</h1>
-          <p className="font-pixel text-sm text-muted-foreground mb-6">
-            {"L'utilisateur " + username + " n'existe pas ou a été supprimé."}
-          </p>
+          <h1 className="font-pixel text-2xl mb-4 uppercase">{dict.profile.notFound.replace("%user%", username)}</h1>
           <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
-            <Link href="/">{"RETOUR À L'ACCUEIL"}</Link>
+            <Link href="/" className="uppercase">{dict.common.back}</Link>
           </Button>
         </div>
         <Footer dict={dict}/>
@@ -210,20 +202,20 @@ export default function UserProfilePage() {
             <div className="flex-1 text-center md:text-left">
               <h1 className="font-pixel text-2xl md:text-3xl">{user.displayName}</h1>
               <p className="font-pixel text-sm text-game-blue">@{user.username}</p>
-              <p className="font-pixel text-xs text-muted-foreground mt-1">Membre depuis {user.joinDate}</p>
+              <p className="font-pixel text-xs text-muted-foreground mt-1">{dict.profile.memberSince.replace("%date%", user.joinDate)}</p>
               <p className="mt-4 text-sm">{user.bio}</p>
             </div>
 
             <div className="flex flex-col gap-2 mt-4 md:mt-0">
               {!isFriend ? (
-                <Button className="font-pixel bg-game-blue hover:bg-game-blue/90" onClick={handleAddFriend}>
+                <Button className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase" onClick={handleAddFriend}>
                   <UserPlus className="h-4 w-4 mr-2" />
-                  AJOUTER EN AMI
+                  {dict.profile.addFriend}
                 </Button>
               ) : (
-                <Button className="font-pixel bg-game-green hover:bg-game-green/90" onClick={handleMessage}>
+                <Button className="font-pixel bg-game-green hover:bg-game-green/90 uppercase" onClick={handleMessage}>
                   <MessageSquare className="h-4 w-4 mr-2" />
-                  ENVOYER UN MESSAGE
+                  {dict.profile.sendMessage}
                 </Button>
               )}
             </div>
@@ -233,9 +225,9 @@ export default function UserProfilePage() {
         {/* Tabs for different sections */}
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-            <TabsTrigger value="overview">APERÇU</TabsTrigger>
-            <TabsTrigger value="stats">STATISTIQUES</TabsTrigger>
-            <TabsTrigger value="history">HISTORIQUE</TabsTrigger>
+            <TabsTrigger className="uppercase" value="overview">{dict.profile.sections.overview.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="stats">{dict.profile.sections.stats.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="history">{dict.profile.sections.history.title}</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -243,32 +235,34 @@ export default function UserProfilePage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">PARTIES JOUÉES</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.gamesPlayed}</CardTitle>
                   <GamepadIcon className="text-game-blue h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.totalGames}</div>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.common.total}</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">TAUX DE VICTOIRE</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.winRate}</CardTitle>
                   <Trophy className="text-game-orange h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.winRate}</div>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.pong.title}</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">MEILLEUR SCORE</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.bestScore}</CardTitle>
                   <BarChart3 className="text-game-red h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.highScore}</div>
-                  <p className="font-pixel text-xs text-muted-foreground">DINO RUN</p>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.dino.title}</p>
                 </CardContent>
               </Card>
             </div>
@@ -276,10 +270,7 @@ export default function UserProfilePage() {
             <div className="grid gap-4 md:grid-cols-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">DERNIÈRES PARTIES</CardTitle>
-                  <CardDescription className="font-pixel text-xs">
-                    LES PARTIES RÉCENTES DE {user.username}
-                  </CardDescription>
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.overview.recentGames}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -343,25 +334,24 @@ export default function UserProfilePage() {
           <TabsContent value="stats" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="font-pixel text-sm">STATISTIQUES PONG</CardTitle>
-                <CardDescription className="font-pixel text-xs">PERFORMANCE DE {user.username} EN PONG</CardDescription>
+                <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">PARTIES JOUÉES</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.played}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">VICTOIRES</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.wins}</p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.wins}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">DÉFAITES</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.losses}</p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.losses}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">TAUX DE VICTOIRE</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.winRate}</p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.winRate}</p>
                   </div>
                 </div>
@@ -370,27 +360,24 @@ export default function UserProfilePage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="font-pixel text-sm">STATISTIQUES DINO RUN</CardTitle>
-                <CardDescription className="font-pixel text-xs">
-                  PERFORMANCE DE {user.username} EN DINO RUN
-                </CardDescription>
+                <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">PARTIES JOUÉES</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.played}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">MEILLEUR SCORE</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.bestScore}</p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.highScore}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">SCORE MOYEN</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.averageScore}</p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.avgScore}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">DISTANCE TOTALE</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.totalDistance}</p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.totalDistance}</p>
                   </div>
                 </div>
@@ -403,10 +390,7 @@ export default function UserProfilePage() {
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">HISTORIQUE PONG</CardTitle>
-                  <CardDescription className="font-pixel text-xs">
-                    PARTIES RÉCENTES DE PONG DE {user.username}
-                  </CardDescription>
+                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -440,10 +424,7 @@ export default function UserProfilePage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">HISTORIQUE DINO RUN</CardTitle>
-                  <CardDescription className="font-pixel text-xs">
-                    PARTIES RÉCENTES DE DINO RUN DE {user.username}
-                  </CardDescription>
+                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">

@@ -71,6 +71,7 @@ function startGame() {
 	if (gameInterval)
 		return ;
 
+	game.autoUpdate() ;
 	console.log('Game started') ;
 	gameInterval = setInterval(() => {
 		broadcastGame() ;

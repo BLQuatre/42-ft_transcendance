@@ -3,23 +3,20 @@ import { Obstacle } from './obstacle' ;
 import * as CONST from './constants' ;
 
 export class Game {
-	score: number ; // Ramping up constantly, attributed to a player when he "loses"
-	dinos: { player: Player, score: number }[] ;
-	obstacles: Obstacle[] ;
+	score:number = 0 ; // Ramping up constantly, attributed to a player when he "loses"
+	dinos: { player: Player, score: number }[] = [] ;
+	obstacles: Obstacle[] = [] ;
 	
-	private frameCount = 0 ;
-	private lastWasClose = false ;
+	private frameCount:number = 0 ;
+	private isUpdating:boolean = false ;
+	private lastWasClose:boolean = false ;
 
-	constructor() {
-		this.score = 0 ;
-		this.dinos = [] ;
-		this.obstacles = [] ;
 
-		this.autoUpdate() ;
-	}
-	
-	// should start updating upon request instead of constructor
-	private autoUpdate() {
+	autoUpdate() {
+		if (this.isUpdating)
+			return ;
+		this.isUpdating = true ;
+
 		const interval = 1000 / CONST.FPS ;
 	
 		setInterval(() => {

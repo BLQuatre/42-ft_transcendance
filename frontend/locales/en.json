@@ -3,6 +3,7 @@
 	"home": {
 		"description": "Challenge your friends in classic games",
 		"play": "Play Now",
+		"gamerules": "Game Rules",
 		"games": "Featured Games",
 
 		"features": {

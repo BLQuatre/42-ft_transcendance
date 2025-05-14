@@ -53,13 +53,8 @@ export default async function HomePage({
                     <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 min-w-28">
                       <Link href="/games/pong" className="uppercase">{dict.common.play} {dict.games.pong.title}</Link>
                     </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue"
-                    >
-                      <Link href="/games#pong">GAME RULES &gt;</Link>
+                    <Button asChild variant="outline" size="sm" className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue">
+                      <Link className="uppercase" href="/games#pong">{dict.home.gamerules} &gt;</Link>
                     </Button>
                   </div>
                 </div>
@@ -87,13 +82,8 @@ export default async function HomePage({
                     <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 min-w-28">
                       <Link href="/games/dino" className="uppercase">{dict.common.play} {dict.games.dino.title}</Link>
                     </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange"
-                    >
-                      <Link href="/games#dino">GAME RULES &gt;</Link>
+                    <Button asChild variant="outline" size="sm" className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange">
+                      <Link className="uppercase" href="/games#dino">{dict.home.gamerules} &gt;</Link>
                     </Button>
                   </div>
                 </div>

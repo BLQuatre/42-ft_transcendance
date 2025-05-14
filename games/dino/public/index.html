@@ -129,10 +129,9 @@
 				i++ ;
 			}) ;
 	
-			// // Draw scores
-			// ctx.font = '24px Arial';
-			// ctx.fillText(`${gameState.left_team.score}`, 300, 40);
-			// ctx.fillText(`${gameState.right_team.score}`, 480, 40);
+			// Draw scores
+			ctx.font = '24px Arial' ;
+			ctx.fillText(`${gameState.score}`, 390, 20) ;
 
 			frame-- ;
 			if (frame < 0) frame = FRAME_VAL ;

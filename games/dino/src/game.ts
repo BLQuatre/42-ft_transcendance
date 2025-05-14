@@ -87,7 +87,8 @@ export class Game {
 				x: obstacle.get_x().from,
 				y: obstacle.get_y().to,
 				type: obstacle.get_type()
-			}))
+			})),
+			score: this.score
 		}
 	}
 

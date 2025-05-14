@@ -54,6 +54,10 @@ export const PTERO_HEIGHT		= 48 ;
 		const dinoImage = new Image() ;
 		dinoImage.src = 'img/dino_standing.png' ;
 		
+		const DINO_LEAN_WIDTH = 64 ; const DINO_LEAN_HEIGHT = 48 ;
+		const dinoLeanImage = new Image() ;
+		dinoLeanImage.src = 'img/dino_leaning1.png' ;
+		
 		const CACTUS_WIDTH = 32 ; const CACTUS_HEIGHT = 48 ;
 		const cactusImage = new Image() ;
 		cactusImage.src = 'img/cactus.png' ;
@@ -72,7 +76,7 @@ export const PTERO_HEIGHT		= 48 ;
 		
 		const keysPressed = {
 			jump: false,
-			fall: false
+			down: false
 		} ;
 	
 		socket.addEventListener('open', () => {
@@ -103,9 +107,10 @@ export const PTERO_HEIGHT		= 48 ;
 			gameState.dinos.forEach(dino => {
 				ctx.fillRect(20, (offset * i), (canvas.width - 40), 2) ;
 				
-				if (dinoImage.complete) {
+				if (dino.lean && dinoLeanImage.complete)
+					ctx.drawImage(dinoLeanImage, 40, ((offset * i) - DINO_LEAN_HEIGHT - dino.y), DINO_LEAN_WIDTH, DINO_LEAN_HEIGHT) ;
+				else if (dinoImage.complete)
 					ctx.drawImage(dinoImage, 40, ((offset * i) - DINO_HEIGHT - dino.y), DINO_WIDTH, DINO_HEIGHT) ;
-				}
 
 				gameState.obstacles.forEach(obstacle => {
 					if (obstacle.type === TYPE_CACTUS && cactusImage.complete)
@@ -133,7 +138,8 @@ export const PTERO_HEIGHT		= 48 ;
 	
 			if (keysPressed.jump) socket.send(JSON.stringify({ type: 'jump', playerId })) ;
 			
-			if (keysPressed.fall) socket.send(JSON.stringify({ type: 'fall', playerId })) ;
+			if (!keysPressed.down) socket.send(JSON.stringify({ type: 'up', playerId })) ;
+			if (keysPressed.down) socket.send(JSON.stringify({ type: 'down', playerId })) ;
 		}
 	
 		// Game loop
@@ -148,12 +154,12 @@ export const PTERO_HEIGHT		= 48 ;
 		// Keyboard controls (no delay)
 		document.addEventListener('keydown', e => {
 			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = true ;
-			if (e.key === 'ArrowDown') keysPressed.fall = true ;
+			if (e.key === 'ArrowDown') keysPressed.down = true ;
 		}) ;
 	
 		document.addEventListener('keyup', e => {
 			if (e.key === 'ArrowUp' || e.key === ' ') keysPressed.jump = false ;
-			if (e.key === 'ArrowDown') keysPressed.fall = false ;
+			if (e.key === 'ArrowDown') keysPressed.down = false ;
 		}) ;
 	</script>
 </body>

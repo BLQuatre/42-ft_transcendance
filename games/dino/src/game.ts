@@ -79,7 +79,8 @@ export class Game {
 	getState() {
 		return {
 			dinos: this.dinos.map(dino => ({
-				y: dino.player.get_y_pos(),
+				y: dino.player.get_y().from,
+				lean: dino.player.get_leaning(),
 				score: dino.score
 			})),
 			obstacles: this.obstacles.map(obstacle => ({

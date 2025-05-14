@@ -10,6 +10,7 @@ export const JUMP_SPEED			= 10 ;
 
 export const DINO_WIDTH			= 48 ;
 export const DINO_HEIGHT		= 48 ;
+export const DINO_POS			= 40 ; // how far from the left the dino is
 
 
 // Obstacles
@@ -32,7 +33,7 @@ export const GROUP_HEIGHT		= 48 ;
 
 export const PTERO_WIDTH		= 48 ;
 export const PTERO_HEIGHT		= 48 ;
-export const PTERO_POS			= 32 ;
+export const PTERO_POS			= 32 ; // how high in the sky they can fly (not that much)
 
 
 // Game

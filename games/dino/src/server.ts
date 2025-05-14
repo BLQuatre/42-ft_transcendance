@@ -3,7 +3,7 @@ import { WebSocketServer } from 'ws' ;
 
 import { Game } from './game' ;
 import { Player } from './player';
-
+import * as CONST from './constants' ;
 
 const fastify = Fastify() ;
 
@@ -11,8 +11,6 @@ let gameInterval: NodeJS.Timeout | null = null ;
 
 let game = new Game() ;
 let id = 0 ;
-
-const FPS = 60 ;
 
 fastify.get('/', async (request, reply) => {
 	return { status: 'Pong server is running' };
@@ -72,7 +70,7 @@ function startGame() {
 	console.log('Game started') ;
 	gameInterval = setInterval(() => {
 		broadcastGame() ;
-	}, 1000 / FPS) ;
+	}, 1000 / CONST.FPS) ;
 }
 
 // TODO: change the paused state

@@ -1,9 +1,5 @@
 import { WebSocket } from 'ws';
-
-const FPS = 30 ;
-const MAX_Y = 75 ;
-const FAST_ZONE_Y = 60 ;
-const JUMP_SPEED = 10 ;
+import * as CONST from './constants' ;
 
 export class Player {
 	private id: number ;
@@ -26,17 +22,17 @@ export class Player {
 	}
 
 	private autoUpdate() {
-		const interval = 1000 / FPS ;
+		const interval = 1000 / CONST.FPS ;
 		
 		setInterval(() => {
-			if (this.in_jump && this.y_pos < MAX_Y)
-				this.y_pos += this.y_pos < FAST_ZONE_Y ? JUMP_SPEED : JUMP_SPEED / 3 ;
-			else if (this.in_jump && this.y_pos >= MAX_Y)
+			if (this.in_jump && this.y_pos < CONST.JUMP_MAX_Y)
+				this.y_pos += this.y_pos < CONST.FAST_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+			else if (this.in_jump && this.y_pos >= CONST.JUMP_MAX_Y)
 				this.in_jump = false ;
 			else if (!this.in_jump && this.y_pos > 0)
-				this.y_pos -= this.y_pos < FAST_ZONE_Y ? JUMP_SPEED : JUMP_SPEED / 3 ;
+				this.y_pos -= this.y_pos < CONST.FAST_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
 
-			if (this.y_pos > MAX_Y)	this.y_pos = MAX_Y ;
+			if (this.y_pos > CONST.JUMP_MAX_Y)	this.y_pos = CONST.JUMP_MAX_Y ;
 			if (this.y_pos < 0)		this.y_pos = 0 ;
 		}, interval) ;
 	}
@@ -53,7 +49,7 @@ export class Player {
 	fall() {
 		this.in_jump = false ;
 
-		this.y_pos -= JUMP_SPEED / 3 ;
+		this.y_pos -= CONST.JUMP_SPEED / 3 ;
 		if (this.y_pos < 0) this.y_pos = 0 ;
 	}
 }

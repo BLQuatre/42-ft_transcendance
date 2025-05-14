@@ -1,7 +1,4 @@
-const FPS = 30 ;
-const SCREEN_WIDTH = 800 ;
-const OBSTCL_BASE_SPD = 5 ;
-const SPD_SCALE_DIV = 30 ;
+import * as CONST from './constants' ;
 
 export class Obstacle {
 	private x_pos: number ;
@@ -11,20 +8,20 @@ export class Obstacle {
 
 
 	constructor(score: number) {
-		this.x_pos = SCREEN_WIDTH ;
+		this.x_pos = CONST.SCREEN_WIDTH ;
 		this.score = score ;
 
 		this.autoUpdate() ;
 	}
 
 	private autoUpdate() {
-		const interval = 1000 / FPS ;
+		const interval = 1000 / CONST.FPS ;
 	
 		setInterval(() => {
 			if (this.frameCount === 0) this.score++ ;
 			this.frameCount = ((this.frameCount + 1) % 3) ;
 	
-			this.x_pos -= OBSTCL_BASE_SPD + OBSTCL_BASE_SPD * Math.log(1.3 + (this.score / SPD_SCALE_DIV)) ;
+			this.x_pos -= CONST.OBSTCL_BASE_SPD + CONST.OBSTCL_BASE_SPD * Math.log(1.3 + (this.score / CONST.SPD_SCALE_DIV)) ;
 		}, interval) ;
 	}
 

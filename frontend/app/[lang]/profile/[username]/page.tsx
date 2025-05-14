@@ -476,8 +476,6 @@ export default function UserProfilePage() {
           </TabsContent>
         </Tabs>
       </div>
-
-      <Footer />
     </div>
   )
 }

@@ -514,13 +514,12 @@ export default function DashboardPage() {
           <TabsContent value="settings" className="space-y-4">
             <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-                <TabsTrigger value="profile">PROFILE</TabsTrigger>
                 <TabsTrigger value="account">ACCOUNT</TabsTrigger>
                 <TabsTrigger value="security">SECURITY</TabsTrigger>
                 <TabsTrigger value="appearance">APPEARANCE</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="profile" className="space-y-4">
+              <TabsContent value="account" className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-pixel text-sm">PROFILE</CardTitle>
@@ -586,38 +585,6 @@ export default function DashboardPage() {
                         disabled={isLoading}
                       >
                         {isLoading ? "SAVING..." : "SAVE CHANGES"}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="account" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">ACCOUNT INFORMATION</CardTitle>
-                    <CardDescription className="font-pixel text-xs">UPDATE YOUR ACCOUNT DETAILS</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="font-pixel text-xs">
-                          EMAIL
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          defaultValue="player@example.com"
-                          className="font-pixel text-sm h-10 bg-muted"
-                        />
-                      </div>
-
-                      <Button
-                        type="submit"
-                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? "UPDATING..." : "UPDATE EMAIL"}
                       </Button>
                     </form>
 
@@ -768,7 +735,6 @@ export default function DashboardPage() {
           </TabsContent>
         </Tabs>
       </div>
-      <Footer />
     </div>
   )
 }

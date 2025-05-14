@@ -87,6 +87,16 @@
 	},
 
 	"shop": {
+		"title": "Shop",
+		"description": "Customize your gaming experience",
+		"balance": "Your Balance",
+
+		"status": {
+			"buy": "Buy",
+			"select": "Select",
+			"selected": "Selected"
+		},
+
 		"categories": {
 			"characters": "Characters Skins",
 			"maps": "Map Themes"

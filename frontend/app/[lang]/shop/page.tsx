@@ -10,17 +10,18 @@ import Image from "next/image"
 import { useToast } from "@/components/ui/use-toast"
 import { Footer } from "@/components/footer"
 import { useDictionary } from "@/hooks/use-dictionnary"
+import { GameType, ItemStatus, ItemType, MapItem, SkinItem } from "@/types/types"
+import { Item } from "@radix-ui/react-dropdown-menu"
 
 // Sample shop items
-const characterSkins = [
+const characterSkins: SkinItem[] = [
   {
     id: "cs1",
     name: "CLASSIC PIXEL",
     description: "THE ORIGINAL RETRO LOOK",
     price: 0,
     image: "/placeholder.svg?height=100&width=100",
-    owned: true,
-    equipped: true,
+    status: ItemStatus.SELECTED
   },
   {
     id: "cs2",
@@ -28,8 +29,7 @@ const characterSkins = [
     description: "GLOW IN THE DIGITAL DARK",
     price: 500,
     image: "/placeholder.svg?height=100&width=100",
-    owned: false,
-    equipped: false,
+    status: ItemStatus.BUY
   },
   {
     id: "cs3",
@@ -37,8 +37,7 @@ const characterSkins = [
     description: "MECHANICAL PRECISION",
     price: 750,
     image: "/placeholder.svg?height=100&width=100",
-    owned: true,
-    equipped: false,
+    status: ItemStatus.BOUGHT
   },
   {
     id: "cs4",
@@ -46,21 +45,19 @@ const characterSkins = [
     description: "SEMI-TRANSPARENT STEALTH",
     price: 1000,
     image: "/placeholder.svg?height=100&width=100",
-    owned: false,
-    equipped: false,
+    status: ItemStatus.BUY
   },
 ]
 
-const mapSkins = [
+const mapSkins: MapItem[] = [
   {
     id: "ms1",
     name: "CLASSIC ARENA",
     description: "THE ORIGINAL BATTLEFIELD",
     price: 0,
     image: "/placeholder.svg?height=100&width=200",
-    owned: true,
-    equipped: true,
-    game: "pong",
+    status: ItemStatus.SELECTED,
+    game: GameType.PONG,
   },
   {
     id: "ms2",
@@ -68,9 +65,8 @@ const mapSkins = [
     description: "PLAY AMONG THE STARS",
     price: 600,
     image: "/placeholder.svg?height=100&width=200",
-    owned: false,
-    equipped: false,
-    game: "pong",
+    status: ItemStatus.BUY,
+    game: GameType.PONG,
   },
   {
     id: "ms3",
@@ -78,9 +74,8 @@ const mapSkins = [
     description: "CLASSIC DINO ENVIRONMENT",
     price: 0,
     image: "/placeholder.svg?height=100&width=200",
-    owned: true,
-    equipped: true,
-    game: "dino",
+    status: ItemStatus.SELECTED,
+    game: GameType.DINO,
   },
   {
     id: "ms4",
@@ -88,9 +83,8 @@ const mapSkins = [
     description: "RUN THROUGH THE DIGITAL METROPOLIS",
     price: 800,
     image: "/placeholder.svg?height=100&width=200",
-    owned: false,
-    equipped: false,
-    game: "dino",
+    status: ItemStatus.BUY,
+    game: GameType.DINO,
   },
 ]
 
@@ -105,16 +99,16 @@ export default function ShopPage() {
     return null
   }
 
-  const buySkin = (id: string, type: "character" | "map") => {
-    const items = type === "character" ? playerSkins : gameMaps
-    const setItems = type === "character" ? setPlayerSkins : setGameMaps
+  const buySkin = (id: string, type: ItemType) => {
+    const items = type === ItemType.SKIN ? playerSkins : gameMaps
+    const setItems = type === ItemType.SKIN ? setPlayerSkins : setGameMaps
 
     const item = items.find((item) => item.id === id)
     if (!item) return
 
     if (coins >= item.price) {
       setCoins((prev) => prev - item.price)
-      setItems(items.map((i) => (i.id === id ? { ...i, owned: true } : i)))
+      setItems(items.map((i) => (i.id === id ? { ...i, status: ItemStatus.BOUGHT } : i)))
 
       toast({
         title: "Purchase Successful",
@@ -131,27 +125,28 @@ export default function ShopPage() {
     }
   }
 
-  const equipSkin = (id: string, type: "character" | "map") => {
-    const items = type === "character" ? playerSkins : gameMaps
-    const setItems = type === "character" ? setPlayerSkins : setGameMaps
+  const equipSkin = (id: string, type: ItemType) => {
+    const items = type === ItemType.SKIN ? playerSkins : gameMaps
+    const setItems = type === ItemType.SKIN ? setPlayerSkins : setGameMaps
 
-    const game = type === "map" ? items.find((item) => item.id === id)?.game : null
+    const game = type === ItemType.MAP ? (items.find((item) => item.id === id) as (MapItem | undefined))?.game : null
 
     setItems(
       items.map((i) => {
-        if (type === "map" && game && i.game !== game) {
+        if ((type === ItemType.MAP && game && i.game !== game) || i.status === ItemStatus.BUY) {
           return i
         }
         return {
           ...i,
-          equipped: i.id === id,
+
+          status: i.id === id ? ItemStatus.SELECTED : ItemStatus.BOUGHT,
         }
       }),
     )
 
     toast({
-      title: "Skin Equipped",
-      description: `You've equipped a new skin!`,
+      title: "Skin selected",
+      description: `You've selected a new skin!`,
       duration: 3000,
     })
   }
@@ -163,12 +158,12 @@ export default function ShopPage() {
       <div className="flex-1 container py-8 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="font-pixel text-2xl md:text-3xl mb-2">GAME SHOP</h1>
-            <p className="font-pixel text-xs text-muted-foreground">CUSTOMIZE YOUR GAMING EXPERIENCE</p>
+            <h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">{dict.shop.title}</h1>
+            <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.shop.description}</p>
           </div>
 
           <div className="flex items-center space-x-2 bg-muted p-2 rounded-md">
-            <span className="font-pixel text-sm">YOUR BALANCE:</span>
+            <span className="font-pixel text-sm uppercase">{dict.shop.balance}:</span>
             <span className="font-pixel text-lg text-game-orange">{coins}</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -198,11 +193,10 @@ export default function ShopPage() {
           <TabsContent value="characters" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {playerSkins.map((skin) => (
-                <Card key={skin.id} className={`overflow-hidden ${skin.equipped ? "border-game-blue" : ""}`}>
+                <Card key={skin.id} className={`overflow-hidden ${skin.status == ItemStatus.SELECTED ? "border-game-blue" : ""}`}>
                   <CardHeader className="p-4">
                     <div className="flex justify-between items-start">
                       <CardTitle className="font-pixel text-sm">{skin.name}</CardTitle>
-                      {skin.equipped && <Badge className="font-pixel text-[10px] bg-game-blue">EQUIPPED</Badge>}
                     </div>
                     <CardDescription className="font-pixel text-xs">{skin.description}</CardDescription>
                   </CardHeader>
@@ -212,7 +206,7 @@ export default function ShopPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="p-4 flex justify-between">
-                    {!skin.owned ? (
+                    {skin.status === ItemStatus.BUY ? (
                       <>
                         <div className="flex items-center">
                           <span className="font-pixel text-sm text-game-orange mr-1">{skin.price}</span>
@@ -236,21 +230,26 @@ export default function ShopPage() {
                           </svg>
                         </div>
                         <Button
-                          className="font-pixel text-xs bg-game-blue hover:bg-game-blue/90"
-                          onClick={() => buySkin(skin.id, "character")}
+                          className="font-pixel text-xs bg-game-blue hover:bg-game-blue/90 uppercase"
+                          onClick={() => buySkin(skin.id, ItemType.SKIN)}
                         >
-                          BUY
+                          {dict.shop.status.buy}
                         </Button>
                       </>
-                    ) : !skin.equipped ? (
+                    ) : (skin.status === ItemStatus.BOUGHT) ? (
                       <Button
-                        className="font-pixel text-xs w-full bg-game-green hover:bg-game-green/90"
-                        onClick={() => equipSkin(skin.id, "character")}
+                        className="font-pixel text-xs w-full bg-game-green hover:bg-game-green/90 uppercase"
+                        onClick={() => equipSkin(skin.id, ItemType.SKIN)}
                       >
-                        EQUIP
+                        {dict.shop.status.select}
                       </Button>
                     ) : (
-                      <span className="font-pixel text-xs text-muted-foreground">CURRENTLY ACTIVE</span>
+                      <Button
+                        className="font-pixel text-xs w-full bg-game-green/70 uppercase"
+                        disabled={true}
+                      >
+                        {dict.shop.status.selected}
+                      </Button>
                     )}
                   </CardFooter>
                 </Card>
@@ -261,16 +260,16 @@ export default function ShopPage() {
           <TabsContent value="maps" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               {gameMaps.map((map) => (
-                <Card key={map.id} className={`overflow-hidden ${map.equipped ? "border-game-blue" : ""}`}>
+                <Card key={map.id} className={`overflow-hidden ${map.status == ItemStatus.SELECTED ? "border-game-blue" : ""}`}>
                   <CardHeader className="p-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="font-pixel text-sm">{map.name}</CardTitle>
-                        <Badge className="font-pixel text-[10px] bg-muted text-muted-foreground mt-1">
-                          {map.game === "pong" ? "PONG" : "DINO RUN"}
-                        </Badge>
                       </div>
-                      {map.equipped && <Badge className="font-pixel text-[10px] bg-game-blue">EQUIPPED</Badge>}
+                      {/* TODO: Change badge color if dino or pong */}
+                      <Badge className="font-pixel text-[10px] bg-muted uppercase" variant="defaultNoHover">
+                        {map.game === "pong" ? dict.games.pong.title : dict.games.dino.title}
+                      </Badge>
                     </div>
                     <CardDescription className="font-pixel text-xs mt-2">{map.description}</CardDescription>
                   </CardHeader>
@@ -280,7 +279,7 @@ export default function ShopPage() {
                     </div>
                   </CardContent>
                   <CardFooter className="p-4 flex justify-between">
-                    {!map.owned ? (
+                    {map.status === ItemStatus.BUY ? (
                       <>
                         <div className="flex items-center">
                           <span className="font-pixel text-sm text-game-orange mr-1">{map.price}</span>
@@ -302,21 +301,26 @@ export default function ShopPage() {
                           </svg>
                         </div>
                         <Button
-                          className="font-pixel text-xs bg-game-blue hover:bg-game-blue/90"
-                          onClick={() => buySkin(map.id, "map")}
+                          className="font-pixel text-xs bg-game-blue hover:bg-game-blue/90 uppercase"
+                          onClick={() => buySkin(map.id, ItemType.MAP)}
                         >
-                          BUY
+                          {dict.shop.status.buy}
                         </Button>
                       </>
-                    ) : !map.equipped ? (
+                    ) : (map.status === ItemStatus.BOUGHT) ? (
                       <Button
-                        className="font-pixel text-xs w-full bg-game-green hover:bg-game-green/90"
-                        onClick={() => equipSkin(map.id, "map")}
+                        className="font-pixel text-xs w-full bg-game-green hover:bg-game-green/90 uppercase"
+                        onClick={() => equipSkin(map.id, ItemType.MAP)}
                       >
-                        EQUIP
+                        {dict.shop.status.select}
                       </Button>
                     ) : (
-                      <span className="font-pixel text-xs text-muted-foreground">CURRENTLY ACTIVE</span>
+                      <Button
+                        className="font-pixel text-xs w-full bg-game-green/70 uppercase"
+                        disabled={true}
+                      >
+                        {dict.shop.status.selected}
+                      </Button>
                     )}
                   </CardFooter>
                 </Card>

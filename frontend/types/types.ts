@@ -81,3 +81,30 @@ export interface Friend {
 	avatar: string;
 	status: UserStatus;
 }
+
+export enum ItemStatus {
+	BUY = "buy",
+	BOUGHT = "bought",
+	SELECTED = "selected"
+}
+
+export enum ItemType {
+	SKIN = "skin",
+	MAP = "map"
+}
+
+export interface BuyableItem {
+	id: string;
+	name: string;
+	description: string;
+	image: string;
+	price: number;
+	status: ItemStatus;
+}
+
+export interface SkinItem extends BuyableItem {
+}
+
+export interface MapItem extends BuyableItem {
+	game: GameType;
+}

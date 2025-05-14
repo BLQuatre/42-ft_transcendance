@@ -1,6 +1,7 @@
 import { Player } from './player' ;
 import { Obstacle } from './obstacle' ;
 import * as CONST from './constants' ;
+import { exit } from 'process';
 
 export class Game {
 	score:number = 0 ; // Ramping up constantly, attributed to a player when he "loses"
@@ -24,7 +25,7 @@ export class Game {
 				this.score++ ;
 			this.frameCount = ((this.frameCount + 1) % 3) ;
 
-			// see if a timeout before obstacles is needed
+			// TODO: see if a timeout before obstacles is needed
 			this.handleObstacle() ;
 		}, interval) ;
 	}
@@ -47,6 +48,8 @@ export class Game {
 		}
 	
 		this.obstacles = this.obstacles.filter(obstacle => obstacle.get_x().from >= 0); // Erase off-screen obstacles
+
+		this.checkObstacles() ;
 	}
 	
 
@@ -90,4 +93,35 @@ export class Game {
 	}
 
 	addPlayer(player: Player) { this.dinos.push( { player: player, score: -1 } ) ; }
+
+	checkObstacles() {
+		if (this.dinos.length === 0)
+			return ;
+
+		this.obstacles.forEach(obstacle => {
+			const obstacle_x = obstacle.get_x() ;
+			const first_dino_x = this.dinos.at(0)?.player.get_x() ?? { from: 0, to: 0 } ;	// assuming every players share the same x (as it's not modifiable)
+																							// still using ?? logic to make following code lighter
+			
+			if (!(obstacle_x.to > first_dino_x.from && obstacle_x.from < first_dino_x.to)) // checking collision between obstacle and dino (x-axis wise)
+				return ;
+
+			console.log(`x collision \n dino: ${first_dino_x.from}-${first_dino_x.to} \n obstacle: ${obstacle_x.from}-${obstacle_x.to}`) ;
+			
+			exit ;
+			
+			const obstacle_y = obstacle.get_y() ;
+			for (const dino of this.dinos) {
+				if (dino.score > -1)
+					continue ;
+
+				const dino_y = dino.player.get_y() ;
+
+				if (obstacle_y.to > dino_y.from && obstacle_y.from < dino_y.to) { // checking collision between obstacle and dino (y-axis wise)
+					dino.player.stopUpdating() ;
+					dino.score = this.score ;
+				}
+			}
+		}) ;
+	}
 }

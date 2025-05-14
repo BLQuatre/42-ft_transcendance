@@ -93,8 +93,6 @@
 		});
 	
 		function drawGame() {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-	
 			if (!gameState) return ;
 	
 			const offset = 600 / (gameState.dinos.length + 1) ;
@@ -102,7 +100,11 @@
 			ctx.fillStyle = '#555' ;
 			let i = 1 ;
 			gameState.dinos.forEach(dino => {
-				ctx.fillRect(20, (offset * i), (canvas.width - 40), 2) ;
+				if (dino.score > -1) { i++ ; return ; }
+
+				ctx.clearRect(0, (offset * (i - 1)), canvas.width, offset) ;
+
+				ctx.fillRect(20, ((offset * i) - 6), (canvas.width - 40), 2) ; //TODO: Might add decor later, if not, could remove drawing each time // -2 is for the plane bar, adding decor would require to change this
 				
 				if (dino.lean && dinoLeanImage1.complete && dinoLeanImage2.complete) {
 					const dinoLeanImage = ((frame % 12) > 6) ? dinoLeanImage1 : dinoLeanImage2 ;
@@ -131,6 +133,7 @@
 	
 			// Draw scores
 			ctx.font = '24px Arial' ;
+			ctx.clearRect(380, 0, 200, 50) ;
 			ctx.fillText(`${gameState.score}`, 390, 20) ;
 
 			frame-- ;

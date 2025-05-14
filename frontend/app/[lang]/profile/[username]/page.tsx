@@ -20,7 +20,6 @@ const userData: Record<string, User> = {
     username: "GAMER42",
     displayName: "The Gamer",
     avatar: "/placeholder.svg?height=100&width=100",
-    level: 24,
     joinDate: "04/12/2022",
     bio: "Retro gaming enthusiast. Pong champion and pixel art lover.",
     stats: {
@@ -92,7 +91,6 @@ const userData: Record<string, User> = {
     username: "PIXEL_MASTER",
     displayName: "Pixel Master",
     avatar: "/placeholder.svg?height=100&width=100",
-    level: 36,
     joinDate: "02/28/2022",
     bio: "Pixel art creator and retro game developer. I love creating and playing 8-bit style games!",
     stats: {
@@ -172,7 +170,6 @@ const userData: Record<string, User> = {
     username: "RETRO_FAN",
     displayName: "Retro Fan",
     avatar: "/placeholder.svg?height=100&width=100",
-    level: 18,
     joinDate: "06/15/2022",
     bio: "Passionate about all things retro. Collector of vintage consoles and arcade machines.",
     stats: {
@@ -315,9 +312,6 @@ export default function UserProfilePage() {
                 <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} />
                 <AvatarFallback className="font-pixel text-xl">{user.username.substring(0, 2)}</AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-2 -right-2 bg-game-blue text-white font-pixel text-xs px-2 py-1 rounded-md">
-                LVL {user.level}
-              </div>
             </div>
 
             <div className="flex-1 text-center md:text-left">

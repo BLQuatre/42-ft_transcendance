@@ -32,7 +32,6 @@ export interface User {
 	username: string;
 	displayName: string;
 	avatar: string;
-	level: number;
 	joinDate: string;
 	bio: string;
 	stats: UserStats;

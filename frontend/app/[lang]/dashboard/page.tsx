@@ -192,9 +192,6 @@ export default function DashboardPage() {
             </Avatar>
             <div>
               <p className="font-pixel text-sm">PLAYER_ONE</p>
-              <Badge variant="outline" className="font-pixel text-[10px]">
-                LEVEL 12
-              </Badge>
             </div>
           </div>
         </div>

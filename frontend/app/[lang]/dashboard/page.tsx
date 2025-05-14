@@ -150,7 +150,7 @@ const dinoMapSkins = [
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false)
-  const [activeSettingsTab, setActiveSettingsTab] = useState("profile")
+  const [activeSettingsTab, setActiveSettingsTab] = useState("account")
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -460,55 +460,55 @@ export default function DashboardPage() {
             </div>
           </TabsContent>
 
-		  <TabsContent value="skins" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="CHARACTER SKIN"
-                      description="CHOOSE YOUR PLAYER APPEARANCE"
-                      skins={characterSkins}
-                      defaultSelected="cs1"
-                    />
-                  </CardContent>
-                </Card>
+          <TabsContent value="skins" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
+                <CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SkinSelector
+                  title="CHARACTER SKIN"
+                  description="CHOOSE YOUR PLAYER APPEARANCE"
+                  skins={characterSkins}
+                  defaultSelected="cs1"
+                />
+              </CardContent>
+            </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="PONG MAP"
-                      description="SELECT YOUR PONG GAME ENVIRONMENT"
-                      skins={pongMapSkins}
-                      defaultSelected="pms1"
-                    />
-                  </CardContent>
-                </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
+                <CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SkinSelector
+                  title="PONG MAP"
+                  description="SELECT YOUR PONG GAME ENVIRONMENT"
+                  skins={pongMapSkins}
+                  defaultSelected="pms1"
+                />
+              </CardContent>
+            </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="DINO RUN MAP"
-                      description="SELECT YOUR DINO RUN ENVIRONMENT"
-                      skins={dinoMapSkins}
-                      defaultSelected="dms1"
-                    />
-                  </CardContent>
-                </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
+                <CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SkinSelector
+                  title="DINO RUN MAP"
+                  description="SELECT YOUR DINO RUN ENVIRONMENT"
+                  skins={dinoMapSkins}
+                  defaultSelected="dms1"
+                />
+              </CardContent>
+            </Card>
 
-                <div className="flex justify-end">
-                  <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
-                </div>
+            <div className="flex justify-end">
+              <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
+            </div>
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-4">
@@ -516,7 +516,6 @@ export default function DashboardPage() {
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
                 <TabsTrigger value="account">ACCOUNT</TabsTrigger>
                 <TabsTrigger value="security">SECURITY</TabsTrigger>
-                <TabsTrigger value="appearance">APPEARANCE</TabsTrigger>
               </TabsList>
 
               <TabsContent value="account" className="space-y-4">
@@ -665,69 +664,6 @@ export default function DashboardPage() {
                     <Button variant="outline" className="font-pixel">
                       SETUP 2FA
                     </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="appearance" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">THEME</CardTitle>
-                    <CardDescription className="font-pixel text-xs">
-                      CUSTOMIZE THE APPEARANCE OF THE APPLICATION
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h3 className="font-pixel text-sm">DARK MODE</h3>
-                        <p className="font-pixel text-xs text-muted-foreground">TOGGLE BETWEEN LIGHT AND DARK MODE</p>
-                      </div>
-                      <Switch defaultChecked />
-                    </div>
-
-                    <div className="space-y-3">
-                      <h3 className="font-pixel text-sm">COLOR THEME</h3>
-                      <div className="grid grid-cols-5 gap-2">
-                        {["#4A9DFF", "#FFA500", "#FF4D4D", "#4CAF50", "#9C27B0"].map((color, index) => (
-                          <button
-                            key={index}
-                            className={`h-12 w-full rounded-md border-2 ${index === 0 ? "border-white" : "border-transparent"}`}
-                            style={{ backgroundColor: color }}
-                            onClick={() => {}}
-                            aria-label={`Color theme ${index + 1}`}
-                          >
-                            {index === 0 && <Check className="h-6 w-6 text-white mx-auto" />}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <h3 className="font-pixel text-sm">LANGUAGE</h3>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-between font-pixel">
-                            <span>ENGLISH</span>
-                            <ChevronDown className="h-4 w-4 opacity-50" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-full" align="end">
-                          {languages.map((language) => (
-                            <DropdownMenuItem
-                              key={language.code}
-                              className="font-pixel text-xs cursor-pointer"
-                              onClick={() => {}}
-                            >
-                              {language.name.toUpperCase()}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE PREFERENCES</Button>
                   </CardFooter>
                 </Card>
               </TabsContent>

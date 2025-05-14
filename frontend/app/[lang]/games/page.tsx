@@ -10,7 +10,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
 
-      <main className="flex-1">
+      <main className="flex-1" id="pong">
         {/* Games Section */}
         <section className="py-12 md:py-24 lg:py-16">
           <div className="container px-4 md:px-6">
@@ -23,7 +23,7 @@ export default function HomePage() {
             </div>
 
             {/* Pong Game Feature */}
-            <div className="mb-20" id="pong">
+            <div className="mb-20">
               <div className="rounded-xl pixel-border bg-card overflow-hidden">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="p-8 md:p-10 flex flex-col justify-center">

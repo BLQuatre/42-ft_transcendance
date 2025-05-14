@@ -60,32 +60,9 @@ const friendRequestsData = [
   },
 ]
 
-// Sample suggested friends data
-const suggestedFriendsData = [
-  {
-    id: "s1",
-    username: "NEON_WARRIOR",
-    avatar: "/placeholder.svg?height=40&width=40",
-    mutualFriends: 3,
-  },
-  {
-    id: "s2",
-    username: "GHOST_PLAYER",
-    avatar: "/placeholder.svg?height=40&width=40",
-    mutualFriends: 2,
-  },
-  {
-    id: "s3",
-    username: "SPACE_INVADER",
-    avatar: "/placeholder.svg?height=40&width=40",
-    mutualFriends: 1,
-  },
-]
-
 export default function FriendsPage() {
   const [friends, setFriends] = useState(friendsData)
   const [friendRequests, setFriendRequests] = useState(friendRequestsData)
-  const [suggestedFriends, setSuggestedFriends] = useState(suggestedFriendsData)
   const [searchQuery, setSearchQuery] = useState("")
   const { toast } = useToast()
 
@@ -125,19 +102,6 @@ export default function FriendsPage() {
     })
   }
 
-  const handleAddFriend = (id: string) => {
-    const suggested = suggestedFriends.find((friend) => friend.id === id)
-    if (suggested) {
-      setSuggestedFriends(suggestedFriends.filter((friend) => friend.id !== id))
-
-      toast({
-        title: "Friend Request Sent",
-        description: `Friend request sent to ${suggested.username}`,
-        duration: 3000,
-      })
-    }
-  }
-
   const handleRemoveFriend = (id: string) => {
     const friend = friends.find((f) => f.id === id)
     if (friend) {
@@ -172,7 +136,6 @@ export default function FriendsPage() {
                 <Badge className="ml-2 bg-game-red text-white font-pixel text-[10px]">{friendRequests.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="suggested">SUGGESTED</TabsTrigger>
           </TabsList>
 
           <TabsContent value="friends" className="space-y-4">
@@ -305,51 +268,6 @@ export default function FriendsPage() {
                           <span className="sr-only">Reject</span>
                         </Button>
                       </div>
-                    </div>
-                  ))
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="suggested" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">SUGGESTED FRIENDS</CardTitle>
-                <CardDescription className="font-pixel text-xs">PEOPLE YOU MIGHT KNOW</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {suggestedFriends.length === 0 ? (
-                  <p className="text-center font-pixel text-sm text-muted-foreground py-4">
-                    No suggested friends at the moment.
-                  </p>
-                ) : (
-                  suggestedFriends.map((suggested) => (
-                    <div key={suggested.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Avatar>
-                          <AvatarImage src={suggested.avatar || "/placeholder.svg"} alt={suggested.username} />
-                          <AvatarFallback className="font-pixel text-xs">
-                            {suggested.username.substring(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-pixel text-sm">{suggested.username}</p>
-                          <p className="font-pixel text-xs text-muted-foreground">
-                            {suggested.mutualFriends} mutual friend
-                            {suggested.mutualFriends !== 1 ? "s" : ""}
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="font-pixel text-xs"
-                        onClick={() => handleAddFriend(suggested.id)}
-                      >
-                        <UserPlus className="h-4 w-4 mr-2" />
-                        ADD FRIEND
-                      </Button>
                     </div>
                   ))
                 )}

@@ -251,7 +251,7 @@ const pongHistory = [
       },
     },
   },
-  
+
   // ... other pong history items
 ]
 
@@ -633,7 +633,7 @@ export default function DashboardPage() {
                   <CardDescription className="font-pixel text-xs">YOUR RECENT PONG GAMES</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3 h-[300px] overflow-y-auto pr-2 show-scrollbar">
+                  <div className="space-y-3 h-[480px] overflow-y-auto pr-2 show-scrollbar">
                     {pongHistory.map((game, index) => (
                       <div
                         key={index}

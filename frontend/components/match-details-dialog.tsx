@@ -81,7 +81,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] border-2 border-game-blue">
+      <DialogContent className="sm:max-w-[800px]">
         <DialogHeader className="animate-fadeIn">
           <DialogTitle className="font-pixel text-sm">{isPong ? `MATCH DETAILS` : `RUN DETAILS`}</DialogTitle>
           <DialogDescription className="font-pixel text-xs">

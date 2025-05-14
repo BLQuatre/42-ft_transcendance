@@ -9,17 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { Footer } from "@/components/footer"
-import { Check, ChevronDown } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { SkinSelector } from "@/components/skin-selector"
+import { MatchDetailsDialog } from "@/components/match-details-dialog"
 import axios from "axios"
 
 // Sample data for charts
@@ -40,21 +37,258 @@ const scoreData = [
   { name: "Week 4", score: 510 },
 ]
 
-// Sample game history data
+// Sample game history data with support for multiple players (up to 8)
 const pongHistory = [
-  { opponent: "GAMER42", result: "WIN", score: "10-5", date: "04/20/2023" },
-  { opponent: "PIXEL_MASTER", result: "WIN", score: "10-8", date: "04/18/2023" },
-  { opponent: "RETRO_FAN", result: "LOSS", score: "7-10", date: "04/15/2023" },
-  { opponent: "ARCADE_PRO", result: "WIN", score: "10-2", date: "04/12/2023" },
-  { opponent: "JUMP_MASTER", result: "WIN", score: "10-6", date: "04/10/2023" },
+  {
+    id: "match-001",
+    type: "TEAM MATCH",
+    result: "WIN",
+    date: "04/20/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "GAMER42", team: "BETA", score: 5, isUser: false },
+      { id: "player-003", name: "PIXEL_PRO", team: "ALPHA", score: 8, isUser: false },
+      { id: "player-004", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 18,
+      BETA: 11,
+    },
+    details: {
+      duration: "12:45",
+      map: "CLASSIC ARENA",
+      powerUps: 3,
+      accuracyRate: "78%",
+      rallies: 24,
+      longestRally: "00:42",
+      playerStats: {
+        "player-001": { aces: 5, errors: 2, powerHits: 8 },
+        "player-002": { aces: 2, errors: 6, powerHits: 4 },
+        "player-003": { aces: 4, errors: 3, powerHits: 6 },
+        "player-004": { aces: 3, errors: 4, powerHits: 5 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  
+  // ... other pong history items
 ]
 
 const dinoHistory = [
-  { map: "CLASSIC MAP", score: 753, date: "04/22/2023" },
-  { map: "CLASSIC MAP", score: 621, date: "04/20/2023" },
-  { map: "CLASSIC MAP", score: 542, date: "04/18/2023" },
-  { map: "CLASSIC MAP", score: 498, date: "04/15/2023" },
-  { map: "CLASSIC MAP", score: 412, date: "04/12/2023" },
+  {
+    id: "run-001",
+    map: "CLASSIC MAP",
+    score: 753,
+    date: "04/22/2023",
+    details: {
+      duration: "02:45",
+      obstacles: 124,
+      powerUps: 8,
+      distance: "1.2km",
+      jumps: 87,
+      ducks: 36,
+      coins: 42,
+      achievements: ["SPEED DEMON", "COIN COLLECTOR"],
+    },
+  },
+  {
+    id: "run-002",
+    map: "CLASSIC MAP",
+    score: 621,
+    date: "04/20/2023",
+    details: {
+      duration: "02:10",
+      obstacles: 98,
+      powerUps: 5,
+      distance: "0.9km",
+      jumps: 65,
+      ducks: 32,
+      coins: 35,
+      achievements: ["PERFECT TIMING"],
+    },
+  },
+  // ... other dino history items
 ]
 
 // Settings data
@@ -151,6 +385,16 @@ const dinoMapSkins = [
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [activeSettingsTab, setActiveSettingsTab] = useState("account")
+  const [selectedMatch, setSelectedMatch] = useState<null | {
+    type: "pong" | "dino"
+    details: any
+  }>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const handleMatchClick = (type: "pong" | "dino", details: any) => {
+    setSelectedMatch({ type, details })
+    setDialogOpen(true)
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -389,33 +633,35 @@ export default function DashboardPage() {
                   <CardDescription className="font-pixel text-xs">YOUR RECENT PONG GAMES</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-3 h-[300px] overflow-y-auto pr-2 show-scrollbar">
                     {pongHistory.map((game, index) => (
-                      <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        onClick={() => handleMatchClick("pong", game)}
+                      >
                         <div className="flex items-center space-x-2">
                           <div
                             className={`w-2 h-2 rounded-full ${
                               game.result === "WIN" ? "bg-game-green" : "bg-game-red"
                             }`}
                           ></div>
-                          <p className="font-pixel text-xs">VS. {game.opponent}</p>
+                          <p className="font-pixel text-xs">
+                            {game.players.length} PLAYERS • {game.date}
+                          </p>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div>
                           <p
                             className={`font-pixel text-xs ${
                               game.result === "WIN" ? "text-game-blue" : "text-game-red"
                             }`}
                           >
-                            {game.score}
+                            {game.result}
                           </p>
-                          <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <Button variant="outline" className="w-full mt-4 font-pixel text-xs">
-                    VIEW ALL MATCHES
-                  </Button>
                 </CardContent>
               </Card>
 
@@ -425,9 +671,13 @@ export default function DashboardPage() {
                   <CardDescription className="font-pixel text-xs">YOUR RECENT DINO RUN ATTEMPTS</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-3 h-[300px] overflow-y-auto show-scrollbar pr-2">
                     {dinoHistory.map((game, index) => (
-                      <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        onClick={() => handleMatchClick("dino", game)}
+                      >
                         <div className="flex items-center space-x-2">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -443,18 +693,12 @@ export default function DashboardPage() {
                           >
                             <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                           </svg>
-                          <p className="font-pixel text-xs">{game.map}</p>
+                          <p className="font-pixel text-xs">{game.date}</p>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
-                          <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
-                        </div>
+                        <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
                       </div>
                     ))}
                   </div>
-                  <Button variant="outline" className="w-full mt-4 font-pixel text-xs">
-                    VIEW ALL RUNS
-                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -660,6 +904,9 @@ export default function DashboardPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Match Details Dialog */}
+      <MatchDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} match={selectedMatch} />
     </div>
   )
 }

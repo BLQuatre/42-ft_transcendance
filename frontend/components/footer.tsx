@@ -12,8 +12,8 @@ export function Footer() {
           </div>
           <p className="font-pixel text-xs text-muted-foreground">© 2025 ft_transcendance</p>
           <div className="flex items-center space-x-4">
-            <Link href="/cgu" className="font-pixel text-xs text-muted-foreground hover:text-game-blue">
-              CGU
+            <Link href="/terms" className="font-pixel text-xs text-muted-foreground hover:text-game-blue">
+              CONDITIONS D'UTILISATION
             </Link>
             <Link href="/privacy" className="font-pixel text-xs text-muted-foreground hover:text-game-blue">
               CONFIDENTIALITÉ

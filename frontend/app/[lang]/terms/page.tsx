@@ -1,6 +1,6 @@
 import { MainNav } from "@/components/main-nav"
 
-export default function CGUPage() {
+export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />

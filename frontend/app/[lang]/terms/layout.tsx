@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cgu - Transcendance',
+  title: 'Terms - Transcendance',
 }
 
 export default function RegisterLayout({

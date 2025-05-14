@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MainNav } from "@/components/main-nav"
 import { FcGoogle } from "react-icons/fc"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,6 +25,10 @@ export default function LoginPage() {
       window.location.href = "/"
     }, 1000)
   }
+
+  const dict = useDictionary()
+  if (!dict)
+    return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -46,12 +51,12 @@ export default function LoginPage() {
           </div>
 
           <div className="p-8 flex flex-col justify-center">
-            <h1 className="font-pixel text-3xl text-center mb-8">LOGIN</h1>
+            <h1 className="font-pixel text-3xl text-center mb-8 uppercase">{dict.connection.login}</h1>
 
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="font-pixel text-sm">
-                  Email
+                  {dict.connection.email}
                 </Label>
                 <Input
                   id="email"
@@ -64,23 +69,22 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="password" className="font-pixel text-sm">
-                  Password
+                  {dict.connection.password.title}
                 </Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={dict.connection.password.placeholder}
                   required
                   className="font-pixel text-sm h-10 bg-muted"
                 />
               </div>
-
               <Button
                 type="submit"
-                className="w-full font-pixel bg-game-blue hover:bg-game-blue/90"
+                className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
                 disabled={isLoading}
               >
-                LOGIN
+                {dict.connection.login}
               </Button>
             </form>
 
@@ -89,23 +93,23 @@ export default function LoginPage() {
                 <span className="w-full border-t border-muted" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-card px-2 font-pixel text-muted-foreground">OR</span>
+                <span className="bg-card px-2 font-pixel text-muted-foreground uppercase">{dict.connection.or}</span>
               </div>
             </div>
 
             <Button
               variant="outline"
-              className="mt-4 font-pixel flex items-center justify-center gap-2"
+              className="mt-4 font-pixel flex items-center justify-center gap-2 uppercase"
               onClick={() => setIsLoading(true)}
             >
               <FcGoogle className="h-5 w-5" />
-              SIGN IN WITH GOOGLE
+              {dict.connection.google.login}
             </Button>
 
             <p className="mt-4 text-center text-xs font-pixel text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              {dict.connection.dontHaveAccount}{" "}
               <Link href="/register" className="text-game-blue hover:underline">
-                Register
+                {dict.connection.register}
               </Link>
             </p>
           </div>

@@ -1,7 +1,16 @@
 import { Footer } from "@/components/footer"
 import { MainNav } from "@/components/main-nav"
+import { getDictionary } from "@/lib/dictionnaries"
+import { Language } from "@/types/types"
 
-export default function CGUPage() {
+export default async function PrivacyPage({
+  params,
+}: {
+  params: Promise<{ lang: Language }>
+}) {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -13,7 +22,7 @@ export default function CGUPage() {
         </div>
       </div>
 
-      <Footer />
+      <Footer dict={dict}/>
     </div>
   )
 }

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MainNav } from "@/components/main-nav"
 import { FcGoogle } from "react-icons/fc"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,6 +25,10 @@ export default function RegisterPage() {
     }, 1000)
   }
 
+  const dict = useDictionary()
+  if (!dict)
+    return null
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -31,12 +36,12 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 bg-card rounded-lg overflow-hidden pixel-border">
           <div className="p-8 flex flex-col justify-center">
-            <h1 className="font-pixel text-3xl text-center mb-8">REGISTER</h1>
+            <h1 className="font-pixel text-3xl text-center mb-8 uppercase">{dict.connection.register}</h1>
 
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="username" className="font-pixel text-sm">
-                  Username
+                  {dict.connection.username}
                 </Label>
                 <Input
                   id="username"
@@ -49,12 +54,12 @@ export default function RegisterPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="password" className="font-pixel text-sm">
-                  Password
+                  {dict.connection.password.title}
                 </Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={dict.connection.password.placeholder}
                   required
                   className="font-pixel text-sm h-10 bg-muted"
                 />
@@ -62,12 +67,12 @@ export default function RegisterPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword" className="font-pixel text-sm">
-                  Confirm Password
+                  {dict.connection.password.confirm}
                 </Label>
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="Confirm your password"
+                  placeholder={dict.connection.password.confirmPlaceholder}
                   required
                   className="font-pixel text-sm h-10 bg-muted"
                 />
@@ -75,10 +80,10 @@ export default function RegisterPage() {
 
               <Button
                 type="submit"
-                className="w-full font-pixel bg-game-blue hover:bg-game-blue/90"
+                className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
                 disabled={isLoading}
               >
-                REGISTER
+                {dict.connection.register}
               </Button>
             </form>
 
@@ -87,23 +92,23 @@ export default function RegisterPage() {
                 <span className="w-full border-t border-muted" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-card px-2 font-pixel text-muted-foreground">OR</span>
+                <span className="bg-card px-2 font-pixel text-muted-foreground uppercase">{dict.connection.or}</span>
               </div>
             </div>
 
             <Button
               variant="outline"
-              className="mt-4 font-pixel flex items-center justify-center gap-2"
+              className="mt-4 font-pixel flex items-center justify-center gap-2 uppercase"
               onClick={() => setIsLoading(true)}
             >
               <FcGoogle className="h-5 w-5" />
-              SIGN UP WITH GOOGLE
+              {dict.connection.google.register}
             </Button>
 
             <p className="mt-4 text-center text-sm font-pixel text-muted-foreground">
-              Already have an account?{" "}
+              {dict.connection.haveAccount}{" "}
               <Link href="/login" className="text-game-blue hover:underline">
-                Login
+                {dict.connection.login}
               </Link>
             </p>
           </div>

@@ -3,9 +3,18 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
-import { ArrowRight, Gamepad2, Trophy, Users } from "lucide-react"
+import { ArrowRight, Gamepad2, Users } from "lucide-react"
+import { getDictionary } from "@/lib/dictionnaries"
+import { Language } from "@/types/types"
 
-export default function HomePage() {
+export default async function GamesPage({
+  params,
+}: {
+  params: Promise<{ lang: Language }>
+}) {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -15,10 +24,10 @@ export default function HomePage() {
         <section className="py-12 md:py-24 lg:py-16">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center mb-12">
-              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange">OUR GAMES</h2>
+              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange uppercase">{dict.games.title}</h2>
               <div className="w-20 h-1 bg-game-orange"></div>
-              <p className="max-w-3xl text-muted-foreground font-pixel text-sm">
-                EXPLORE OUR COLLECTION OF RETRO-INSPIRED ARCADE GAMES. EACH GAME OFFERS UNIQUE GAMEPLAY AND CHALLENGES.
+              <p className="max-w-3xl text-muted-foreground font-pixel text-sm uppercase">
+                {dict.games.description}
               </p>
             </div>
 
@@ -27,55 +36,36 @@ export default function HomePage() {
               <div className="rounded-xl pixel-border bg-card overflow-hidden">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="p-8 md:p-10 flex flex-col justify-center">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-game-blue/20 text-game-blue font-pixel text-xs mb-4 w-fit">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-game-blue/20 text-game-blue font-pixel text-xs mb-4 w-fit uppercase">
                       <Gamepad2 className="mr-2 h-4 w-4" />
-                      CLASSIC ARCADE
+                      {dict.games.pong.type}
                     </div>
-                    <h3 className="font-pixel text-3xl text-game-blue mb-4">PONG</h3>
+                    <h3 className="font-pixel text-3xl text-game-blue mb-4 uppercase">{dict.games.pong.title}</h3>
                     <div className="space-y-4 mb-6">
-                      <p className="font-pixel text-sm">
-                        THE ORIGINAL TABLE TENNIS SIMULATION GAME THAT STARTED THE VIDEO GAME REVOLUTION.
-                      </p>
-
+                      <p className="font-pixel text-sm uppercase">{dict.games.pong.description}</p>
                       <div className="space-y-2">
-                        <h4 className="font-pixel text-lg text-game-blue">HOW TO PLAY:</h4>
+                        <h4 className="font-pixel text-lg text-game-blue uppercase  ">{dict.games.how}:</h4>
                         <ul className="space-y-2 font-pixel text-xs text-muted-foreground">
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>
-                              MOVE YOUR PADDLE UP AND DOWN USING THE W/S KEYS (PLAYER 1) OR UP/DOWN ARROWS (PLAYER 2)
-                            </span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>HIT THE BALL WITH YOUR PADDLE TO SEND IT BACK TO YOUR OPPONENT</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>SCORE POINTS WHEN YOUR OPPONENT MISSES THE BALL</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>FIRST PLAYER TO REACH 10 POINTS WINS THE GAME</span>
-                          </li>
+                          {dict.games.pong.explications.map((text: string, index: number) => (
+                            <li key={index} className="flex items-start">
+                              <span className="mr-2">•</span>
+                              <span className="uppercase">{text}</span>
+                            </li>
+                          ))}
                         </ul>
                       </div>
 
                       <div className="flex flex-wrap gap-4 items-center">
                         <div className="flex items-center gap-2 font-pixel text-xs">
                           <Users className="h-4 w-4 text-game-blue" />
-                          <span>2 PLAYERS</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-pixel text-xs">
-                          <Trophy className="h-4 w-4 text-game-blue" />
-                          <span>COMPETITIVE</span>
+                          <span className="uppercase">{dict.games.pong.players}</span>
                         </div>
                       </div>
                     </div>
 
                     <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 w-fit mt-2">
-                      <Link href="/games/pong" className="flex items-center">
-                        PLAY PONG
+                      <Link href="/games/pong" className="flex items-center uppercase">
+                        {dict.common.play} {dict.games.pong.title}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -107,58 +97,37 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="order-1 md:order-2 p-8 md:p-10 flex flex-col justify-center">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-game-orange/20 text-game-orange font-pixel text-xs mb-4 w-fit">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-game-orange/20 text-game-orange font-pixel text-xs mb-4 w-fit uppercase">
                       <Gamepad2 className="mr-2 h-4 w-4" />
-                      ENDLESS RUNNER
+                      {dict.games.dino.type}
                     </div>
-                    <h3 className="font-pixel text-3xl text-game-orange mb-4">DINO RUN</h3>
+                    <h3 className="font-pixel text-3xl text-game-orange mb-4 uppercase">{dict.games.dino.title}</h3>
                     <div className="space-y-4 mb-6">
-                      <p className="font-pixel text-sm">
-                        A CHALLENGING ENDLESS RUNNER WHERE YOU CONTROL A DINOSAUR AVOIDING OBSTACLES IN A PREHISTORIC
-                        LANDSCAPE.
-                      </p>
+                      <p className="font-pixel text-sm uppercase">{dict.games.dino.description}</p>
 
                       <div className="space-y-2">
-                        <h4 className="font-pixel text-lg text-game-orange">HOW TO PLAY:</h4>
+                        <h4 className="font-pixel text-lg text-game-orange uppercase">{dict.games.how}:</h4>
                         <ul className="space-y-2 font-pixel text-xs text-muted-foreground">
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>PRESS SPACE BAR OR UP ARROW TO JUMP OVER CACTI AND OTHER OBSTACLES</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>PRESS DOWN ARROW TO DUCK UNDER FLYING PTERODACTYLS</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>THE GAME SPEEDS UP OVER TIME, MAKING IT INCREASINGLY DIFFICULT</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>YOUR SCORE INCREASES THE LONGER YOU SURVIVE</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>TRY TO BEAT YOUR HIGH SCORE WITH EACH ATTEMPT</span>
-                          </li>
+                          {dict.games.dino.explications.map((text: string, index: number) => (
+                            <li key={index} className="flex items-start">
+                              <span className="mr-2">•</span>
+                              <span className="uppercase">{text}</span>
+                            </li>
+                          ))}
                         </ul>
                       </div>
 
                       <div className="flex flex-wrap gap-4 items-center">
                         <div className="flex items-center gap-2 font-pixel text-xs">
                           <Users className="h-4 w-4 text-game-orange" />
-                          <span>1 PLAYER</span>
-                        </div>
-                        <div className="flex items-center gap-2 font-pixel text-xs">
-                          <Trophy className="h-4 w-4 text-game-orange" />
-                          <span>HIGH SCORE CHALLENGE</span>
+                          <span className="uppercase">{dict.games.dino.players}</span>
                         </div>
                       </div>
                     </div>
 
                     <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 w-fit mt-2">
-                      <Link href="/games/dino" className="flex items-center">
-                        PLAY DINO RUN
+                      <Link href="/games/dino" className="flex items-center uppercase">
+                        {dict.common.play} {dict.games.dino.title}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>
@@ -169,8 +138,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-
-      <Footer />
-	    </div>
+      <Footer dict={dict} />
+    </div>
   )
 }

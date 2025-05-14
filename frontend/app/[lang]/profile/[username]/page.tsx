@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
-import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/User"
+import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/types"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 // Sample user data - in a real app, this would come from an API
 const userData: Record<string, User> = {
@@ -157,6 +158,10 @@ export default function UserProfilePage() {
     })
   }
 
+  const dict = useDictionary()
+  if (!dict)
+    return null
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -164,7 +169,7 @@ export default function UserProfilePage() {
         <div className="flex-1 container py-8 px-4 md:px-6 flex items-center justify-center">
           <div className="font-pixel text-xl animate-pulse">CHARGEMENT...</div>
         </div>
-        <Footer />
+        <Footer dict={dict} />
       </div>
     )
   }
@@ -182,7 +187,7 @@ export default function UserProfilePage() {
             <Link href="/">{"RETOUR À L'ACCUEIL"}</Link>
           </Button>
         </div>
-        <Footer />
+        <Footer dict={dict}/>
       </div>
     )
   }

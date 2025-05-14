@@ -1,5 +1,103 @@
 {
-	"products": {
-		"cart": "Add to Cart"
+	"title": "ft_transcendance",
+	"home": {
+		"description": "Challenge your friends in classic games",
+		"play": "Play Now",
+		"games": "Featured Games",
+
+		"features": {
+			"title": "Features",
+			"multiplayer": {
+				"title": "Multiplayer",
+				"description": "Play with friends locally or online"
+			},
+			"stats": {
+				"title": "Stats",
+				"description": "Track your progress and game history"
+			},
+			"customization": {
+				"title": "Customization",
+				"description": "Personalize your gaming experience"
+			}
+		}
+	},
+
+	"navbar": {
+		"home": "Home",
+		"games": "Games",
+		"shop": "Shop",
+		"friends": "Friends",
+		"dashboard": "Dashboard",
+		"menu": "Menu"
+	},
+
+	"connection": {
+		"login": "Login",
+		"register": "Register",
+		"logout": "Logout",
+		"username": "Username",
+		"password": {
+			"title": "Password",
+			"placeholder": "Enter your password",
+			"confirm": "Confirm password",
+			"confirmPlaceholder": "Confirm your password",
+			"forgot": "Forgot your password?"
+		},
+		"rememberMe": "Remember me",
+		"dontHaveAccount": "Don't have an account?",
+		"haveAccount": "Already have an account?",
+		"or": "Or",
+		"google": {
+			"login": "Login with Google",
+			"register": "Register with Google"
+		}
+	},
+
+	"games": {
+		"title": "Our Games",
+		"description": "Explore our collection of retro-inspired arcade games.\nEach game offers unique gameplay and challenges.",
+		"how": "How to play",
+
+		"pong": {
+			"title": "Pong",
+			"description": "Fast-paced table tennis action! Challenge your friends and smash your way to the high score.",
+			"explications": [
+				"Move your paddle up and down using the w/s keys (P1) or up/down arrows (P2)",
+				"Hit the ball with your paddle to send it back to your opponent",
+				"Score points when your opponent misses the ball",
+				"First player to reach 10 points wins the game"
+			],
+			"type": "Classic Arcade",
+			"players": "2-8 players"
+		},
+		"dino": {
+			"title": "Dino Run",
+			"description": "A challenging endless runner where you control a dinosaur avoiding obstacles in a prehistoric landscape.",
+			"explications": [
+				"Press space bar or up arrow to jump over cactus and other obstacles",
+				"Press down arrow to duck under flying pterodactyls",
+				"The game speeds up over time, making it increasingly difficult",
+				"Your score increases the longer you survive",
+				"Try to beat your high score with each attempt"
+			],
+			"type": "Endless Runner",
+			"players": "1-8 player(s)"
+		}
+	},
+
+	"shop": {
+		"categories": {
+			"characters": "Characters Skins",
+			"maps": "Map Themes"
+		}
+	},
+
+	"footer": {
+		"cgu": "CGU",
+		"privacy": "Privacy"
+	},
+
+	"common": {
+		"play": "PLAY"
 	}
 }

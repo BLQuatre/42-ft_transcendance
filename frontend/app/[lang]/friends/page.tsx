@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import { Footer } from "@/components/footer"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 // Sample friends data
 const friendsData = [
@@ -116,6 +116,10 @@ export default function FriendsPage() {
   }
 
   const filteredFriends = friends.filter((friend) => friend.username.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  const dict = useDictionary()
+  if (!dict)
+    return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -276,7 +280,6 @@ export default function FriendsPage() {
           </TabsContent>
         </Tabs>
       </div>
-      <Footer />
     </div>
   )
 }

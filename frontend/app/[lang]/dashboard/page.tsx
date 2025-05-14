@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator"
 import { SkinSelector } from "@/components/skin-selector"
 import { MatchDetailsDialog } from "@/components/match-details-dialog"
 import axios from "axios"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 // Sample data for charts
 const gamePlayData = [
@@ -417,6 +418,10 @@ export default function DashboardPage() {
       setIsLoading(false)
     }, 1000)
   }
+
+  const dict = useDictionary()
+  if (!dict)
+    return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

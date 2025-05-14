@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import { useToast } from "@/components/ui/use-toast"
 import { Footer } from "@/components/footer"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 // Sample shop items
 const characterSkins = [
@@ -98,6 +99,11 @@ export default function ShopPage() {
   const [gameMaps, setGameMaps] = useState(mapSkins)
   const [coins, setCoins] = useState(1250)
   const { toast } = useToast()
+  const dict = useDictionary()
+
+  if (!dict) {
+    return null
+  }
 
   const buySkin = (id: string, type: "character" | "map") => {
     const items = type === "character" ? playerSkins : gameMaps
@@ -185,8 +191,8 @@ export default function ShopPage() {
 
         <Tabs defaultValue="characters" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-            <TabsTrigger value="characters">CHARACTER SKINS</TabsTrigger>
-            <TabsTrigger value="maps">MAP THEMES</TabsTrigger>
+            <TabsTrigger value="characters" className="uppercase">{dict.shop.categories.characters}</TabsTrigger>
+            <TabsTrigger value="maps"className="uppercase">{dict.shop.categories.maps}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="characters" className="space-y-4">
@@ -319,7 +325,7 @@ export default function ShopPage() {
           </TabsContent>
         </Tabs>
       </div>
-      <Footer />
+      <Footer dict={dict} />
     </div>
   )
 }

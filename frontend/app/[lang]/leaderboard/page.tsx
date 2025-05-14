@@ -1,10 +1,18 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
-import { Footer } from "@/components/footer"
 import { Trophy, Medal, Clock, Gamepad2, ArrowLeft } from "lucide-react"
+import { Language } from "@/types/types"
+import { getDictionary } from "@/lib/dictionnaries"
 
-export default function LeaderboardPage() {
+export default async function LeaderboardPage({
+  params,
+}: {
+  params: Promise<{ lang: Language }>
+}) {
+  const { lang } = await params
+  const dict = await getDictionary(lang)
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -376,8 +384,6 @@ export default function LeaderboardPage() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }

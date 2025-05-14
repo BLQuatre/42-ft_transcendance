@@ -5,18 +5,22 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { User, Users } from "lucide-react"
+import { useDictionary } from "@/hooks/use-dictionnary"
 
 export function MainNav() {
   const pathname = usePathname()
 
-//   const isLoggedIn = pathname !== "/login" && pathname !== "/register"
-	const isLoggedIn = true
+  const dict = useDictionary()
+  if (!dict)
+    return null
+
+  const isLoggedIn = pathname !== "/login" && pathname !== "/register"
 
   return (
     <div className="flex justify-between items-center w-full px-4 py-3 bg-game-dark border-b-4 border-game-blue">
       <Link href="/" className="flex items-center space-x-2">
-        <span className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
-          ft_transcendance
+        <span className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate uppercase">
+          {dict.title}
         </span>
       </Link>
 
@@ -26,29 +30,29 @@ export function MainNav() {
             <Link
               href="/"
               className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue",
+                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
                 pathname === "/" ? "text-game-blue" : "text-muted-foreground",
               )}
             >
-              HOME
+              {dict.navbar.home}
             </Link>
             <Link
               href="/games"
               className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue",
+                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
                 pathname.startsWith("/games") ? "text-game-blue" : "text-muted-foreground",
               )}
             >
-              GAMES
+              {dict.navbar.games}
             </Link>
             <Link
               href="/shop"
               className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue",
+                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
                 pathname === "/shop" ? "text-game-blue" : "text-muted-foreground",
               )}
             >
-              SHOP
+              {dict.navbar.shop}
             </Link>
           </>
         )}
@@ -66,7 +70,7 @@ export function MainNav() {
                 )}
               >
                 <Users className="h-5 w-5" />
-                <span className="font-pixel text-xs hidden sm:inline-block">FRIENDS</span>
+                <span className="font-pixel text-xs hidden sm:inline-block uppercase">{dict.navbar.friends}</span>
               </Link>
             </div>
             <div className="relative">
@@ -78,20 +82,20 @@ export function MainNav() {
                 )}
               >
                 <User className="h-5 w-5" />
-                <span className="font-pixel text-xs hidden sm:inline-block">DASHBOARD</span>
+                <span className="font-pixel text-xs hidden sm:inline-block uppercase">{dict.navbar.dashboard}</span>
               </Link>
             </div>
             {/* Mobile navigation */}
             <div className="md:hidden">
               <Button variant="outline" size="sm" className="font-pixel text-xs">
-                MENU
+                {dict.navbar.menu}
               </Button>
             </div>
           </>
         ) : (
-          <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
+          <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase">
             <Link href={pathname === "/register" ? "/login" : "/register"}>
-              {pathname === "/register" ? "LOGIN" : "REGISTER"}
+              {pathname === "/register" ? dict.connection.login : dict.connection.register}
             </Link>
           </Button>
         )}

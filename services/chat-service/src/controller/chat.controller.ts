@@ -19,7 +19,7 @@ export class ChatController {
 	async handleConnection(connection: WebSocket, request: FastifyRequest) {
 		const userId = request.headers['x-user-id'] as string;
 
-		if (/*!userId ||*/ !userId) {
+		if (!userId) {
 			connection.close(4000, 'User ID is required');
 			return;
 		}
@@ -62,7 +62,6 @@ export class ChatController {
 		const recId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${receiverId}`)
 		.catch(() => {
 			this.sendToUser(senderId, {
-
 				type: 'ERROR',
 				data: { message: 'undefined user'}
 			})

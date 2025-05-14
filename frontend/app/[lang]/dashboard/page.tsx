@@ -553,17 +553,6 @@ export default function DashboardPage() {
                           </Label>
                           <Input id="username" defaultValue="PLAYER_ONE" className="font-pixel text-sm h-10 bg-muted" />
                         </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="displayName" className="font-pixel text-xs">
-                            DISPLAY NAME
-                          </Label>
-                          <Input
-                            id="displayName"
-                            defaultValue="Player One"
-                            className="font-pixel text-sm h-10 bg-muted"
-                          />
-                        </div>
                       </div>
 
                       <div className="space-y-2">

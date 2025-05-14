@@ -1,14 +1,26 @@
 "use client"
 
+import type React from "react"
+
+import { useState } from "react"
 import { MainNav } from "@/components/main-nav"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
+import { Separator } from "@/components/ui/separator"
 import { Footer } from "@/components/footer"
+import { Check, ChevronDown } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { SkinSelector } from "@/components/skin-selector"
+import axios from "axios"
 
 // Sample data for charts
 const gamePlayData = [
@@ -45,7 +57,123 @@ const dinoHistory = [
   { map: "CLASSIC MAP", score: 412, date: "04/12/2023" },
 ]
 
+// Settings data
+const languages = [
+  { code: "en", name: "English" },
+  { code: "es", name: "Spanish" },
+  { code: "fr", name: "French" },
+  { code: "de", name: "German" },
+  { code: "ja", name: "Japanese" },
+]
+
+// Sample skin data
+const characterSkins = [
+  {
+    id: "cs1",
+    name: "CLASSIC PIXEL",
+    image: "/placeholder.svg?height=100&width=100",
+    owned: true,
+  },
+  {
+    id: "cs2",
+    name: "NEON WARRIOR",
+    image: "/placeholder.svg?height=100&width=100",
+    owned: false,
+  },
+  {
+    id: "cs3",
+    name: "ROBOT PLAYER",
+    image: "/placeholder.svg?height=100&width=100",
+    owned: true,
+  },
+  {
+    id: "cs4",
+    name: "GHOST MODE",
+    image: "/placeholder.svg?height=100&width=100",
+    owned: false,
+  },
+  {
+    id: "cs5",
+    name: "RETRO HERO",
+    image: "/placeholder.svg?height=100&width=100",
+    owned: true,
+  },
+]
+
+const pongMapSkins = [
+  {
+    id: "pms1",
+    name: "CLASSIC ARENA",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: true,
+  },
+  {
+    id: "pms2",
+    name: "SPACE VOID",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: false,
+  },
+  {
+    id: "pms3",
+    name: "NEON GRID",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: true,
+  },
+  {
+    id: "pms4",
+    name: "RETRO ARCADE",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: false,
+  },
+]
+
+const dinoMapSkins = [
+  {
+    id: "dms1",
+    name: "RETRO DESERT",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: true,
+  },
+  {
+    id: "dms2",
+    name: "CYBER CITY",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: false,
+  },
+  {
+    id: "dms3",
+    name: "PIXEL FOREST",
+    image: "/placeholder.svg?height=100&width=200",
+    owned: true,
+  },
+]
+
 export default function DashboardPage() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeSettingsTab, setActiveSettingsTab] = useState("profile")
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    setIsLoading(true)
+
+    axios
+      .get("/api/auth/access", {
+        headers: {
+          Authorization: `token_here`,
+        },
+      })
+      .then((response) => {
+        console.log("Token valid:", response.data)
+      })
+      .catch((error) => {
+        console.error("Token invalid:", error.response?.data || error.message)
+      })
+
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
@@ -74,10 +202,8 @@ export default function DashboardPage() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
             <TabsTrigger value="overview">OVERVIEW</TabsTrigger>
-            <TabsTrigger value="pong">PONG STATS</TabsTrigger>
-            <TabsTrigger value="dino">DINO STATS</TabsTrigger>
             <TabsTrigger value="history">GAME HISTORY</TabsTrigger>
-            <TabsTrigger value="achievements">ACHIEVEMENTS</TabsTrigger>
+            <TabsTrigger value="settings">SETTINGS</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
@@ -257,64 +383,6 @@ export default function DashboardPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="pong" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">PONG STATISTICS</CardTitle>
-                <CardDescription className="font-pixel text-xs">YOUR PERFORMANCE IN PONG GAMES</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">GAMES PLAYED</p>
-                    <p className="font-pixel text-xl">76</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">WINS</p>
-                    <p className="font-pixel text-xl">48</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">LOSSES</p>
-                    <p className="font-pixel text-xl">28</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">WIN RATE</p>
-                    <p className="font-pixel text-xl">63%</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="dino" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">DINO STATISTICS</CardTitle>
-                <CardDescription className="font-pixel text-xs">YOUR PERFORMANCE IN DINO RUN GAMES</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">GAMES PLAYED</p>
-                    <p className="font-pixel text-xl">52</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">HIGH SCORE</p>
-                    <p className="font-pixel text-xl">1,024</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">AVERAGE SCORE</p>
-                    <p className="font-pixel text-xl">512</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground">TOTAL DISTANCE</p>
-                    <p className="font-pixel text-xl">42km</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="history" className="space-y-4">
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
@@ -394,135 +462,312 @@ export default function DashboardPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="achievements" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">ACHIEVEMENTS</CardTitle>
-                <CardDescription className="font-pixel text-xs">YOUR UNLOCKED ACHIEVEMENTS</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-                    <div className="p-2 bg-game-blue/20 rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="round"
-                        className="text-game-blue h-6 w-6"
-                      >
-                        <path d="M12 2v4"></path>
-                        <path d="M12 18v4"></path>
-                        <path d="m4.93 4.93 2.83 2.83"></path>
-                        <path d="m16.24 16.24 2.83 2.83"></path>
-                        <path d="M2 12h4"></path>
-                        <path d="M18 12h4"></path>
-                        <path d="m4.93 19.07 2.83-2.83"></path>
-                        <path d="m16.24 7.76 2.83-2.83"></path>
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-pixel text-sm">FIRST VICTORY</p>
-                      <p className="font-pixel text-xs text-muted-foreground">WIN YOUR FIRST GAME</p>
-                      <p className="font-pixel text-xs text-game-blue mt-1">UNLOCKED: 04/15/2023</p>
-                    </div>
-                  </div>
+          <TabsContent value="settings" className="space-y-4">
+            <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
+              <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
+                <TabsTrigger value="profile">PROFILE</TabsTrigger>
+                <TabsTrigger value="account">ACCOUNT</TabsTrigger>
+                <TabsTrigger value="security">SECURITY</TabsTrigger>
+                <TabsTrigger value="appearance">APPEARANCE</TabsTrigger>
+                <TabsTrigger value="skins">SKINS</TabsTrigger>
+              </TabsList>
 
-                  <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-                    <div className="p-2 bg-game-orange/20 rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="round"
-                        className="text-game-orange h-6 w-6"
-                      >
-                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                        <path d="M4 22h16"></path>
-                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
-                      </svg>
+              <TabsContent value="profile" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">PROFILE</CardTitle>
+                    <CardDescription className="font-pixel text-xs">
+                      MANAGE YOUR PUBLIC PROFILE INFORMATION
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                      <Avatar className="h-20 w-20 border-2 border-game-blue">
+                        <AvatarImage src="/placeholder.svg?height=80&width=80" alt="@player" />
+                        <AvatarFallback className="font-pixel text-lg">P1</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-2">
+                        <h3 className="font-pixel text-sm">PROFILE PICTURE</h3>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" className="font-pixel text-xs">
+                            UPLOAD
+                          </Button>
+                          <Button variant="outline" size="sm" className="font-pixel text-xs text-destructive">
+                            REMOVE
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-pixel text-sm">CHAMPION</p>
-                      <p className="font-pixel text-xs text-muted-foreground">WIN 10 GAMES IN A ROW</p>
-                      <p className="font-pixel text-xs text-game-orange mt-1">UNLOCKED: 06/22/2023</p>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-                    <div className="p-2 bg-game-red/20 rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="round"
-                        className="text-game-red h-6 w-6"
-                      >
-                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-pixel text-sm">ON FIRE</p>
-                      <p className="font-pixel text-xs text-muted-foreground">SCORE 500+ POINTS IN DINO RUN</p>
-                      <p className="font-pixel text-xs text-game-red mt-1">UNLOCKED: 08/03/2023</p>
-                    </div>
-                  </div>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label htmlFor="username" className="font-pixel text-xs">
+                            USERNAME
+                          </Label>
+                          <Input id="username" defaultValue="PLAYER_ONE" className="font-pixel text-sm h-10 bg-muted" />
+                        </div>
 
-                  <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-                    <div className="p-2 bg-game-green/20 rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="square"
-                        strokeLinejoin="round"
-                        className="text-game-green h-6 w-6"
+                        <div className="space-y-2">
+                          <Label htmlFor="displayName" className="font-pixel text-xs">
+                            DISPLAY NAME
+                          </Label>
+                          <Input
+                            id="displayName"
+                            defaultValue="Player One"
+                            className="font-pixel text-sm h-10 bg-muted"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="bio" className="font-pixel text-xs">
+                          BIO
+                        </Label>
+                        <Textarea
+                          id="bio"
+                          rows={3}
+                          defaultValue="Retro gaming enthusiast. Pong champion."
+                          className="w-full rounded-md border border-input bg-muted px-3 py-2 text-sm font-pixel"
+                        />
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
+                        disabled={isLoading}
                       >
-                        <path d="M12 2v8"></path>
-                        <path d="m4.93 10.93 1.41 1.41"></path>
-                        <path d="M2 18h2"></path>
-                        <path d="M20 18h2"></path>
-                        <path d="m19.07 10.93-1.41 1.41"></path>
-                        <path d="M22 22H2"></path>
-                        <path d="M16 6 8 14"></path>
-                        <path d="m16 14-2-2-6-6"></path>
-                        <path d="M8 6h8"></path>
-                        <path d="M10.5 6v4"></path>
-                        <path d="M13.5 6v4"></path>
-                        <path d="M16 14H8"></path>
-                      </svg>
+                        {isLoading ? "SAVING..." : "SAVE CHANGES"}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="account" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">ACCOUNT INFORMATION</CardTitle>
+                    <CardDescription className="font-pixel text-xs">UPDATE YOUR ACCOUNT DETAILS</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email" className="font-pixel text-xs">
+                          EMAIL
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          defaultValue="player@example.com"
+                          className="font-pixel text-sm h-10 bg-muted"
+                        />
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "UPDATING..." : "UPDATE EMAIL"}
+                      </Button>
+                    </form>
+
+                    <Separator className="my-4" />
+
+                    <div className="space-y-2">
+                      <h3 className="font-pixel text-sm text-destructive">DANGER ZONE</h3>
+                      <p className="font-pixel text-xs text-muted-foreground">
+                        ONCE YOU DELETE YOUR ACCOUNT, THERE IS NO GOING BACK. PLEASE BE CERTAIN.
+                      </p>
+                      <Button variant="destructive" className="font-pixel">
+                        DELETE ACCOUNT
+                      </Button>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-pixel text-sm">PONG MASTER</p>
-                      <p className="font-pixel text-xs text-muted-foreground">WIN 50 PONG GAMES</p>
-                      <p className="font-pixel text-xs text-game-green mt-1">UNLOCKED: 09/15/2023</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="security" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">PASSWORD</CardTitle>
+                    <CardDescription className="font-pixel text-xs">CHANGE YOUR PASSWORD</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="currentPassword" className="font-pixel text-xs">
+                          CURRENT PASSWORD
+                        </Label>
+                        <Input id="currentPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="newPassword" className="font-pixel text-xs">
+                          NEW PASSWORD
+                        </Label>
+                        <Input id="newPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="confirmPassword" className="font-pixel text-xs">
+                          CONFIRM NEW PASSWORD
+                        </Label>
+                        <Input id="confirmPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "UPDATING..." : "UPDATE PASSWORD"}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">TWO-FACTOR AUTHENTICATION</CardTitle>
+                    <CardDescription className="font-pixel text-xs">
+                      ADD AN EXTRA LAYER OF SECURITY TO YOUR ACCOUNT
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <h3 className="font-pixel text-sm">2FA STATUS</h3>
+                        <p className="font-pixel text-xs text-muted-foreground">
+                          TWO-FACTOR AUTHENTICATION IS CURRENTLY DISABLED
+                        </p>
+                      </div>
+                      <Switch />
                     </div>
-                  </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" className="font-pixel">
+                      SETUP 2FA
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="appearance" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">THEME</CardTitle>
+                    <CardDescription className="font-pixel text-xs">
+                      CUSTOMIZE THE APPEARANCE OF THE APPLICATION
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <h3 className="font-pixel text-sm">DARK MODE</h3>
+                        <p className="font-pixel text-xs text-muted-foreground">TOGGLE BETWEEN LIGHT AND DARK MODE</p>
+                      </div>
+                      <Switch defaultChecked />
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="font-pixel text-sm">COLOR THEME</h3>
+                      <div className="grid grid-cols-5 gap-2">
+                        {["#4A9DFF", "#FFA500", "#FF4D4D", "#4CAF50", "#9C27B0"].map((color, index) => (
+                          <button
+                            key={index}
+                            className={`h-12 w-full rounded-md border-2 ${index === 0 ? "border-white" : "border-transparent"}`}
+                            style={{ backgroundColor: color }}
+                            onClick={() => {}}
+                            aria-label={`Color theme ${index + 1}`}
+                          >
+                            {index === 0 && <Check className="h-6 w-6 text-white mx-auto" />}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="font-pixel text-sm">LANGUAGE</h3>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between font-pixel">
+                            <span>ENGLISH</span>
+                            <ChevronDown className="h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-full" align="end">
+                          {languages.map((language) => (
+                            <DropdownMenuItem
+                              key={language.code}
+                              className="font-pixel text-xs cursor-pointer"
+                              onClick={() => {}}
+                            >
+                              {language.name.toUpperCase()}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE PREFERENCES</Button>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="skins" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="CHARACTER SKIN"
+                      description="CHOOSE YOUR PLAYER APPEARANCE"
+                      skins={characterSkins}
+                      defaultSelected="cs1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="PONG MAP"
+                      description="SELECT YOUR PONG GAME ENVIRONMENT"
+                      skins={pongMapSkins}
+                      defaultSelected="pms1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="DINO RUN MAP"
+                      description="SELECT YOUR DINO RUN ENVIRONMENT"
+                      skins={dinoMapSkins}
+                      defaultSelected="dms1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <div className="flex justify-end">
+                  <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
                 </div>
-              </CardContent>
-            </Card>
+              </TabsContent>
+            </Tabs>
           </TabsContent>
         </Tabs>
       </div>

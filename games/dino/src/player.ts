@@ -26,11 +26,11 @@ export class Player {
 		
 		setInterval(() => {
 			if (this.in_jump && this.y_pos < CONST.JUMP_MAX_Y)
-				this.y_pos += this.y_pos < CONST.FAST_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+				this.y_pos += this.y_pos < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
 			else if (this.in_jump && this.y_pos >= CONST.JUMP_MAX_Y)
 				this.in_jump = false ;
 			else if (!this.in_jump && this.y_pos > 0)
-				this.y_pos -= this.y_pos < CONST.FAST_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+				this.y_pos -= this.y_pos < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
 
 			if (this.y_pos > CONST.JUMP_MAX_Y)	this.y_pos = CONST.JUMP_MAX_Y ;
 			if (this.y_pos < 0)		this.y_pos = 0 ;

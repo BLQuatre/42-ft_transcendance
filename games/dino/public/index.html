@@ -26,14 +26,49 @@
 		const socket = new WebSocket('ws://localhost:3001') ;
 		let playerId = null ;
 		let gameState = null ;
+
+		const TYPE_CACTUS	= 1 ;
+		const TYPE_SMALL	= 2 ;
+		const TYPE_GROUP	= 3 ;
+		const TYPE_PTERO	= 4 ;
+/*
+
+export const PLAYER_WIDTH		= 48 ;
+export const PLAYER_HEIGHT		= 48 ;
+
+export const CACTUS_WIDTH		= 32 ;
+export const CACTUS_HEIGHT		= 48 ;
+
+export const SMALL_WIDTH		= 16 ;
+export const SMALL_HEIGHT		= 32 ;
+
+export const GROUP_WIDTH		= 48 ;
+export const GROUP_HEIGHT		= 48 ;
+
+export const PTERO_WIDTH		= 48 ;
+export const PTERO_HEIGHT		= 48 ;
+
+*/
 		
-		const DINOWIDTH = 50 ; const DINOHEIGHT = 50 ;
+		const DINO_WIDTH = 48 ; const DINO_HEIGHT = 48 ;
 		const dinoImage = new Image() ;
 		dinoImage.src = 'img/dino_standing.png' ;
 		
-		const CACTUSWIDTH = 30 ; const CACTUSHEIGHT = 50 ;
+		const CACTUS_WIDTH = 32 ; const CACTUS_HEIGHT = 48 ;
 		const cactusImage = new Image() ;
 		cactusImage.src = 'img/cactus.png' ;
+		
+		const SMALL_WIDTH = 16 ; const SMALL_HEIGHT = 32 ;
+		const smallImage = new Image() ;
+		smallImage.src = 'img/cactus_small.png' ;
+		
+		const GROUP_WIDTH = 48 ; const GROUP_HEIGHT = 48 ;
+		const groupImage = new Image() ;
+		groupImage.src = 'img/cactus_group.png' ;
+		
+		const PTERO_WIDTH = 48 ; const PTERO_HEIGHT = 48 ;
+		const pteroImage = new Image() ;
+		pteroImage.src = 'img/ptero1.png' ;
 		
 		const keysPressed = {
 			jump: false,
@@ -69,13 +104,18 @@
 				ctx.fillRect(20, (offset * i), (canvas.width - 40), 2) ;
 				
 				if (dinoImage.complete) {
-					ctx.drawImage(dinoImage, 40, ((offset * i) - DINOHEIGHT - dino.y), DINOWIDTH, DINOHEIGHT) ;
+					ctx.drawImage(dinoImage, 40, ((offset * i) - DINO_HEIGHT - dino.y), DINO_WIDTH, DINO_HEIGHT) ;
 				}
 
 				gameState.obstacles.forEach(obstacle => {
-					if (cactusImage.complete) {
-						ctx.drawImage(cactusImage, obstacle.x, ((offset * i) - CACTUSHEIGHT), CACTUSWIDTH, CACTUSHEIGHT) ;
-					}
+					if (obstacle.type === TYPE_CACTUS && cactusImage.complete)
+						ctx.drawImage(cactusImage, obstacle.x, ((offset * i) - obstacle.y), CACTUS_WIDTH, CACTUS_HEIGHT) ;
+					else if (obstacle.type === TYPE_SMALL && smallImage.complete)
+						ctx.drawImage(smallImage, obstacle.x, ((offset * i) - obstacle.y), SMALL_WIDTH, SMALL_HEIGHT) ;
+					else if (obstacle.type === TYPE_GROUP && groupImage.complete)
+						ctx.drawImage(groupImage, obstacle.x, ((offset * i) - obstacle.y), GROUP_WIDTH, GROUP_HEIGHT) ;
+					else if (obstacle.type === TYPE_PTERO && pteroImage.complete)
+						ctx.drawImage(pteroImage, obstacle.x, ((offset * i) - obstacle.y), PTERO_WIDTH, PTERO_HEIGHT) ;
 				})
 
 				i++ ;

@@ -131,5 +131,33 @@
 				"title": "Game History"
 			}
 		}
+	},
+
+	"userStatus": {
+		"online": "Online",
+		"offline": "Offline"
+	},
+
+	"friends": {
+		"title": "Friends",
+		"description": "Invite your friends to play with you",
+
+		"sections": {
+			"myFriends": {
+				"title": "My Friends",
+				"description": "Manage your friends list",
+				"search": "Search friends...",
+				"noFriends": "You don't have any friends yet.",
+				"noFriendsFound": "No friends found. Try a different search."
+			},
+
+			"requests": {
+				"title": "Friend Requests",
+				"description": "Manage incoming friend requests",
+				"noRequests": "You don't have any friend requests yet.",
+				"accept": "Accept",
+				"decline": "Decline"
+			}
+		}
 	}
 }

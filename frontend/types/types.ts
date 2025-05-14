@@ -70,3 +70,14 @@ export enum Language {
 	RUSSIAN = "ru",
 	LINGALA = "ln",
 }
+
+export enum UserStatus {
+	ONLINE = "online",
+	OFFLINE = "offline"
+}
+
+export interface Friend {
+	username: string;
+	avatar: string;
+	status: UserStatus;
+}

@@ -50,15 +50,6 @@ export function MainNav() {
             >
               SHOP
             </Link>
-            <Link
-              href="/dashboard"
-              className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue",
-                pathname.startsWith("/dashboard") ? "text-game-blue" : "text-muted-foreground",
-              )}
-            >
-              STATS
-            </Link>
           </>
         )}
       </nav>
@@ -66,25 +57,6 @@ export function MainNav() {
       <div className="flex items-center space-x-4">
         {isLoggedIn ? (
           <>
-            <div className="flex items-center">
-              <div className="mr-2 font-pixel text-xs text-game-orange hidden sm:block">1250</div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-game-orange"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 6v12" />
-                <path d="M8 10h8" />
-              </svg>
-            </div>
             <div className="relative">
               <Link
                 href="/friends"
@@ -99,14 +71,14 @@ export function MainNav() {
             </div>
             <div className="relative">
               <Link
-                href="/settings"
+                href="/dashboard"
                 className={cn(
                   "flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-muted",
-                  pathname === "/settings" ? "bg-muted" : "",
+                  pathname === "/dashboard" ? "bg-muted" : "",
                 )}
               >
                 <User className="h-5 w-5" />
-                <span className="font-pixel text-xs hidden sm:inline-block">PROFILE</span>
+                <span className="font-pixel text-xs hidden sm:inline-block">DASHBOARD</span>
               </Link>
             </div>
             {/* Mobile navigation */}

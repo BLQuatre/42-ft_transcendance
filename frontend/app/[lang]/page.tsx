@@ -8,7 +8,7 @@ import { getDictionary } from "@/dictionnaries"
 export default async function HomePage({
   params,
 }: {
-  params: Promise<{ lang: 'en' | 'fr' }>
+  params: Promise<{ lang: "en" | "fr" }>
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
@@ -18,82 +18,83 @@ export default async function HomePage({
       <MainNav />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        {/* <section className="py-12 md:py-24 lg:py-32 bg-game-dark">
+        {/* Games Section - Moved to the top for prominence */}
+        <section className="py-8 md:py-16 lg:py-20 border-b border-muted">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="font-pixel text-3xl md:text-5xl lg:text-6xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate">
-                  ft_transcendance
-                </h1>
-                <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto">
-                  CHALLENGE YOUR FRIENDS IN CLASSIC GAMES {dict.products.cart}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section> */}
-
-        {/* Games Section */}
-        <section className="py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center mb-12">
-              <h2 className="font-pixel text-2xl md:text-3xl text-game-orange">FEATURED GAMES</h2>
-              <div className="w-20 h-1 bg-game-orange"></div>
+            <div className="flex flex-col items-center space-y-4 text-center mb-8">
+              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange animate-pulse">FEATURED GAMES</h2>
+              <div className="w-32 h-1 bg-game-orange"></div>
+              <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto">
+                CHALLENGE YOUR FRIENDS AND TEST YOUR SKILLS
+              </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
               {/* Pong Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-				<Link href="/games/pong">
-                  <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
-                    alt="Pong Game"
-                    width={700}
-                    height={400}
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
-				</Link>
+                  <Link href="/games/pong">
+                    <Image
+                      src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+                      alt="Pong Game"
+                      width={700}
+                      height={400}
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                  </Link>
                 </div>
                 <div className="p-6">
                   <h3 className="font-pixel text-xl text-game-blue mb-2">PONG</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4">
                     THE CLASSIC TABLE TENNIS GAME. COMPETE WITH FRIENDS TO SEE WHO CAN SCORE THE MOST POINTS.
                   </p>
-                  <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
-                    <Link href="/games/pong">PLAY PONG</Link>
-                  </Button>
-				  <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 ml-5">
-                    <Link href="/games#pong">GAME RULES</Link>
-                  </Button>
+                  <div className="flex flex-wrap justify-between items-center">
+                    <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 min-w-28">
+                      <Link href="/games/pong">PLAY PONG</Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue"
+                    >
+                      <Link href="/games#pong">GAME RULES &gt;</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
 
               {/* Dino Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-				<Link href="/games/dino">
-                  <Image
-                    src="https://archive.org/download/dino-run/dino-run.jpg"
-                    alt="Dino Game"
-                    width={700}
-                    height={400}
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
-				</Link>
+                  <Link href="/games/dino">
+                    <Image
+                      src="https://archive.org/download/dino-run/dino-run.jpg"
+                      alt="Dino Game"
+                      width={700}
+                      height={400}
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                  </Link>
                 </div>
                 <div className="p-6">
                   <h3 className="font-pixel text-xl text-game-orange mb-2">DINO RUN</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4">
                     JUMP OVER OBSTACLES AND SURVIVE AS LONG AS POSSIBLE IN THIS ENDLESS RUNNER GAME.
                   </p>
-                  <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90">
-                    <Link href="/games/dino">PLAY DINO</Link>
-                  </Button>
-				  <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 ml-5">
-                    <Link href="/games#dino">GAME RULES</Link>
-                  </Button>
+                  <div className="flex flex-wrap justify-between items-center">
+                    <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 min-w-28">
+                      <Link href="/games/dino">PLAY DINO</Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange"
+                    >
+                      <Link href="/games#dino">GAME RULES &gt;</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -101,7 +102,7 @@ export default async function HomePage({
         </section>
 
         {/* Features Section */}
-        <section className="py-12 md:py-24 lg:py-32 bg-game-dark">
+        <section className="py-12 md:py-20 lg:py-24 bg-game-dark">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center mb-12">
               <h2 className="font-pixel text-2xl md:text-3xl text-game-blue">FEATURES</h2>
@@ -109,7 +110,7 @@ export default async function HomePage({
             </div>
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border">
+              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border hover:transform hover:scale-105 transition-transform">
                 <div className="p-2 bg-game-blue/20 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +132,7 @@ export default async function HomePage({
                 <p className="font-pixel text-xs text-muted-foreground">PLAY WITH FRIENDS LOCALLY OR ONLINE</p>
               </div>
 
-              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border">
+              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border hover:transform hover:scale-105 transition-transform">
                 <div className="p-2 bg-game-orange/20 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -148,11 +149,11 @@ export default async function HomePage({
                     <path d="M12 20v-6M6 20V10M18 20V4"></path>
                   </svg>
                 </div>
-                <h3 className="font-pixel text-base">LEADERBOARDS</h3>
-                <p className="font-pixel text-xs text-muted-foreground">COMPETE FOR THE TOP SPOT</p>
+                <h3 className="font-pixel text-base">STATS</h3>
+                <p className="font-pixel text-xs text-muted-foreground">TRACK YOUR PROGRESS AND GAME HISTORY</p>
               </div>
 
-              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border sm:col-span-2 md:col-span-1">
+              <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border sm:col-span-2 md:col-span-1 hover:transform hover:scale-105 transition-transform">
                 <div className="p-2 bg-game-red/20 rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

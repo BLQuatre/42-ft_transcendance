@@ -202,7 +202,8 @@ export default function DashboardPage() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
             <TabsTrigger value="overview">OVERVIEW</TabsTrigger>
-            <TabsTrigger value="history">GAME HISTORY</TabsTrigger>
+            <TabsTrigger value="history">HISTORY</TabsTrigger>
+            <TabsTrigger value="skins">SKINS</TabsTrigger>
             <TabsTrigger value="settings">SETTINGS</TabsTrigger>
           </TabsList>
 
@@ -462,6 +463,57 @@ export default function DashboardPage() {
             </div>
           </TabsContent>
 
+		  <TabsContent value="skins" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="CHARACTER SKIN"
+                      description="CHOOSE YOUR PLAYER APPEARANCE"
+                      skins={characterSkins}
+                      defaultSelected="cs1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="PONG MAP"
+                      description="SELECT YOUR PONG GAME ENVIRONMENT"
+                      skins={pongMapSkins}
+                      defaultSelected="pms1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
+                    <CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SkinSelector
+                      title="DINO RUN MAP"
+                      description="SELECT YOUR DINO RUN ENVIRONMENT"
+                      skins={dinoMapSkins}
+                      defaultSelected="dms1"
+                    />
+                  </CardContent>
+                </Card>
+
+                <div className="flex justify-end">
+                  <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
+                </div>
+          </TabsContent>
+
           <TabsContent value="settings" className="space-y-4">
             <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
@@ -469,7 +521,6 @@ export default function DashboardPage() {
                 <TabsTrigger value="account">ACCOUNT</TabsTrigger>
                 <TabsTrigger value="security">SECURITY</TabsTrigger>
                 <TabsTrigger value="appearance">APPEARANCE</TabsTrigger>
-                <TabsTrigger value="skins">SKINS</TabsTrigger>
               </TabsList>
 
               <TabsContent value="profile" className="space-y-4">
@@ -715,57 +766,6 @@ export default function DashboardPage() {
                     <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE PREFERENCES</Button>
                   </CardFooter>
                 </Card>
-              </TabsContent>
-
-              <TabsContent value="skins" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="CHARACTER SKIN"
-                      description="CHOOSE YOUR PLAYER APPEARANCE"
-                      skins={characterSkins}
-                      defaultSelected="cs1"
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="PONG MAP"
-                      description="SELECT YOUR PONG GAME ENVIRONMENT"
-                      skins={pongMapSkins}
-                      defaultSelected="pms1"
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
-                    <CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SkinSelector
-                      title="DINO RUN MAP"
-                      description="SELECT YOUR DINO RUN ENVIRONMENT"
-                      skins={dinoMapSkins}
-                      defaultSelected="dms1"
-                    />
-                  </CardContent>
-                </Card>
-
-                <div className="flex justify-end">
-                  <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
-                </div>
               </TabsContent>
             </Tabs>
           </TabsContent>

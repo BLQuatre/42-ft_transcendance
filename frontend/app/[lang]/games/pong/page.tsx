@@ -150,11 +150,11 @@ export default function PongGamePage() {
           <p className="font-pixel text-xs text-muted-foreground">THE CLASSIC TABLE TENNIS GAME</p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[1fr_300px]">
+        <div className="grid gap-8">
           <div className="space-y-4">
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
+                <canvas ref={canvasRef} width={800} height={350} className="w-full h-auto bg-game-dark pixel-border" />
               </CardContent>
               <CardFooter className="flex justify-between p-4">
                 <div className="font-pixel text-sm">
@@ -176,135 +176,6 @@ export default function PongGamePage() {
                 PLAYER 2: ARROW UP AND ARROW DOWN
               </AlertDescription>
             </Alert>
-          </div>
-
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">LEADERBOARD</CardTitle>
-                <CardDescription className="font-pixel text-xs">TOP PLAYERS THIS WEEK</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">1. PLAYER_ONE</p>
-                    <p className="font-pixel text-xs">120 PTS</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">2. GAMER42</p>
-                    <p className="font-pixel text-xs">98 PTS</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">3. RETRO_FAN</p>
-                    <p className="font-pixel text-xs">87 PTS</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">4. PIXEL_MASTER</p>
-                    <p className="font-pixel text-xs">65 PTS</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">5. ARCADE_PRO</p>
-                    <p className="font-pixel text-xs">52 PTS</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">YOUR STATS</CardTitle>
-                <CardDescription className="font-pixel text-xs">YOUR PONG PERFORMANCE</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">GAMES PLAYED</p>
-                    <p className="font-pixel text-xs">76</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">WINS</p>
-                    <p className="font-pixel text-xs">48</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">LOSSES</p>
-                    <p className="font-pixel text-xs">28</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">WIN RATE</p>
-                    <p className="font-pixel text-xs">63%</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-pixel text-xs">HIGHEST SCORE</p>
-                    <p className="font-pixel text-xs">15-3</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="mt-4">
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">RECENT GAMES</CardTitle>
-                <CardDescription className="font-pixel text-xs">YOUR LATEST PONG MATCHES</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-2 bg-muted rounded-md">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-game-green"></div>
-                      <p className="font-pixel text-xs">VS. GAMER42</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <p className="font-pixel text-xs text-game-blue">10-5</p>
-                      <p className="font-pixel text-xs text-muted-foreground">04/20/2023</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center p-2 bg-muted rounded-md">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-game-green"></div>
-                      <p className="font-pixel text-xs">VS. PIXEL_MASTER</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <p className="font-pixel text-xs text-game-blue">10-8</p>
-                      <p className="font-pixel text-xs text-muted-foreground">04/18/2023</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center p-2 bg-muted rounded-md">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-game-red"></div>
-                      <p className="font-pixel text-xs">VS. RETRO_FAN</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <p className="font-pixel text-xs text-game-red">7-10</p>
-                      <p className="font-pixel text-xs text-muted-foreground">04/15/2023</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center p-2 bg-muted rounded-md">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-game-green"></div>
-                      <p className="font-pixel text-xs">VS. ARCADE_PRO</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <p className="font-pixel text-xs text-game-blue">10-2</p>
-                      <p className="font-pixel text-xs text-muted-foreground">04/12/2023</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center p-2 bg-muted rounded-md">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-game-green"></div>
-                      <p className="font-pixel text-xs">VS. JUMP_MASTER</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <p className="font-pixel text-xs text-game-blue">10-6</p>
-                      <p className="font-pixel text-xs text-muted-foreground">04/10/2023</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

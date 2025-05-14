@@ -126,6 +126,10 @@
   }
 }
 
+::-webkit-scrollbar {
+	display: none;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -161,3 +165,12 @@
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
   }
 }
+
+* {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+  }

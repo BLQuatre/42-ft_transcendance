@@ -40,16 +40,12 @@ export interface User {
 		dino: DinoGameStats;
 	};
 	recentGames: Game[];
-	achievements: Achievement[];
 }
 
 export interface UserStats {
 	totalGames: number;
 	winRate: string;
 	highScore: number;
-	playtime: string;
-	achievements: number;
-	rank: string;
 }
 
 export interface PongGameStats {
@@ -65,21 +61,4 @@ export interface DinoGameStats {
 	highScore: number;
 	avgScore: number;
 	totalDistance: string;
-}
-
-export enum AchievementRarity {
-	COMMON = "common",
-	UNCOMMON = "uncommon",
-	RARE = "rare",
-	EPIC = "epic",
-	LEGENDARY = "legendary",
-}
-
-export interface Achievement {
-	id: string;
-	name: string;
-	description: string;
-	icon: string;
-	date: string;
-	rarity: AchievementRarity;
 }

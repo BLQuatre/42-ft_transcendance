@@ -7,12 +7,11 @@ import { Footer } from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { UserPlus, MessageSquare, Trophy, GamepadIcon, Clock, BarChart3 } from "lucide-react"
+import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
-import { Achievement, AchievementRarity, DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/User"
+import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/User"
 
 // Sample user data - in a real app, this would come from an API
 const userData: Record<string, User> = {
@@ -26,9 +25,6 @@ const userData: Record<string, User> = {
       totalGames: 342,
       winRate: "68%",
       highScore: 1876,
-      playtime: "124h",
-      achievements: 18,
-      rank: "#42",
     },
     gameStats: {
       pong: {
@@ -52,40 +48,6 @@ const userData: Record<string, User> = {
       { type: GameType.DINO, score: 1245, date: "04/12/2023", distance: 500 },
       { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-2", date: "04/10/2023" },
     ],
-    achievements: [
-      {
-        id: "a1",
-        name: "FIRST VICTORY",
-        description: "Win your first game",
-        icon: "trophy",
-        date: "04/15/2022",
-        rarity: AchievementRarity.COMMON,
-      },
-      {
-        id: "a2",
-        name: "CHAMPION",
-        description: "Win 10 games in a row",
-        icon: "medal",
-        date: "06/22/2022",
-        rarity: AchievementRarity.RARE
-      },
-      {
-        id: "a3",
-        name: "ON FIRE",
-        description: "Score 500+ points in Dino Run",
-        icon: "flame",
-        date: "08/03/2022",
-        rarity: AchievementRarity.UNCOMMON,
-      },
-      {
-        id: "a4",
-        name: "PONG MASTER",
-        description: "Win 50 Pong games",
-        icon: "award",
-        date: "09/15/2022",
-        rarity: AchievementRarity.EPIC,
-      },
-    ],
   },
   PIXEL_MASTER: {
     username: "PIXEL_MASTER",
@@ -97,9 +59,6 @@ const userData: Record<string, User> = {
       totalGames: 512,
       winRate: "74%",
       highScore: 2048,
-      playtime: "256h",
-      achievements: 24,
-      rank: "#12",
     },
     gameStats: {
       pong: {
@@ -123,48 +82,6 @@ const userData: Record<string, User> = {
       { type: GameType.DINO, score: 1654, date: "04/22/2023", distance: 500 },
       { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-4", date: "04/20/2023" },
     ],
-    achievements: [
-      {
-        id: "a1",
-        name: "FIRST VICTORY",
-        description: "Win your first game",
-        icon: "trophy",
-        date: "03/05/2022",
-        rarity: AchievementRarity.COMMON,
-      },
-      {
-        id: "a2",
-        name: "CHAMPION",
-        description: "Win 10 games in a row",
-        icon: "medal",
-        date: "04/10/2022",
-        rarity: AchievementRarity.RARE
-      },
-      {
-        id: "a3",
-        name: "ON FIRE",
-        description: "Score 500+ points in Dino Run",
-        icon: "flame",
-        date: "05/15/2022",
-        rarity: AchievementRarity.UNCOMMON,
-      },
-      {
-        id: "a4",
-        name: "PONG MASTER",
-        description: "Win 50 Pong games",
-        icon: "award",
-        date: "06/20/2022",
-        rarity: AchievementRarity.EPIC,
-      },
-      {
-        id: "a5",
-        name: "LEGENDARY",
-        description: "Reach level 30",
-        icon: "star",
-        date: "10/10/2022",
-        rarity: AchievementRarity.LEGENDARY
-      },
-    ],
   },
   RETRO_FAN: {
     username: "RETRO_FAN",
@@ -176,9 +93,6 @@ const userData: Record<string, User> = {
       totalGames: 256,
       winRate: "62%",
       highScore: 1542,
-      playtime: "98h",
-      achievements: 15,
-      rank: "#76",
     },
     gameStats: {
       pong: {
@@ -201,32 +115,6 @@ const userData: Record<string, User> = {
       { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.LOSE, score: "6-10", date: "04/25/2023" },
       { type: GameType.DINO, score: 1102, date: "04/08/2023", distance: 100 },
       { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.LOSE, score: "5-10", date: "04/05/2023" },
-    ],
-    achievements: [
-      {
-        id: "a1",
-        name: "FIRST VICTORY",
-        description: "Win your first game",
-        icon: "trophy",
-        date: "06/20/2022",
-        rarity: AchievementRarity.COMMON
-      },
-      {
-        id: "a3",
-        name: "ON FIRE",
-        description: "Score 500+ points in Dino Run",
-        icon: "flame",
-        date: "07/15/2022",
-        rarity: AchievementRarity.UNCOMMON
-      },
-      {
-        id: "a6",
-        name: "COLLECTOR",
-        description: "Unlock 5 different skins",
-        icon: "package",
-        date: "09/10/2022",
-        rarity: AchievementRarity.RARE
-      },
     ],
   },
 }
@@ -303,7 +191,7 @@ export default function UserProfilePage() {
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
 
-      <div className="flex-1 container py-8 px-4 md:px-6">
+      <div className="flex-1 container py-16 px-4 md:px-6">
         {/* User Header */}
         <div className="mb-8 bg-card rounded-lg p-6 pixel-border">
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
@@ -319,25 +207,6 @@ export default function UserProfilePage() {
               <p className="font-pixel text-sm text-game-blue">@{user.username}</p>
               <p className="font-pixel text-xs text-muted-foreground mt-1">Membre depuis {user.joinDate}</p>
               <p className="mt-4 text-sm">{user.bio}</p>
-
-              <div className="flex flex-wrap gap-2 mt-4 justify-center md:justify-start">
-                <Badge variant="outline" className="font-pixel text-xs">
-                  <Trophy className="h-3 w-3 mr-1" />
-                  RANG {user.stats.rank}
-                </Badge>
-                <Badge variant="outline" className="font-pixel text-xs">
-                  <GamepadIcon className="h-3 w-3 mr-1" />
-                  {user.stats.totalGames} PARTIES
-                </Badge>
-                <Badge variant="outline" className="font-pixel text-xs">
-                  <Clock className="h-3 w-3 mr-1" />
-                  {user.stats.playtime}
-                </Badge>
-                <Badge variant="outline" className="font-pixel text-xs">
-                  <BarChart3 className="h-3 w-3 mr-1" />
-                  {user.stats.winRate} VICTOIRES
-                </Badge>
-              </div>
             </div>
 
             <div className="flex flex-col gap-2 mt-4 md:mt-0">
@@ -361,13 +230,12 @@ export default function UserProfilePage() {
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
             <TabsTrigger value="overview">APERÇU</TabsTrigger>
             <TabsTrigger value="stats">STATISTIQUES</TabsTrigger>
-            <TabsTrigger value="achievements">SUCCÈS</TabsTrigger>
             <TabsTrigger value="history">HISTORIQUE</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="font-pixel text-sm">PARTIES JOUÉES</CardTitle>
@@ -398,19 +266,9 @@ export default function UserProfilePage() {
                   <p className="font-pixel text-xs text-muted-foreground">DINO RUN</p>
                 </CardContent>
               </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">TEMPS DE JEU</CardTitle>
-                  <Clock className="text-game-green h-4 w-4" />
-                </CardHeader>
-                <CardContent>
-                  <div className="font-pixel text-2xl">{user.stats.playtime}</div>
-                </CardContent>
-              </Card>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-1">
               <Card>
                 <CardHeader>
                   <CardTitle className="font-pixel text-sm">DERNIÈRES PARTIES</CardTitle>
@@ -473,55 +331,6 @@ export default function UserProfilePage() {
                   </div>
                 </CardContent>
               </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-pixel text-sm">SUCCÈS RÉCENTS</CardTitle>
-                  <CardDescription className="font-pixel text-xs">
-                    LES DERNIERS SUCCÈS DÉBLOQUÉS PAR {user.username}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {user.achievements.slice(0, 3).map((achievement: Achievement) => (
-                      <div key={achievement.id} className="flex items-center space-x-4 p-2 bg-muted rounded-md">
-                        <div
-                          className={`p-2 rounded-full ${
-                            achievement.rarity === AchievementRarity.COMMON
-                              ? "bg-gray-500/20"
-                              : achievement.rarity === AchievementRarity.UNCOMMON
-                                ? "bg-game-green/20"
-                                : achievement.rarity === AchievementRarity.RARE
-                                  ? "bg-game-blue/20"
-                                  : achievement.rarity === AchievementRarity.EPIC
-                                    ? "bg-game-orange/20"
-                                    : "bg-game-red/20"
-                          }`}
-                        >
-                          <Trophy
-                            className={`h-4 w-4 ${
-                              achievement.rarity === AchievementRarity.COMMON
-                                ? "text-gray-500"
-                                : achievement.rarity === AchievementRarity.UNCOMMON
-                                  ? "text-game-green"
-                                  : achievement.rarity === AchievementRarity.RARE
-                                    ? "text-game-blue"
-                                    : achievement.rarity === AchievementRarity.EPIC
-                                      ? "text-game-orange"
-                                      : "text-game-red"
-                            }`}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-pixel text-xs">{achievement.name}</p>
-                          <p className="font-pixel text-[10px] text-muted-foreground">{achievement.description}</p>
-                        </div>
-                        <p className="font-pixel text-xs text-muted-foreground">{achievement.date}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </TabsContent>
 
@@ -579,56 +388,6 @@ export default function UserProfilePage() {
                     <p className="font-pixel text-xs text-muted-foreground">DISTANCE TOTALE</p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.totalDistance}</p>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Achievements Tab */}
-          <TabsContent value="achievements" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-sm">SUCCÈS</CardTitle>
-                <CardDescription className="font-pixel text-xs">SUCCÈS DÉBLOQUÉS PAR {user.username}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {user.achievements.map((achievement: Achievement) => (
-                    <div key={achievement.id} className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
-                      <div
-                        className={`p-2 rounded-full ${
-                          achievement.rarity === AchievementRarity.COMMON
-                            ? "bg-gray-500/20"
-                            : achievement.rarity === AchievementRarity.UNCOMMON
-                              ? "bg-game-green/20"
-                              : achievement.rarity === AchievementRarity.RARE
-                                ? "bg-game-blue/20"
-                                : achievement.rarity === AchievementRarity.EPIC
-                                  ? "bg-game-orange/20"
-                                  : "bg-game-red/20"
-                        }`}
-                      >
-                        <Trophy
-                          className={`h-6 w-6 ${
-                            achievement.rarity === AchievementRarity.COMMON
-                              ? "text-gray-500"
-                              : achievement.rarity === AchievementRarity.UNCOMMON
-                                ? "text-game-green"
-                                : achievement.rarity === AchievementRarity.RARE
-                                  ? "text-game-blue"
-                                  : achievement.rarity === AchievementRarity.EPIC
-                                    ? "text-game-orange"
-                                    : "text-game-red"
-                          }`}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-pixel text-sm">{achievement.name}</p>
-                        <p className="font-pixel text-xs text-muted-foreground">{achievement.description}</p>
-                        <p className="font-pixel text-xs text-game-blue mt-1">DÉBLOQUÉ: {achievement.date}</p>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </CardContent>
             </Card>

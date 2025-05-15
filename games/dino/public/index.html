@@ -102,7 +102,11 @@
 			gameState.dinos.forEach(dino => {
 				i++ ;
 
-				if (dino.score > -1) return ;
+				if (dino.score > -1) {
+					ctx.font = '16px Arial' ;
+					ctx.fillText(`${dino.score}`, (canvas.width - 100), ((offset * i) - (offset / 2))) ;
+					return ;
+				}
 
 				ctx.clearRect(0, (offset * (i - 1)), canvas.width, offset) ;
 

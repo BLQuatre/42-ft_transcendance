@@ -454,7 +454,7 @@ export default function DashboardPage() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="font-pixel text-sm">TOTAL GAMES</CardTitle>
@@ -478,7 +478,6 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">128</div>
-                  <p className="font-pixel text-xs text-muted-foreground">+12% FROM LAST WEEK</p>
                 </CardContent>
               </Card>
 
@@ -503,7 +502,6 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">64%</div>
-                  <p className="font-pixel text-xs text-muted-foreground">+5% FROM LAST WEEK</p>
                 </CardContent>
               </Card>
 
@@ -529,32 +527,6 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">1,024</div>
-                  <p className="font-pixel text-xs text-muted-foreground">DINO RUN</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">PLAYTIME</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                    strokeLinejoin="round"
-                    className="text-game-green h-4 w-4"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="font-pixel text-2xl">24h</div>
-                  <p className="font-pixel text-xs text-muted-foreground">+2H FROM LAST WEEK</p>
                 </CardContent>
               </Card>
             </div>

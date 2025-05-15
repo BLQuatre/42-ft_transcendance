@@ -11,7 +11,6 @@ const app = fastify({
 	logger: process.env.DEBUG === 'true',
 });
 
-app.log.info('[AUTH] Connected to database');
 app.register(loginSingUp);
 app.register(authentication);
 

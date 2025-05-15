@@ -98,9 +98,11 @@
 			const offset = 600 / (gameState.dinos.length + 1) ;
 
 			ctx.fillStyle = '#555' ;
-			let i = 1 ;
+			let i = 0 ;
 			gameState.dinos.forEach(dino => {
-				if (dino.score > -1) { i++ ; return ; }
+				i++ ;
+
+				if (dino.score > -1) return ;
 
 				ctx.clearRect(0, (offset * (i - 1)), canvas.width, offset) ;
 
@@ -127,8 +129,6 @@
 						ctx.drawImage(pteroImage, obstacle.x, ((offset * i) - obstacle.y), PTERO_WIDTH, PTERO_HEIGHT) ;
 					}
 				})
-
-				i++ ;
 			}) ;
 	
 			// Draw scores

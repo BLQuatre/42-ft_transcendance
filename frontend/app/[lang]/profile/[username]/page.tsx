@@ -1,0 +1,467 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
+import { MainNav } from "@/components/main-nav"
+import { Footer } from "@/components/footer"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
+import Link from "next/link"
+import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/types"
+import { useDictionary } from "@/hooks/use-dictionnary"
+import Loading from "@/components/loading"
+
+// Sample user data - in a real app, this would come from an API
+const userData: Record<string, User> = {
+  GAMER42: {
+    username: "GAMER42",
+    displayName: "The Gamer",
+    avatar: "/placeholder.svg?height=100&width=100",
+    joinDate: "04/12/2022",
+    bio: "Retro gaming enthusiast. Pong champion and pixel art lover.",
+    stats: {
+      totalGames: 342,
+      winRate: "68%",
+      highScore: 1876,
+    },
+    gameStats: {
+      pong: {
+        played: 156,
+        wins: 112,
+        losses: 44,
+        winRate: "72%",
+        highScore: "15-3",
+      },
+      dino: {
+        played: 186,
+        highScore: 1876,
+        avgScore: 756,
+        totalDistance: "86km",
+      },
+    },
+    recentGames: [
+      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.WIN, score: "10-5", date: "04/20/2023" },
+      { type: GameType.DINO, score: 1542, date: "04/18/2023", distance: 1000 },
+      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "7-10", date: "04/15/2023" },
+      { type: GameType.DINO, score: 1245, date: "04/12/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-2", date: "04/10/2023" },
+    ],
+  },
+  PIXEL_MASTER: {
+    username: "PIXEL_MASTER",
+    displayName: "Pixel Master",
+    avatar: "/placeholder.svg?height=100&width=100",
+    joinDate: "02/28/2022",
+    bio: "Pixel art creator and retro game developer. I love creating and playing 8-bit style games!",
+    stats: {
+      totalGames: 512,
+      winRate: "74%",
+      highScore: 2048,
+    },
+    gameStats: {
+      pong: {
+        played: 210,
+        wins: 168,
+        losses: 42,
+        winRate: "80%",
+        highScore: "15-2",
+      },
+      dino: {
+        played: 302,
+        highScore: 2048,
+        avgScore: 1024,
+        totalDistance: "120km",
+      },
+    },
+    recentGames: [
+      { type: GameType.DINO, score: 1876, date: "05/01/2023", distance: 1000 },
+      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-8", date: "04/28/2023" },
+      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "10-6", date: "04/25/2023" },
+      { type: GameType.DINO, score: 1654, date: "04/22/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-4", date: "04/20/2023" },
+    ],
+  },
+  RETRO_FAN: {
+    username: "RETRO_FAN",
+    displayName: "Retro Fan",
+    avatar: "/placeholder.svg?height=100&width=100",
+    joinDate: "06/15/2022",
+    bio: "Passionate about all things retro. Collector of vintage consoles and arcade machines.",
+    stats: {
+      totalGames: 256,
+      winRate: "62%",
+      highScore: 1542,
+    },
+    gameStats: {
+      pong: {
+        played: 124,
+        wins: 82,
+        losses: 42,
+        winRate: "66%",
+        highScore: "15-8",
+      },
+      dino: {
+        played: 132,
+        highScore: 1542,
+        avgScore: 876,
+        totalDistance: "64km",
+      },
+    },
+    recentGames: [
+      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-7", date: "04/15/2023" },
+      { type: GameType.DINO, score: 1324, date: "04/12/2023", distance: 500 },
+      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.LOSE, score: "6-10", date: "04/25/2023" },
+      { type: GameType.DINO, score: 1102, date: "04/08/2023", distance: 100 },
+      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.LOSE, score: "5-10", date: "04/05/2023" },
+    ],
+  },
+}
+
+export default function UserProfilePage() {
+  const params = useParams()
+  const username = params.username as string
+  // TODO: Remove this any when interface will be implemented
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [isFriend, setIsFriend] = useState(false)
+  const { toast } = useToast()
+
+  useEffect(() => {
+    // Simulate API call to fetch user data
+    setTimeout(() => {
+      const foundUser = userData[username as keyof typeof userData]
+      setUser(foundUser || null)
+      setLoading(false)
+
+      // Simulate checking if this is a friend
+      setIsFriend(username === "GAMER42")
+    }, 500)
+  }, [username])
+
+  const handleAddFriend = () => {
+    setIsFriend(true)
+    toast({
+      title: "Demande d'ami envoyée",
+      description: user ? `Une demande d'ami a été envoyée à ${user.username}` : `Erreur lors de l'envoi de la demande d'ami`,
+      duration: 3000,
+    })
+  }
+
+  const handleMessage = () => {
+    toast({
+      title: "Message",
+      description: user ? `Ouverture de la conversation avec ${user.username}` : `Erreur lors de l'ouverture de la conversation`,
+      duration: 3000,
+    })
+  }
+
+  const dict = useDictionary()
+  if (!dict)
+    return null
+
+  if (loading) {
+    return (
+      <Loading dict={dict} />
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <MainNav />
+        <div className="flex-1 container py-8 px-4 md:px-6 flex flex-col items-center justify-center">
+          <h1 className="font-pixel text-2xl mb-4 uppercase">{dict.profile.notFound.replace("%user%", username)}</h1>
+          <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
+            <Link href="/" className="uppercase">{dict.common.back}</Link>
+          </Button>
+        </div>
+        <Footer dict={dict}/>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <MainNav />
+
+      <div className="flex-1 container py-16 px-4 md:px-6">
+        {/* User Header */}
+        <div className="mb-8 bg-card rounded-lg p-6 pixel-border">
+          <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+            <div className="relative">
+              <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-game-blue">
+                <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} />
+                <AvatarFallback className="font-pixel text-xl">{user.username.substring(0, 2)}</AvatarFallback>
+              </Avatar>
+            </div>
+
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="font-pixel text-2xl md:text-3xl">{user.displayName}</h1>
+              <p className="font-pixel text-sm text-game-blue">@{user.username}</p>
+              <p className="font-pixel text-xs text-muted-foreground mt-1">{dict.profile.memberSince.replace("%date%", user.joinDate)}</p>
+              <p className="mt-4 text-sm">{user.bio}</p>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-4 md:mt-0">
+              {!isFriend ? (
+                <Button className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase" onClick={handleAddFriend}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  {dict.profile.addFriend}
+                </Button>
+              ) : (
+                <Button className="font-pixel bg-game-green hover:bg-game-green/90 uppercase" onClick={handleMessage}>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  {dict.profile.sendMessage}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs for different sections */}
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
+            <TabsTrigger className="uppercase" value="overview">{dict.profile.sections.overview.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="stats">{dict.profile.sections.stats.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="history">{dict.profile.sections.history.title}</TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.gamesPlayed}</CardTitle>
+                  <GamepadIcon className="text-game-blue h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="font-pixel text-2xl">{user.stats.totalGames}</div>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.common.total}</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.winRate}</CardTitle>
+                  <Trophy className="text-game-orange h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="font-pixel text-2xl">{user.stats.winRate}</div>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.pong.title}</p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.bestScore}</CardTitle>
+                  <BarChart3 className="text-game-red h-4 w-4" />
+                </CardHeader>
+                <CardContent>
+                  <div className="font-pixel text-2xl">{user.stats.highScore}</div>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.dino.title}</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.overview.recentGames}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {user.recentGames.slice(0, 3).map((game: Game, index: number) => (
+                      <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                        <div className="flex items-center space-x-2">
+                          {game.type === GameType.PONG ? (
+                            <>
+                              <div
+                                className={`w-2 h-2 rounded-full ${
+                                  game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
+                                }`}
+                              ></div>
+                              <p className="font-pixel text-xs">
+                                {game.type.toUpperCase()} VS. {game.opponent}
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="text-game-orange"
+                              >
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                              </svg>
+                              <p className="font-pixel text-xs">{game.type.toUpperCase()}</p>
+                            </>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {game.type === GameType.PONG ? (
+                            <p
+                              className={`font-pixel text-xs ${
+                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
+                              }`}
+                            >
+                              {game.score}
+                            </p>
+                          ) : (
+                            <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
+                          )}
+                          <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Stats Tab */}
+          <TabsContent value="stats" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.pong.played}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.wins}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.pong.wins}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.losses}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.pong.losses}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.winRate}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.pong.winRate}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.dino.played}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.bestScore}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.dino.highScore}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.averageScore}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.dino.avgScore}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.totalDistance}</p>
+                    <p className="font-pixel text-xl">{user.gameStats.dino.totalDistance}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* History Tab */}
+          <TabsContent value="history" className="space-y-4">
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {user.recentGames
+                      .filter((game: Game) => game.type === GameType.PONG)
+                      .map((game: PongGame, index: number) => (
+                        <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                          <div className="flex items-center space-x-2">
+                            <div
+                              className={`w-2 h-2 rounded-full ${
+                                game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
+                              }`}
+                            ></div>
+                            <p className="font-pixel text-xs">VS. {game.opponent}</p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <p
+                              className={`font-pixel text-xs ${
+                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
+                              }`}
+                            >
+                              {game.score}
+                            </p>
+                            <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {user.recentGames
+                      .filter((game: Game) => game.type === GameType.DINO)
+                      .map((game: DinoGame, index: number) => (
+                        <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                          <div className="flex items-center space-x-2">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="text-game-orange"
+                            >
+                              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                            <p className="font-pixel text-xs">DINO RUN</p>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
+                            <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  )
+}

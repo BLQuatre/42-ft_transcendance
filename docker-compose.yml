@@ -1,0 +1,160 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_POSTGRES}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - transcendance
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
+  auth_service:
+    container_name: auth_service
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
+  user_service:
+    container_name: user_service
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
+  chat_service:
+    container_name: chat_service
+    build:
+      context: ./services/chat-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
+  friend_service:
+    container_name: friend_service
+    build:
+      context: ./services/friend-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    networks:
+      - transcendance
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+    depends_on:
+      - frontend
+      - gateway
+    networks:
+      - transcendance
+    restart: always
+
+
+  # nginx:
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - inception
+  #   depends_on:
+  #     - transcendance
+  #   build:
+  #     context: requirements/nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "443:443"
+  #   restart: always
+
+
+
+  # nginx:
+  #   build: ./nginx
+
+  #   depends_on:
+  #     - frontend
+  #     - gateway
+  #   networks:
+  #     - transcendance
+
+  # game:
+  #   build: ./services/game
+  #   env_file:
+  #     - .env.docker
+  #   networks:
+  #     - transcendance
+
+  # frontend:
+  #   build: ./frontend
+  #   networks:
+  #     - transcendance
+
+
+networks:
+  transcendance:
+
+volumes:
+  postgres-data:

@@ -1,0 +1,299 @@
+@import 'tailwindcss';
+
+@source '../*.{js,ts,jsx,tsx,mdx}';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-pixel: 'Press Start 2P', cursive;
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-game-blue: #4a9dff;
+  --color-game-orange: #ffa500;
+  --color-game-yellow: #ffd700;
+  --color-game-red: #ff4d4d;
+  --color-game-green: #4caf50;
+  --color-game-dark: #1e1e1e;
+
+  --animate-blink: blink 1s step-end infinite;
+  --animate-pixelate: pixelate 0.5s ease-out forwards;
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes pixelate {
+    0% {
+      filter: brightness(1.5) contrast(2) blur(8px);
+    }
+    100% {
+      filter: brightness(1) contrast(1) blur(0);
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 210 100% 65%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 30 100% 60%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 30 100% 60%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 210 100% 65%;
+
+    --radius: 0.5rem;
+  }
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .pixel-corners {
+    clip-path: polygon(
+      0px 4px,
+      4px 4px,
+      4px 0px,
+      calc(100% - 4px) 0px,
+      calc(100% - 4px) 4px,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      4px calc(100% - 4px),
+      0px calc(100% - 4px)
+    );
+  }
+
+  .pixel-text {
+    @apply font-pixel tracking-wide;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .pixel-border {
+    @apply border-4 border-solid border-game-dark;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  }
+}
+
+* {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+  }
+
+
+  /* Add this class to your existing globals.css file */
+.show-scrollbar {
+	/* For Chrome, Safari, and Opera */
+	&::-webkit-scrollbar {
+	  display: block;
+	  width: 8px;
+	  height: 8px;
+	}
+
+	/* For WebKit browsers - styling the scrollbar */
+	&::-webkit-scrollbar-track {
+	  background: rgba(0, 0, 0, 0.1);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  background: var(--color-muted);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+	  background: var(--color-muted-foreground);
+	}
+
+	/* For Firefox */
+	scrollbar-width: thin;
+
+	/* For IE and Edge */
+	-ms-overflow-style: auto;
+  }
+
+
+/* Dialog animations */
+@keyframes fadeIn {
+	from {
+	  opacity: 0;
+	}
+	to {
+	  opacity: 1;
+	}
+  }
+
+  @keyframes slideUp {
+	from {
+	  transform: translateY(10px);
+	  opacity: 0;
+	}
+	to {
+	  transform: translateY(0);
+	  opacity: 1;
+	}
+  }
+
+  .animate-fadeIn {
+	animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slideUp {
+	animation: slideUp 0.4s ease-out forwards;
+	animation-delay: 0.1s;
+	opacity: 0;
+  }
+
+  /* Pixel animation effect */
+  @keyframes pixelate {
+	0% {
+	  filter: blur(5px);
+	}
+	20% {
+	  filter: blur(0px);
+	}
+	25% {
+	  filter: blur(1px);
+	}
+	30% {
+	  filter: blur(0px);
+	}
+	100% {
+	  filter: blur(0px);
+	}
+  }
+
+  .animate-pixelate {
+	animation: pixelate 0.5s ease-out forwards;
+  }
+
+
+  /* Tournament bracket connector lines */
+.connector-right::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -8px;
+	width: 8px;
+	height: 2px;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 1;
+  }
+
+  .connector-left::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -8px;
+	width: 8px;
+	height: 2px;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 1;
+  }
+
+  /* Add vertical connectors for matches in the same round */
+  .connector-vertical::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -8px;
+	width: 2px;
+	height: 100%;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 0;
+  }

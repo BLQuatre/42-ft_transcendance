@@ -1,0 +1,59 @@
+{
+	"title": "ft_transcendance",
+	"home": {
+		"description": "Défie tes amis dans des jeux classiques",
+		"play": "Jouer maintenant",
+		"games": "Jeux en vedette",
+
+		"features": {
+			"title": "Fonctionnalités",
+			"multiplayer": {
+				"title": "Multijoueur",
+				"description": "Joue avec des amis en local ou en ligne"
+			},
+			"leaderboards": {
+				"title": "Classements",
+				"description": "Compète pour la première place"
+			},
+			"customization": {
+				"title": "Personnalisation",
+				"description": "Personnalise ton expérience de jeu"
+			}
+		}
+	},
+
+	"navbar": {
+		"home": "Accueil",
+		"games": "Jeux",
+		"shop": "Boutique",
+		"stats": "Statistiques",
+		"friends": "Amis",
+		"profile": "Profil"
+	},
+
+	"connection": {
+		"login": "Connexion",
+		"register": "Inscription",
+		"logout": "Déconnexion"
+	},
+
+	"games": {
+		"pong": {
+			"title": "Pong",
+			"description": "Le jeu de tennis de table classique. Affronte tes amis pour voir qui marque le plus de points."
+		},
+		"dino": {
+			"title": "Dino Run",
+			"description": "Saute par-dessus les obstacles et survis le plus longtemps possible dans ce jeu de course sans fin."
+		}
+	},
+
+	"footer": {
+		"cgu": "CGU",
+		"privacy": "Confidentialité"
+	},
+
+	"common": {
+		"play": "JOUER AU"
+	}
+}

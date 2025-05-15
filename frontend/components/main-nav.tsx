@@ -11,8 +11,7 @@ export function MainNav() {
   const pathname = usePathname()
 
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   const isLoggedIn = pathname !== "/login" && pathname !== "/register"
 
@@ -25,37 +24,34 @@ export function MainNav() {
       </Link>
 
       <nav className="hidden md:flex items-center space-x-6">
-        {isLoggedIn && (
-          <>
-            <Link
-              href="/"
-              className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-                pathname === "/" ? "text-game-blue" : "text-muted-foreground",
-              )}
-            >
-              {dict.navbar.home}
-            </Link>
-            <Link
-              href="/games"
-              className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-                pathname.startsWith("/games") ? "text-game-blue" : "text-muted-foreground",
-              )}
-            >
-              {dict.navbar.games}
-            </Link>
-            <Link
-              href="/shop"
-              className={cn(
-                "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-                pathname === "/shop" ? "text-game-blue" : "text-muted-foreground",
-              )}
-            >
-              {dict.navbar.shop}
-            </Link>
-          </>
-        )}
+        {/* Navigation links always visible regardless of login status */}
+        <Link
+          href="/"
+          className={cn(
+            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
+            pathname === "/" ? "text-game-blue" : "text-muted-foreground",
+          )}
+        >
+          {dict.navbar.home}
+        </Link>
+        <Link
+          href="/games"
+          className={cn(
+            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
+            pathname.startsWith("/games") ? "text-game-blue" : "text-muted-foreground",
+          )}
+        >
+          {dict.navbar.games}
+        </Link>
+        <Link
+          href="/shop"
+          className={cn(
+            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
+            pathname === "/shop" ? "text-game-blue" : "text-muted-foreground",
+          )}
+        >
+          {dict.navbar.shop}
+        </Link>
       </nav>
 
       <div className="flex items-center space-x-4">
@@ -85,20 +81,24 @@ export function MainNav() {
                 <span className="font-pixel text-xs hidden sm:inline-block uppercase">{dict.navbar.dashboard}</span>
               </Link>
             </div>
-            {/* Mobile navigation */}
-            <div className="md:hidden">
-              <Button variant="outline" size="sm" className="font-pixel text-xs">
-                {dict.navbar.menu}
-              </Button>
-            </div>
           </>
         ) : (
-          <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase">
-            <Link href={pathname === "/register" ? "/login" : "/register"}>
-              {pathname === "/register" ? dict.connection.login : dict.connection.register}
-            </Link>
-          </Button>
+          <>
+            <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 uppercase hidden sm:flex">
+              <Link href="/login">{dict.connection.login}</Link>
+            </Button>
+            <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase">
+              <Link href="/register">{dict.connection.register}</Link>
+            </Button>
+          </>
         )}
+
+        {/* Mobile navigation - always visible */}
+        <div className="md:hidden">
+          <Button variant="outline" size="sm" className="font-pixel text-xs">
+            {dict.navbar.menu}
+          </Button>
+        </div>
       </div>
     </div>
   )

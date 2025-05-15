@@ -11,9 +11,11 @@ import { Label } from "@/components/ui/label"
 import { MainNav } from "@/components/main-nav"
 import { FcGoogle } from "react-icons/fc"
 import { useDictionary } from "@/hooks/use-dictionnary"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -27,8 +29,7 @@ export default function LoginPage() {
   }
 
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -36,7 +37,6 @@ export default function LoginPage() {
 
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 bg-card rounded-lg overflow-hidden pixel-border">
-
           <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
             <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#4A9DFF_50%)]"></div>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
@@ -67,17 +67,33 @@ export default function LoginPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="password" className="font-pixel text-sm">
                   {dict.connection.password.title}
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder={dict.connection.password.placeholder}
-                  required
-                  className="font-pixel text-sm h-10 bg-muted"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder={dict.connection.password.placeholder}
+                    required
+                    className="font-pixel text-sm h-10 bg-muted pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-10 w-10 px-0 hover:bg-transparent hover:opacity-70"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                  </Button>
+                </div>
               </div>
               <Button
                 type="submit"
@@ -113,7 +129,6 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-
         </div>
       </div>
     </div>

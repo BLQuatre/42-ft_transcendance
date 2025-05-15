@@ -55,13 +55,13 @@ export default function LoginPage() {
 
             <form onSubmit={onSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="font-pixel text-sm">
-                  {dict.connection.email}
+                <Label htmlFor="Username" className="font-pixel text-sm">
+                  {dict.connection.username}
                 </Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="example@example.com"
+                  id="username"
+                  type="username"
+                  placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
                 />

@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
 import { getDictionary } from "@/lib/dictionnaries"
-import { Language } from "@/types/types"
+import type { Language } from "@/types/types"
 import { GameButtons } from "@/components/game-buttons"
+import { LanguageSelectorDialog } from "@/components/language-selector-dialog"
 
 export default async function HomePage({
   params,
@@ -18,13 +19,16 @@ export default async function HomePage({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
+      <LanguageSelectorDialog />
 
       <main className="flex-1">
         {/* Games Section - Moved to the top for prominence */}
         <section className="py-8 md:py-16 lg:py-20 border-b border-muted">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center mb-8">
-              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange animate-pulse uppercase">{dict.home.games}</h2>
+              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange animate-pulse uppercase">
+                {dict.home.games}
+              </h2>
               <div className="w-32 h-1 bg-game-orange"></div>
               <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto uppercase">
                 {dict.home.description}
@@ -36,13 +40,13 @@ export default async function HomePage({
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
                   <Link href="/games/pong">
-                  <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
-                    alt="Pong Game"
-                    width={700}
-                    height={400}
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
+                    <Image
+                      src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+                      alt="Pong Game"
+                      width={700}
+                      height={400}
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
                   </Link>
                 </div>
                 <div className="p-6">
@@ -51,15 +55,22 @@ export default async function HomePage({
                     {dict.games.pong.description}
                   </p>
                   <div className="flex flex-wrap justify-between items-center">
-				  	<GameButtons
+                    <GameButtons
                       gameType="pong"
                       gameTitle={dict.games.pong.title}
                       buttonText={`${dict.common.play} ${dict.games.pong.title}`}
                       buttonColor="blue"
                       dict={dict}
                     />
-                    <Button asChild variant="outline" size="sm" className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue">
-                      <Link className="uppercase" href="/games#pong">{dict.home.gamerules} &gt;</Link>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue"
+                    >
+                      <Link className="uppercase" href="/games#pong">
+                        {dict.home.gamerules} &gt;
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -69,13 +80,13 @@ export default async function HomePage({
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
                   <Link href="/games/dino">
-                  <Image
-                    src="https://archive.org/download/dino-run/dino-run.jpg"
-                    alt="Dino Game"
-                    width={700}
-                    height={400}
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
+                    <Image
+                      src="https://archive.org/download/dino-run/dino-run.jpg"
+                      alt="Dino Game"
+                      width={700}
+                      height={400}
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
                   </Link>
                 </div>
                 <div className="p-6">
@@ -84,15 +95,22 @@ export default async function HomePage({
                     {dict.games.dino.description}
                   </p>
                   <div className="flex flex-wrap justify-between items-center">
-				  	<GameButtons
+                    <GameButtons
                       gameType="dino"
                       gameTitle={dict.games.dino.title}
                       buttonText={`${dict.common.play} ${dict.games.dino.title}`}
                       buttonColor="orange"
                       dict={dict}
                     />
-                    <Button asChild variant="outline" size="sm" className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange">
-                      <Link className="uppercase" href="/games#dino">{dict.home.gamerules} &gt;</Link>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange"
+                    >
+                      <Link className="uppercase" href="/games#dino">
+                        {dict.home.gamerules} &gt;
+                      </Link>
                     </Button>
                   </div>
                 </div>
@@ -128,9 +146,7 @@ export default async function HomePage({
                     <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                   </svg>
                 </div>
-                <h3 className="font-pixel text-base uppercase">
-                  {dict.home.features.multiplayer.title}
-                </h3>
+                <h3 className="font-pixel text-base uppercase">{dict.home.features.multiplayer.title}</h3>
                 <p className="font-pixel text-xs text-muted-foreground uppercase">
                   {dict.home.features.multiplayer.description}
                 </p>
@@ -154,7 +170,9 @@ export default async function HomePage({
                   </svg>
                 </div>
                 <h3 className="font-pixel text-base uppercase">{dict.home.features.stats.title}</h3>
-                <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.home.features.stats.description}</p>
+                <p className="font-pixel text-xs text-muted-foreground uppercase">
+                  {dict.home.features.stats.description}
+                </p>
               </div>
 
               <div className="flex flex-col items-center text-center space-y-2 p-6 bg-card rounded-lg pixel-border sm:col-span-2 md:col-span-1 hover:transform hover:scale-105 transition-transform">
@@ -177,9 +195,7 @@ export default async function HomePage({
                     <circle cx="7" cy="7" r="3"></circle>
                   </svg>
                 </div>
-                <h3 className="font-pixel text-base uppercase">
-                  {dict.home.features.customization.title}
-                </h3>
+                <h3 className="font-pixel text-base uppercase">{dict.home.features.customization.title}</h3>
                 <p className="font-pixel text-xs text-muted-foreground uppercase">
                   {dict.home.features.customization.description}
                 </p>

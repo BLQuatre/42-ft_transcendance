@@ -19,8 +19,8 @@ fastify.get('/', async (request, reply) => {
 }) ; // TODO:check utility
 
 const start = async () => {
-	await fastify.listen({ port: 3000 }) ;
-	console.log('Server running on http://localhost:3000') ;
+	await fastify.listen({ port: 3002 }) ;
+	console.log('Server running on http://localhost:3002') ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 
@@ -53,9 +53,12 @@ const start = async () => {
 				if (player === undefined)
 					return ;
 			
-				const moveSpeed = 6 ; // Tune this value for faster/slower movement
-				if (data.direction === 'up')	player.move(-moveSpeed) ;
-				if (data.direction === 'down')	player.move(moveSpeed) ;
+				if		(data.direction === 'up')		player.setMoveUp(true) ;
+				else if	(data.direction === 'notup')	player.setMoveUp(false) ;
+				else if	(data.direction === 'down')		player.setMoveDown(true) ;
+				else if	(data.direction === 'notdown')	player.setMoveDown(false) ;
+
+				console.log(`move received from player ${data.playerId}, now at ${player.paddle.top}-${player.paddle.bot}`) ;
 			}			
 		}) ;
 

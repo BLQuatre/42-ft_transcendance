@@ -1,11 +1,16 @@
 import { WebSocket } from 'ws';
 import { Range } from './types';
 
+const FPS = 60 ;
+const MOV_SPD = 6 ;
+
 export class Player {
 	id: number ;
 
 	paddle: Range ;
 	zone: Range ;
+
+	moving: { up: boolean, down: boolean } ;
 
 	socket?: WebSocket ; // TODO: check utility
 
@@ -16,13 +21,28 @@ export class Player {
 		this.paddle = { top: 0, bot: 0 } ;
 		this.zone = { top: 0, bot: 0 } ;
 
+		this.moving = { up: false, down: false } ;
+
 		this.socket = socket ;
+
+		this.autoUpdate() ;
 	}
 
-	resizePaddle(top: number, bot: number) { this.paddle = { top: top, bot: bot} ; }
-	resizeZone(top: number, bot: number) { this.zone = { top: top, bot: bot } ; }
+	autoUpdate() {
+		const interval = 1000 / FPS ;
 
-	move(distance: number) { // a negative 'distance' means moving up, positive means down
+		setInterval(() => {
+			if (this.moving.up)		this.move(-MOV_SPD) ;
+			if (this.moving.down)	this.move(MOV_SPD) ;
+		}, interval) ;
+	}
+
+	setMoveUp(up: boolean)		{ this.moving.up = up ; }
+	setMoveDown(down: boolean)	{ this.moving.down = down ; }
+	resizePaddle(top: number, bot: number)	{ this.paddle = { top: top, bot: bot} ; }
+	resizeZone(top: number, bot: number)	{ this.zone = { top: top, bot: bot } ; }
+
+	private move(distance: number) { // a negative 'distance' means moving up, positive means down
 		this.paddle.top += distance ;
 		this.paddle.bot += distance ;
 

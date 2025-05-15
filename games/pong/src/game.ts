@@ -1,4 +1,4 @@
-import { Team, Ball } from './types';
+import { Team, Ball, State } from './types';
 import { Player } from './player';
 
 const BOARD_LENGTH	= 800 ;
@@ -27,7 +27,7 @@ export class Game {
 			.find(player => player.id === id) ;
 	}
 
-	getState() {
+	getState(): State {
 		return {
 			left_team: {
 				score	: this.left_team.score,
@@ -82,11 +82,8 @@ export class Game {
 
 		// Paddle collision for left team
 		this.left_team.players.forEach(player => {
-			console.log('forEach') ;
-			if (this.ball.x <= PADDLE_LEFT && this.ball.vx < 0) {
-				console.log('if') ;
+			if (this.ball.x <= PADDLE_LEFT && this.ball.vx < 0)
 				this.paddleCollision(player) ;
-			}
 		}) ;
 
 		// Paddle collision for right team

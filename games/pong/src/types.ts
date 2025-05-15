@@ -16,3 +16,18 @@ export interface Ball {
 	vx: number ;
 	vy: number ;
 }
+
+export interface State {
+	left_team: {
+		score: number;
+		players: Range[];
+	};
+	right_team: {
+		score: number;
+		players: Range[];
+	};
+	ball: {
+		x: number;
+		y: number;
+	};
+}

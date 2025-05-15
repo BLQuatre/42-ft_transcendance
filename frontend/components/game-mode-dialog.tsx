@@ -1,0 +1,184 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Trophy, User, Users } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+
+type GameModeDialogProps = {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  gameType: "pong" | "dino"
+  gameTitle: string
+  dict: any
+}
+
+export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }: GameModeDialogProps) {
+  const router = useRouter()
+  const [selectedMode, setSelectedMode] = useState<string | null>(null)
+
+  const handleModeSelect = (mode: string) => {
+    setSelectedMode(mode)
+    // Navigate to the appropriate URL based on game type and mode
+    router.push(`/games/${gameType}/${mode}`)
+    onOpenChange(false)
+  }
+
+  const getColorClass = () => {
+    return gameType === "pong" ? "bg-game-blue" : "bg-game-orange"
+  }
+
+  const getTextColorClass = () => {
+    return gameType === "pong" ? "text-game-blue" : "text-game-orange"
+  }
+
+  const getBorderColorClass = () => {
+    return gameType === "pong" ? "border-game-blue" : "border-game-orange"
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[800px] p-6">
+        <DialogHeader className="animate-fadeIn mb-4">
+          <DialogTitle className="font-pixel text-sm">
+            {dict.common.play} {gameTitle.toUpperCase()}
+          </DialogTitle>
+          <DialogDescription className="font-pixel text-xs">SELECT GAME MODE</DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slideUp">
+          {/* Solo Mode Card */}
+          <div
+            className={`rounded-md border-2 ${
+              selectedMode === "solo"
+                ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                : "border-muted bg-muted/50 hover:bg-muted"
+            } p-4 cursor-pointer transition-all`}
+            onClick={() => setSelectedMode("solo")}
+          >
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  selectedMode === "solo" ? "bg-white/20" : getColorClass()
+                }`}
+              >
+                <User className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h3
+                  className={`font-pixel text-sm mb-2 ${selectedMode === "solo" ? "text-white" : getTextColorClass()}`}
+                >
+                  SOLO MODE
+                </h3>
+                <p
+                  className={`font-pixel text-xs ${
+                    selectedMode === "solo" ? "text-white/80" : "text-muted-foreground"
+                  }`}
+                >
+                  PLAY AGAINST THE COMPUTER
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Multiplayer Mode Card */}
+          <div
+            className={`rounded-md border-2 ${
+              selectedMode === "multiplayer"
+                ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                : "border-muted bg-muted/50 hover:bg-muted"
+            } p-4 cursor-pointer transition-all`}
+            onClick={() => setSelectedMode("multiplayer")}
+          >
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  selectedMode === "multiplayer" ? "bg-white/20" : getColorClass()
+                }`}
+              >
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h3
+                  className={`font-pixel text-sm mb-2 ${
+                    selectedMode === "multiplayer" ? "text-white" : getTextColorClass()
+                  }`}
+                >
+                  MULTIPLAYER
+                </h3>
+                <p
+                  className={`font-pixel text-xs ${
+                    selectedMode === "multiplayer" ? "text-white/80" : "text-muted-foreground"
+                  }`}
+                >
+                  PLAY WITH FRIENDS
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tournament Mode Card */}
+          <div
+            className={`rounded-md border-2 ${
+              selectedMode === "tournament"
+                ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                : "border-muted bg-muted/50 hover:bg-muted"
+            } p-4 cursor-pointer transition-all`}
+            onClick={() => setSelectedMode("tournament")}
+          >
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  selectedMode === "tournament" ? "bg-white/20" : getColorClass()
+                }`}
+              >
+                <Trophy className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h3
+                  className={`font-pixel text-sm mb-2 ${
+                    selectedMode === "tournament" ? "text-white" : getTextColorClass()
+                  }`}
+                >
+                  TOURNAMENT
+                </h3>
+                <p
+                  className={`font-pixel text-xs ${
+                    selectedMode === "tournament" ? "text-white/80" : "text-muted-foreground"
+                  }`}
+                >
+                  COMPETE IN A TOURNAMENT
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="pt-6 animate-slideUp">
+          <DialogClose asChild>
+            <Button variant="outline" className="font-pixel text-xs mr-2">
+              {dict.common.cancel || "CANCEL"}
+            </Button>
+          </DialogClose>
+          <Button
+            variant="default"
+            className={`font-pixel text-xs ${getColorClass()}`}
+            disabled={!selectedMode}
+            onClick={() => selectedMode && handleModeSelect(selectedMode)}
+          >
+            {selectedMode ? `PLAY ${selectedMode.toUpperCase()}` : "SELECT A MODE"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}

@@ -1,11 +1,10 @@
-import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
-import { ArrowRight, Gamepad2, Users } from "lucide-react"
+import { Gamepad2, Users } from "lucide-react"
 import { getDictionary } from "@/lib/dictionnaries"
-import { Language } from "@/types/types"
+import type { Language } from "@/types/types"
+import { GameButtons } from "@/components/game-buttons"
 
 export default async function GamesPage({
   params,
@@ -26,9 +25,7 @@ export default async function GamesPage({
             <div className="flex flex-col items-center space-y-4 text-center mb-12">
               <h2 className="font-pixel text-2xl md:text-4xl text-game-orange uppercase">{dict.games.title}</h2>
               <div className="w-20 h-1 bg-game-orange"></div>
-              <p className="max-w-3xl text-muted-foreground font-pixel text-sm uppercase">
-                {dict.games.description}
-              </p>
+              <p className="max-w-3xl text-muted-foreground font-pixel text-sm uppercase">{dict.games.description}</p>
             </div>
 
             {/* Pong Game Feature */}
@@ -63,12 +60,13 @@ export default async function GamesPage({
                       </div>
                     </div>
 
-                    <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 w-fit mt-2">
-                      <Link href="/games/pong" className="flex items-center uppercase">
-                        {dict.common.play} {dict.games.pong.title}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
+                    <GameButtons
+                      gameType="pong"
+                      gameTitle={dict.games.pong.title}
+                      buttonText={`${dict.common.play} ${dict.games.pong.title}`}
+                      buttonColor="blue"
+                      dict={dict}
+                    />
                   </div>
                   <div className="aspect-auto overflow-hidden bg-black/5">
                     <Image
@@ -125,12 +123,13 @@ export default async function GamesPage({
                       </div>
                     </div>
 
-                    <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 w-fit mt-2">
-                      <Link href="/games/dino" className="flex items-center uppercase">
-                        {dict.common.play} {dict.games.dino.title}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
+                    <GameButtons
+                      gameType="dino"
+                      gameTitle={dict.games.dino.title}
+                      buttonText={`${dict.common.play} ${dict.games.dino.title}`}
+                      buttonColor="orange"
+                      dict={dict}
+                    />
                   </div>
                 </div>
               </div>

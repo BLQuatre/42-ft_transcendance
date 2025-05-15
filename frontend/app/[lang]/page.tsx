@@ -5,6 +5,7 @@ import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
 import { getDictionary } from "@/lib/dictionnaries"
 import { Language } from "@/types/types"
+import { GameButtons } from "@/components/game-buttons"
 
 export default async function HomePage({
   params,
@@ -50,9 +51,13 @@ export default async function HomePage({
                     {dict.games.pong.description}
                   </p>
                   <div className="flex flex-wrap justify-between items-center">
-                    <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90 min-w-28">
-                      <Link href="/games/pong" className="uppercase">{dict.common.play} {dict.games.pong.title}</Link>
-                    </Button>
+				  	<GameButtons
+                      gameType="pong"
+                      gameTitle={dict.games.pong.title}
+                      buttonText={`${dict.common.play} ${dict.games.pong.title}`}
+                      buttonColor="blue"
+                      dict={dict}
+                    />
                     <Button asChild variant="outline" size="sm" className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue">
                       <Link className="uppercase" href="/games#pong">{dict.home.gamerules} &gt;</Link>
                     </Button>
@@ -79,9 +84,13 @@ export default async function HomePage({
                     {dict.games.dino.description}
                   </p>
                   <div className="flex flex-wrap justify-between items-center">
-                    <Button asChild className="font-pixel bg-game-orange hover:bg-game-orange/90 min-w-28">
-                      <Link href="/games/dino" className="uppercase">{dict.common.play} {dict.games.dino.title}</Link>
-                    </Button>
+				  	<GameButtons
+                      gameType="dino"
+                      gameTitle={dict.games.dino.title}
+                      buttonText={`${dict.common.play} ${dict.games.dino.title}`}
+                      buttonColor="orange"
+                      dict={dict}
+                    />
                     <Button asChild variant="outline" size="sm" className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange">
                       <Link className="uppercase" href="/games#dino">{dict.home.gamerules} &gt;</Link>
                     </Button>

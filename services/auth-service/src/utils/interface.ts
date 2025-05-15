@@ -14,4 +14,5 @@ export interface AuthRequest extends FastifyRequest {
 
 export interface MyJwtPayload extends JwtPayload {
 	id: string;
+	name:string;
 }

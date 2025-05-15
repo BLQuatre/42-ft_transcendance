@@ -5,14 +5,13 @@ import { isAxiosResponse } from "../utils/functions";
 
 interface messageSocket {
     type: string;
-    data: {
-        receiverId: string,
-        content: string,
-    }
+    userId: string,
+    content: string,
+    name: string
 }
 
-export const chatRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.get('/ws/chat-friend', { websocket: true}, async (connection, req) => {
+export const chatGeneralRoutes: FastifyPluginAsync = async (fastify) => {
+    fastify.get('/ws/chat-general', { websocket: true}, async (connection, req) => {
         const token = req.headers['authorization']?.split(' ')[1];
         
         if (!token) {
@@ -33,8 +32,8 @@ export const chatRoutes: FastifyPluginAsync = async (fastify) => {
 
             // const authData = await authResponse.data;
             const userId = authResponse.data.id;
-        
-            const upstream = new WebSocket('http://localhost:3004/chat/ws', {
+            
+            const upstream = new WebSocket('http://localhost:3005/ws/chat', {
             headers: {
                 'x-user-id': userId
             }

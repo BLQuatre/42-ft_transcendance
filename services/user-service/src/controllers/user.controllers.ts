@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 import { removePassword, PublicUser } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 import { UUID } from "crypto";
-import { loginWithEmail, loginWithName } from "../utils/interface";
+import { loginWithName } from "../utils/interface";
 
 const User = AppDataSource.getRepository(UserEntity);
 
@@ -200,21 +200,6 @@ export const createUser = async(req: FastifyRequest<{Body: CreateUserDto}>, repl
 		statusCode: 201,
 		newUser
 
-	})
-}
-
-export const logWithEmail = async(req: FastifyRequest<{Body: loginWithEmail}>, reply: FastifyReply) => {
-	const user = await User.findOneBy({ email: req.body.email})
-	if (!user) {
-		return reply.code(404).send({
-			message: "User not found",
-			statusCode: 404
-		})
-	}
-	return reply.code(200).send({
-		message: 'User Found',
-		statusCode: 200,
-		user
 	})
 }
 

@@ -7,7 +7,7 @@ import { friendRoutes } from "./routes/friend";
 import dotenv from 'dotenv';
 import path from 'path';
 import { chatRoutes } from "./routes/chat";
-
+import { chatGeneralRoutes} from "./routes/chatGeneral";
 dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
 const app = fastify({
@@ -21,6 +21,7 @@ app.register(authRoutes);
 app.register(usersRoutes);
 app.register(friendRoutes);
 app.register(chatRoutes);
+app.register(chatGeneralRoutes);
 
 // app.register(async function (app) {
 // 	app.get('/ws', { websocket: true}, (connection, req) => {
@@ -56,5 +57,5 @@ app.listen({
 	port: parseInt(process.env.GATEWAY_PORT || '0', 10)
 }, (err, address) => {
 	if (err) throw err;
-	app.log.info(`[GATEWAY] Running on http://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT} (${address})`);
+	console.log(`[GATEWAY] Running on http://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT} (${address})`);
 })

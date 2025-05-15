@@ -252,6 +252,371 @@ const pongHistory = [
       },
     },
   },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+    teamScores: {
+      ALPHA: 10,
+      BETA: 8,
+    },
+    details: {
+      duration: "15:20",
+      map: "NEON GRID",
+      powerUps: 5,
+      accuracyRate: "82%",
+      rallies: 32,
+      longestRally: "01:05",
+      playerStats: {
+        "player-001": { aces: 4, errors: 3, powerHits: 10 },
+        "player-002": { aces: 3, errors: 5, powerHits: 7 },
+      },
+    },
+  },
+  
 
   // ... other pong history items
 ]

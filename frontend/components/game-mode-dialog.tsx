@@ -13,6 +13,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { MultiplayerOptionsDialog } from "./multiplayer-options-dialog"
 
 type GameModeDialogProps = {
   open: boolean
@@ -25,12 +26,20 @@ type GameModeDialogProps = {
 export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }: GameModeDialogProps) {
   const router = useRouter()
   const [selectedMode, setSelectedMode] = useState<string | null>(null)
+  const [isMultiplayerDialogOpen, setIsMultiplayerDialogOpen] = useState(false)
 
-  const handleModeSelect = (mode: string) => {
+  function handleModeSelect(mode: string) {
     setSelectedMode(mode)
-    // Navigate to the appropriate URL based on game type and mode
-    router.push(`/games/${gameType}/${mode}`)
-    onOpenChange(false)
+
+    // If multiplayer is selected, open the multiplayer dialog
+    if (mode === "multiplayer") {
+      setIsMultiplayerDialogOpen(true)
+      // Keep the main dialog open for now
+    } else {
+      // Navigate to the appropriate URL based on game type and mode
+      router.push(`/games/${gameType}/${mode}/test`)
+      onOpenChange(false)
+    }
   }
 
   const getColorClass = () => {
@@ -178,6 +187,19 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
             {selectedMode ? `PLAY ${selectedMode.toUpperCase()}` : "SELECT A MODE"}
           </Button>
         </DialogFooter>
+        {/* Multiplayer Options Dialog */}
+        <MultiplayerOptionsDialog
+          open={isMultiplayerDialogOpen}
+          onOpenChange={setIsMultiplayerDialogOpen}
+          gameType={gameType}
+          onComplete={() => {
+            setIsMultiplayerDialogOpen(false)
+            onOpenChange(false)
+          }}
+          getColorClass={getColorClass}
+          getTextColorClass={getTextColorClass}
+          getBorderColorClass={getBorderColorClass}
+        />
       </DialogContent>
     </Dialog>
   )

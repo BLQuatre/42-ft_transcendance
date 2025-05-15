@@ -795,8 +795,12 @@ export default function DashboardPage() {
       <div className="flex-1 container py-8 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="font-pixel text-2xl md:text-3xl mb-2">PLAYER DASHBOARD</h1>
-            <p className="font-pixel text-xs text-muted-foreground">VIEW YOUR GAME STATISTICS AND PROGRESS</p>
+            <h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">
+              {dict.dashboard.title}
+            </h1>
+            <p className="font-pixel text-xs text-muted-foreground uppercase">
+              {dict.dashboard.description}
+              </p>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -812,17 +816,19 @@ export default function DashboardPage() {
 
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-            <TabsTrigger value="overview">OVERVIEW</TabsTrigger>
-            <TabsTrigger value="history">HISTORY</TabsTrigger>
-            <TabsTrigger value="skins">SKINS</TabsTrigger>
-            <TabsTrigger value="settings">SETTINGS</TabsTrigger>
+            <TabsTrigger className="uppercase" value="overview">{dict.dashboard.sections.overview.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="history">HISTORY</TabsTrigger>
+            <TabsTrigger className="uppercase" value="skins">SKINS</TabsTrigger>
+            <TabsTrigger className="uppercase" value="settings">SETTINGS</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">TOTAL GAMES</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.dashboard.sections.overview.totalGames}
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -848,7 +854,9 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">WIN RATE</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.dashboard.sections.overview.winRate}
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -872,7 +880,9 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm">HIGH SCORE</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.dashboard.sections.overview.highScore}
+                  </CardTitle>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -899,8 +909,12 @@ export default function DashboardPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">WEEKLY ACTIVITY</CardTitle>
-                  <CardDescription className="font-pixel text-xs">NUMBER OF GAMES PLAYED PER DAY</CardDescription>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.dashboard.sections.overview.charts.activity.title}
+                  </CardTitle>
+                  <CardDescription className="font-pixel text-xs uppercase">
+                    {dict.dashboard.sections.overview.charts.activity.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
                   <ChartContainer
@@ -922,8 +936,8 @@ export default function DashboardPage() {
                         <YAxis />
                         <ChartTooltip content={<ChartTooltipContent />} />
                         <Legend />
-                        <Bar dataKey="pong" fill="var(--color-pong)" name="Pong" />
-                        <Bar dataKey="dino" fill="var(--color-dino)" name="Dino" />
+                        <Bar dataKey="pong" fill="var(--color-primary)" name={dict.games.pong.title} />
+                        <Bar dataKey="dino" fill="var(--color-secondary)" name={dict.games.dino.title} />
                       </BarChart>
                     </ResponsiveContainer>
                   </ChartContainer>
@@ -932,8 +946,12 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">SCORE PROGRESSION</CardTitle>
-                  <CardDescription className="font-pixel text-xs">YOUR SCORE OVER THE LAST 4 WEEKS</CardDescription>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.dashboard.sections.overview.charts.score.title}
+                  </CardTitle>
+                  <CardDescription className="font-pixel text-xs uppercase">
+                    {dict.dashboard.sections.overview.charts.score.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
                   <ChartContainer
@@ -958,6 +976,7 @@ export default function DashboardPage() {
                           strokeWidth={2}
                           dot={{ r: 4 }}
                           activeDot={{ r: 6 }}
+                          name={dict.dashboard.sections.overview.charts.score.label}
                         />
                       </LineChart>
                     </ResponsiveContainer>

@@ -169,5 +169,31 @@
 				"decline": "Decline"
 			}
 		}
+	},
+
+	"dashboard": {
+		"title": "Dashboard",
+		"description": "Manage your account",
+
+		"sections": {
+			"overview": {
+				"title": "Overview",
+
+				"totalGames": "Total Games",
+				"winRate": "Win Rate",
+				"highScore": "High Score",
+				"charts": {
+					"activity": {
+						"title": "Activity",
+						"description": "Number of games played per day"
+					},
+					"score": {
+						"title": "Score Progresion",
+						"description": "Your score over time",
+						"label": "Score"
+					}
+				}
+			}
+		}
 	}
 }

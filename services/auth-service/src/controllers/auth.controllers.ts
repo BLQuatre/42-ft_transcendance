@@ -59,8 +59,8 @@ export const refreshAuthentication = async (req: AuthRequest, reply: FastifyRepl
 	const token = authHeader.replace(/^Bearer\s+/, '');
 	try {
 		const decode = jwt.verify(token, JWT_REFRESH) as MyJwtPayload;
-		const accessToken = jwt.sign({ id: decode.id }, JWT_ACCESS, { expiresIn: '15min' });
-		const refreshtoken = jwt.sign({ id: decode.id }, JWT_REFRESH, { expiresIn: '7D' });
+		const accessToken = jwt.sign({ id: decode.id, name: decode.name }, JWT_ACCESS, { expiresIn: '15min' });
+		const refreshtoken = jwt.sign({ id: decode.id, name: decode.name }, JWT_REFRESH, { expiresIn: '7D' });
 		return reply.code(200).send({
 			message: 'Refresh token authentified',
 			statusCode: 200,

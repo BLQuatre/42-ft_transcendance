@@ -1,6 +1,11 @@
 import { JwtPayload } from "jsonwebtoken";
 import { UserEntity } from "../entities/User";
 import { loginWithNameInterface } from "./interface";
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env')});
+
 export type PublicUser = Omit<UserEntity, 'password'>;
 
 export function removePassword(user: UserEntity): PublicUser{

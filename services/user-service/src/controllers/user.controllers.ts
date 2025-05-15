@@ -7,11 +7,9 @@ import bcrypt from 'bcryptjs';
 import { removePassword, PublicUser } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 
-// type PublicUser = Omit<UserEntity, 'password_hash'>
 const User = AppDataSource.getRepository(UserEntity);
 
 export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => {
-	// console.log(` id :${req.headers['x-user-id']}`);
 	const usersFind = await User.find();
 	const Users : PublicUser[] | [] = usersFind.map(removePassword);
 	return reply.code(200).send({
@@ -23,23 +21,28 @@ export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => 
 
 export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
-	const user = await User.findOneBy({ id: id })
-
-	console.log(`User: ${user}`);
-
-	if (!user) {
-		return reply.code(404).send({
-			message: "unable to find user",
-			statusCode: 404
+	try {
+		const user = await User.findOneBy({ id: id })
+		if (!user) {
+			return reply.code(404).send({
+				message: "unable to find user",
+				statusCode: 404
+			});
+		}
+		// TODO: Name of this function, removePassword return a publicUser ???
+		const publicUser : PublicUser = removePassword(user);
+		return reply.code(200).send({
+			message: 'User find',
+			statusCode: 200,
+			user: {...publicUser}
 		});
+
+	} catch {
+		return reply.code(404).send({
+			message: 'unable to find user',
+			statusCode: 404
+		})
 	}
-	// TODO: Name of this function, removePassword return a publicUser ???
-	const publicUser : PublicUser = removePassword(user)
-	return reply.code(200).send({
-		message: 'User find',
-		statusCode: 200,
-		publicUser
-	});
 }
 
 export const confirmPassword = async(req:FastifyRequest<{Body: {password: string}}>, reply: FastifyReply) => {
@@ -97,7 +100,6 @@ export const updateUser = async (req:FastifyRequest<{Body: CreateUserDto}>, repl
 	if (!isValid) return;
 
 	await User.update(userFind.id, {
-		email: req.body.email,
 		name: req.body.name,
 		updated_at: new Date()
 	});

@@ -6,11 +6,6 @@ export interface loginWithNameInterface{
 	password: string
 }
 
-export interface loginWithEmailInterface{
-	email: string;
-	password: string
-}
-
 export interface AuthRequest extends FastifyRequest {
 	headers: {
 		authorization? : string

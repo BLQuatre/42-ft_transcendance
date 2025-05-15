@@ -11,9 +11,12 @@ import { Label } from "@/components/ui/label"
 import { MainNav } from "@/components/main-nav"
 import { FcGoogle } from "react-icons/fc"
 import { useDictionary } from "@/hooks/use-dictionnary"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -26,8 +29,7 @@ export default function RegisterPage() {
   }
 
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -52,30 +54,64 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="password" className="font-pixel text-sm">
                   {dict.connection.password.title}
                 </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder={dict.connection.password.placeholder}
-                  required
-                  className="font-pixel text-sm h-10 bg-muted"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder={dict.connection.password.placeholder}
+                    required
+                    className="font-pixel text-sm h-10 bg-muted pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-10 w-10 px-0 hover:bg-transparent hover:opacity-70"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+                  </Button>
+                </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="confirmPassword" className="font-pixel text-sm">
                   {dict.connection.password.confirm}
                 </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder={dict.connection.password.confirmPlaceholder}
-                  required
-                  className="font-pixel text-sm h-10 bg-muted"
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder={dict.connection.password.confirmPlaceholder}
+                    required
+                    className="font-pixel text-sm h-10 bg-muted pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-10 w-10 px-0 hover:bg-transparent hover:opacity-70"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="sr-only">
+                      {showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    </span>
+                  </Button>
+                </div>
               </div>
 
               <Button
@@ -105,7 +141,7 @@ export default function RegisterPage() {
               {dict.connection.google.register}
             </Button>
 
-            <p className="mt-4 text-center text-sm font-pixel text-muted-foreground">
+            <p className="mt-4 text-center text-xs font-pixel text-muted-foreground">
               {dict.connection.haveAccount}{" "}
               <Link href="/login" className="text-game-blue hover:underline">
                 {dict.connection.login}
@@ -113,17 +149,61 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          <div className="relative hidden md:block bg-linear-to-br from-game-dark to-black overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_50%,#FFD700_50%)]"></div>
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4">
+          <div className="hidden md:block relative bg-linear-to-br from-game-dark to-black overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute inset-0 bg-gradient-to-br from-game-blue/20 to-transparent z-10"></div>
+            <div className="absolute inset-0 grid grid-cols-[repeat(20,1fr)] grid-rows-[repeat(20,1fr)] opacity-30 z-10">
+              {Array.from({ length: 40 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="border border-game-blue/10"
+                  style={{
+                    gridColumn: `span ${Math.floor(Math.random() * 3) + 1} / span ${Math.floor(Math.random() * 3) + 1}`,
+                    gridRow: `span ${Math.floor(Math.random() * 3) + 1} / span ${Math.floor(Math.random() * 3) + 1}`,
+                  }}
+                ></div>
+              ))}
+            </div>
+
+            {/* Top image container */}
+            <div className="absolute top-0 left-0 right-0 h-1/2">
+              <div className="absolute inset-0 bg-black/30 z-10"></div>
               <Image
-                src="/placeholder.svg?height=300&width=300"
+                src="https://archive.org/download/dino-run/dino-run.jpg"
                 alt="Game character"
-                width={300}
-                height={300}
-                className="pixel-art"
+                fill
+                className="object-cover blur-[2px] brightness-75 saturate-150"
+                priority
               />
             </div>
+
+            {/* Bottom image container */}
+            <div className="absolute bottom-0 left-0 right-0 h-1/2">
+              <div className="absolute inset-0 bg-black/30 z-10"></div>
+              <Image
+                src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+                alt="Game item"
+                fill
+                className="object-cover blur-[2px] brightness-75 saturate-150"
+                priority
+              />
+            </div>
+
+            {/* Center logo/text overlay */}
+            <div className="absolute inset-0 flex items-center justify-center z-20">
+              <div className="bg-black/50 p-4 rounded-lg border border-game-blue/50 backdrop-blur-sm">
+                <h2 className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent text-center">
+                  ft_transcendance
+                </h2>
+                <p className="font-pixel text-xs text-center text-white/70 mt-1">RETRO GAMES</p>
+              </div>
+            </div>
+
+            {/* Pixel corners */}
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-game-blue/70 z-20"></div>
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-game-blue/70 z-20"></div>
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-game-blue/70 z-20"></div>
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-game-blue/70 z-20"></div>
           </div>
         </div>
       </div>

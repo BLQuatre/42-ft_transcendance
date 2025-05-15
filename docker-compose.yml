@@ -11,7 +11,7 @@ services:
       - transcendance
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_POSTGRES}"]
       interval: 10s
       retries: 5
       start_period: 30s

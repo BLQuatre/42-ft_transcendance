@@ -819,7 +819,7 @@ export default function DashboardPage() {
             <TabsTrigger className="uppercase" value="overview">{dict.dashboard.sections.overview.title}</TabsTrigger>
             <TabsTrigger className="uppercase" value="history">HISTORY</TabsTrigger>
             <TabsTrigger className="uppercase" value="skins">SKINS</TabsTrigger>
-            <TabsTrigger className="uppercase" value="settings">SETTINGS</TabsTrigger>
+            <TabsTrigger className="uppercase" value="settings">{dict.dashboard.sections.settings.title}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">

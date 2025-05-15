@@ -1119,16 +1119,18 @@ export default function DashboardPage() {
           <TabsContent value="settings" className="space-y-4">
             <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-                <TabsTrigger value="account">ACCOUNT</TabsTrigger>
-                <TabsTrigger value="security">SECURITY</TabsTrigger>
+                <TabsTrigger className="uppercase" value="account">{dict.dashboard.sections.settings.account.title}</TabsTrigger>
+                <TabsTrigger className="uppercase" value="security">{dict.dashboard.sections.settings.security.title}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="account" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-pixel text-sm">PROFILE</CardTitle>
-                    <CardDescription className="font-pixel text-xs">
-                      MANAGE YOUR PUBLIC PROFILE INFORMATION
+                    <CardTitle className="font-pixel text-sm uppercase">
+                      {dict.dashboard.sections.settings.account.title}
+                    </CardTitle>
+                    <CardDescription className="font-pixel text-xs uppercase">
+                      {dict.dashboard.sections.settings.account.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -1138,13 +1140,13 @@ export default function DashboardPage() {
                         <AvatarFallback className="font-pixel text-lg">P1</AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <h3 className="font-pixel text-sm">PROFILE PICTURE</h3>
+                        <h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.account.picture}</h3>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="font-pixel text-xs">
-                            UPLOAD
+                          <Button variant="outline" size="sm" className="font-pixel text-xs uppercase">
+                            {dict.common.upload}
                           </Button>
-                          <Button variant="outline" size="sm" className="font-pixel text-xs text-destructive">
-                            REMOVE
+                          <Button variant="outline" size="sm" className="font-pixel text-xs text-destructive uppercase">
+                            {dict.common.remove}
                           </Button>
                         </div>
                       </div>
@@ -1153,16 +1155,16 @@ export default function DashboardPage() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
-                          <Label htmlFor="username" className="font-pixel text-xs">
-                            USERNAME
+                          <Label htmlFor="username" className="font-pixel text-xs uppercase">
+                            {dict.dashboard.sections.settings.account.username}
                           </Label>
                           <Input id="username" defaultValue="PLAYER_ONE" className="font-pixel text-sm h-10 bg-muted" />
                         </div>
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="bio" className="font-pixel text-xs">
-                          BIO
+                        <Label htmlFor="bio" className="font-pixel text-xs uppercase">
+                          {dict.dashboard.sections.settings.account.bio}
                         </Label>
                         <Textarea
                           id="bio"
@@ -1174,22 +1176,24 @@ export default function DashboardPage() {
 
                       <Button
                         type="submit"
-                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
+                        className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
                         disabled={isLoading}
                       >
-                        {isLoading ? "SAVING..." : "SAVE CHANGES"}
+                        {isLoading ? dict.common.saving : dict.common.save}
                       </Button>
                     </form>
 
                     <Separator className="my-4" />
 
                     <div className="space-y-2">
-                      <h3 className="font-pixel text-sm text-destructive">DANGER ZONE</h3>
-                      <p className="font-pixel text-xs text-muted-foreground">
-                        ONCE YOU DELETE YOUR ACCOUNT, THERE IS NO GOING BACK. PLEASE BE CERTAIN.
+                      <h3 className="font-pixel text-sm text-destructive uppercase">
+                        {dict.dashboard.sections.settings.account.dangerZone.title}
+                      </h3>
+                      <p className="font-pixel text-xs text-muted-foreground uppercase">
+                        {dict.dashboard.sections.settings.account.dangerZone.description}.
                       </p>
-                      <Button variant="destructive" className="font-pixel">
-                        DELETE ACCOUNT
+                      <Button variant="destructive" className="font-pixel uppercase">
+                        {dict.dashboard.sections.settings.account.dangerZone.delete}
                       </Button>
                     </div>
                   </CardContent>
@@ -1199,38 +1203,42 @@ export default function DashboardPage() {
               <TabsContent value="security" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-pixel text-sm">PASSWORD</CardTitle>
-                    <CardDescription className="font-pixel text-xs">CHANGE YOUR PASSWORD</CardDescription>
+                    <CardTitle className="font-pixel text-sm uppercase">
+                      {dict.dashboard.sections.settings.security.password.title}
+                    </CardTitle>
+                    <CardDescription className="font-pixel text-xs uppercase">
+                      {dict.dashboard.sections.settings.security.password.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor="currentPassword" className="font-pixel text-xs">
-                          CURRENT PASSWORD
+                        <Label htmlFor="currentPassword" className="font-pixel text-xs uppercase">
+                          {dict.dashboard.sections.settings.security.password.current}
                         </Label>
                         <Input id="currentPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="newPassword" className="font-pixel text-xs">
-                          NEW PASSWORD
+                        <Label htmlFor="newPassword" className="font-pixel text-xs uppercase">
+                          {dict.dashboard.sections.settings.security.password.new}
                         </Label>
                         <Input id="newPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="confirmPassword" className="font-pixel text-xs">
-                          CONFIRM NEW PASSWORD
+                        <Label htmlFor="confirmPassword" className="font-pixel text-xs uppercase">
+                          {dict.dashboard.sections.settings.security.password.confirm}
                         </Label>
                         <Input id="confirmPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
                       </div>
 
                       <Button
                         type="submit"
-                        className="font-pixel bg-game-blue hover:bg-game-blue/90"
+                        className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
                         disabled={isLoading}
                       >
-                        {isLoading ? "UPDATING..." : "UPDATE PASSWORD"}
+                        {isLoading ? dict.common.updating : dict.dashboard.sections.settings.security.password.update}
                       </Button>
                     </form>
                   </CardContent>

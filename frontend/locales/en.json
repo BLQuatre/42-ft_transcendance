@@ -112,7 +112,12 @@
 		"play": "PLAY",
 		"back": "Back",
 		"loading": "Loading...",
-		"total": "Total"
+		"saving": "Saving...",
+		"updating": "Updating...",
+		"total": "Total",
+		"upload": "Upload",
+		"remove": "Remove",
+		"save": "Save Changes"
 	},
 
 	"profile": {
@@ -191,6 +196,35 @@
 						"title": "Score Progresion",
 						"description": "Your score over time",
 						"label": "Score"
+					}
+				}
+			},
+
+			"settings": {
+				"title": "Settings",
+
+				"account": {
+					"title": "Account",
+					"description": "Manage your public profile information",
+					"picture": "Profile Picture",
+					"username": "Username",
+					"bio": "Bio",
+
+					"dangerZone": {
+						"title": "Danger Zone",
+						"description": "Once you delete your account, there is no going back. Please be certain.",
+						"delete": "Delete Account"
+					}
+				},
+				"security": {
+					"title": "Security",
+					"password": {
+						"title": "Password",
+						"description": "Change your password",
+						"current": "Current Password",
+						"new": "New Password",
+						"confirm": "Confirm New Password",
+						"update": "Update Password"
 					}
 				}
 			}

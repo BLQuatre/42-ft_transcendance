@@ -34,7 +34,6 @@ export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply
 			message: "Error internal sever",
 			statusCode: 500
 		})
-		
 	})
 	if (result){
 		const accessToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
@@ -48,13 +47,13 @@ export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply
 			},
 			refreshToken,
 			accessToken,
-		});	
+		});
 	}
 }
 
 // dans le auth-service
 export const login = async (req: FastifyRequest<{ Body: loginWithNameInterface }>, reply: FastifyReply) => {
-	const user = await axios.post('http://localhost:3001/user/name', {
+	const user = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/name`, {
 		...req.body
 	})
 	.catch((err) => {

@@ -1,0 +1,1 @@
+dans le /profile/[id] faire en sorte que le GAME HISTORY -> HISTORY

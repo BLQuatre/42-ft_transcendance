@@ -15,6 +15,7 @@ import { type DinoGame, type Game, GameResult, GameType, type PongGame, type Use
 import { useDictionary } from "@/hooks/use-dictionnary"
 import Loading from "@/components/loading"
 
+
 // Sample user data - in a real app, this would come from an API
 const userData: Record<string, User> = {
   GAMER42: {
@@ -188,7 +189,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
       <MainNav />
 
       <div className="flex-1 container py-16 px-4 md:px-6">
@@ -231,9 +232,6 @@ export default function UserProfilePage() {
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
             <TabsTrigger className="uppercase" value="overview">
               {dict.profile.sections.overview.title}
-            </TabsTrigger>
-            <TabsTrigger className="uppercase" value="stats">
-              {dict.profile.sections.stats.title}
             </TabsTrigger>
             <TabsTrigger className="uppercase" value="history">
               {dict.profile.sections.history.title}
@@ -280,75 +278,7 @@ export default function UserProfilePage() {
                 </CardContent>
               </Card>
             </div>
-
-            <div className="grid gap-4 md:grid-cols-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="font-pixel text-sm uppercase">
-                    {dict.profile.sections.overview.recentGames}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {user.recentGames.slice(0, 3).map((game: Game, index: number) => (
-                      <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
-                        <div className="flex items-center space-x-2">
-                          {game.type === GameType.PONG ? (
-                            <>
-                              <div
-                                className={`w-2 h-2 rounded-full ${
-                                  game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
-                                }`}
-                              ></div>
-                              <p className="font-pixel text-xs">
-                                {game.type.toUpperCase()} VS. {game.opponent}
-                              </p>
-                            </>
-                          ) : (
-                            <>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="text-game-orange"
-                              >
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                              </svg>
-                              <p className="font-pixel text-xs">{game.type.toUpperCase()}</p>
-                            </>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {game.type === GameType.PONG ? (
-                            <p
-                              className={`font-pixel text-xs ${
-                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
-                              }`}
-                            >
-                              {game.score}
-                            </p>
-                          ) : (
-                            <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
-                          )}
-                          <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Stats Tab */}
-          <TabsContent value="stats" className="space-y-4">
-            <Card>
+			<Card>
               <CardHeader>
                 <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
               </CardHeader>

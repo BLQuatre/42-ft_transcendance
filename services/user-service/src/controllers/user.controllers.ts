@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs';
 import { removePassword } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 import { PublicUser } from "../utils/types";
+import { LoginUser } from "../utils/interface";
 
 const User = AppDataSource.getRepository(UserEntity);
 
@@ -67,6 +68,31 @@ export const createUser = async (req: FastifyRequest<{Body: CreateUserDto}>, rep
 			statusCode: 409
 		});
 	}
+}
+
+export const verifyUser = async (req: FastifyRequest<{Body: LoginUser}>, reply: FastifyReply) => {
+	const userFind = await User.findOneBy({ name: req.body.name });
+	if (!userFind) {
+		return reply.code(404).send({
+			message: 'Unable to find uuser',
+			statusCode: 404
+		});
+	}
+
+	const verif = await bcrypt.compare(req.body.password, userFind.password);
+	if (!verif) {
+		return reply.code(401).send({
+			message: 'Unable to login, incorrect password',
+			statusCode: 401
+		});
+	}
+
+	const user = removePassword(userFind);
+	return reply.code(200).send({
+		message: 'User connected',
+		statusCode: 200,
+		user
+	});
 }
 
 export const confirmPassword = async(req: FastifyRequest<{Body: {password: string}}>, reply: FastifyReply) => {

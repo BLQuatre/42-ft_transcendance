@@ -12,20 +12,58 @@ import { MainNav } from "@/components/Navbar"
 import { FcGoogle } from "react-icons/fc"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { Eye, EyeOff } from "lucide-react"
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import { cn } from "@/lib/utils"
 
 export default function LoginPage() {
+  const router = useRouter()
+
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [usernameError, setUsernameError] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>)   {
     event.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
+    console.log("Login submitted");
+
+    axios.post('/api/auth/login', {
+      name: username,
+      password: password
+    })
+    .then(response => {
+      console.log("Successfull login: " + JSON.stringify(response.data))
+      document.cookie = `accessToken=${response.data.accessToken}; Path=/; Max-Age=2592000; SameSite=Strict; Secure;`;
+      router.push("/")
+    })
+    .catch(error => {
+      if (error.status == 401) {
+        setPasswordError("Invalid password")
+      } else if (error.status == 404) {
+        setUsernameError("User not found")
+      } else {
+        console.error("Error: " + JSON.stringify(error))
+      }
+    })
+    .finally(() => {
       setIsLoading(false)
-      window.location.href = "/"
-    }, 1000)
+    })
+  }
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value)
+    setUsernameError(null)
+  }
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value)
+    setPasswordError(null)
   }
 
   const dict = useDictionary()
@@ -102,11 +140,16 @@ export default function LoginPage() {
                 </Label>
                 <Input
                   id="username"
+                  name="username"
                   type="username"
                   placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
+                  error={usernameError !== null}
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>{usernameError || " "}</p>
               </div>
 
               <div className="space-y-2 relative">
@@ -116,10 +159,14 @@ export default function LoginPage() {
                 <div className="relative">
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder={dict.connection.password.placeholder}
                     required
                     className="font-pixel text-sm h-10 bg-muted pr-10"
+                    error={passwordError !== null}
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
                   <Button
                     type="button"
@@ -136,6 +183,7 @@ export default function LoginPage() {
                     <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                   </Button>
                 </div>
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
               </div>
               <Button
                 type="submit"

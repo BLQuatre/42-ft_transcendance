@@ -53,37 +53,51 @@ export const register = async (req: FastifyRequest<{ Body: CreateUserDto }>, rep
 }
 
 // dans le auth-service
+// export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: FastifyReply) => {
+// 	const response = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/verify`, {
+// 		...req.body
+// 	})
+// 	.catch((err) => {
+// 		console.log("================================")
+// 		console.log(JSON.stringify(err));
+// 		console.log("================================")
+// 		if (err.response) {
+// 			return reply.code(err.response.status).send({
+// 				...err.response.data
+// 			})
+// 		} else {
+// 			return reply.code(500).send({
+// 				message: "Internal server error",
+// 				statusCode: 500
+// 			});
+// 		}
+// 	})
+// 	if (response) {
+// 		return response;
+// 	}
+// }
+
 export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: FastifyReply) => {
-	const user = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/name`, {
+	const response = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/verify`, {
 		...req.body
 	})
 	.catch((err) => {
-		if (err.response){
-			return reply.code(err.response.status).send({...err.response.data})
-		}
-		else
-			return reply.code(500).send({message: "Error server intern", statusCode: 500});
-	})
-	if (user){
-		const verif = await bcrypt.compare(req.body.password, user.data.user.password);
-		if (!verif) {
-			return reply.code(401).send({
-				message: "unable to login, identifiant incorrect",
-				statusCode: 401
+		console.log("================================");
+		console.log("Error in login:", err.message);
+		console.log("================================");
+
+		if (err.response) {
+			return reply.code(err.response.status).send({
+				...err.response.data
 			});
 		} else {
-			const publicUser : PublicUser = removePassword(user.data.user);
-			const accessToken = jwt.sign({ id: publicUser.id ,name: publicUser.name }, JWT_ACCESS, { expiresIn: '15min' });
-			const refreshToken = jwt.sign({ id: publicUser.id, name: publicUser.name }, JWT_REFRESH, { expiresIn: '7D' });
-			return reply.code(202).send({
-				message: "User is logged",
-				statusCode: 202,
-				user: {
-					...publicUser
-				},
-				accessToken,
-				refreshToken
+			return reply.code(500).send({
+				message: "Internal server error",
+				statusCode: 500
 			});
 		}
+	})
+	if (response) {
+		return reply.code(response.data.statusCode).send(response.data);
 	}
 }

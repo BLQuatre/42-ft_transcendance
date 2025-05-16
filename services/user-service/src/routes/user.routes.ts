@@ -1,9 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { confirmPassword, createUser, delUser, getAllUsers, getOneUser, updatePassword, updateUser } from '../controllers/user.controllers';
+import { confirmPassword, createUser, delUser, getAllUsers, getOneUser, updatePassword, updateUser, verifyUser } from '../controllers/user.controllers';
 
 export async function userRoutes(app: FastifyInstance) {
 	app.get('/user', getAllUsers);
 	app.get('/user/:id', getOneUser);
+	app.post('/user/verify', verifyUser);
 	app.post('/user', createUser);
 	app.post('/user/confirmpassword/:id', confirmPassword);
 	app.put('/user/:id', updateUser);

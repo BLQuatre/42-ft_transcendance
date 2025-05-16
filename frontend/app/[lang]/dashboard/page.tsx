@@ -592,7 +592,7 @@ export default function DashboardPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="account" className="space-y-4">
+              <TabsContent value="account" className="space-y-4 h-4">
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-pixel text-sm uppercase">

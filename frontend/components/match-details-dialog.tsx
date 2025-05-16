@@ -16,6 +16,7 @@ type Player = {
   name: string
   score: number
   isUser: boolean
+  avatar?: string // Add this line
 }
 
 type PongMatchDetails = {
@@ -80,6 +81,19 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                       } rounded-md`}
                     >
                       <div className="flex items-center space-x-4">
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                          {player.avatar ? (
+                            <img
+                              src={player.avatar || "/placeholder.svg"}
+                              alt={`${player.name}'s avatar`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-primary/20 flex items-center justify-center">
+                              <span className="font-pixel text-xs">{player.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                          )}
+                        </div>
                         <div>
                           <p className="font-pixel text-xs">{player.name}</p>
                         </div>
@@ -126,6 +140,19 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                       } rounded-md`}
                     >
                       <div className="flex items-center space-x-4">
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-muted flex items-center justify-center">
+                          {player.avatar ? (
+                            <img
+                              src={player.avatar || "/placeholder.svg"}
+                              alt={`${player.name}'s avatar`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-primary/20 flex items-center justify-center">
+                              <span className="font-pixel text-xs">{player.name.charAt(0).toUpperCase()}</span>
+                            </div>
+                          )}
+                        </div>
                         <div>
                           <p className="font-pixel text-xs">{player.name}</p>
                         </div>

@@ -4,14 +4,14 @@ import * as CONST from './constants' ;
 
 export class Game {
 	left_team: Team ; right_team: Team ;
-	ball: Ball ;
+	ball: Ball = {} as Ball ;
 
 	private intervalID: NodeJS.Timeout | null = null ;
 
 	constructor() {
 		this.left_team	= { players: [] , score: 0 } ;
 		this.right_team	= { players: [] , score: 0 } ;
-		this.ball = { x: CONST.BOARD_LENGTH / 2 , y: CONST.BOARD_HEIGHT / 2 , vx: 5 , vy: 5 } ;
+		this.resetBall() ;
 	}
 
 	startUpdating() {

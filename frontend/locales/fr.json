@@ -1,23 +1,24 @@
 {
 	"title": "ft_transcendance",
 	"home": {
-		"description": "Défie tes amis dans des jeux classiques",
+		"description": "Défiez vos amis dans des jeux classiques",
 		"play": "Jouer maintenant",
+		"gamerules": "Règles du jeu",
 		"games": "Jeux en vedette",
 
 		"features": {
 			"title": "Fonctionnalités",
 			"multiplayer": {
 				"title": "Multijoueur",
-				"description": "Joue avec des amis en local ou en ligne"
+				"description": "Jouez avec des amis en local ou en ligne"
 			},
-			"leaderboards": {
-				"title": "Classements",
-				"description": "Compète pour la première place"
+			"stats": {
+				"title": "Statistiques",
+				"description": "Suivez vos progrès et votre historique de jeu"
 			},
 			"customization": {
 				"title": "Personnalisation",
-				"description": "Personnalise ton expérience de jeu"
+				"description": "Personnalisez votre expérience de jeu"
 			}
 		}
 	},
@@ -26,34 +27,205 @@
 		"home": "Accueil",
 		"games": "Jeux",
 		"shop": "Boutique",
-		"stats": "Statistiques",
 		"friends": "Amis",
-		"profile": "Profil"
+		"dashboard": "Tableau de bord",
+		"menu": "Menu"
 	},
 
 	"connection": {
 		"login": "Connexion",
 		"register": "Inscription",
-		"logout": "Déconnexion"
+		"logout": "Déconnexion",
+		"username": "Nom d'utilisateur",
+		"password": {
+			"title": "Mot de passe",
+			"placeholder": "Entrez votre mot de passe",
+			"confirm": "Confirmer le mot de passe",
+			"confirmPlaceholder": "Confirmez votre mot de passe",
+			"forgot": "Mot de passe oublié ?"
+		},
+		"rememberMe": "Se souvenir de moi",
+		"dontHaveAccount": "Vous n'avez pas de compte ?",
+		"haveAccount": "Vous avez déjà un compte ?",
+		"or": "Ou",
+		"google": {
+			"login": "Se connecter avec Google",
+			"register": "S'inscrire avec Google"
+		}
 	},
 
 	"games": {
+		"title": "Nos Jeux",
+		"description": "Découvrez notre collection de jeux d'arcade rétro.\nChaque jeu propose un gameplay unique et des défis variés.",
+		"how": "Comment jouer",
+
 		"pong": {
 			"title": "Pong",
-			"description": "Le jeu de tennis de table classique. Affronte tes amis pour voir qui marque le plus de points."
+			"description": "Action rapide de tennis de table ! Défiez vos amis et atteignez le meilleur score.",
+			"explications": [
+				"Déplacez votre raquette avec les touches w/s (J1) ou flèches haut/bas (J2)",
+				"Frappez la balle avec votre raquette pour la renvoyer à l'adversaire",
+				"Marquez un point lorsque l'adversaire rate la balle",
+				"Le premier à atteindre 10 points gagne la partie"
+			],
+			"type": "Arcade Classique",
+			"players": "2 à 8 joueurs"
 		},
 		"dino": {
 			"title": "Dino Run",
-			"description": "Saute par-dessus les obstacles et survis le plus longtemps possible dans ce jeu de course sans fin."
+			"description": "Un runner sans fin difficile où vous contrôlez un dinosaure qui évite les obstacles dans un paysage préhistorique.",
+			"explications": [
+				"Appuyez sur la barre d'espace ou la flèche du haut pour sauter par-dessus les cactus et autres obstacles",
+				"Appuyez sur la flèche du bas pour vous baisser sous les ptérodactyles",
+				"La vitesse augmente avec le temps, rendant le jeu plus difficile",
+				"Votre score augmente plus vous survivez longtemps",
+				"Essayez de battre votre meilleur score à chaque tentative"
+			],
+			"type": "Runner Infini",
+			"players": "1 à 8 joueur(s)"
+		}
+	},
+
+	"shop": {
+		"title": "Boutique",
+		"description": "Personnalisez votre expérience de jeu",
+		"balance": "Votre solde",
+
+		"status": {
+			"buy": "Acheter",
+			"select": "Sélectionner",
+			"selected": "Sélectionné"
+		},
+
+		"categories": {
+			"characters": "Skins de personnages",
+			"maps": "Thèmes de carte"
 		}
 	},
 
 	"footer": {
-		"cgu": "CGU",
+		"terms": "Conditions",
 		"privacy": "Confidentialité"
 	},
 
 	"common": {
-		"play": "JOUER AU"
+		"play": "JOUER",
+		"back": "Retour",
+		"loading": "Chargement...",
+		"saving": "Sauvegarde...",
+		"updating": "Mise à jour...",
+		"total": "Total",
+		"upload": "Téléverser",
+		"remove": "Supprimer",
+		"save": "Enregistrer les modifications"
+	},
+
+	"profile": {
+		"notFound": "Utilisateur %user% introuvable",
+		"memberSince": "Membre depuis le %date%",
+		"addFriend": "Ajouter en ami",
+		"sendMessage": "Envoyer un message",
+
+		"sections": {
+			"overview": {
+				"title": "Aperçu",
+				"recentGames": "Parties récentes"
+			},
+			"stats": {
+				"title": "Statistiques",
+				"gamesPlayed": "Parties jouées",
+				"winRate": "Taux de victoire",
+				"bestScore": "Meilleur score",
+				"wins": "Victoires",
+				"losses": "Défaites",
+				"averageScore": "Score moyen",
+				"totalDistance": "Distance totale"
+			},
+			"history": {
+				"title": "Historique des parties"
+			}
+		}
+	},
+
+	"userStatus": {
+		"online": "En ligne",
+		"offline": "Hors ligne"
+	},
+
+	"friends": {
+		"title": "Amis",
+		"description": "Invitez vos amis à jouer avec vous",
+
+		"sections": {
+			"myFriends": {
+				"title": "Mes amis",
+				"description": "Gérez votre liste d'amis",
+				"search": "Rechercher des amis...",
+				"noFriends": "Vous n'avez pas encore d'amis.",
+				"noFriendsFound": "Aucun ami trouvé. Essayez une autre recherche."
+			},
+
+			"requests": {
+				"title": "Demandes d'amis",
+				"description": "Gérez les demandes entrantes",
+				"noRequests": "Vous n'avez pas encore de demandes d'amis.",
+				"accept": "Accepter",
+				"decline": "Refuser"
+			}
+		}
+	},
+
+	"dashboard": {
+		"title": "Tableau de bord",
+		"description": "Gérez votre compte",
+
+		"sections": {
+			"overview": {
+				"title": "Aperçu",
+				"totalGames": "Nombre total de parties",
+				"winRate": "Taux de victoire",
+				"highScore": "Score maximal",
+				"charts": {
+					"activity": {
+						"title": "Activité",
+						"description": "Nombre de parties jouées par jour"
+					},
+					"score": {
+						"title": "Progression du score",
+						"description": "Votre score au fil du temps",
+						"label": "Score"
+					}
+				}
+			},
+
+			"settings": {
+				"title": "Paramètres",
+
+				"account": {
+					"title": "Compte",
+					"description": "Gérez les informations publiques de votre profil",
+					"picture": "Photo de profil",
+					"username": "Nom d'utilisateur",
+					"bio": "Biographie",
+
+					"dangerZone": {
+						"title": "Zone de danger",
+						"description": "Une fois votre compte supprimé, cette action est irréversible. Soyez sûr de votre décision.",
+						"delete": "Supprimer le compte"
+					}
+				},
+				"security": {
+					"title": "Sécurité",
+					"password": {
+						"title": "Mot de passe",
+						"description": "Changez votre mot de passe",
+						"current": "Mot de passe actuel",
+						"new": "Nouveau mot de passe",
+						"confirm": "Confirmer le nouveau mot de passe",
+						"update": "Mettre à jour le mot de passe"
+					}
+				}
+			}
+		}
 	}
 }

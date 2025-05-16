@@ -4,10 +4,16 @@ import { Language } from '@/types/types';
 const locales = Object.values(Language);
 
 function getLocale(request: NextRequest): Language {
+	const cookieLanguage = request.cookies.get('selectedLanguage')?.value;
 	const acceptLanguage = request.headers.get('accept-language');
+
+	if (cookieLanguage && locales.includes(cookieLanguage as Language)) {
+		return cookieLanguage as Language;
+	}
+
 	if (acceptLanguage) {
 		const preferredLanguages = acceptLanguage.split(',').map(lang => lang.split(';')[0].trim());
-		const matched = preferredLanguages.find(lang => lang in Language);
+		const matched = preferredLanguages.find(lang => locales.includes(lang as Language));
 		if (matched) return matched as Language;
 	}
 

@@ -1,5 +1,5 @@
 import { FastifyReply } from "fastify";
-import { getenvVar } from "../utils/functions";
+import { getEnv } from "../utils/functions";
 import { AuthRequest, MyJwtPayload } from "../utils/interface";
 import dotenv from 'dotenv';
 import path from "path";
@@ -7,8 +7,8 @@ import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
-const JWT_ACCESS = getenvVar('JWT_ACCESS');
-const JWT_REFRESH = getenvVar('JWT_REFRESH');
+const JWT_ACCESS = getEnv('JWT_ACCESS');
+const JWT_REFRESH = getEnv('JWT_REFRESH');
 
 export const accessAuthentication = async (req: AuthRequest, reply: FastifyReply) => {
 	const authHeader = req.headers.authorization;

@@ -1,6 +1,5 @@
 import { FastifyInstance } from "fastify";
 import { confirmPassword, createUser, delUser, getAllUsers, getOneUser, updatePassword, updateUser } from '../controllers/user.controllers';
-import { CreateUserDto } from "../entities/CreateUserDto";
 
 export async function userRoutes(app: FastifyInstance) {
 	app.get('/user', getAllUsers);

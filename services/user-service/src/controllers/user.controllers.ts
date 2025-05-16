@@ -4,8 +4,9 @@ import { UserEntity } from "../entities/User";
 import { validateBody } from "../utils/validate";
 import { CreateUserDto } from "../entities/CreateUserDto";
 import bcrypt from 'bcryptjs';
-import { removePassword, PublicUser } from "../utils/functions";
+import { removePassword } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
+import { PublicUser } from "../utils/types";
 
 const User = AppDataSource.getRepository(UserEntity);
 

@@ -1,7 +1,7 @@
 import { FastifyRequest } from "fastify";
 import { JwtPayload} from 'jsonwebtoken'
 
-export interface loginWithNameInterface{
+export interface LoginUser {
 	name: string;
 	password: string
 }

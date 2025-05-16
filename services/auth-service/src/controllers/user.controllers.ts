@@ -2,8 +2,8 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { validateBody } from "../utils/validate";
 import { CreateUserDto } from "../entities/CreateUserDto";
 import bcrypt from 'bcryptjs';
-import { removePassword, PublicUser, getenvVar } from "../utils/functions";
-import { loginWithNameInterface } from "../utils/interface";
+import { removePassword, PublicUser, getEnv } from "../utils/functions";
+import { LoginUser } from "../utils/interface";
 import dotenv from 'dotenv';
 import path from "path";
 import jwt from "jsonwebtoken";
@@ -11,11 +11,11 @@ import axios from "axios";
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
-const JWT_ACCESS = getenvVar('JWT_ACCESS');
-const JWT_REFRESH = getenvVar('JWT_REFRESH');
+const JWT_ACCESS = getEnv('JWT_ACCESS');
+const JWT_REFRESH = getEnv('JWT_REFRESH');
 
 // dans le auth-service
-export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply: FastifyReply) => {
+export const register = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply: FastifyReply) => {
 	const isValid = await validateBody(CreateUserDto)(req, reply);
 	if (!isValid) return;
 
@@ -35,7 +35,8 @@ export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply
 			statusCode: 500
 		})
 	})
-	if (result){
+
+	if (result) {
 		const accessToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
 		const refreshToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_REFRESH, { expiresIn: '7D' });
 		const publicUser: PublicUser = removePassword(result.data.newUser);
@@ -52,7 +53,7 @@ export const signUp = async (req: FastifyRequest<{ Body: CreateUserDto }>, reply
 }
 
 // dans le auth-service
-export const login = async (req: FastifyRequest<{ Body: loginWithNameInterface }>, reply: FastifyReply) => {
+export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: FastifyReply) => {
 	const user = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/name`, {
 		...req.body
 	})

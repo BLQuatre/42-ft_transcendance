@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
-import { DinoGame, Game, GameResult, GameType, PongGame, User } from "@/types/types"
+import { type DinoGame, type Game, GameResult, GameType, type PongGame, type User } from "@/types/types"
 import { useDictionary } from "@/hooks/use-dictionnary"
 import Loading from "@/components/loading"
 
@@ -146,7 +146,9 @@ export default function UserProfilePage() {
     setIsFriend(true)
     toast({
       title: "Demande d'ami envoyée",
-      description: user ? `Une demande d'ami a été envoyée à ${user.username}` : `Erreur lors de l'envoi de la demande d'ami`,
+      description: user
+        ? `Une demande d'ami a été envoyée à ${user.username}`
+        : `Erreur lors de l'envoi de la demande d'ami`,
       duration: 3000,
     })
   }
@@ -154,19 +156,18 @@ export default function UserProfilePage() {
   const handleMessage = () => {
     toast({
       title: "Message",
-      description: user ? `Ouverture de la conversation avec ${user.username}` : `Erreur lors de l'ouverture de la conversation`,
+      description: user
+        ? `Ouverture de la conversation avec ${user.username}`
+        : `Erreur lors de l'ouverture de la conversation`,
       duration: 3000,
     })
   }
 
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   if (loading) {
-    return (
-      <Loading dict={dict} />
-    )
+    return <Loading dict={dict} />
   }
 
   if (!user) {
@@ -176,10 +177,12 @@ export default function UserProfilePage() {
         <div className="flex-1 container py-8 px-4 md:px-6 flex flex-col items-center justify-center">
           <h1 className="font-pixel text-2xl mb-4 uppercase">{dict.profile.notFound.replace("%user%", username)}</h1>
           <Button asChild className="font-pixel bg-game-blue hover:bg-game-blue/90">
-            <Link href="/" className="uppercase">{dict.common.back}</Link>
+            <Link href="/" className="uppercase">
+              {dict.common.back}
+            </Link>
           </Button>
         </div>
-        <Footer dict={dict}/>
+        <Footer dict={dict} />
       </div>
     )
   }
@@ -191,7 +194,7 @@ export default function UserProfilePage() {
       <div className="flex-1 container py-16 px-4 md:px-6">
         {/* User Header */}
         <div className="mb-8 bg-card rounded-lg p-6 pixel-border">
-          <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+          <div className="flex flex-col md:flex-row gap-6 items-center">
             <div className="relative">
               <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-game-blue">
                 <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} />
@@ -199,10 +202,11 @@ export default function UserProfilePage() {
               </Avatar>
             </div>
 
-            <div className="flex-1 text-center md:text-left">
+            <div className="flex-1 text-center md:text-left flex flex-col justify-center">
               <h1 className="font-pixel text-2xl md:text-3xl">{user.displayName}</h1>
-              <p className="font-pixel text-sm text-game-blue">@{user.username}</p>
-              <p className="font-pixel text-xs text-muted-foreground mt-1">{dict.profile.memberSince.replace("%date%", user.joinDate)}</p>
+              <p className="font-pixel text-xs text-muted-foreground mt-1">
+                {dict.profile.memberSince.replace("%date%", user.joinDate)}
+              </p>
               <p className="mt-4 text-sm">{user.bio}</p>
             </div>
 
@@ -225,9 +229,15 @@ export default function UserProfilePage() {
         {/* Tabs for different sections */}
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-            <TabsTrigger className="uppercase" value="overview">{dict.profile.sections.overview.title}</TabsTrigger>
-            <TabsTrigger className="uppercase" value="stats">{dict.profile.sections.stats.title}</TabsTrigger>
-            <TabsTrigger className="uppercase" value="history">{dict.profile.sections.history.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="overview">
+              {dict.profile.sections.overview.title}
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="stats">
+              {dict.profile.sections.stats.title}
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="history">
+              {dict.profile.sections.history.title}
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -235,12 +245,14 @@ export default function UserProfilePage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.gamesPlayed}</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.profile.sections.stats.gamesPlayed}
+                  </CardTitle>
                   <GamepadIcon className="text-game-blue h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.totalGames}</div>
-                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.common.total}</p>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase mt-2.5">{dict.common.total}</p>
                 </CardContent>
               </Card>
 
@@ -251,18 +263,20 @@ export default function UserProfilePage() {
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.winRate}</div>
-                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.pong.title}</p>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase mt-2.5">{dict.games.pong.title}</p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.stats.bestScore}</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.profile.sections.stats.bestScore}
+                  </CardTitle>
                   <BarChart3 className="text-game-red h-4 w-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="font-pixel text-2xl">{user.stats.highScore}</div>
-                  <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.games.dino.title}</p>
+                  <p className="font-pixel text-xs text-muted-foreground uppercase mt-2.5">{dict.games.dino.title}</p>
                 </CardContent>
               </Card>
             </div>
@@ -270,7 +284,9 @@ export default function UserProfilePage() {
             <div className="grid gap-4 md:grid-cols-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm uppercase">{dict.profile.sections.overview.recentGames}</CardTitle>
+                  <CardTitle className="font-pixel text-sm uppercase">
+                    {dict.profile.sections.overview.recentGames}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -339,19 +355,27 @@ export default function UserProfilePage() {
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.gamesPlayed}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.played}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.wins}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.wins}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.wins}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.losses}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.losses}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.losses}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.winRate}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.winRate}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.pong.winRate}</p>
                   </div>
                 </div>
@@ -365,19 +389,27 @@ export default function UserProfilePage() {
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.gamesPlayed}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.gamesPlayed}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.played}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.bestScore}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.bestScore}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.highScore}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.averageScore}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.averageScore}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.avgScore}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.profile.sections.stats.totalDistance}</p>
+                    <p className="font-pixel text-xs text-muted-foreground uppercase">
+                      {dict.profile.sections.stats.totalDistance}
+                    </p>
                     <p className="font-pixel text-xl">{user.gameStats.dino.totalDistance}</p>
                   </div>
                 </div>
@@ -391,13 +423,17 @@ export default function UserProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
+                  <CardDescription className="font-pixel text-xs">YOUR RECENT PONG GAMES</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {user.recentGames
                       .filter((game: Game) => game.type === GameType.PONG)
                       .map((game: PongGame, index: number) => (
-                        <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                        <div
+                          key={index}
+                          className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        >
                           <div className="flex items-center space-x-2">
                             <div
                               className={`w-2 h-2 rounded-full ${
@@ -425,13 +461,17 @@ export default function UserProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
+                  <CardDescription className="font-pixel text-xs">YOUR RECENT DINO RUN ATTEMPTS</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {user.recentGames
                       .filter((game: Game) => game.type === GameType.DINO)
                       .map((game: DinoGame, index: number) => (
-                        <div key={index} className="flex justify-between items-center p-2 bg-muted rounded-md">
+                        <div
+                          key={index}
+                          className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        >
                           <div className="flex items-center space-x-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"

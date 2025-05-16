@@ -2,21 +2,15 @@ import Fastify from 'fastify' ;
 import { WebSocketServer } from 'ws' ;
 
 import { Game } from './game' ;
-import { Player } from './player';
+import { Player } from './player' ;
+import * as CONST from './constants' ;
 
 
 const fastify = Fastify() ;
 
-let gameInterval: NodeJS.Timeout | null = null ;
-
 let game = new Game() ;
 let id = 0 ;
 
-const FPS = 60 ;
-
-fastify.get('/', async (request, reply) => {
-	return { pong: 'it works' } ;
-}) ; // TODO:check utility
 
 const start = async () => {
 	await fastify.listen({ port: 3002 }) ;
@@ -73,23 +67,24 @@ const start = async () => {
 	}) ;
 } ;
 
-function startGame() {
-	if (gameInterval)
-		return ;
+let servIntervalID: NodeJS.Timeout | null = null ; // Temporary ig
 
+function startGame() {
 	console.log('Game started') ;
-	gameInterval = setInterval(() => {
-		game.update() ;
-		broadcastGame() ;
-	}, 1000 / FPS) ;
+
+	game.startUpdating() ;
+
+	const interval = 1000 / CONST.FPS ;
+	servIntervalID = setInterval(() => broadcastGame(), interval) ;
 }
 
 // TODO: change the paused state
 function stopGame() {
-	if (gameInterval) {
+	game.stopUpdating() ;
+	if (servIntervalID) {
 		console.log('Game paused') ;
-		clearInterval(gameInterval) ;
-		gameInterval = null ;
+		clearInterval(servIntervalID) ;
+		servIntervalID = null ;
 	}
 }
 

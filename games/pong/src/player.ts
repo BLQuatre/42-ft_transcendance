@@ -1,8 +1,7 @@
 import { WebSocket } from 'ws';
 import { Range } from './types';
+import * as CONST from './constants' ;
 
-const FPS = 60 ;
-const MOV_SPD = 6 ;
 
 export class Player {
 	id: number ;
@@ -29,11 +28,11 @@ export class Player {
 	}
 
 	autoUpdate() {
-		const interval = 1000 / FPS ;
+		const interval = 1000 / CONST.FPS ;
 
 		setInterval(() => {
-			if (this.moving.up)		this.move(-MOV_SPD) ;
-			if (this.moving.down)	this.move(MOV_SPD) ;
+			if (this.moving.up)		this.move(-CONST.PLAYER_MOV_SPD) ;
+			if (this.moving.down)	this.move( CONST.PLAYER_MOV_SPD) ;
 		}, interval) ;
 	}
 

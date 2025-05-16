@@ -6,18 +6,96 @@ import { MainNav } from "@/components/main-nav"
 import { Footer } from "@/components/footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
-import { type DinoGame, type Game, GameResult, GameType, type PongGame, type User } from "@/types/types"
+import { MatchDetailsDialog } from "@/components/match-details-dialog"
 import { useDictionary } from "@/hooks/use-dictionnary"
 import Loading from "@/components/loading"
+import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 
+// Sample data for charts - from dashboard
+const gamePlayData = [
+  { name: "Mon", pong: 4, dino: 2 },
+  { name: "Tue", pong: 3, dino: 5 },
+  { name: "Wed", pong: 5, dino: 3 },
+  { name: "Thu", pong: 7, dino: 4 },
+  { name: "Fri", pong: 5, dino: 6 },
+  { name: "Sat", pong: 8, dino: 9 },
+  { name: "Sun", pong: 10, dino: 7 },
+]
+
+const scoreData = [
+  { name: "Week 1", score: 350 },
+  { name: "Week 2", score: 420 },
+  { name: "Week 3", score: 380 },
+  { name: "Week 4", score: 510 },
+]
+
+// Sample game history data with support for multiple players (up to 8) - from dashboard
+const pongHistory = [
+  {
+    id: "match-001",
+    type: "TEAM MATCH",
+    result: "LOOSE",
+    date: "04/20/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "GAMER42", team: "BETA", score: 5, isUser: false },
+      { id: "player-003", name: "PIXEL_PRO", team: "ALPHA", score: 8, isUser: false },
+      { id: "player-004", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-005", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-006", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-007", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-008", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+    ],
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+  },
+]
+
+const dinoHistory = [
+  {
+    id: "match-001",
+    type: "TEAM MATCH",
+    result: "WIN",
+    date: "04/20/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "GAMER42", team: "BETA", score: 5, isUser: false },
+      { id: "player-003", name: "PIXEL_PRO", team: "ALPHA", score: 8, isUser: false },
+      { id: "player-004", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-005", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-006", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-007", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-008", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+    ],
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+  },
+]
 
 // Sample user data - in a real app, this would come from an API
-const userData: Record<string, User> = {
+const userData = {
   GAMER42: {
     username: "GAMER42",
     displayName: "The Gamer",
@@ -44,13 +122,8 @@ const userData: Record<string, User> = {
         totalDistance: "86km",
       },
     },
-    recentGames: [
-      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.WIN, score: "10-5", date: "04/20/2023" },
-      { type: GameType.DINO, score: 1542, date: "04/18/2023", distance: 1000 },
-      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "7-10", date: "04/15/2023" },
-      { type: GameType.DINO, score: 1245, date: "04/12/2023", distance: 500 },
-      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-2", date: "04/10/2023" },
-    ],
+    // Will use dashboard's pongHistory and dinoHistory instead of these
+    recentGames: [],
   },
   PIXEL_MASTER: {
     username: "PIXEL_MASTER",
@@ -78,13 +151,8 @@ const userData: Record<string, User> = {
         totalDistance: "120km",
       },
     },
-    recentGames: [
-      { type: GameType.DINO, score: 1876, date: "05/01/2023", distance: 1000 },
-      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-8", date: "04/28/2023" },
-      { type: GameType.PONG, opponent: "RETRO_FAN", result: GameResult.LOSE, score: "10-6", date: "04/25/2023" },
-      { type: GameType.DINO, score: 1654, date: "04/22/2023", distance: 500 },
-      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.WIN, score: "10-4", date: "04/20/2023" },
-    ],
+    // Will use dashboard's pongHistory and dinoHistory instead of these
+    recentGames: [],
   },
   RETRO_FAN: {
     username: "RETRO_FAN",
@@ -112,24 +180,28 @@ const userData: Record<string, User> = {
         totalDistance: "64km",
       },
     },
-    recentGames: [
-      { type: GameType.PONG, opponent: "GAMER42", result: GameResult.WIN, score: "10-7", date: "04/15/2023" },
-      { type: GameType.DINO, score: 1324, date: "04/12/2023", distance: 500 },
-      { type: GameType.PONG, opponent: "PIXEL_MASTER", result: GameResult.LOSE, score: "6-10", date: "04/25/2023" },
-      { type: GameType.DINO, score: 1102, date: "04/08/2023", distance: 100 },
-      { type: GameType.PONG, opponent: "ARCADE_PRO", result: GameResult.LOSE, score: "5-10", date: "04/05/2023" },
-    ],
+    // Will use dashboard's pongHistory and dinoHistory instead of these
+    recentGames: [],
   },
 }
 
 export default function UserProfilePage() {
   const params = useParams()
   const username = params.username as string
-  // TODO: Remove this any when interface will be implemented
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [isFriend, setIsFriend] = useState(false)
   const { toast } = useToast()
+  const [selectedMatch, setSelectedMatch] = useState<null | {
+    type: "pong" | "dino"
+    details: any
+  }>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const handleMatchClick = (type: "pong" | "dino", details: any) => {
+    setSelectedMatch({ type, details })
+    setDialogOpen(true)
+  }
 
   useEffect(() => {
     // Simulate API call to fetch user data
@@ -189,7 +261,7 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
 
       <div className="flex-1 container py-16 px-4 md:px-6">
@@ -278,153 +350,83 @@ export default function UserProfilePage() {
                 </CardContent>
               </Card>
             </div>
-			<Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.gamesPlayed}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.pong.played}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.wins}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.pong.wins}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.losses}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.pong.losses}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.winRate}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.pong.winRate}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.gamesPlayed}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.dino.played}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.bestScore}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.dino.highScore}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.averageScore}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.dino.avgScore}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="font-pixel text-xs text-muted-foreground uppercase">
-                      {dict.profile.sections.stats.totalDistance}
-                    </p>
-                    <p className="font-pixel text-xl">{user.gameStats.dino.totalDistance}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
 
-          {/* History Tab */}
+          {/* History Tab - Using Dashboard's History Section Style */}
           <TabsContent value="history" className="space-y-4">
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.pong.title}</CardTitle>
+                  <CardTitle className="font-pixel text-sm">PONG MATCH HISTORY</CardTitle>
                   <CardDescription className="font-pixel text-xs">YOUR RECENT PONG GAMES</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {user.recentGames
-                      .filter((game: Game) => game.type === GameType.PONG)
-                      .map((game: PongGame, index: number) => (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <div
-                              className={`w-2 h-2 rounded-full ${
-                                game.result === GameResult.WIN ? "bg-game-green" : "bg-game-red"
-                              }`}
-                            ></div>
-                            <p className="font-pixel text-xs">VS. {game.opponent}</p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <p
-                              className={`font-pixel text-xs ${
-                                game.result === GameResult.WIN ? "text-game-blue" : "text-game-red"
-                              }`}
-                            >
-                              {game.score}
-                            </p>
-                            <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
-                          </div>
+                  <div className="space-y-3 pr-2">
+                    {pongHistory.map((game, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        onClick={() => handleMatchClick("pong", game)}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              game.result === "WIN" ? "bg-game-green" : "bg-game-red"
+                            }`}
+                          ></div>
+                          <p className="font-pixel text-xs">
+                            {game.players.length} PLAYERS • {game.date}
+                          </p>
                         </div>
-                      ))}
+                        <div>
+                          <p
+                            className={`font-pixel text-xs ${
+                              game.result === "WIN" ? "text-game-green" : "text-game-red"
+                            }`}
+                          >
+                            {game.result}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-xl uppercase">{dict.games.dino.title}</CardTitle>
+                  <CardTitle className="font-pixel text-sm">DINO RUN HISTORY</CardTitle>
                   <CardDescription className="font-pixel text-xs">YOUR RECENT DINO RUN ATTEMPTS</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {user.recentGames
-                      .filter((game: Game) => game.type === GameType.DINO)
-                      .map((game: DinoGame, index: number) => (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="text-game-orange"
-                            >
-                              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                            </svg>
-                            <p className="font-pixel text-xs">DINO RUN</p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <p className="font-pixel text-xs text-game-orange">{game.score} PTS</p>
-                            <p className="font-pixel text-xs text-muted-foreground">{game.date}</p>
-                          </div>
+                  <div className="space-y-3 pr-2 min-h-[320px]">
+                    {dinoHistory.map((game, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
+                        onClick={() => handleMatchClick("dino", game)}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              game.result === "WIN" ? "bg-game-green" : "bg-game-red"
+                            }`}
+                          ></div>
+                          <p className="font-pixel text-xs">
+                            {game.players.length} PLAYERS • {game.date}
+                          </p>
                         </div>
-                      ))}
+                        <div>
+                          <p
+                            className={`font-pixel text-xs ${
+                              game.result === "WIN" ? "text-game-green" : "text-game-red"
+                            }`}
+                          >
+                            {game.result}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -432,6 +434,9 @@ export default function UserProfilePage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Match Details Dialog - From Dashboard */}
+      <MatchDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} match={selectedMatch} />
     </div>
   )
 }

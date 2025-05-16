@@ -27,13 +27,29 @@ export function middleware(request: NextRequest) {
 		(locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
 	);
 
-	if (pathnameHasLocale) return NextResponse.next();
-
 	const locale = getLocale(request);
-	const url = request.nextUrl.clone();
-	url.pathname = `/${locale}${pathname}`;
 
-	return NextResponse.redirect(url);
+	let response: NextResponse;
+
+	if (pathnameHasLocale) {
+		response = NextResponse.next();
+	} else {
+		const url = request.nextUrl.clone();
+		url.pathname = `/${locale}${pathname}`;
+		response = NextResponse.redirect(url);
+	}
+
+	if (!request.cookies.get('selectedLanguage')) {
+		response.cookies.set('selectedLanguage', locale, {
+			path: '/',
+			httpOnly: false,
+			sameSite: 'lax',
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 60 * 60 * 24 * 365,
+		});
+	}
+
+	return response;
 }
 
 export const config = {

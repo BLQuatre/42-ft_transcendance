@@ -17,8 +17,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import { SkinSelector } from "@/components/skin-selector"
 import { MatchDetailsDialog } from "@/components/match-details-dialog"
+import { LogOut } from "lucide-react"
 import axios from "axios"
 import { useDictionary } from "@/hooks/use-dictionnary"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 // Sample data for charts
 const gamePlayData = [
@@ -69,33 +78,33 @@ const pongHistory = [
 ]
 
 const dinoHistory = [
-	{
-	  id: "match-001",
-	  type: "TEAM MATCH",
-	  result: "WIN",
-	  date: "04/20/2023",
-	  players: [
-		{ id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
-		{ id: "player-002", name: "GAMER42", team: "BETA", score: 5, isUser: false },
-		{ id: "player-003", name: "PIXEL_PRO", team: "ALPHA", score: 8, isUser: false },
-		{ id: "player-004", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
-		{ id: "player-005", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
-		{ id: "player-006", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
-		{ id: "player-007", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
-		{ id: "player-008", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
-	  ],
-	},
-	{
-	  id: "match-002",
-	  type: "1V1 MATCH",
-	  result: "WIN",
-	  date: "04/18/2023",
-	  players: [
-		{ id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
-		{ id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
-	  ],
-	},
-  ]
+  {
+    id: "match-001",
+    type: "TEAM MATCH",
+    result: "WIN",
+    date: "04/20/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "GAMER42", team: "BETA", score: 5, isUser: false },
+      { id: "player-003", name: "PIXEL_PRO", team: "ALPHA", score: 8, isUser: false },
+      { id: "player-004", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-005", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-006", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-007", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+      { id: "player-008", name: "RETRO_KID", team: "BETA", score: 6, isUser: false },
+    ],
+  },
+  {
+    id: "match-002",
+    type: "1V1 MATCH",
+    result: "WIN",
+    date: "04/18/2023",
+    players: [
+      { id: "player-001", name: "PLAYER_ONE", team: "ALPHA", score: 10, isUser: true },
+      { id: "player-002", name: "PIXEL_MASTER", team: "BETA", score: 8, isUser: false },
+    ],
+  },
+]
 
 // Sample skin data
 const characterSkins = [
@@ -187,6 +196,7 @@ export default function DashboardPage() {
     details: any
   }>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
 
   const handleMatchClick = (type: "pong" | "dino", details: any) => {
     setSelectedMatch({ type, details })
@@ -215,9 +225,19 @@ export default function DashboardPage() {
     }, 1000)
   }
 
+  const handleLogout = () => {
+    setLogoutDialogOpen(true)
+  }
+
+  const confirmLogout = () => {
+    console.log("Logging out...")
+    // Example: redirect to login page
+    window.location.href = "/login"
+    setLogoutDialogOpen(false)
+  }
+
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -226,12 +246,8 @@ export default function DashboardPage() {
       <div className="flex-1 container py-8 px-4 md:px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">
-              {dict.dashboard.title}
-            </h1>
-            <p className="font-pixel text-xs text-muted-foreground uppercase">
-              {dict.dashboard.description}
-              </p>
+            <h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">{dict.dashboard.title}</h1>
+            <p className="font-pixel text-xs text-muted-foreground uppercase">{dict.dashboard.description}</p>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -239,18 +255,35 @@ export default function DashboardPage() {
               <AvatarImage src="/placeholder.svg?height=40&width=40" alt="@player" />
               <AvatarFallback className="font-pixel text-xs">P1</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex flex-col items-start">
               <p className="font-pixel text-sm">PLAYER_ONE</p>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="font-pixel text-xs text-game-red hover:bg-red-100/10 hover:text-game-red border-game-red/30 mt-1 h-7 px-2 cursor-pointer transition-all duration-200 active:scale-95"
+              >
+                <LogOut className="h-3 w-3 mr-1" />
+                LOGOUT
+              </Button>
             </div>
           </div>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-            <TabsTrigger className="uppercase" value="overview">{dict.dashboard.sections.overview.title}</TabsTrigger>
-            <TabsTrigger className="uppercase" value="history">HISTORY</TabsTrigger>
-            <TabsTrigger className="uppercase" value="skins">SKINS</TabsTrigger>
-            <TabsTrigger className="uppercase" value="settings">{dict.dashboard.sections.settings.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="overview">
+              {dict.dashboard.sections.overview.title}
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="history">
+              HISTORY
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="skins">
+              SKINS
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="settings">
+              {dict.dashboard.sections.settings.title}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
@@ -551,8 +584,12 @@ export default function DashboardPage() {
           <TabsContent value="settings" className="space-y-4">
             <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
-                <TabsTrigger className="uppercase" value="account">{dict.dashboard.sections.settings.account.title}</TabsTrigger>
-                <TabsTrigger className="uppercase" value="security">{dict.dashboard.sections.settings.security.title}</TabsTrigger>
+                <TabsTrigger className="uppercase" value="account">
+                  {dict.dashboard.sections.settings.title}
+                </TabsTrigger>
+                <TabsTrigger className="uppercase" value="security">
+                  {dict.dashboard.sections.settings.security.title}
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="account" className="space-y-4">
@@ -572,7 +609,9 @@ export default function DashboardPage() {
                         <AvatarFallback className="font-pixel text-lg">P1</AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
-                        <h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.account.picture}</h3>
+                        <h3 className="font-pixel text-sm uppercase">
+                          {dict.dashboard.sections.settings.account.picture}
+                        </h3>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" className="font-pixel text-xs uppercase">
                             {dict.common.upload}
@@ -708,6 +747,36 @@ export default function DashboardPage() {
 
       {/* Match Details Dialog */}
       <MatchDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} match={selectedMatch} />
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Confirm Logout</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to log out of your account?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setLogoutDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="font-pixel text-xs uppercase"
+              onClick={confirmLogout}
+            >
+              Logout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

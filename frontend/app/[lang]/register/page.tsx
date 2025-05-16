@@ -12,21 +12,89 @@ import { MainNav } from "@/components/Navbar"
 import { FcGoogle } from "react-icons/fc"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { Eye, EyeOff } from "lucide-react"
+import axios from "axios"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
+  const router = useRouter()
+
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [usernameError, setUsernameError] = useState<string | null>(null)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null)
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>)   {
     event.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
+    console.log("Form submitted");
+
+    axios.post('/api/auth/register', {
+      name: username,
+      password: password
+    })
+    .then(response => {
+      console.log("Successfull register: " + JSON.stringify(response.data))
+      document.cookie = `accessToken=${response.data.accessToken}; Path=/; Max-Age=2592000; SameSite=Strict; Secure;`;
+      router.push("/")
+    })
+    .catch(error => {
+      if (error.status == 409) {
+        setUsernameError("Username already taken")
+      } else {
+        console.error("Error: " + JSON.stringify(error))
+      }
+    })
+    .finally(() => {
       setIsLoading(false)
-    }, 1000)
+    })
   }
+
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = event.target.value;
+    setUsername(newUsername);
+
+    if (newUsername.length > 0 &&newUsername.length < 6) {
+      setUsernameError("6 characters minimum");
+    } else {
+      setUsernameError(null);
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+
+    if (newPassword.length < 8) {
+      setPasswordError("8 characters minimum");
+    } else {
+      setPasswordError(null);
+    }
+
+    if (newPassword !== confirmPassword && newPassword.length > 0 && confirmPassword.length > 0) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError(null);
+    }
+  };
+
+  const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = event.target.value;
+    setConfirmPassword(newPassword);
+
+    if (password !== newPassword && newPassword.length > 0 && password.length > 0) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError(null);
+    }
+  };
 
   const dict = useDictionary()
   if (!dict) return null
@@ -41,19 +109,26 @@ export default function RegisterPage() {
             <h1 className="font-pixel text-3xl text-center mb-8 uppercase">{dict.connection.register}</h1>
 
             <form onSubmit={onSubmit} className="space-y-6">
+              {/* Username */}
               <div className="space-y-2">
                 <Label htmlFor="username" className="font-pixel text-sm">
                   {dict.connection.username}
                 </Label>
                 <Input
                   id="username"
+                  name="username"
                   type="username"
                   placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
+                  error={usernameError !== null}
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>{usernameError || " "}</p>
               </div>
 
+              {/* Password */}
               <div className="space-y-2 relative">
                 <Label htmlFor="password" className="font-pixel text-sm">
                   {dict.connection.password.title}
@@ -61,10 +136,14 @@ export default function RegisterPage() {
                 <div className="relative">
                   <Input
                     id="password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     placeholder={dict.connection.password.placeholder}
                     required
                     className="font-pixel text-sm h-10 bg-muted pr-10"
+                    error={passwordError !== null}
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
                   <Button
                     type="button"
@@ -78,11 +157,12 @@ export default function RegisterPage() {
                     ) : (
                       <Eye className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                   </Button>
                 </div>
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
               </div>
 
+              {/* Confirm Password */}
               <div className="space-y-2 relative">
                 <Label htmlFor="confirmPassword" className="font-pixel text-sm">
                   {dict.connection.password.confirm}
@@ -90,10 +170,14 @@ export default function RegisterPage() {
                 <div className="relative">
                   <Input
                     id="confirmPassword"
+                    name="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder={dict.connection.password.confirmPlaceholder}
                     required
                     className="font-pixel text-sm h-10 bg-muted pr-10"
+                    error={confirmPasswordError !== null}
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
                   />
                   <Button
                     type="button"
@@ -107,17 +191,17 @@ export default function RegisterPage() {
                     ) : (
                       <Eye className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <span className="sr-only">
-                      {showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                    </span>
                   </Button>
                 </div>
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", confirmPasswordError ? "" : "select-none")}>{confirmPasswordError || " "}</p>
               </div>
 
               <Button
                 type="submit"
                 className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-                disabled={isLoading}
+                disabled={isLoading || usernameError !== null || passwordError !== null || confirmPasswordError !== null
+                || username.length < 6 || password.length < 8
+                }
               >
                 {dict.connection.register}
               </Button>

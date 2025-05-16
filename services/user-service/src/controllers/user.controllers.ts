@@ -9,7 +9,7 @@ import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 
 const User = AppDataSource.getRepository(UserEntity);
 
-export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => {
+export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
 	const usersFind = await User.find();
 	const Users : PublicUser[] | [] = usersFind.map(removePassword);
 	return reply.code(200).send({
@@ -19,7 +19,7 @@ export const getAllUsers = async ( req: FastifyRequest, reply: FastifyReply) => 
 	});
 };
 
-export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
+export const getOneUser = async (req: FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
 	try {
 		const user = await User.findOneBy({ id: id })
@@ -45,7 +45,30 @@ export const getOneUser = async ( req: FastifyRequest, reply: FastifyReply) => {
 	}
 }
 
-export const confirmPassword = async(req:FastifyRequest<{Body: {password: string}}>, reply: FastifyReply) => {
+export const createUser = async (req: FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
+	const isValid = await validateBody(CreateUserDto)(req, reply);
+	if (!isValid) return;
+
+	try {
+		const user = await User.save(req.body);
+
+		return reply.code(201).send({
+			message: 'User created',
+			statusCode: 201,
+			newUser: {
+				name: user.name,
+				id: user.id,
+			}
+		})
+	} catch {
+		return reply.code(409).send({
+			message: 'User already exist',
+			statusCode: 409
+		});
+	}
+}
+
+export const confirmPassword = async(req: FastifyRequest<{Body: {password: string}}>, reply: FastifyReply) => {
 	const { id } = req.params as { id: string }
 
 	const token = req.headers['x-user-id'];
@@ -77,7 +100,7 @@ export const confirmPassword = async(req:FastifyRequest<{Body: {password: string
 	});
 }
 
-export const updateUser = async (req:FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
+export const updateUser = async (req: FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
 
 	const token = req.headers['x-user-id'];

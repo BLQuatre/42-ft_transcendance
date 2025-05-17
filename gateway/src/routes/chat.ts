@@ -2,6 +2,10 @@ import axios, { AxiosError } from "axios";
 import { FastifyPluginAsync } from "fastify";
 import WebSocket from "ws";
 import { isAxiosResponse } from "../utils/functions";
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
 interface messageSocket {
     type: string;
@@ -21,7 +25,7 @@ export const chatRoutes: FastifyPluginAsync = async (fastify) => {
         }
 
         try {
-            const authResponse = await axios.get('http://localhost:3002/auth/access', {
+            const authResponse = await axios.get(`http://${process.env.AUTH_HOST}:${process.env.AUTH_PORT}/auth/access`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -34,7 +38,7 @@ export const chatRoutes: FastifyPluginAsync = async (fastify) => {
             // const authData = await authResponse.data;
             const userId = authResponse.data.id;
         
-            const upstream = new WebSocket('http://localhost:3004/chat/ws', {
+            const upstream = new WebSocket(`http://${process.env.CHAT_HOST}:${process.env.CHAT_PORT}/chat/ws`, {
             headers: {
                 'x-user-id': userId
             }

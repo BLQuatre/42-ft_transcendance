@@ -29,6 +29,23 @@ type Friend = {
   unread: number
 }
 
+// 1. Add new types for game invites after the existing Friend type
+type GameInvite = {
+  id: string
+  gameId: string
+  gameName: string
+  senderId: string
+  receiverId: string
+  status: "pending" | "accepted" | "declined"
+  timestamp: string
+}
+
+type Game = {
+  id: string
+  name: string
+  icon: string
+}
+
 // Données de test
 const initialMessages: Message[] = [
   {
@@ -128,6 +145,12 @@ const initialPrivateMessages: Record<string, Message[]> = {
   ],
 }
 
+// 2. Add available games constant after the initialPrivateMessages
+const availableGames: Game[] = [
+  { id: "game1", name: "Pong", icon: "🏓" },
+  { id: "game2", name: "Dino Run", icon: "🦖" },
+]
+
 export function SimpleChat() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeView, setActiveView] = useState<"general" | "friends" | "private">("general")
@@ -140,6 +163,12 @@ export function SimpleChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // 3. Add new state variables in the SimpleChat component after the existing state variables
+  const [showGameInviteModal, setShowGameInviteModal] = useState(false)
+  const [gameInvites, setGameInvites] = useState<GameInvite[]>([])
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null)
+  const [isTyping, setIsTyping] = useState(false)
 
   // Calcul du nombre total de messages non lus
   const totalUnread = friends.reduce((sum, friend) => sum + friend.unread, 0)
@@ -305,13 +334,119 @@ export function SimpleChat() {
     setActiveFriend(null)
   }
 
+  // 4. Add new functions before the return statement
+  const handleSendGameInvite = () => {
+    if (!activeFriend || !selectedGame) return
+
+    const timestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+
+    // Create new invite
+    const newInvite: GameInvite = {
+      id: `invite_${Date.now()}`,
+      gameId: selectedGame.id,
+      gameName: selectedGame.name,
+      senderId: "PLAYER_ONE",
+      receiverId: activeFriend.id,
+      status: "pending",
+      timestamp,
+    }
+
+    setGameInvites((prev) => [...prev, newInvite])
+
+    // Add system message to private chat
+    const inviteMsg: Message = {
+      id: `pm${Date.now()}`,
+      sender: "SYSTEM",
+      content: `Vous avez invité ${activeFriend.username} à jouer à ${selectedGame.name}`,
+      timestamp,
+      isSystem: true,
+    }
+
+    setPrivateMessages((prev) => ({
+      ...prev,
+      [activeFriend.id]: [...(prev[activeFriend.id] || []), inviteMsg],
+    }))
+
+    // Close modal
+    setShowGameInviteModal(false)
+    setSelectedGame(null)
+
+    // Simulate friend response after a delay
+    setTimeout(
+      () => {
+        const isAccepted = Math.random() > 0.3 // 70% chance to accept
+
+        // Update invite status
+        setGameInvites((prev) =>
+          prev.map((invite) =>
+            invite.id === newInvite.id ? { ...invite, status: isAccepted ? "accepted" : "declined" } : invite,
+          ),
+        )
+
+        // Add response message
+        const responseMsg: Message = {
+          id: `pm${Date.now()}`,
+          sender: activeFriend.username,
+          content: isAccepted
+            ? `J'accepte ton invitation à jouer à ${selectedGame.name}! Allons-y!`
+            : `Désolé, je ne peux pas jouer à ${selectedGame.name} maintenant.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        }
+
+        setPrivateMessages((prev) => ({
+          ...prev,
+          [activeFriend.id]: [...(prev[activeFriend.id] || []), responseMsg],
+        }))
+
+        // If accepted, add system message about game starting
+        if (isAccepted) {
+          setTimeout(() => {
+            const gameStartMsg: Message = {
+              id: `pm${Date.now()}`,
+              sender: "SYSTEM",
+              content: `Partie de ${selectedGame.name} démarrée avec ${activeFriend.username}`,
+              timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+              isSystem: true,
+            }
+
+            setPrivateMessages((prev) => ({
+              ...prev,
+              [activeFriend.id]: [...(prev[activeFriend.id] || []), gameStartMsg],
+            }))
+          }, 1500)
+        }
+      },
+      2000 + Math.random() * 2000,
+    ) // Random delay between 2-4 seconds
+  }
+
+  useEffect(() => {
+    if (activeView === "private" && activeFriend && newMessage.length > 0) {
+      const typingTimeout = setTimeout(() => {
+        setIsTyping(true)
+
+        // Hide typing indicator after a random time
+        setTimeout(
+          () => {
+            setIsTyping(false)
+          },
+          1000 + Math.random() * 2000,
+        )
+      }, 500)
+
+      return () => clearTimeout(typingTimeout)
+    }
+
+    return () => {}
+  }, [newMessage, activeView, activeFriend])
+
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">
       {/* Chat Window */}
       {isOpen && (
         <Card
           ref={chatRef}
-          className="mb-2 flex flex-col shadow-lg w-[400] h-[400px] transition-all duration-200 ease-in-out border-2"
+          className="mb-2 flex flex-col shadow-lg w-[350px] sm:w-[400px] h-[450px] transition-all duration-200 ease-in-out border-2 animate-in slide-in-from-bottom-5"
         >
           <CardHeader className="p-3 border-b flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
@@ -346,6 +481,7 @@ export function SimpleChat() {
                 </>
               )}
             </div>
+            {/* 5. Modify the CardHeader component to add the game invite button */}
             <div className="flex items-center space-x-1">
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsOpen(false)} title="Fermer">
                 <X className="h-4 w-4" />
@@ -458,6 +594,21 @@ export function SimpleChat() {
             // Vue chat (général ou privé)
             <>
               <CardContent className="flex-1 p-0 overflow-hidden">
+                {activeView === "general" && (
+                  <div className="px-3 py-2 border-b">
+                    <div className="relative">
+                      <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        placeholder="Rechercher dans le chat..."
+                        className="pl-8 font-pixel text-xs h-8"
+                        onChange={(e) => {
+                          // This would be implemented with actual search functionality
+                          // For now it's just a UI element
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
                 <ScrollArea className="h-full p-3">
                   <div className="space-y-3">
                     {activeView === "general"
@@ -497,24 +648,51 @@ export function SimpleChat() {
                             )}
                           </div>
                         ))
-                      : activeFriend &&
-                        privateMessages[activeFriend.id]?.map((message) => (
-                          <div
-                            key={message.id}
-                            className={`flex ${message.sender === "PLAYER_ONE" ? "justify-end" : "justify-start"}`}
-                          >
-                            <div
-                              className={`max-w-[80%] ${
-                                message.sender === "PLAYER_ONE"
-                                  ? "bg-game-blue text-white border border-game-blue/30"
-                                  : "bg-muted border border-border/50"
-                              } rounded-lg p-2 shadow-sm`}
-                            >
-                              <p className="font-pixel text-[10px] text-muted-foreground/70">{message.timestamp}</p>
-                              <p className="font-pixel text-xs mt-0.5">{message.content}</p>
+                      : // 7. Modify the private chat message rendering to handle system messages
+                        activeFriend &&
+                        privateMessages[activeFriend.id]?.map((message) =>
+                          message.isSystem ? (
+                            <div key={message.id} className="w-full text-center my-2">
+                              <p className="font-pixel text-[10px] text-muted-foreground bg-muted inline-block px-2 py-1 rounded-md border border-border">
+                                {message.content}
+                              </p>
                             </div>
-                          </div>
-                        ))}
+                          ) : (
+                            <div
+                              key={message.id}
+                              className={`flex ${message.sender === "PLAYER_ONE" ? "justify-end" : "justify-start"} mb-2`}
+                            >
+                              <div
+                                className={`max-w-[80%] ${
+                                  message.sender === "PLAYER_ONE"
+                                    ? "bg-game-blue text-white border border-game-blue/30 rounded-tl-lg rounded-tr-lg rounded-bl-lg"
+                                    : "bg-muted border border-border/50 rounded-tl-lg rounded-tr-lg rounded-br-lg"
+                                } p-2 shadow-sm`}
+                              >
+                                <p className="font-pixel text-[10px] text-muted-foreground/70">{message.timestamp}</p>
+                                <p className="font-pixel text-xs mt-0.5">{message.content}</p>
+                              </div>
+                            </div>
+                          ),
+                        )}
+                    {activeView === "private" && activeFriend && isTyping && (
+                      <div className="flex items-start space-x-2 mt-2">
+                        <div className="flex items-center space-x-1 bg-muted/30 px-3 py-1 rounded-full">
+                          <span
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                            style={{ animationDelay: "0ms" }}
+                          ></span>
+                          <span
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                            style={{ animationDelay: "150ms" }}
+                          ></span>
+                          <span
+                            className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                            style={{ animationDelay: "300ms" }}
+                          ></span>
+                        </div>
+                      </div>
+                    )}
                     <div ref={messagesEndRef} />
                   </div>
                 </ScrollArea>
@@ -522,6 +700,33 @@ export function SimpleChat() {
 
               <CardFooter className="p-2 border-t">
                 <div className="flex items-center w-full space-x-2">
+                  {activeView === "private" && activeFriend && activeFriend.status === "online" && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 text-game-blue hover:bg-blue-50 dark:hover:bg-blue-950/30 border-dashed"
+                      onClick={() => setShowGameInviteModal(true)}
+                      title="Inviter à jouer"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <path d="M12 12h.01" />
+                        <path d="M17 12h.01" />
+                        <path d="M7 12h.01" />
+                        <path d="M12 7v10" />
+                      </svg>
+                    </Button>
+                  )}
                   <Input
                     ref={inputRef}
                     placeholder="Écrivez votre message..."
@@ -563,6 +768,47 @@ export function SimpleChat() {
           </Badge>
         )}
       </Button>
+      {/* 6. Add the game invite modal at the end of the component, just before the final closing div tag */}
+      {/* Game Invite Modal */}
+      {showGameInviteModal && activeFriend && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
+          <div className="bg-background border-2 rounded-lg shadow-lg p-4 max-w-[300px] w-full animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-pixel text-sm font-bold">Inviter {activeFriend.username} à jouer</h3>
+              <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setShowGameInviteModal(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              {availableGames.map((game) => (
+                <button
+                  key={game.id}
+                  className={`p-3 rounded-md font-pixel text-xs flex flex-col items-center justify-center space-y-2 transition-colors border ${
+                    selectedGame?.id === game.id
+                      ? "bg-game-blue text-white border-game-blue"
+                      : "hover:bg-muted border-border"
+                  }`}
+                  onClick={() => setSelectedGame(game)}
+                >
+                  <span className="text-2xl">{game.icon}</span>
+                  <span>{game.name}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="flex justify-end">
+              <Button
+                className="bg-game-blue hover:bg-game-blue/90 font-pixel text-xs"
+                disabled={!selectedGame}
+                onClick={handleSendGameInvite}
+              >
+                Envoyer l'invitation
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

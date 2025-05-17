@@ -2,25 +2,19 @@ import Fastify from 'fastify' ;
 import { WebSocketServer } from 'ws' ;
 
 import { Game } from './game' ;
-import { Player } from './player';
+import { Player } from './player' ;
+import * as CONST from './constants' ;
 
 
 const fastify = Fastify() ;
 
-let gameInterval: NodeJS.Timeout | null = null ;
-
 let game = new Game() ;
 let id = 0 ;
 
-const FPS = 60 ;
-
-fastify.get('/', async (request, reply) => {
-	return { pong: 'it works' } ;
-}) ; // TODO:check utility
 
 const start = async () => {
-	await fastify.listen({ port: 3000 }) ;
-	console.log('Server running on http://localhost:3000') ;
+	await fastify.listen({ port: 3002 }) ;
+	console.log('Server running on http://localhost:3002') ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 
@@ -53,9 +47,12 @@ const start = async () => {
 				if (player === undefined)
 					return ;
 			
-				const moveSpeed = 6 ; // Tune this value for faster/slower movement
-				if (data.direction === 'up')	player.move(-moveSpeed) ;
-				if (data.direction === 'down')	player.move(moveSpeed) ;
+				if		(data.direction === 'up')		player.setMoveUp(true) ;
+				else if	(data.direction === 'notup')	player.setMoveUp(false) ;
+				else if	(data.direction === 'down')		player.setMoveDown(true) ;
+				else if	(data.direction === 'notdown')	player.setMoveDown(false) ;
+
+				console.log(`move received from player ${data.playerId}, now at ${player.paddle.top}-${player.paddle.bot}`) ;
 			}			
 		}) ;
 
@@ -70,23 +67,24 @@ const start = async () => {
 	}) ;
 } ;
 
-function startGame() {
-	if (gameInterval)
-		return ;
+let servIntervalID: NodeJS.Timeout | null = null ; // Temporary ig
 
+function startGame() {
 	console.log('Game started') ;
-	gameInterval = setInterval(() => {
-		game.update() ;
-		broadcastGame() ;
-	}, 1000 / FPS) ;
+
+	game.startUpdating() ;
+
+	const interval = 1000 / CONST.FPS ;
+	servIntervalID = setInterval(() => broadcastGame(), interval) ;
 }
 
 // TODO: change the paused state
 function stopGame() {
-	if (gameInterval) {
+	game.stopUpdating() ;
+	if (servIntervalID) {
 		console.log('Game paused') ;
-		clearInterval(gameInterval) ;
-		gameInterval = null ;
+		clearInterval(servIntervalID) ;
+		servIntervalID = null ;
 	}
 }
 

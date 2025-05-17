@@ -23,7 +23,7 @@
 		const canvas = document.getElementById('game');
 		const ctx = canvas.getContext('2d');
 	
-		const socket = new WebSocket('ws://localhost:3000');
+		const socket = new WebSocket('ws://localhost:3002');
 		let playerId = null;
 		let gameState = null;
 	
@@ -107,6 +107,6 @@
 			if (e.key === 'ArrowUp' || e.key === 'w') keysPressed.up = false;
 			if (e.key === 'ArrowDown' || e.key === 's') keysPressed.down = false;
 		});
-	</script>	
+	</script>
 </body>
 </html>

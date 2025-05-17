@@ -108,3 +108,23 @@ export interface SkinItem extends BuyableItem {
 export interface MapItem extends BuyableItem {
 	game: GameType;
 }
+
+export interface Range {
+	top: number ;
+	bot: number ;
+}
+
+export interface PongState {
+	left_team: {
+		score: number;
+		players: Range[];
+	};
+	right_team: {
+		score: number;
+		players: Range[];
+	};
+	ball: {
+		x: number;
+		y: number;
+	};
+}

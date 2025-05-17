@@ -1,20 +1,30 @@
-import { Team, Ball } from './types';
-import { Player } from './player';
-
-const BOARD_LENGTH	= 800 ;
-const BOARD_HEIGHT	= 600 ;
-const PADDLE_LEFT	= 40 ;
-const PADDLE_RIGHT	= 760 ;
-const PADDLE_SIZE	= 100 ; // This represents the total length of all the paddles of a team, multiples members in the same team share this length
+import { Team, Ball, State } from './types' ;
+import { Player } from './player' ;
+import * as CONST from './constants' ;
 
 export class Game {
 	left_team: Team ; right_team: Team ;
-	ball: Ball ;
+	ball: Ball = {} as Ball ;
+
+	private intervalID: NodeJS.Timeout | null = null ;
 
 	constructor() {
 		this.left_team	= { players: [] , score: 0 } ;
 		this.right_team	= { players: [] , score: 0 } ;
-		this.ball = { x: BOARD_LENGTH / 2 , y: BOARD_HEIGHT / 2 , vx: 5 , vy: 5 } ;
+		this.resetBall() ;
+	}
+
+	startUpdating() {
+		const interval = 1000 / CONST.FPS ;
+
+		this.intervalID = setInterval(() => this.update(), interval) ;
+	}
+
+	stopUpdating() {
+		if (this.intervalID !== null) {
+			clearInterval(this.intervalID) ;
+			this.intervalID = null ; // optional, but good practice
+		}
 	}
 
 
@@ -27,7 +37,7 @@ export class Game {
 			.find(player => player.id === id) ;
 	}
 
-	getState() {
+	getState(): State {
 		return {
 			left_team: {
 				score	: this.left_team.score,
@@ -55,14 +65,14 @@ export class Game {
 
 		team.players.push(player) ;
 
-		const	areaSize	= BOARD_HEIGHT / team.players.length ;
+		const	areaSize	= CONST.BOARD_HEIGHT / team.players.length ;
 		let		areaBegin	= 0 ;
 
 		team.players.forEach(player => {
 			player.resizeZone(areaBegin, (areaBegin + areaSize)) ;
 
 			const areaCenter = (player.zone.top + player.zone.bot) / 2 ;
-			const playerPaddleSize = (PADDLE_SIZE / team.players.length) ;
+			const playerPaddleSize = (CONST.PADDLE_SIZE / team.players.length) ;
 
 			player.resizePaddle((areaCenter - (playerPaddleSize / 2)), (areaCenter + (playerPaddleSize / 2))) ;
 
@@ -70,28 +80,25 @@ export class Game {
 		}) ;
 	}
 
-	update() {
+	private update() {
 		// Move ball
 		this.ball.x += this.ball.vx;
 		this.ball.y += this.ball.vy;
 
 		// Paddle collision for top/bottom borders
-		if (this.ball.y <= 0 || this.ball.y >= BOARD_HEIGHT) {
+		if (this.ball.y <= 0 || this.ball.y >= CONST.BOARD_HEIGHT) {
 			this.ball.vy *= -1;
 		}
 
 		// Paddle collision for left team
 		this.left_team.players.forEach(player => {
-			console.log('forEach') ;
-			if (this.ball.x <= PADDLE_LEFT && this.ball.vx < 0) {
-				console.log('if') ;
+			if (this.ball.x <= CONST.PADDLE_WIDTH && this.ball.vx < 0)
 				this.paddleCollision(player) ;
-			}
 		}) ;
 
 		// Paddle collision for right team
 		this.right_team.players.forEach(player => {
-			if (this.ball.x >= PADDLE_RIGHT && this.ball.vx > 0)
+			if (this.ball.x >= (CONST.BOARD_LENGTH - CONST.PADDLE_WIDTH) && this.ball.vx > 0)
 				this.paddleCollision(player) ;
 		}) ;
 
@@ -102,7 +109,7 @@ export class Game {
 			this.scoring(this.right_team) ;
 	}
 
-	paddleCollision(player: Player) {
+	private paddleCollision(player: Player) {
 		if (this.ball.y > player.paddle.top && this.ball.y < player.paddle.bot) {
 			const paddleCenter = (player.paddle.top + player.paddle.bot) / 2 ;
 			const distanceFromCenter = this.ball.y - paddleCenter ;
@@ -122,14 +129,13 @@ export class Game {
 		}
 	}
 
-	scoring(team: Team) {
+	private scoring(team: Team) {
 		team.score += 1 ;
 		this.resetBall() ;
 	}
 
-	resetBall() {
-		const speed = 7; // you can tweak this
-		let angle: number;
+	private resetBall() {
+		let angle: number ;
 
 		// Avoid angles too close to horizontal or vertical (e.g., 0°, 90°, 180°, 270°)
 		do {
@@ -137,11 +143,11 @@ export class Game {
 		} while (
 			Math.abs(Math.cos(angle)) < 0.3 || // too vertical
 			Math.abs(Math.sin(angle)) < 0.3    // too horizontal
-		);
+		) ;
 
-		this.ball.x = BOARD_LENGTH / 2 ;
-		this.ball.y = BOARD_HEIGHT / 2 ;
-		this.ball.vx = Math.cos(angle) * speed;
-		this.ball.vy = Math.sin(angle) * speed;
+		this.ball.x = CONST.BOARD_LENGTH / 2 ;
+		this.ball.y = CONST.BOARD_HEIGHT / 2 ;
+		this.ball.vx = Math.cos(angle) * CONST.BALL_SPD ;
+		this.ball.vy = Math.sin(angle) * CONST.BALL_SPD ;
 	}
 }

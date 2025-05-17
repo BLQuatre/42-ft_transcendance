@@ -59,13 +59,10 @@ const start = async () => {
 
 			if (assignedPlayer)
 				assignedPlayer.socket = undefined ;
-			
-			stopGame() ;
 		}) ;
 	}) ;
 } ;
 
-let servIntervalID: NodeJS.Timeout | null = null ; // Temporary ig
 
 function startGame() {
 	console.log('Game started') ;
@@ -73,17 +70,7 @@ function startGame() {
 	game.startUpdating() ;
 
 	const interval = 1000 / CONST.FPS ;
-	servIntervalID = setInterval(() => broadcastGame(), interval) ;
-}
-
-// TODO: change the paused state
-function stopGame() {
-	game.stopUpdating() ;
-	if (servIntervalID) {
-		console.log('Game paused') ;
-		clearInterval(servIntervalID) ;
-		servIntervalID = null ;
-	}
+	setInterval(() => broadcastGame(), interval) ;
 }
 
 function broadcastGame() {
@@ -101,4 +88,7 @@ function broadcastGame() {
 	}) ;
 }
 
-start() ;
+start().catch(err => {
+	console.error('Failed to start server:', err);
+	process.exit(1);
+}) ;

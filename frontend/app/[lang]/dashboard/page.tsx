@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React from "react"
 
 import { useState } from "react"
 import { MainNav } from "@/components/main-nav"
@@ -197,6 +197,12 @@ export default function DashboardPage() {
   }>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
+  const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
+  const [saveSkinDialogOpen, setSaveSkinDialogOpen] = useState(false)
+  const [updatePasswordDialogOpen, setUpdatePasswordDialogOpen] = useState(false)
+  const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const handleMatchClick = (type: "pong" | "dino", details: any) => {
     setSelectedMatch({ type, details })
@@ -234,6 +240,63 @@ export default function DashboardPage() {
     // Example: redirect to login page
     window.location.href = "/login"
     setLogoutDialogOpen(false)
+  }
+
+  const handleDeleteAccount = () => {
+    setDeleteAccountDialogOpen(true)
+  }
+
+  const confirmDeleteAccount = () => {
+    console.log("Deleting account...")
+    // Implement actual account deletion logic here
+    setDeleteAccountDialogOpen(false)
+  }
+
+  const handleSaveSkins = () => {
+    setSaveSkinDialogOpen(true)
+  }
+
+  const confirmSaveSkins = () => {
+    console.log("Saving skin selections...")
+    // Implement actual skin saving logic here
+    setSaveSkinDialogOpen(false)
+  }
+
+  const handleUpdatePassword = (event: React.FormEvent) => {
+    event.preventDefault()
+    setUpdatePasswordDialogOpen(true)
+  }
+
+  const confirmUpdatePassword = () => {
+    console.log("Updating password...")
+    // Implement actual password update logic here
+    setUpdatePasswordDialogOpen(false)
+  }
+
+  const handleUploadAvatar = () => {
+    // Trigger the hidden file input click
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      console.log("File selected:", file)
+      // Here you would typically upload the file to your server
+      // and update the user's avatar
+    }
+  }
+
+  const handleRemoveAvatar = () => {
+    setRemoveAvatarDialogOpen(true)
+  }
+
+  const confirmRemoveAvatar = () => {
+    console.log("Removing avatar...")
+    // Implement actual avatar removal logic here
+    setRemoveAvatarDialogOpen(false)
   }
 
   const dict = useDictionary()
@@ -577,7 +640,9 @@ export default function DashboardPage() {
             </Card>
 
             <div className="flex justify-end">
-              <Button className="font-pixel bg-game-blue hover:bg-game-blue/90">SAVE SELECTIONS</Button>
+              <Button className="font-pixel bg-game-blue hover:bg-game-blue/90" onClick={handleSaveSkins}>
+                SAVE SELECTIONS
+              </Button>
             </div>
           </TabsContent>
 
@@ -613,12 +678,29 @@ export default function DashboardPage() {
                           {dict.dashboard.sections.settings.account.picture}
                         </h3>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="font-pixel text-xs uppercase">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="font-pixel text-xs uppercase"
+                            onClick={handleUploadAvatar}
+                          >
                             {dict.common.upload}
                           </Button>
-                          <Button variant="outline" size="sm" className="font-pixel text-xs text-destructive uppercase">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="font-pixel text-xs text-destructive uppercase"
+                            onClick={handleRemoveAvatar}
+                          >
                             {dict.common.remove}
                           </Button>
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
+                            accept="image/*"
+                          />
                         </div>
                       </div>
                     </div>
@@ -663,7 +745,7 @@ export default function DashboardPage() {
                       <p className="font-pixel text-xs text-muted-foreground uppercase">
                         {dict.dashboard.sections.settings.account.dangerZone.description}.
                       </p>
-                      <Button variant="destructive" className="font-pixel uppercase">
+                      <Button variant="destructive" className="font-pixel uppercase" onClick={handleDeleteAccount}>
                         {dict.dashboard.sections.settings.account.dangerZone.delete}
                       </Button>
                     </div>
@@ -682,7 +764,7 @@ export default function DashboardPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleUpdatePassword} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="currentPassword" className="font-pixel text-xs uppercase">
                           {dict.dashboard.sections.settings.security.password.current}
@@ -773,6 +855,124 @@ export default function DashboardPage() {
               onClick={confirmLogout}
             >
               Logout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Account Confirmation Dialog */}
+      <Dialog open={deleteAccountDialogOpen} onOpenChange={setDeleteAccountDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Confirm Account Deletion</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to delete your account? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setDeleteAccountDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="font-pixel text-xs uppercase"
+              onClick={confirmDeleteAccount}
+            >
+              Delete Account
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Save Skins Confirmation Dialog */}
+      <Dialog open={saveSkinDialogOpen} onOpenChange={setSaveSkinDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Confirm Skin Selection</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to save your skin selections?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setSaveSkinDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="font-pixel text-xs uppercase bg-game-blue hover:bg-game-blue/90"
+              onClick={confirmSaveSkins}
+            >
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Update Password Confirmation Dialog */}
+      <Dialog open={updatePasswordDialogOpen} onOpenChange={setUpdatePasswordDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Confirm Password Update</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to update your password?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setUpdatePasswordDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="font-pixel text-xs uppercase bg-game-blue hover:bg-game-blue/90"
+              onClick={confirmUpdatePassword}
+            >
+              Update Password
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Remove Avatar Confirmation Dialog */}
+      <Dialog open={removeAvatarDialogOpen} onOpenChange={setRemoveAvatarDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Confirm Remove Avatar</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to remove your profile picture? The default avatar will be used instead.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setRemoveAvatarDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="font-pixel text-xs uppercase"
+              onClick={confirmRemoveAvatar}
+            >
+              Remove Avatar
             </Button>
           </DialogFooter>
         </DialogContent>

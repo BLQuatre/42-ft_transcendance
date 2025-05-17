@@ -51,8 +51,6 @@ const start = async () => {
 				else if	(data.direction === 'notup')	player.setMoveUp(false) ;
 				else if	(data.direction === 'down')		player.setMoveDown(true) ;
 				else if	(data.direction === 'notdown')	player.setMoveDown(false) ;
-
-				console.log(`move received from player ${data.playerId}, now at ${player.paddle.top}-${player.paddle.bot}`) ;
 			}			
 		}) ;
 

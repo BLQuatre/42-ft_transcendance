@@ -1,11 +1,11 @@
 // General
 export const FPS			= 60 ;
 export const BOARD_LENGTH	= 800 ;
-export const BOARD_HEIGHT	= 600 ;
+export const BOARD_HEIGHT	= 500 ;
 
 
 // Player
-export const PLAYER_MOV_SPD	= 6 ;
+export const PLAYER_MOV_SPD	= 5 ;
 
 
 // Game

@@ -10,16 +10,11 @@ import { PongState } from "@/types/types" // Ensure this matches your backend ty
 
 export default function PongGamePage() {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
-	const [gameStarted, setGameStarted] = useState(false)
 	const [gameState, setGameState] = useState<PongState | null>(null)
 	const [playerId, setPlayerId] = useState<number | null>(null)
 	const socketRef = useRef<WebSocket | null>(null)
 
 	const keysPressed = useRef({ up: false, down: false })
-
-	const startGame = () => {
-		setGameStarted(true)
-	}
 
 	useEffect(() => {
 		const socket = new WebSocket("ws://localhost:3002")
@@ -41,7 +36,7 @@ export default function PongGamePage() {
 	}, [])
 
 	useEffect(() => {
-		if (!gameStarted || !canvasRef.current) return
+		if (!canvasRef.current) return
 
 		const canvas = canvasRef.current
 		const ctx = canvas.getContext("2d")
@@ -64,14 +59,15 @@ export default function PongGamePage() {
 			ctx.setLineDash([])
 
 			// Draw paddles
+            const offset = 20
+
 			ctx.fillStyle = "#4A9DFF"
 			gameState.left_team.players.forEach(player =>
-				ctx.fillRect(20, player.top, 20, player.bot - player.top)
+				ctx.fillRect(offset, player.top, offset, player.bot - player.top)
 			)
-
 			ctx.fillStyle = "#FFA500"
 			gameState.right_team.players.forEach(player =>
-				ctx.fillRect(760, player.top, 20, player.bot - player.top)
+				ctx.fillRect(canvas.width - (offset * 2), player.top, offset, player.bot - player.top)
 			)
 
 			// Draw ball
@@ -129,18 +125,13 @@ export default function PongGamePage() {
 			window.removeEventListener("keydown", keydown)
 			window.removeEventListener("keyup", keyup)
 		}
-	}, [gameStarted, gameState])
+	}, [gameState])
 
 	return (
-		<div className="min-h-screen bg-background flex flex-col">
+		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
 			<MainNav />
 
 			<div className="flex-1 container py-8">
-				<div className="mb-8">
-					<h1 className="font-pixel text-2xl md:text-3xl mb-2">PONG</h1>
-					<p className="font-pixel text-xs text-muted-foreground">THE CLASSIC TABLE TENNIS GAME</p>
-				</div>
-
 				<div className="grid gap-8">
 					<div className="space-y-4">
 						<Card className="overflow-hidden">
@@ -148,30 +139,11 @@ export default function PongGamePage() {
 								<canvas
 									ref={canvasRef}
 									width={800}
-									height={600}
+									height={500}
 									className="w-full h-auto bg-game-dark pixel-border"
 								/>
 							</CardContent>
-							<CardFooter className="flex justify-between p-4">
-								<div className="font-pixel text-sm">
-									<span className="text-game-blue">{gameState?.left_team.score ?? 0}</span>
-									{" - "}
-									<span className="text-game-orange">{gameState?.right_team.score ?? 0}</span>
-								</div>
-								<Button onClick={startGame} className="font-pixel bg-game-blue hover:bg-game-blue/90">
-									{gameStarted ? "RESTART" : "START GAME"}
-								</Button>
-							</CardFooter>
 						</Card>
-
-						<Alert>
-							<AlertCircle className="h-4 w-4" />
-							<AlertTitle className="font-pixel text-sm">CONTROLS</AlertTitle>
-							<AlertDescription className="font-pixel text-xs">
-								PLAYER 1: W (UP) AND S (DOWN) <br />
-								PLAYER 2: ARROW UP AND ARROW DOWN
-							</AlertDescription>
-						</Alert>
 					</div>
 				</div>
 			</div>

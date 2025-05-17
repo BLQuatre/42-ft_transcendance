@@ -39,7 +39,6 @@ export default async function HomePage({
               {/* Pong Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-                  <Link href="/games/pong">
                     <Image
                       src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
                       alt="Pong Game"
@@ -47,7 +46,6 @@ export default async function HomePage({
                       height={400}
                       className="object-cover transition-transform group-hover:scale-105"
                     />
-                  </Link>
                 </div>
                 <div className="p-6">
                   <h3 className="font-pixel text-xl text-game-blue mb-2 uppercase">{dict.games.pong.title}</h3>
@@ -79,7 +77,6 @@ export default async function HomePage({
               {/* Dino Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-                  <Link href="/games/dino">
                     <Image
                       src="https://archive.org/download/dino-run/dino-run.jpg"
                       alt="Dino Game"
@@ -87,7 +84,6 @@ export default async function HomePage({
                       height={400}
                       className="object-cover transition-transform group-hover:scale-105"
                     />
-                  </Link>
                 </div>
                 <div className="p-6">
                   <h3 className="font-pixel text-xl text-game-orange mb-2 uppercase">{dict.games.dino.title}</h3>

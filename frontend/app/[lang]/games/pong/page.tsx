@@ -131,7 +131,7 @@ export default function PongGamePage() {
 		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
 			<MainNav />
 
-			<div className="flex-1 container py-8">
+			<div className="flex-1 container py-6">
 				<div className="grid gap-8">
 					<div className="space-y-4">
 						<Card className="overflow-hidden">

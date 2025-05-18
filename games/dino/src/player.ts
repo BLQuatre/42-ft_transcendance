@@ -52,9 +52,6 @@ export class Player {
 				this.y.from	= 0 ;
 				this.y.to	= this.y.from + CONST.DINO_HEIGHT ;
 			}
-
-			if (Math.abs(this.y.to - this.y.from - CONST.DINO_HEIGHT) > 0.001 && Math.abs(this.y.to - this.y.from - (CONST.DINO_HEIGHT / 2)) > 0.001)
-				console.log(`WARNING! from:${this.y.from} to:${this.y.to} diff:${this.y.to - this.y.from}`) ; // DEBUG
 		}, interval) ;
 	}
 

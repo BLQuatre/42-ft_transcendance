@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/main-nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
 
 export default function PongGamePage() {

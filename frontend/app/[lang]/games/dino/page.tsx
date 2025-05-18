@@ -14,7 +14,7 @@ export default function DinoGamePage() {
 	const socketRef = useRef<WebSocket | null>(null)
 
 	// Constants
-	const FRAME_VAL = 36
+	const FRAME_VAL = 36  // Keeping original value for slower animation
 
 	const TYPE_CACTUS = 1
 	const TYPE_SMALL = 2
@@ -170,12 +170,12 @@ export default function DinoGamePage() {
 
 				// Draw dino
 				if (dino.lean) {
-					const leanImg = (frame % 12) > 6 ? img.dinoLean1 : img.dinoLean2
+					const leanImg = (Math.floor(frame / 12) % 2) === 0 ? img.dinoLean1 : img.dinoLean2
 					if (leanImg.complete) {
 						ctx.drawImage(leanImg, 40, offset * i - 48 - dino.y, 64, 48)
 					}
 				} else {
-					const runImg = dino.y > 0 ? img.dinoStanding : ((frame % 12) > 6 ? img.dinoRun1 : img.dinoRun2)
+					const runImg = dino.y > 0 ? img.dinoStanding : ((Math.floor(frame / 12) % 2) === 0 ? img.dinoRun1 : img.dinoRun2)
 					if (runImg.complete) {
 						ctx.drawImage(runImg, 40, offset * i - 48 - dino.y, 48, 48)
 					}
@@ -191,7 +191,7 @@ export default function DinoGamePage() {
 					else if (ob.type === TYPE_GROUP && img.group.complete)
 						ctx.drawImage(img.group, ob.x, y, 48, 48)
 					else if (ob.type === TYPE_PTERO) {
-						const pteroImg = (frame > FRAME_VAL / 2) ? img.ptero1 : img.ptero2
+						const pteroImg = (Math.floor(frame / 12) % 2) === 0 ? img.ptero1 : img.ptero2
 						if (pteroImg.complete)
 							ctx.drawImage(pteroImg, ob.x, y, 48, 48)
 					}

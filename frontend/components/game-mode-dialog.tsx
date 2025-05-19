@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Trophy, User, Users } from "lucide-react"
+import { Trophy, User, Users, Monitor } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -35,6 +35,9 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
     if (mode === "multiplayer") {
       setIsMultiplayerDialogOpen(true)
       // Keep the main dialog open for now
+    } else if (mode === "local1v1" && gameType === "pong") {
+      router.push(`/games/${gameType}/local1v1/test`)
+      onOpenChange(false)
     } else {
       // Navigate to the appropriate URL based on game type and mode
       router.push(`/games/${gameType}/${mode}/test`)
@@ -56,7 +59,7 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] p-6">
+      <DialogContent className={`p-6 ${gameType === "pong" ? "sm:max-w-[1000px]" : "sm:max-w-[600px]"}`}>
         <DialogHeader className="animate-fadeIn mb-4">
           <DialogTitle className="font-pixel text-sm">
             {dict.common.play} {gameTitle.toUpperCase()}
@@ -64,7 +67,47 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
           <DialogDescription className="font-pixel text-xs">SELECT GAME MODE</DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slideUp">
+        <div
+          className={`grid grid-cols-1 ${gameType === "pong" ? "md:grid-cols-4" : "md:grid-cols-2"} gap-4 animate-slideUp`}
+        >
+          {/* 1v1 Local Mode Card - Only show for Pong */}
+          {gameType === "pong" && (
+            <div
+              className={`rounded-md border-2 ${
+                selectedMode === "local1v1"
+                  ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                  : "border-muted bg-muted/50 hover:bg-muted"
+              } p-4 cursor-pointer transition-all`}
+              onClick={() => setSelectedMode("local1v1")}
+            >
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div
+                  className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                    selectedMode === "local1v1" ? "bg-white/20" : getColorClass()
+                  }`}
+                >
+                  <Monitor className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h3
+                    className={`font-pixel text-sm mb-2 ${
+                      selectedMode === "local1v1" ? "text-white" : getTextColorClass()
+                    }`}
+                  >
+                    1V1 LOCAL
+                  </h3>
+                  <p
+                    className={`font-pixel text-xs ${
+                      selectedMode === "local1v1" ? "text-white/80" : "text-muted-foreground"
+                    }`}
+                  >
+                    PLAY WITH A FRIEND LOCALLY
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Solo Mode Card */}
           <div
             className={`rounded-md border-2 ${
@@ -135,41 +178,43 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
             </div>
           </div>
 
-          {/* Tournament Mode Card */}
-          <div
-            className={`rounded-md border-2 ${
-              selectedMode === "tournament"
-                ? `${getBorderColorClass()} ${getColorClass()} text-white`
-                : "border-muted bg-muted/50 hover:bg-muted"
-            } p-4 cursor-pointer transition-all`}
-            onClick={() => setSelectedMode("tournament")}
-          >
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                  selectedMode === "tournament" ? "bg-white/20" : getColorClass()
-                }`}
-              >
-                <Trophy className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h3
-                  className={`font-pixel text-sm mb-2 ${
-                    selectedMode === "tournament" ? "text-white" : getTextColorClass()
+          {/* Tournament Mode Card - Only show for Pong */}
+          {gameType === "pong" && (
+            <div
+              className={`rounded-md border-2 ${
+                selectedMode === "tournament"
+                  ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                  : "border-muted bg-muted/50 hover:bg-muted"
+              } p-4 cursor-pointer transition-all`}
+              onClick={() => setSelectedMode("tournament")}
+            >
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div
+                  className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                    selectedMode === "tournament" ? "bg-white/20" : getColorClass()
                   }`}
                 >
-                  TOURNAMENT
-                </h3>
-                <p
-                  className={`font-pixel text-xs ${
-                    selectedMode === "tournament" ? "text-white/80" : "text-muted-foreground"
-                  }`}
-                >
-                  COMPETE IN A TOURNAMENT
-                </p>
+                  <Trophy className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h3
+                    className={`font-pixel text-sm mb-2 ${
+                      selectedMode === "tournament" ? "text-white" : getTextColorClass()
+                    }`}
+                  >
+                    TOURNAMENT
+                  </h3>
+                  <p
+                    className={`font-pixel text-xs ${
+                      selectedMode === "tournament" ? "text-white/80" : "text-muted-foreground"
+                    }`}
+                  >
+                    COMPETE IN A TOURNAMENT
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         <DialogFooter className="pt-6 animate-slideUp">

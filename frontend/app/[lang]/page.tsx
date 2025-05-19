@@ -39,37 +39,39 @@ export default async function HomePage({
               {/* Pong Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-                    <Image
-                      src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
-                      alt="Pong Game"
-                      width={700}
-                      height={400}
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
+                  <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+                    alt="Pong Game"
+                    width={700}
+                    height={400}
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex flex-col h-[200px]">
                   <h3 className="font-pixel text-xl text-game-blue mb-2 uppercase">{dict.games.pong.title}</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4 uppercase">
                     {dict.games.pong.description}
                   </p>
-                  <div className="flex flex-wrap justify-between items-center">
-                    <GameButtons
-                      gameType="pong"
-                      gameTitle={dict.games.pong.title}
-                      buttonText={`${dict.common.play} ${dict.games.pong.title}`}
-                      buttonColor="blue"
-                      dict={dict}
-                    />
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue"
-                    >
-                      <Link className="uppercase" href="/games#pong">
-                        {dict.home.gamerules} &gt;
-                      </Link>
-                    </Button>
+                  <div className="flex flex-col space-y-3 mt-auto">
+                    <div className="flex justify-between items-center">
+                      <GameButtons
+                        gameType="pong"
+                        gameTitle={dict.games.pong.title}
+                        buttonText={`${dict.common.play} ${dict.games.pong.title}`}
+                        buttonColor="blue"
+                        dict={dict}
+                      />
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="font-pixel border border-game-blue text-game-blue hover:bg-game-blue/10 hover:text-game-blue ml-2 flex items-center self-center h-9"
+                      >
+                        <Link className="uppercase" href="/games#pong">
+                          {dict.home.gamerules} &gt;
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -77,37 +79,39 @@ export default async function HomePage({
               {/* Dino Game */}
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
-                    <Image
-                      src="https://archive.org/download/dino-run/dino-run.jpg"
-                      alt="Dino Game"
-                      width={700}
-                      height={400}
-                      className="object-cover transition-transform group-hover:scale-105"
-                    />
+                  <Image
+                    src="https://archive.org/download/dino-run/dino-run.jpg"
+                    alt="Dino Game"
+                    width={700}
+                    height={400}
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex flex-col h-[200px]">
                   <h3 className="font-pixel text-xl text-game-orange mb-2 uppercase">{dict.games.dino.title}</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4 uppercase">
                     {dict.games.dino.description}
                   </p>
-                  <div className="flex flex-wrap justify-between items-center">
-                    <GameButtons
-                      gameType="dino"
-                      gameTitle={dict.games.dino.title}
-                      buttonText={`${dict.common.play} ${dict.games.dino.title}`}
-                      buttonColor="orange"
-                      dict={dict}
-                    />
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange"
-                    >
-                      <Link className="uppercase" href="/games#dino">
-                        {dict.home.gamerules} &gt;
-                      </Link>
-                    </Button>
+                  <div className="flex flex-col space-y-3 mt-auto">
+                    <div className="flex justify-between items-center">
+                      <GameButtons
+                        gameType="dino"
+                        gameTitle={dict.games.dino.title}
+                        buttonText={`${dict.common.play} ${dict.games.dino.title}`}
+                        buttonColor="orange"
+                        dict={dict}
+                      />
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="font-pixel border border-game-orange text-game-orange hover:bg-game-orange/10 hover:text-game-orange ml-2 flex items-center self-center h-9"
+                      >
+                        <Link className="uppercase" href="/games#dino">
+                          {dict.home.gamerules} &gt;
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>

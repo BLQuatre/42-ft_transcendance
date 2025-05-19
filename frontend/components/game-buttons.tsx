@@ -22,7 +22,7 @@ export function GameButtons({ gameType, gameTitle, buttonText, buttonColor, dict
 
   return (
     <>
-      <Button className={`font-pixel ${getButtonClass()} w-fit mt-2`} onClick={() => setDialogOpen(true)}>
+      <Button className={`font-pixel ${getButtonClass()} w-fit mt-2 cursor-pointer`} onClick={() => setDialogOpen(true)}>
         <span className="flex items-center uppercase">
           {buttonText}
           <ArrowRight className="ml-2 h-4 w-4" />

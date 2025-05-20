@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import fastify from 'fastify';
 import { loginSingUp } from './routes/user.routes';
 import { authentication } from './routes/auth.routes';
+import fastifyCookie from '@fastify/cookie';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
@@ -11,6 +12,9 @@ const app = fastify({
 	logger: process.env.DEBUG === 'true',
 });
 
+app.register(fastifyCookie, {
+	secret: process.env.COOKIE_SECRET
+});
 app.register(loginSingUp);
 app.register(authentication);
 

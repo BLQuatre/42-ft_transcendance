@@ -14,7 +14,7 @@ export const accessAuthentication = async (req: AuthRequest, reply: FastifyReply
 	const authHeader = req.headers.authorization;
 	if (!authHeader) {
 		return reply.code(401).send({
-			message: 'Unauthorize',
+			message: 'Unauthorized',
 			statusCode: 401
 		});
 	}
@@ -23,7 +23,7 @@ export const accessAuthentication = async (req: AuthRequest, reply: FastifyReply
 	try {
 		const decode = jwt.verify(token, JWT_ACCESS) as MyJwtPayload;
 		reply.code(200).send({
-			message: 'authenticated',
+			message: 'Authenticated',
 			statusCode: 200,
 			id: decode.id
 		})
@@ -60,12 +60,20 @@ export const refreshAuthentication = async (req: AuthRequest, reply: FastifyRepl
 	try {
 		const decode = jwt.verify(token, JWT_REFRESH) as MyJwtPayload;
 		const accessToken = jwt.sign({ id: decode.id, name: decode.name }, JWT_ACCESS, { expiresIn: '15min' });
-		const refreshtoken = jwt.sign({ id: decode.id, name: decode.name }, JWT_REFRESH, { expiresIn: '7D' });
-		return reply.code(200).send({
-			message: 'Refresh token authentified',
-			statusCode: 200,
-			accessToken,
-			refreshtoken
+		const refreshToken = jwt.sign({ id: decode.id, name: decode.name }, JWT_REFRESH, { expiresIn: '7D' });
+		return reply
+			.setCookie('refreshToken', refreshToken, {
+				path: '/',
+				httpOnly: true,
+				secure: true,
+				sameSite: 'strict',
+				maxAge: 7 * 24 * 60 * 60
+			})
+			.code(200)
+			.send({
+				message: 'Refresh token authentified',
+				statusCode: 200,
+				accessToken
 		});
 	} catch (err){
 		if (err instanceof TokenExpiredError) {

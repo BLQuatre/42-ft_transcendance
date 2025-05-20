@@ -40,52 +40,30 @@ export const register = async (req: FastifyRequest<{ Body: CreateUserDto }>, rep
 		const accessToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
 		const refreshToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_REFRESH, { expiresIn: '7D' });
 		const publicUser: PublicUser = removePassword(result.data.newUser);
-		return reply.code(201).send({
-			message: "User created",
-			statusCode: 201,
-			user: {
-				...publicUser
-			},
-			refreshToken,
-			accessToken,
-		});
+		return reply
+			.setCookie('refreshToken', refreshToken, {
+				path: '/',
+				httpOnly: true,
+				secure: true,
+				sameSite: 'strict',
+				maxAge: 7 * 24 * 60 * 60
+			})
+			.code(201)
+			.send({
+				message: "User created",
+				statusCode: 201,
+				user: { ...publicUser },
+				accessToken,
+			});
 	}
 }
 
 // dans le auth-service
-// export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: FastifyReply) => {
-// 	const response = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/verify`, {
-// 		...req.body
-// 	})
-// 	.catch((err) => {
-// 		console.log("================================")
-// 		console.log(JSON.stringify(err));
-// 		console.log("================================")
-// 		if (err.response) {
-// 			return reply.code(err.response.status).send({
-// 				...err.response.data
-// 			})
-// 		} else {
-// 			return reply.code(500).send({
-// 				message: "Internal server error",
-// 				statusCode: 500
-// 			});
-// 		}
-// 	})
-// 	if (response) {
-// 		return response;
-// 	}
-// }
-
 export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: FastifyReply) => {
 	const response = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/verify`, {
 		...req.body
 	})
 	.catch((err) => {
-		console.log("================================");
-		console.log("Error in login:", err.message);
-		console.log("================================");
-
 		if (err.response) {
 			return reply.code(err.response.status).send({
 				...err.response.data

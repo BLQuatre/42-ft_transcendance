@@ -329,7 +329,7 @@ export default function ShopPage() {
           </TabsContent>
         </Tabs>
       </div>
-      <Footer dict={dict} />
+      <Footer />
     </div>
   )
 }

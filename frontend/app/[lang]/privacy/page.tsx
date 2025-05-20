@@ -22,7 +22,7 @@ export default async function PrivacyPage({
         </div>
       </div>
 
-      <Footer dict={dict}/>
+      <Footer />
     </div>
   )
 }

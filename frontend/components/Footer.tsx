@@ -1,6 +1,12 @@
+"use client"
+
+import { useDictionary } from "@/hooks/UseDictionnary"
 import Link from "next/link"
 
-export function Footer({ dict }: { dict: any }) {
+export function Footer() {
+  const dict = useDictionary()
+  if (!dict) return null
+
   return (
     <footer className="border-t border-muted py-6">
       <div className="container px-4 md:px-6">

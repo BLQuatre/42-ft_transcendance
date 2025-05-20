@@ -205,7 +205,7 @@ export default async function HomePage({
         </section>
       </main>
 
-      <Footer dict={dict} />
+      <Footer />
     </div>
   )
 }

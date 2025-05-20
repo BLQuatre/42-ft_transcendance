@@ -255,7 +255,7 @@ export default function UserProfilePage() {
             </Link>
           </Button>
         </div>
-        <Footer dict={dict} />
+        <Footer />
       </div>
     )
   }

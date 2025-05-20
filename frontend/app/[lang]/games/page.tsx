@@ -137,7 +137,7 @@ export default async function GamesPage({
           </div>
         </section>
       </main>
-      <Footer dict={dict} />
+      <Footer />
     </div>
   )
 }

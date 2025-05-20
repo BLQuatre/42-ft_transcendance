@@ -26,8 +26,7 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [usernameError, setUsernameError] = useState<string | null>(null)
-  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const [loginError, setLoginError] = useState<string | null>(null)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>)   {
     event.preventDefault()
@@ -45,10 +44,8 @@ export default function LoginPage() {
       router.push("/")
     })
     .catch(error => {
-      if (error.status == 401) {
-        setPasswordError("Invalid password")
-      } else if (error.status == 404) {
-        setUsernameError("User not found")
+      if (error.status == 401 || error.status == 404) {
+        setLoginError("Invalid username or password")
       } else {
         console.error("Error: " + JSON.stringify(error))
       }
@@ -60,12 +57,12 @@ export default function LoginPage() {
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value)
-    setUsernameError(null)
+    setLoginError(null)
   }
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
-    setPasswordError(null)
+    setLoginError(null)
   }
 
   const dict = useDictionary()
@@ -148,11 +145,10 @@ export default function LoginPage() {
                   placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
-                  error={usernameError !== null}
+                  error={loginError !== null}
                   value={username}
                   onChange={handleUsernameChange}
                 />
-                <p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>{usernameError || " "}</p>
               </div>
 
               <div className="space-y-2 relative">
@@ -168,7 +164,7 @@ export default function LoginPage() {
                     placeholder={dict.connection.password.placeholder}
                     required
                     className="font-pixel text-sm h-10 bg-muted pr-10"
-                    error={passwordError !== null}
+                    error={loginError !== null}
                     value={password}
                     onChange={handlePasswordChange}
                   />
@@ -187,7 +183,7 @@ export default function LoginPage() {
                     <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                   </Button>
                 </div>
-                <p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
               </div>
               <Button
                 type="submit"

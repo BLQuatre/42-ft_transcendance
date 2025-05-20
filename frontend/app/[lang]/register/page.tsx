@@ -117,7 +117,8 @@ export default function RegisterPage() {
                 <Input
                   id="username"
                   name="username"
-                  type="username"
+                  type="text"
+                  autoComplete="username"
                   placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
@@ -137,6 +138,7 @@ export default function RegisterPage() {
                   <Input
                     id="password"
                     name="password"
+                    autoComplete="new-password"
                     type={showPassword ? "text" : "password"}
                     placeholder={dict.connection.password.placeholder}
                     required
@@ -171,6 +173,7 @@ export default function RegisterPage() {
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
+                    autoComplete="new-password"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder={dict.connection.password.confirmPlaceholder}
                     required

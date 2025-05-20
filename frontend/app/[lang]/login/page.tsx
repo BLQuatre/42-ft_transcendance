@@ -141,7 +141,8 @@ export default function LoginPage() {
                 <Input
                   id="username"
                   name="username"
-                  type="username"
+                  type="text"
+                  autoComplete="username"
                   placeholder="player123"
                   required
                   className="font-pixel text-sm h-10 bg-muted"
@@ -160,6 +161,7 @@ export default function LoginPage() {
                   <Input
                     id="password"
                     name="password"
+                    autoComplete="current-password"
                     type={showPassword ? "text" : "password"}
                     placeholder={dict.connection.password.placeholder}
                     required

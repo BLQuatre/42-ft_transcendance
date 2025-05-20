@@ -41,15 +41,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    console.log(`[AuthProvider] useEffect called`);
+    console.log(`[AuthProvider] pathname: ${pathname} (${pathname.slice(3)})`);
 
-    console.log('useEffect called');
-    console.log('pathname:', pathname.slice(3));
-
-    if (noRefreshPaths.includes(pathname.slice(3))
-      || pathname.startsWith('/api')
-      || pathname.startsWith('/images')
-    )
-      return;
+    // if (noRefreshPaths.includes(pathname.slice(3))
+    //   || pathname.startsWith('/api')
+    //   || pathname.startsWith('/images')
+    // )
+    //   return;
     refreshAccessToken();
   }, []);
 

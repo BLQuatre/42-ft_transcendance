@@ -93,13 +93,6 @@ export function MainNav() {
             </Button>
           </>
         )}
-
-        {/* Mobile navigation - always visible */}
-        <div className="md:hidden">
-          <Button variant="outline" size="sm" className="font-pixel text-xs">
-            {dict.navbar.menu}
-          </Button>
-        </div>
       </div>
     </div>
   )

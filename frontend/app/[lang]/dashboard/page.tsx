@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog"
+import { useAuth } from "@/contexts/auth-context"
 
 // Sample data for charts
 const gamePlayData = [
@@ -189,6 +190,8 @@ const dinoMapSkins = [
 ]
 
 export default function DashboardPage() {
+  const { setAccessToken } = useAuth()
+
   const [isLoading, setIsLoading] = useState(false)
   const [activeSettingsTab, setActiveSettingsTab] = useState("account")
   const [selectedMatch, setSelectedMatch] = useState<null | {
@@ -241,7 +244,10 @@ export default function DashboardPage() {
 
   const confirmLogout = () => {
     console.log("Logging out...")
-    // Example: redirect to login page
+
+    setAccessToken(null)
+    axios.get("/api/auth/logout")
+
     window.location.href = "/login"
     setLogoutDialogOpen(false)
   }

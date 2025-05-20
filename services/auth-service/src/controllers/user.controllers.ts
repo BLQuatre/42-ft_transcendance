@@ -96,3 +96,19 @@ export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: Fas
 			})
 	}
 }
+
+export const logout = async (req: FastifyRequest, reply: FastifyReply) => {
+	return reply
+		.clearCookie('refreshToken', {
+			path: '/',
+			httpOnly: true,
+			secure: true,
+			sameSite: 'strict',
+			maxAge: 7 * 24 * 60 * 60
+		})
+		.code(200)
+		.send({
+			message: "User logged out",
+			statusCode: 200,
+		})
+}

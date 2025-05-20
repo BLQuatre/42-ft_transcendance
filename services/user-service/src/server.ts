@@ -32,5 +32,6 @@ AppDataSource.initialize()
 	});
 })
 .catch((err) => {
+	console.log(err);
 	app.log.error('[USER] Error during database init:', err);
 });

@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { AppDataSource} from '../data-source';
 import { UserEntity } from "../entities/User";
 import { validateBody } from "../utils/validate";
@@ -23,6 +23,7 @@ export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
 
 export const getOneUser = async (req: FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
+
 	try {
 		const user = await User.findOneBy({ id: id })
 		if (!user) {
@@ -38,7 +39,6 @@ export const getOneUser = async (req: FastifyRequest, reply: FastifyReply) => {
 			statusCode: 200,
 			user: {...publicUser}
 		});
-
 	} catch {
 		return reply.code(404).send({
 			message: 'unable to find user',
@@ -105,7 +105,6 @@ export const confirmPassword = async(req: FastifyRequest<{Body: {password: strin
 			statusCode: 401
 		});
 	}
-
 	const user = await User.findOneBy({ id: id })
 	if (!user) {
 		return reply.code(404).send({
@@ -113,7 +112,6 @@ export const confirmPassword = async(req: FastifyRequest<{Body: {password: strin
 			statusCode: 404
 		});
 	}
-
 	const verif = await bcrypt.compare(req.body.password, user.password);
 	if (!verif) {
 		return reply.code(401).send({
@@ -222,5 +220,12 @@ export const delUser = async (req: FastifyRequest, reply: FastifyReply) => {
 	return reply.code(200).send({
 		message: 'User deleted',
 		statusCode: 200
+	});
+}
+// test
+export const badRoute = async (req: FastifyRequest, reply: FastifyReply) => {
+	return reply.code(404).send({
+		message: "unknow route",
+		statusCode: 404
 	});
 }

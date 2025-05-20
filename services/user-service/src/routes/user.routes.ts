@@ -11,3 +11,4 @@ export async function userRoutes(app: FastifyInstance) {
 	app.put('/user/password/:id', updatePassword);
 	app.delete('/user/:id', delUser);
 }
+	// app.get('/user/*', badRoute);

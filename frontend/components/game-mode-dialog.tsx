@@ -35,12 +35,9 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
     if (mode === "multiplayer") {
       setIsMultiplayerDialogOpen(true)
       // Keep the main dialog open for now
-    } else if (mode === "local" && gameType === "pong") {
-      router.push(`/games/${gameType}/${mode}/`)
-      onOpenChange(false)
     } else {
       // Navigate to the appropriate URL based on game type and mode
-      router.push(`/games/${gameType}/${mode}/test`)
+      router.push(`/games/${gameType}/${mode}`)
       onOpenChange(false)
     }
   }
@@ -111,29 +108,29 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
           {/* Solo Mode Card */}
           <div
             className={`rounded-md border-2 ${
-              selectedMode === "solo"
+              selectedMode === "ai"
                 ? `${getBorderColorClass()} ${getColorClass()} text-white`
                 : "border-muted bg-muted/50 hover:bg-muted"
             } p-4 cursor-pointer transition-all`}
-            onClick={() => setSelectedMode("solo")}
+            onClick={() => setSelectedMode("ai")}
           >
             <div className="flex flex-col items-center text-center space-y-4">
               <div
                 className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                  selectedMode === "solo" ? "bg-white/20" : getColorClass()
+                  selectedMode === "ai" ? "bg-white/20" : getColorClass()
                 }`}
               >
                 <User className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h3
-                  className={`font-pixel text-sm mb-2 ${selectedMode === "solo" ? "text-white" : getTextColorClass()}`}
+                  className={`font-pixel text-sm mb-2 ${selectedMode === "ai" ? "text-white" : getTextColorClass()}`}
                 >
                   SOLO MODE
                 </h3>
                 <p
                   className={`font-pixel text-xs ${
-                    selectedMode === "solo" ? "text-white/80" : "text-muted-foreground"
+                    selectedMode === "ai" ? "text-white/80" : "text-muted-foreground"
                   }`}
                 >
                   PLAY AGAINST THE COMPUTER

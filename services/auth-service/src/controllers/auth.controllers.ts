@@ -4,6 +4,7 @@ import { AuthRequest, MyJwtPayload } from "../utils/interface";
 import dotenv from 'dotenv';
 import path from "path";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import axios from 'axios';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
@@ -22,6 +23,7 @@ export const accessAuthentication = async (req: AuthRequest, reply: FastifyReply
 	const token = authHeader.replace(/^Bearer\s+/, '');
 	try {
 		const decode = jwt.verify(token, JWT_ACCESS) as MyJwtPayload;
+		await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${decode.id}`)
 		reply.code(200).send({
 			message: 'Authenticated',
 			statusCode: 200,
@@ -59,6 +61,7 @@ export const refreshAuthentication = async (req: AuthRequest, reply: FastifyRepl
 	const token = authHeader.replace(/^Bearer\s+/, '');
 	try {
 		const decode = jwt.verify(token, JWT_REFRESH) as MyJwtPayload;
+		await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${decode.id}`)
 		const accessToken = jwt.sign({ id: decode.id, name: decode.name }, JWT_ACCESS, { expiresIn: '15min' });
 		const refreshToken = jwt.sign({ id: decode.id, name: decode.name }, JWT_REFRESH, { expiresIn: '7D' });
 		return reply

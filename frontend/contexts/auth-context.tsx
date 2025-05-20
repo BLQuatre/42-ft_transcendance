@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 type AuthContextType = {
@@ -8,10 +9,13 @@ type AuthContextType = {
   refreshAccessToken: () => Promise<void>;
 };
 
+const noRefreshPaths = ['/login', '/register'];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const refreshAccessToken = async () => {
     try {
@@ -37,6 +41,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+
+    console.log('useEffect called');
+    console.log('pathname:', pathname.slice(3));
+
+    if (noRefreshPaths.includes(pathname.slice(3))
+      || pathname.startsWith('/api')
+      || pathname.startsWith('/images')
+    )
+      return;
     refreshAccessToken();
   }, []);
 

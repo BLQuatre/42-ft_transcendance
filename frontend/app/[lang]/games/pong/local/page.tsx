@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/main-nav"
-import { Card, CardContent } from "@/components/ui/card"
+import { MainNav } from "@/components/Navbar"
+import { Card, CardContent } from "@/components/ui/Card"
 
 import { Game } from './game'
 
@@ -156,6 +156,17 @@ export default function PongGamePage() {
 									height={500}
 									className="w-full h-auto bg-game-dark pixel-border"
 								/>
+								{pausedState && (
+								<div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+									<div className="text-white text-center">
+										<h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+										<div className="text-sm opacity-80">
+											<p>Left : use W/S to move your paddle</p>
+											<p>Right : use ↑/↓ to move your paddle</p>
+										</div>
+									</div>
+								</div>
+								)}
 							</CardContent>
 						</Card>
 					</div>

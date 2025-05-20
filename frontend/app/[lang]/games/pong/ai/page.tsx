@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/main-nav"
-import { Card, CardContent } from "@/components/ui/card"
+import { MainNav } from "@/components/Navbar"
+import { Card, CardContent } from "@/components/ui/Card"
 
 import { Game } from './game'
 import * as CONST from './constants' ;
@@ -29,10 +29,10 @@ export default function PongGamePage() {
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			const ball = gameRef.current!.get_ball()
-	
+
 			// Predict 1s into the future
 			let predictedY = ball.y + ball.vy * CONST.FPS
-	
+
 			// Adjust prediction in case of bounce
 			if (predictedY > canvasRef.current!.height)
 				predictedY = canvasRef.current!.height - (predictedY - canvasRef.current!.height)
@@ -42,10 +42,10 @@ export default function PongGamePage() {
 			// Use prediction, unless ball is already going straight to the paddle
 			bot.knownBallY = (ball.x > ((canvasRef.current?.width ?? 800) - 100) && Math.abs(ball.vy) < 1) ? ball.y : predictedY
 		}, 1000)
-	
+
 		return () => clearInterval(intervalId)
 	}, [])
-	
+
 
 
 	useEffect(() => {
@@ -117,18 +117,18 @@ export default function PongGamePage() {
 
 		const handleInput = () => {
 			if (pausedRef.current === true) return
-		
+
 			// player
 			if (keysPressed.up)
 				game.get_Lplayer().move(true)
 			if (keysPressed.down)
 				game.get_Lplayer().move(false)
-		
-		
+
+
 			// Bot
 			const botPaddle = game.get_Rplayer().get_paddle()
 			const paddleCenter = (botPaddle.top + botPaddle.bot) / 2
-		
+
 			// Move continuously toward last known ball position
 			if (Math.abs(bot.knownBallY - paddleCenter) > 10) {
 				bot.inputs.up = bot.knownBallY < paddleCenter
@@ -137,7 +137,7 @@ export default function PongGamePage() {
 				bot.inputs.up = false
 				bot.inputs.down = false
 			}
-		
+
 			if (bot.inputs.up)
 				game.get_Rplayer().move(true)
 			if (bot.inputs.down)
@@ -193,6 +193,16 @@ export default function PongGamePage() {
 									className="w-full h-auto bg-game-dark pixel-border"
 								/>
 							</CardContent>
+							{pausedState && (
+								<div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+									<div className="text-white text-center">
+										<h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+										<div className="text-sm opacity-80">
+											<p>Use ↑/↓ or W/S to move your paddle</p>
+										</div>
+									</div>
+								</div>
+							)}
 						</Card>
 					</div>
 				</div>

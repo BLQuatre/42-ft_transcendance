@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogClose,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from "@/components/ui/Dialog"
 
 type Player = {
   id: string

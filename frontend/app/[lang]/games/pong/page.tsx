@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/main-nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/Button"
+import { Card, CardContent, CardFooter } from "@/components/ui/Card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
 import { AlertCircle } from "lucide-react"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
 

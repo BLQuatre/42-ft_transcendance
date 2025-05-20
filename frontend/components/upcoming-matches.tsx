@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { formatDistanceToNow } from "date-fns"
 import { Clock, Trophy } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 
 type Player = {

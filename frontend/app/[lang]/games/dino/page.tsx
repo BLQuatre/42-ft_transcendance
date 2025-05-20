@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/main-nav"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/Button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
 import { AlertCircle } from "lucide-react"
 
 export default function DinoGamePage() {

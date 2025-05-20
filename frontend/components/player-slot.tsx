@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { UserPlus, Bot } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/Button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/Dialog"
+import { ScrollArea } from "@/components/ui/ScrollArea"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Input } from "@/components/ui/Input"
 
 interface Friend {
   id: string

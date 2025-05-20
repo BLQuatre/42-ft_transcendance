@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { MainNav } from "@/components/main-nav"
 import { Trophy, Medal, Clock, Gamepad2, ArrowLeft } from "lucide-react"
 import { Language } from "@/types/types"

@@ -1,15 +1,15 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { ScrollArea } from "@/components/ui/ScrollArea"
+import { Badge } from "@/components/ui/Badge"
 import { MessageSquare, Send, X, ChevronLeft, Search, Users, Home } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/Separator"
 
 // Types
 type Message = {

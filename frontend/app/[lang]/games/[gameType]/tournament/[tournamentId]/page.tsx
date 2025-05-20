@@ -3,11 +3,11 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Trophy, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
 import { TournamentBracket } from "@/components/tournament-bracket"
 import { UpcomingMatches } from "@/components/upcoming-matches"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 type Player = {
   name: string

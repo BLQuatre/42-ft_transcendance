@@ -5,21 +5,16 @@ import { Game } from './game' ;
 import { Player } from './player';
 import * as CONST from './constants' ;
 
-const fastify = Fastify() ;
 
-let gameInterval: NodeJS.Timeout | null = null ;
+const fastify = Fastify() ;
 
 let game = new Game() ;
 let id = 0 ;
 
-fastify.get('/', async (request, reply) => {
-	return { status: 'Pong server is running' };
-});
-
 const start = async () => {
-	await fastify.listen({ port: 3001 }).catch(console.error) ;
+	await fastify.listen({ port: 3003 }).catch(console.error) ;
 
-	console.log('Server running on http://localhost:3001') ;
+	console.log('Server running on http://localhost:3003') ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 
@@ -61,30 +56,16 @@ const start = async () => {
 
 			if (assignedPlayer)
 				assignedPlayer.socket = undefined ;
-			
-			stopGame() ;
 		}) ;
 	}) ;
 } ;
 
 function startGame() {
-	if (gameInterval)
-		return ;
+	const interval = 1000 / CONST.FPS ;
 
 	game.autoUpdate() ;
 	console.log('Game started') ;
-	gameInterval = setInterval(() => {
-		broadcastGame() ;
-	}, 1000 / CONST.FPS) ;
-}
-
-// TODO: change the paused state
-function stopGame() {
-	if (gameInterval) {
-		console.log('Game paused') ;
-		clearInterval(gameInterval) ;
-		gameInterval = null ;
-	}
+	setInterval(() => broadcastGame(), interval) ;
 }
 
 function broadcastGame() {

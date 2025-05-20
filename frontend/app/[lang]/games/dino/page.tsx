@@ -1,200 +1,234 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/Navbar"
-import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
-import { AlertCircle } from "lucide-react"
+import { MainNav } from "@/components/main-nav"
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function DinoGamePage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [gameStarted, setGameStarted] = useState(false)
-  const [score, setScore] = useState(0)
-  const [highScore, setHighScore] = useState(0)
+	const	canvasRef = useRef<HTMLCanvasElement>(null)
+	const	[playerId, setPlayerId] = useState<number | null>(null)
+	const	[gameState, setGameState] = useState<any>(null)
+	const	[frame, setFrame] = useState(36)
+	const	keysRef = useRef({ up: false, down: false })
 
-  const startGame = () => {
-    setGameStarted(true)
-    setScore(0)
-  }
+	const socketRef = useRef<WebSocket | null>(null)
 
-  useEffect(() => {
-    if (!gameStarted || !canvasRef.current) return
+	// Constants
+	const FRAME_VAL = 36  // Keeping original value for slower animation
 
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+	const TYPE_CACTUS = 1
+	const TYPE_SMALL = 2
+	const TYPE_GROUP = 3
+	const TYPE_PTERO = 4
 
-    // Game variables
-    const dinoHeight = 60
-    const dinoWidth = 40
-    let dinoY = canvas.height - dinoHeight - 20
-    const dinoX = 50
-    let jumping = false
-    let jumpHeight = 0
-    const gravity = 1
-    const jumpPower = 15
 
-    // Obstacles
-    const obstacles: { x: number; width: number; height: number }[] = []
-    const obstacleSpeed = 5
-    const obstacleWidth = 20
-    const minObstacleHeight = 30
-    const maxObstacleHeight = 70
-    let obstacleTimer = 0
+	// Load all images once
+	const images = useRef<any>({}) ;
+	const [imagesLoaded, setImagesLoaded] = useState(false) ;
+	useEffect(() => {
+		const imageSources = {
+			dinoStanding:	"/img/dino_standing.png",
+			dinoRun1:		"/img/dino_running1.png",
+			dinoRun2:		"/img/dino_running2.png",
+			dinoLean1:		"/img/dino_leaning1.png",
+			dinoLean2:		"/img/dino_leaning2.png",
+			cactus:			"/img/cactus.png",
+			small:			"/img/cactus_small.png",
+			group:			"/img/cactus_group.png",
+			ptero1:			"/img/ptero1.png",
+			ptero2:			"/img/ptero2.png",
+		} ;
 
-    // Game state
-    let gameOver = false
-    let animationId: number
-    let currentScore = 0
+		let loadedCount = 0;
+		const total = Object.keys(imageSources).length;
 
-    // Controls
-    const keyDownHandler = (e: KeyboardEvent) => {
-      if ((e.key === " " || e.key === "ArrowUp") && !jumping) {
-        jumping = true
-        jumpHeight = jumpPower
-      }
-    }
+		for (const [key, src] of Object.entries(imageSources)) {
+			const img = new Image();
+			img.src = `${window.location.origin}${src}`;
+			img.onload = () => {
+				loadedCount++;
+				if (loadedCount === total) {
+					setImagesLoaded(true);
+				}
+			} ;
+			img.onerror = (e) => {
+				console.error(`Image failed to load: ${img.src}`, e);
+			} ;
+			images.current[key] = img ;
+		}
+	}, [])
 
-    window.addEventListener("keydown", keyDownHandler)
+	// WebSocket setup
+	useEffect(() => {
+		const socket = new WebSocket("ws://localhost:3003")
+		socketRef.current = socket
 
-    // Game loop
-    const gameLoop = () => {
-      // Clear canvas
-      ctx.fillStyle = "#1E1E1E"
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+		socket.addEventListener("open", () => {
+			console.log("Connected to server")
+		})
 
-      // Draw ground
-      ctx.fillStyle = "#333"
-      ctx.fillRect(0, canvas.height - 20, canvas.width, 20)
+		socket.addEventListener("message", (event) => {
+			const msg = JSON.parse(event.data)
+			if (msg.type === "assign") setPlayerId(msg.playerId)
+			if (msg.type === "state") setGameState(msg.gameState)
+		})
 
-      // Update dino position
-      if (jumping) {
-        dinoY -= jumpHeight
-        jumpHeight -= gravity
+		return () => socket.close()
+	}, [])
 
-        if (dinoY >= canvas.height - dinoHeight - 20) {
-          dinoY = canvas.height - dinoHeight - 20
-          jumping = false
-        }
-      }
+	// Input handling
+	useEffect(() => {
+		if (!playerId) return
 
-      // Draw dino
-      ctx.fillStyle = "#FFA500"
-      ctx.fillRect(dinoX, dinoY, dinoWidth, dinoHeight)
+		const down = (e: KeyboardEvent) => {
+			if (e.key === " " || e.key === "ArrowUp") {
+				keysRef.current.up = true;
+			}
+			if (e.key === "ArrowDown") {
+				keysRef.current.down = true;
+			}
+		}
 
-      // Generate obstacles
-      obstacleTimer++
-      if (obstacleTimer > 100) {
-        const height = Math.floor(Math.random() * (maxObstacleHeight - minObstacleHeight + 1)) + minObstacleHeight
-        obstacles.push({
-          x: canvas.width,
-          width: obstacleWidth,
-          height,
-        })
-        obstacleTimer = 0
-      }
+		const up = (e: KeyboardEvent) => {
+			if (e.key === " " || e.key === "ArrowUp") {
+				keysRef.current.up = false;
+			}
+			if (e.key === "ArrowDown") {
+				keysRef.current.down = false;
+			}
+		}
 
-      // Update and draw obstacles
-      for (let i = 0; i < obstacles.length; i++) {
-        const obstacle = obstacles[i]
-        obstacle.x -= obstacleSpeed
+		window.addEventListener("keydown", down)
+		window.addEventListener("keyup", up)
 
-        // Draw obstacle
-        ctx.fillStyle = "#4A9DFF"
-        ctx.fillRect(obstacle.x, canvas.height - obstacle.height - 20, obstacle.width, obstacle.height)
+		return () => {
+			window.removeEventListener("keydown", down)
+			window.removeEventListener("keyup", up)
+		}
+	}, [playerId])
 
-        // Check collision
-        if (
-          dinoX < obstacle.x + obstacle.width &&
-          dinoX + dinoWidth > obstacle.x &&
-          dinoY < canvas.height - obstacle.height - 20 + obstacle.height &&
-          dinoY + dinoHeight > canvas.height - obstacle.height - 20
-        ) {
-          gameOver = true
-        }
+	// Continuous input sending
+	useEffect(() => {
+		if (!playerId || !socketRef.current) return;
 
-        // Remove obstacles that are off screen
-        if (obstacle.x + obstacle.width < 0) {
-          obstacles.splice(i, 1)
-          i--
-          currentScore++
-          setScore(currentScore)
-        }
-      }
+		const sendInputs = () => {
+			if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
 
-      // Draw score
-      ctx.font = '16px "Press Start 2P"'
-      ctx.fillStyle = "#FFFFFF"
-      ctx.fillText(`SCORE: ${currentScore}`, 20, 30)
+			// Send jump command if up key is pressed
+			if (keysRef.current.up) {
+				socketRef.current.send(JSON.stringify({ type: "jump", playerId }));
+			}
 
-      if (gameOver) {
-        if (currentScore > highScore) {
-          setHighScore(currentScore)
-        }
+			// Send down command if down key is pressed
+			if (keysRef.current.down) {
+				socketRef.current.send(JSON.stringify({ type: "down", playerId }));
+			} else {
+				// Send up command if down key is not pressed
+				socketRef.current.send(JSON.stringify({ type: "up", playerId }));
+			}
+		};
 
-        ctx.fillStyle = "rgba(0, 0, 0, 0.7)"
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
+		// Set up interval to continuously send input state
+		const inputInterval = setInterval(sendInputs, 50); // Send updates every 50ms
 
-        ctx.font = '24px "Press Start 2P"'
-        ctx.fillStyle = "#FF4D4D"
-        ctx.fillText("GAME OVER", canvas.width / 2 - 100, canvas.height / 2 - 20)
+		return () => {
+			clearInterval(inputInterval);
+		};
+	}, [playerId]);
 
-        ctx.font = '16px "Press Start 2P"'
-        ctx.fillStyle = "#FFFFFF"
-        ctx.fillText(`SCORE: ${currentScore}`, canvas.width / 2 - 70, canvas.height / 2 + 20)
+	// Rendering
+	useEffect(() => {
+		if (!canvasRef.current || !gameState || !imagesLoaded) return
+		const canvas = canvasRef.current
+		const ctx = canvas.getContext("2d")
+		if (!ctx) return
 
-        setGameStarted(false)
-        return
-      }
+		const img = images.current
 
-      animationId = requestAnimationFrame(gameLoop)
-    }
+		const draw = () => {
+			// Clear only the score area at the top
+			ctx.clearRect(0, 0, canvas.width, 50);
 
-    animationId = requestAnimationFrame(gameLoop)
+			const offset = canvas.height / (gameState.dinos.length + 1)
+			let i = 0
 
-    return () => {
-      window.removeEventListener("keydown", keyDownHandler)
-      cancelAnimationFrame(animationId)
-    }
-  }, [gameStarted, highScore])
+			gameState.dinos.forEach((dino: any) => {
+				i++
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <MainNav />
+				if (dino.score > -1) {
+					ctx.font = "16px Arial"
+					ctx.fillStyle = "#555"
+					ctx.fillText(`${dino.score}`, canvas.width - 100, offset * i - offset / 2)
+					return
+				}
 
-      <div className="flex-1 container py-8">
-        <div className="mb-8">
-          <h1 className="font-pixel text-2xl md:text-3xl mb-2">DINO RUN</h1>
-          <p className="font-pixel text-xs text-muted-foreground">
-            JUMP OVER OBSTACLES AND SURVIVE AS LONG AS POSSIBLE
-          </p>
-        </div>
+				// Only clear the area for active players
+				ctx.clearRect(0, (offset * (i - 1)), canvas.width, offset);
 
-        <div className="grid gap-8">
-          <div className="space-y-4">
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <canvas ref={canvasRef} width={800} height={350} className="w-full h-auto bg-game-dark pixel-border" />
-              </CardContent>
-              <CardFooter className="flex justify-between p-4">
-                <div className="font-pixel text-sm">
-                  SCORE: <span className="text-game-orange">{score}</span>
-                </div>
-                <Button onClick={startGame} className="font-pixel bg-game-orange hover:bg-game-orange/90">
-                  {gameStarted ? "RESTART" : "START GAME"}
-                </Button>
-              </CardFooter>
-            </Card>
+				ctx.fillStyle = "#555"
+				ctx.fillRect(20, offset * i - 6, canvas.width - 40, 2)
 
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle className="font-pixel text-sm">CONTROLS</AlertTitle>
-              <AlertDescription className="font-pixel text-xs">PRESS SPACE OR ARROW UP TO JUMP</AlertDescription>
-            </Alert>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+				// Draw dino
+				if (dino.lean) {
+					const leanImg = (Math.floor(frame / 12) % 2) === 0 ? img.dinoLean1 : img.dinoLean2
+					if (leanImg.complete) {
+						ctx.drawImage(leanImg, 40, offset * i - 48 - dino.y, 64, 48)
+					}
+				} else {
+					const runImg = dino.y > 0 ? img.dinoStanding : ((Math.floor(frame / 12) % 2) === 0 ? img.dinoRun1 : img.dinoRun2)
+					if (runImg.complete) {
+						ctx.drawImage(runImg, 40, offset * i - 48 - dino.y, 48, 48)
+					}
+				}
+
+				// Draw obstacles
+				gameState.obstacles.forEach((ob: any) => {
+					const y = offset * i - ob.y
+					if (ob.type === TYPE_CACTUS && img.cactus.complete)
+						ctx.drawImage(img.cactus, ob.x, y, 32, 48)
+					else if (ob.type === TYPE_SMALL && img.small.complete)
+						ctx.drawImage(img.small, ob.x, y, 16, 32)
+					else if (ob.type === TYPE_GROUP && img.group.complete)
+						ctx.drawImage(img.group, ob.x, y, 48, 48)
+					else if (ob.type === TYPE_PTERO) {
+						const pteroImg = (Math.floor(frame / 12) % 2) === 0 ? img.ptero1 : img.ptero2
+						if (pteroImg.complete)
+							ctx.drawImage(pteroImg, ob.x, y, 48, 48)
+					}
+				})
+			})
+
+			// Score
+			ctx.font = '20px "Press Start 2P"'
+			ctx.fillStyle = "#FFF"
+			ctx.fillText(`SCORE: ${gameState.score}`, 20, 30)
+
+			setFrame(f => (f - 1 + FRAME_VAL) % FRAME_VAL)
+			requestAnimationFrame(draw)
+		}
+
+		requestAnimationFrame(draw)
+	}, [gameState, imagesLoaded])
+
+	return (
+		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
+			<MainNav />
+			<div className="flex-1 container py-6">
+				<div className="grid gap-8">
+					<div className="space-y-4">
+						<Card className="overflow-hidden">
+							<CardContent className="p-0">
+								<canvas
+									ref={canvasRef}
+									width={800}
+									height={500}
+									className="w-full h-auto bg-game-dark pixel-border"
+								/>
+							</CardContent>
+						</Card>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 }

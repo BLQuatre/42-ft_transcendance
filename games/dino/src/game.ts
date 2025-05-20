@@ -1,7 +1,6 @@
 import { Player } from './player' ;
 import { Obstacle } from './obstacle' ;
 import * as CONST from './constants' ;
-import { exit } from 'process';
 
 export class Game {
 	score:number = 0 ; // Ramping up constantly, attributed to a player when he "loses"
@@ -106,10 +105,6 @@ export class Game {
 			if (!(obstacle_x.to > first_dino_x.from && obstacle_x.from < first_dino_x.to)) // checking collision between obstacle and dino (x-axis wise)
 				return ;
 
-			console.log(`x collision \n dino: ${first_dino_x.from}-${first_dino_x.to} \n obstacle: ${obstacle_x.from}-${obstacle_x.to}`) ;
-			
-			exit ;
-			
 			const obstacle_y = obstacle.get_y() ;
 			for (const dino of this.dinos) {
 				if (dino.score > -1)

@@ -1,11 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/Navbar"
-import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardFooter } from "@/components/ui/Card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
-import { AlertCircle } from "lucide-react"
+import { MainNav } from "@/components/main-nav"
+import { Card, CardContent } from "@/components/ui/card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
 
 export default function PongGamePage() {
@@ -14,7 +11,6 @@ export default function PongGamePage() {
 	const [playerId, setPlayerId] = useState<number | null>(null)
 	const socketRef = useRef<WebSocket | null>(null)
 
-	const keysPressed = useRef({ up: false, down: false })
 
 	useEffect(() => {
 		const socket = new WebSocket("ws://localhost:3002")
@@ -84,23 +80,13 @@ export default function PongGamePage() {
 			ctx.fillText(gameState.right_team.score.toString(), (canvas.width / 4) * 3, 30)
 		}
 
-		const handleInput = () => {
-			if (!playerId || !socketRef.current) return
-			const socket = socketRef.current
-
-			if (keysPressed.current.up)
-				socket.send(JSON.stringify({ type: "move", playerId, direction: "up" }))
-			if (keysPressed.current.down)
-				socket.send(JSON.stringify({ type: "move", playerId, direction: "down" }))
-		}
 
 		const gameLoop = () => {
 			draw()
-			handleInput()
 			requestAnimationFrame(gameLoop)
 		}
-
 		const animId = requestAnimationFrame(gameLoop)
+
 
 		const keydown = (e: KeyboardEvent) => {
 			if (!playerId || !socketRef.current) return
@@ -119,6 +105,7 @@ export default function PongGamePage() {
 
 		window.addEventListener("keydown", keydown)
 		window.addEventListener("keyup", keyup)
+
 
 		return () => {
 			cancelAnimationFrame(animId)

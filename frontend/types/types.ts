@@ -114,6 +114,13 @@ export interface Range {
 	bot: number ;
 }
 
+export interface Ball {
+	x: number ;
+	y: number ;
+	vx: number ;
+	vy: number ;
+}
+
 export interface PongState {
 	left_team: {
 		score: number;

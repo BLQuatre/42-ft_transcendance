@@ -35,8 +35,8 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
     if (mode === "multiplayer") {
       setIsMultiplayerDialogOpen(true)
       // Keep the main dialog open for now
-    } else if (mode === "local1v1" && gameType === "pong") {
-      router.push(`/games/${gameType}/local1v1/test`)
+    } else if (mode === "local" && gameType === "pong") {
+      router.push(`/games/${gameType}/${mode}/`)
       onOpenChange(false)
     } else {
       // Navigate to the appropriate URL based on game type and mode
@@ -74,16 +74,16 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
           {gameType === "pong" && (
             <div
               className={`rounded-md border-2 ${
-                selectedMode === "local1v1"
+                selectedMode === "local"
                   ? `${getBorderColorClass()} ${getColorClass()} text-white`
                   : "border-muted bg-muted/50 hover:bg-muted"
               } p-4 cursor-pointer transition-all`}
-              onClick={() => setSelectedMode("local1v1")}
+              onClick={() => setSelectedMode("local")}
             >
               <div className="flex flex-col items-center text-center space-y-4">
                 <div
                   className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                    selectedMode === "local1v1" ? "bg-white/20" : getColorClass()
+                    selectedMode === "local" ? "bg-white/20" : getColorClass()
                   }`}
                 >
                   <Monitor className="h-8 w-8 text-white" />
@@ -91,14 +91,14 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
                 <div>
                   <h3
                     className={`font-pixel text-sm mb-2 ${
-                      selectedMode === "local1v1" ? "text-white" : getTextColorClass()
+                      selectedMode === "local" ? "text-white" : getTextColorClass()
                     }`}
                   >
                     1V1 LOCAL
                   </h3>
                   <p
                     className={`font-pixel text-xs ${
-                      selectedMode === "local1v1" ? "text-white/80" : "text-muted-foreground"
+                      selectedMode === "local" ? "text-white/80" : "text-muted-foreground"
                     }`}
                   >
                     PLAY WITH A FRIEND LOCALLY

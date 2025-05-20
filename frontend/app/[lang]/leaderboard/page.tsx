@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/Button"
 import { MainNav } from "@/components/Navbar"
 import { Trophy, Medal, Clock, Gamepad2, ArrowLeft } from "lucide-react"
 import { Language } from "@/types/types"
-import { getDictionary } from "@/lib/Dictionnaries"
+import { getDictionary } from "@/lib/dictionnaries"
 
 export default async function LeaderboardPage({
   params,

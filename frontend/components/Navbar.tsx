@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/Utils"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { User, Users } from "lucide-react"
 import { useDictionary } from "@/hooks/UseDictionnary"

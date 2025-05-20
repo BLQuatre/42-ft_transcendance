@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Badge } from "@/components/ui/Badge"
 import { MessageSquare, Send, X, ChevronLeft, Search, Users, Home } from "lucide-react"
-import { cn } from "@/lib/Utils"
+import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/Separator"
 
 // Types

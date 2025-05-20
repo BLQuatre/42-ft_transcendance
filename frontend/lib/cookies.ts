@@ -1,5 +1,7 @@
 "use client"
 
+// TODO: see if necessary and remove if not
+
 /**
  * Cookie utility functions for client-side use
  */

@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
-import { cn } from "@/lib/Utils"
+import { cn } from "@/lib/utils"
 
 type Friend = {
   id: string

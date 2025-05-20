@@ -68,7 +68,6 @@ export enum Language {
 	FRENCH = "fr",
 	MOLDAVIAN = "ro",
 	RUSSIAN = "ru",
-	LINGALA = "ln",
 }
 
 export enum UserStatus {

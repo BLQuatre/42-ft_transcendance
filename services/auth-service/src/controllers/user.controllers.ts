@@ -22,7 +22,7 @@ export const register = async (req: FastifyRequest<{ Body: CreateUserDto }>, rep
 	const savedUser = req.body as CreateUserDto;
 	savedUser.password = await bcrypt.hash(savedUser.password, 10);
 
-	const result = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user`, {
+	const response = await axios.post(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user`, {
 		name: savedUser.name,
 		password: savedUser.password
 	})
@@ -36,10 +36,10 @@ export const register = async (req: FastifyRequest<{ Body: CreateUserDto }>, rep
 		})
 	})
 
-	if (result) {
-		const accessToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
-		const refreshToken = jwt.sign({ id: result.data.newUser.id, name: result.data.newUser.name }, JWT_REFRESH, { expiresIn: '7D' });
-		const publicUser: PublicUser = removePassword(result.data.newUser);
+	if (response) {
+		const accessToken = jwt.sign({ id: response.data.newUser.id, name: response.data.newUser.name }, JWT_ACCESS, { expiresIn: '15min' });
+		const refreshToken = jwt.sign({ id: response.data.newUser.id, name: response.data.newUser.name }, JWT_REFRESH, { expiresIn: '7D' });
+		const publicUser: PublicUser = removePassword(response.data.newUser);
 		return reply
 			.setCookie('refreshToken', refreshToken, {
 				path: '/',
@@ -75,7 +75,24 @@ export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: Fas
 			});
 		}
 	})
+
 	if (response) {
-		return reply.code(response.data.statusCode).send(response.data);
+		const accessToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_ACCESS, { expiresIn: '15min' });
+		const refreshToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_REFRESH, { expiresIn: '7D' });
+		return reply
+			.setCookie('refreshToken', refreshToken, {
+				path: '/',
+				httpOnly: true,
+				secure: true,
+				sameSite: 'strict',
+				maxAge: 7 * 24 * 60 * 60
+			})
+			.code(200)
+			.send({
+				message: "User logged in",
+				statusCode: 200,
+				user: response.data.user,
+				accessToken,
+			})
 	}
 }

@@ -4,6 +4,8 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "@/components/ui/Toaster"
 import { SimpleChat } from "@/components/SimpleChat"
+import { AuthProvider } from "@/contexts/auth-context"
+import InitAuth from "@/hooks/InitAuth"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,9 +26,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
       </head>
       <body className={inter.className}>
-          {children}
-          <SimpleChat />
-          <Toaster />
+          <AuthProvider>
+            <InitAuth />
+            {children}
+            <SimpleChat />
+            <Toaster />
+          </AuthProvider>
       </body>
     </html>
   )

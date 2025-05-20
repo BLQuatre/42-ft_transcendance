@@ -48,7 +48,7 @@ export const accessAuthentication = async (req: AuthRequest, reply: FastifyReply
 }
 
 export const refreshAuthentication = async (req: AuthRequest, reply: FastifyReply) => {
-	const authHeader = req.headers.authorization;
+	const authHeader = req.cookies.refreshToken;
 	if (!authHeader) {
 		return reply.code(401).send({
 			message: 'Unauthorize',

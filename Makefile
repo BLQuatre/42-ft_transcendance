@@ -49,4 +49,10 @@ del_node_modules:
 del_dist:
 	find . -type d -name "dist" -prune -exec rm -rf '{}' +
 
-.PHONY: all up down stop start restart re test del_images_none del_images
+del_users:
+	docker exec -it $(NAME)-postgres-1 psql -U test -d $(NAME) -c 'TRUNCATE TABLE "user" RESTART IDENTITY;'
+
+show_users:
+	docker exec -it $(NAME)-postgres-1 psql -U test -d $(NAME) -c 'SELECT * FROM "user";'
+
+.PHONY: all up down stop start restart re test del_images_none del_images del_node_modules del_dist del_users show_users

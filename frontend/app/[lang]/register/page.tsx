@@ -15,9 +15,11 @@ import { Eye, EyeOff } from "lucide-react"
 import axios from "axios"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { setAccessToken } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -42,7 +44,7 @@ export default function RegisterPage() {
     })
     .then(response => {
       console.log("Successfull register: " + JSON.stringify(response.data))
-      document.cookie = `accessToken=${response.data.accessToken}; Path=/; Max-Age=2592000; SameSite=Strict; Secure;`;
+      setAccessToken(response.data.accessToken)
       router.push("/")
     })
     .catch(error => {

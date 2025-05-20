@@ -90,9 +90,9 @@ export const refreshAuthentication = async (req: AuthRequest, reply: FastifyRepl
 				statusCode: 401
 			});
 		} else {
-			return reply.code(500).send({
+			return reply.code(401).send({
 				message: 'Refresh token verification failed',
-				statusCode: 500
+				statusCode: 401
 			});
 		}
 	}

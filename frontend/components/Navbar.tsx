@@ -6,14 +6,15 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { User, Users } from "lucide-react"
 import { useDictionary } from "@/hooks/UseDictionnary"
+import { useAuth } from "@/contexts/auth-context"
 
 export function MainNav() {
+  const { accessToken } = useAuth()
+
   const pathname = usePathname()
 
   const dict = useDictionary()
   if (!dict) return null
-
-  const isLoggedIn = pathname !== "/login" && pathname !== "/register"
 
   return (
     <div className="flex justify-between items-center w-full px-4 py-3 bg-game-dark border-b-4 border-game-blue">
@@ -55,7 +56,7 @@ export function MainNav() {
       </nav>
 
       <div className="flex items-center space-x-4">
-        {isLoggedIn ? (
+        {accessToken ? (
           <>
             <div className="relative">
               <Link

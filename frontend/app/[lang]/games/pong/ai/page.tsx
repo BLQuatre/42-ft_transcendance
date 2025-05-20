@@ -177,36 +177,36 @@ export default function PongGamePage() {
 	}, [])
 
 
-	return (
-		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
-			<MainNav />
+  return (
+    <div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
+      <MainNav />
 
-			<div className="flex-1 container py-6">
-				<div className="grid gap-8">
-					<div className="space-y-4">
-						<Card className="overflow-hidden">
-							<CardContent className="p-0">
-								<canvas
-									ref={canvasRef}
-									width={800}
-									height={500}
-									className="w-full h-auto bg-game-dark pixel-border"
-								/>
-							</CardContent>
-							{pausedState && (
-								<div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-									<div className="text-white text-center">
-										<h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
-										<div className="text-sm opacity-80">
-											<p>Use ↑/↓ or W/S to move your paddle</p>
-										</div>
-									</div>
-								</div>
-							)}
-						</Card>
-					</div>
-				</div>
-			</div>
-		</div>
-	)
+      <div className="flex-1 container py-6 relative">
+        <div className="grid gap-8 relative">
+          <div className="space-y-4">
+            <Card className="overflow-hidden relative">
+              <CardContent className="p-0">
+                <canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
+
+                {/* Blur overlay applied only to game area */}
+                {pausedState && <div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>}
+
+                {/* Pause instructions on top of blur */}
+                {pausedState && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+                    <div className="text-white text-center">
+                      <h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+                      <div className="text-sm opacity-80">
+                        <p>Use ↑/↓ or W/S to move your paddle</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }

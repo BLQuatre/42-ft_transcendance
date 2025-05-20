@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 import { Button } from "@/components/ui/Button"
-import { setCookie, getCookie } from "@/lib/cookies"
 
 const languages: { code: string; name: string; flag: string }[] = [
   { code: "en", name: "English", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/2560px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" },
@@ -19,20 +18,20 @@ export function LanguageSelectorDialog() {
   const router = useRouter()
 
   useEffect(() => {
-    const hasSelectedLanguage = getCookie("selectedLanguage")
+    // const hasSelectedLanguage = getCookie("selectedLanguage")
 
-    if (!hasSelectedLanguage) {
-      setIsOpen(true)
-    }
+    // if (!hasSelectedLanguage) {
+      // setIsOpen(true)
+    // }
   }, [])
 
   const selectLanguage = (lang: string) => {
     // Set cookie with 1 year expiration
-    setCookie("selectedLanguage", lang, {
-      maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
-      path: "/",
-      sameSite: "lax"
-    })
+    // setCookie("selectedLanguage", lang, {
+    //   maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
+    //   path: "/",
+    //   sameSite: "lax"
+    // })
 
     setIsOpen(false)
     router.push(`/${lang}`)

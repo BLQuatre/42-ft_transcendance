@@ -1,8 +1,13 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getLocaleResponse } from './lib/dictionnaries';
+import { updateTokens } from './lib/sessions';
 
 export function middleware(request: NextRequest) {
-	const response = getLocaleResponse(request);
+	if (request.nextUrl.pathname.startsWith('/images/'))
+		return NextResponse.next();
+
+	let response = getLocaleResponse(request);
+	updateTokens(request, response).then((newResponse) => response = newResponse);
 
 	return response;
 }

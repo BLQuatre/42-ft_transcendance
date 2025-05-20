@@ -92,86 +92,42 @@
   }
 }
 
-@utility text-balance {
-  text-wrap: balance;
-}
-
-@layer utilities {
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 10%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+
+    --card: 0 0% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+
+    --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+
+    --primary: 210 100% 65%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 30 100% 60%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 30 100% 60%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 100% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --border: 0 0% 25%;
+    --input: 0 0% 25%;
+    --ring: 210 100% 65%;
+
+    --radius: 0.5rem;
   }
+}
+
+::-webkit-scrollbar {
+	display: none;
 }
 
 @layer base {
@@ -181,4 +137,163 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .pixel-corners {
+    clip-path: polygon(
+      0px 4px,
+      4px 4px,
+      4px 0px,
+      calc(100% - 4px) 0px,
+      calc(100% - 4px) 4px,
+      100% 4px,
+      100% calc(100% - 4px),
+      calc(100% - 4px) calc(100% - 4px),
+      calc(100% - 4px) 100%,
+      4px 100%,
+      4px calc(100% - 4px),
+      0px calc(100% - 4px)
+    );
+  }
+
+  .pixel-text {
+    @apply font-pixel tracking-wide;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .pixel-border {
+    @apply border-4 border-solid border-game-dark;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  }
 }
+
+* {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+  }
+
+
+  /* Add this class to your existing globals.css file */
+.show-scrollbar {
+	/* For Chrome, Safari, and Opera */
+	&::-webkit-scrollbar {
+	  display: block;
+	  width: 8px;
+	  height: 8px;
+	}
+
+	/* For WebKit browsers - styling the scrollbar */
+	&::-webkit-scrollbar-track {
+	  background: rgba(0, 0, 0, 0.1);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  background: var(--color-muted);
+	  border-radius: 4px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+	  background: var(--color-muted-foreground);
+	}
+
+	/* For Firefox */
+	scrollbar-width: thin;
+
+	/* For IE and Edge */
+	-ms-overflow-style: auto;
+  }
+
+
+/* Dialog animations */
+@keyframes fadeIn {
+	from {
+	  opacity: 0;
+	}
+	to {
+	  opacity: 1;
+	}
+  }
+
+  @keyframes slideUp {
+	from {
+	  transform: translateY(10px);
+	  opacity: 0;
+	}
+	to {
+	  transform: translateY(0);
+	  opacity: 1;
+	}
+  }
+
+  .animate-fadeIn {
+	animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slideUp {
+	animation: slideUp 0.4s ease-out forwards;
+	animation-delay: 0.1s;
+	opacity: 0;
+  }
+
+  /* Pixel animation effect */
+  @keyframes pixelate {
+	0% {
+	  filter: blur(5px);
+	}
+	20% {
+	  filter: blur(0px);
+	}
+	25% {
+	  filter: blur(1px);
+	}
+	30% {
+	  filter: blur(0px);
+	}
+	100% {
+	  filter: blur(0px);
+	}
+  }
+
+  .animate-pixelate {
+	animation: pixelate 0.5s ease-out forwards;
+  }
+
+
+  /* Tournament bracket connector lines */
+.connector-right::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -8px;
+	width: 8px;
+	height: 2px;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 1;
+  }
+
+  .connector-left::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: -8px;
+	width: 8px;
+	height: 2px;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 1;
+  }
+
+  /* Add vertical connectors for matches in the same round */
+  .connector-vertical::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: -8px;
+	width: 2px;
+	height: 100%;
+	background-color: #e5e5e5; /* Use your muted color */
+	z-index: 0;
+  }

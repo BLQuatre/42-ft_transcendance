@@ -1,2 +1,3 @@
 dans le /profile/[id] faire en sorte que le GAME HISTORY -> HISTORY
 Si on use /components/ui/Switch.tsx le laisser sinon penser a l'enlever, il est seulement use sur le dashboard pour 2FA
+Ajouter des elements a droite/gauche de la page du pong (details si il reste du temps)

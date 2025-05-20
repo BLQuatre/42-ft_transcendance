@@ -354,7 +354,7 @@ export default function TournamentPage({
             <div className="min-w-[600px] max-w-[800px] mx-auto">
               <TournamentBracket
                 bracketData={tournamentData.bracketData}
-                gameType={gameType}
+                gameType={gameType as "pong" | "dino"}
                 onInvitePlayer={handleInvitePlayer}
                 onAddBot={handleAddBot}
               />

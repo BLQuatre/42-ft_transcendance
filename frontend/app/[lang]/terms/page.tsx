@@ -1,4 +1,4 @@
-import { MainNav } from "@/components/main-nav"
+import { MainNav } from "@/components/Navbar"
 
 export default function TermsPage() {
   return (

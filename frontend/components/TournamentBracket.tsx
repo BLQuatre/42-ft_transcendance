@@ -4,7 +4,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/Button"
-import { InvitePlayerDialog } from "./invite-player-dialog"
+import { InvitePlayerDialog } from "./dialog/InvitePlayerDialog"
 
 type Player = {
   name: string
@@ -31,7 +31,7 @@ type BracketData = {
 
 type TournamentBracketProps = {
   bracketData: BracketData
-  gameType: string
+  gameType: "pong" | "dino"
   onInvitePlayer?: (matchId: number, slotNumber: 1 | 2, playerId: string) => void
   onAddBot?: (matchId: number, slotNumber: 1 | 2) => void
 }

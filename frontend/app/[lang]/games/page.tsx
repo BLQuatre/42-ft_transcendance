@@ -1,10 +1,10 @@
 import Image from "next/image"
-import { MainNav } from "@/components/main-nav"
-import { Footer } from "@/components/footer"
+import { MainNav } from "@/components/Navbar"
+import { Footer } from "@/components/Footer"
 import { Gamepad2, Users } from "lucide-react"
 import { getDictionary } from "@/lib/dictionnaries"
 import type { Language } from "@/types/types"
-import { GameButtons } from "@/components/game-buttons"
+import { GameButtons } from "@/components/GameButtons"
 
 export default async function GamesPage({
   params,

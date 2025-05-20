@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { ArrowRight } from "lucide-react"
-import { GameModeDialog } from "@/components/game-mode-dialog"
+import { GameModeDialog } from "@/components/dialog/GameModeDialog"
 
 type GameButtonsProps = {
   gameType: "pong" | "dino"

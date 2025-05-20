@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MainNav } from "@/components/main-nav"
+import { MainNav } from "@/components/Navbar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { Button } from "@/components/ui/Button"

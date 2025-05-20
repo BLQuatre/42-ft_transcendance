@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
-import { MainNav } from "@/components/main-nav"
-import { Footer } from "@/components/footer"
+import { MainNav } from "@/components/Navbar"
+import { Footer } from "@/components/Footer"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/Chart"
@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/Button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
-import { MatchDetailsDialog } from "@/components/match-details-dialog"
+import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
 import { useDictionary } from "@/hooks/use-dictionnary"
-import Loading from "@/components/loading"
+import Loading from "@/components/Loading"
 import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 
 // Sample data for charts - from dashboard

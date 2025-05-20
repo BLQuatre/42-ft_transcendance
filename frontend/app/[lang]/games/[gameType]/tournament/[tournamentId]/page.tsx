@@ -5,8 +5,8 @@ import Link from "next/link"
 import { ArrowLeft, Calendar, Trophy, Users } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
-import { TournamentBracket } from "@/components/tournament-bracket"
-import { UpcomingMatches } from "@/components/upcoming-matches"
+import { TournamentBracket } from "@/components/TournamentBracket"
+import { UpcomingMatches } from "@/components/UpcomingMatches"
 import { useToast } from "@/hooks/use-toast"
 
 type Player = {

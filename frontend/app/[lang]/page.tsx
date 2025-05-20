@@ -1,12 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/Button"
-import { MainNav } from "@/components/main-nav"
-import { Footer } from "@/components/footer"
+import { MainNav } from "@/components/Navbar"
+import { Footer } from "@/components/Footer"
 import { getDictionary } from "@/lib/dictionnaries"
 import type { Language } from "@/types/types"
-import { GameButtons } from "@/components/game-buttons"
-import { LanguageSelectorDialog } from "@/components/language-selector-dialog"
+import { GameButtons } from "@/components/GameButtons"
+import { LanguageSelectorDialog } from "@/components/dialog/LanguageSelectorDialog"
 
 export default async function HomePage({
   params,

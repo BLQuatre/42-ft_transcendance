@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/Button"
-import { MainNav } from "@/components/main-nav"
+import { MainNav } from "@/components/Navbar"
 import { Trophy, Medal, Clock, Gamepad2, ArrowLeft } from "lucide-react"
 import { Language } from "@/types/types"
 import { getDictionary } from "@/lib/dictionnaries"

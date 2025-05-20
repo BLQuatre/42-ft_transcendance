@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/main-nav"
+import { MainNav } from "@/components/Navbar"
 import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardFooter } from "@/components/ui/Card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"

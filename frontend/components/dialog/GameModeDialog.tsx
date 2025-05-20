@@ -13,7 +13,7 @@ import {
   DialogFooter,
 } from "@/components/ui/Dialog"
 import { Button } from "@/components/ui/Button"
-import { MultiplayerOptionsDialog } from "./multiplayer-options-dialog"
+import { MultiplayerOptionsDialog } from "./MultiplayerOptionsDialog"
 
 type GameModeDialogProps = {
   open: boolean

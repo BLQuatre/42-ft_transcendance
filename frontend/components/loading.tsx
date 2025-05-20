@@ -1,5 +1,5 @@
-import { Footer } from "./footer";
-import { MainNav } from "./main-nav";
+import { Footer } from "./Footer";
+import { MainNav } from "./Navbar";
 
 export default function Loading({ dict }: { dict: any }) {
 	return (

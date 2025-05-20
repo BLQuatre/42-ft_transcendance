@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { MainNav } from "@/components/Navbar"
 import { FcGoogle } from "react-icons/fc"
-import { useDictionary } from "@/hooks/use-dictionnary"
+import { useDictionary } from "@/hooks/UseDictionnary"
 import { Eye, EyeOff } from "lucide-react"
 
 export default function RegisterPage() {

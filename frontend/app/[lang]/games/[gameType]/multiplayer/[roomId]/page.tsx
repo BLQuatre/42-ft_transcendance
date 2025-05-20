@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { Users, Crown, CheckCircle, XCircle, Home, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/Utils"
 import { use } from "react"
 
 // Types

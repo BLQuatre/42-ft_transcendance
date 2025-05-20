@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 import { Button } from "@/components/ui/Button"
-import { setCookie, getCookie } from "@/lib/cookies"
+import { setCookie, getCookie } from "@/lib/Cookies"
 
 const languages: { code: string; name: string; flag: string }[] = [
   { code: "en", name: "English", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/2560px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" },

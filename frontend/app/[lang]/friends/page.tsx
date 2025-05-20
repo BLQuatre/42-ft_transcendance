@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { useDictionary } from "@/hooks/use-dictionnary"
+import { useToast } from "@/hooks/UseToast"
+import { useDictionary } from "@/hooks/UseDictionnary"
 import { Friend, UserStatus } from "@/types/types"
 
 // Sample friends data

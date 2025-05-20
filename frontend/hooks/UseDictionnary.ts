@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Language } from '@/types/types';
-import { getDictionary } from '@/lib/dictionnaries';
+import { getDictionary } from '@/lib/Dictionnaries';
 import { usePathname } from 'next/navigation';
 
 const supportedLocales = Object.values(Language);

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/Utils"
 import { UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { InvitePlayerDialog } from "./dialog/InvitePlayerDialog"

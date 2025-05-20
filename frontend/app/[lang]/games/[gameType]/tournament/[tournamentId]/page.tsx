@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { TournamentBracket } from "@/components/TournamentBracket"
 import { UpcomingMatches } from "@/components/UpcomingMatches"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/UseToast"
 
 type Player = {
   name: string

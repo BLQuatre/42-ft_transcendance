@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/Card"
 import Image from "next/image"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/Utils"
 import { Check } from "lucide-react"
 
 interface SkinSelectorProps {

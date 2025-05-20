@@ -4,7 +4,7 @@ import Image from "next/image"
 import { formatDistanceToNow } from "date-fns"
 import { Clock, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/Button"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/Utils"
 
 type Player = {
   name: string

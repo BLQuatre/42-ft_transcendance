@@ -10,10 +10,10 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/UseToast"
 import Link from "next/link"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
-import { useDictionary } from "@/hooks/use-dictionnary"
+import { useDictionary } from "@/hooks/UseDictionnary"
 import Loading from "@/components/Loading"
 import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 

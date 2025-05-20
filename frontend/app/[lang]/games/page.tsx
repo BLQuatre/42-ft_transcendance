@@ -2,7 +2,7 @@ import Image from "next/image"
 import { MainNav } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Gamepad2, Users } from "lucide-react"
-import { getDictionary } from "@/lib/dictionnaries"
+import { getDictionary } from "@/lib/Dictionnaries"
 import type { Language } from "@/types/types"
 import { GameButtons } from "@/components/GameButtons"
 

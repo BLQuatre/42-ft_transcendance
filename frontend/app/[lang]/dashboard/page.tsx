@@ -19,7 +19,7 @@ import { SkinSelector } from "@/components/SkinSelector"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
 import { LogOut } from "lucide-react"
 import axios from "axios"
-import { useDictionary } from "@/hooks/use-dictionnary"
+import { useDictionary } from "@/hooks/UseDictionnary"
 import {
   Dialog,
   DialogContent,

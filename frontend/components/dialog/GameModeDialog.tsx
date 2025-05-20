@@ -67,6 +67,40 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
         <div
           className={`grid grid-cols-1 ${gameType === "pong" ? "md:grid-cols-4" : "md:grid-cols-2"} gap-4 animate-slideUp`}
         >
+          {/* Solo Mode Card */}
+          <div
+            className={`rounded-md border-2 ${
+              selectedMode === "ai"
+                ? `${getBorderColorClass()} ${getColorClass()} text-white`
+                : "border-muted bg-muted/50 hover:bg-muted"
+            } p-4 cursor-pointer transition-all`}
+            onClick={() => setSelectedMode("ai")}
+          >
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div
+                className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                  selectedMode === "ai" ? "bg-white/20" : getColorClass()
+                }`}
+              >
+                <User className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h3
+                  className={`font-pixel text-sm mb-2 ${selectedMode === "ai" ? "text-white" : getTextColorClass()}`}
+                >
+                  SOLO MODE
+                </h3>
+                <p
+                  className={`font-pixel text-xs ${
+                    selectedMode === "ai" ? "text-white/80" : "text-muted-foreground"
+                  }`}
+                >
+                  PLAY AGAINST THE COMPUTER
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* 1v1 Local Mode Card - Only show for Pong */}
           {gameType === "pong" && (
             <div
@@ -104,40 +138,6 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
               </div>
             </div>
           )}
-
-          {/* Solo Mode Card */}
-          <div
-            className={`rounded-md border-2 ${
-              selectedMode === "ai"
-                ? `${getBorderColorClass()} ${getColorClass()} text-white`
-                : "border-muted bg-muted/50 hover:bg-muted"
-            } p-4 cursor-pointer transition-all`}
-            onClick={() => setSelectedMode("ai")}
-          >
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                  selectedMode === "ai" ? "bg-white/20" : getColorClass()
-                }`}
-              >
-                <User className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h3
-                  className={`font-pixel text-sm mb-2 ${selectedMode === "ai" ? "text-white" : getTextColorClass()}`}
-                >
-                  SOLO MODE
-                </h3>
-                <p
-                  className={`font-pixel text-xs ${
-                    selectedMode === "ai" ? "text-white/80" : "text-muted-foreground"
-                  }`}
-                >
-                  PLAY AGAINST THE COMPUTER
-                </p>
-              </div>
-            </div>
-          </div>
 
           {/* Multiplayer Mode Card */}
           <div

@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/main-nav"
-import { Card, CardContent } from "@/components/ui/card"
+import { MainNav } from "@/components/Navbar"
+import { Card, CardContent } from "@/components/ui/Card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
 
 export default function PongGamePage() {

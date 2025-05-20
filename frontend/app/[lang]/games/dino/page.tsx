@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/main-nav"
-import { Card, CardContent } from "@/components/ui/card"
+import { MainNav } from "@/components/Navbar"
+import { Card, CardContent } from "@/components/ui/Card"
 
 export default function DinoGamePage() {
 	const	canvasRef = useRef<HTMLCanvasElement>(null)

@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/Badge"
 import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import { useDictionary } from "@/hooks/UseDictionnary"
-import { Friend, UserStatus } from "@/types/types"
+import { type Friend, UserStatus } from "@/types/types"
 
 // Sample friends data
 const friendsData: Friend[] = [
@@ -23,17 +23,17 @@ const friendsData: Friend[] = [
   {
     username: "PIXEL_MASTER",
     status: UserStatus.OFFLINE,
-    avatar: "/placeholder.svg?height=40&width=40"
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     username: "RETRO_FAN",
     status: UserStatus.ONLINE,
-    avatar: "/placeholder.svg?height=40&width=40"
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     username: "ARCADE_PRO",
     status: UserStatus.OFFLINE,
-    avatar: "/placeholder.svg?height=40&width=40"
+    avatar: "/placeholder.svg?height=40&width=40",
   },
 ]
 
@@ -53,10 +53,36 @@ const friendRequestsData = [
   },
 ]
 
+// Sample users that can be added as friends
+const usersData = [
+  {
+    id: "u1",
+    username: "LEVEL_BOSS",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: "u2",
+    username: "QUEST_HUNTER",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: "u3",
+    username: "PIXEL_WIZARD",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: "u4",
+    username: "GAME_LEGEND",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+]
+
 export default function FriendsPage() {
   const [friends, setFriends] = useState(friendsData)
   const [friendRequests, setFriendRequests] = useState(friendRequestsData)
+  const [users, setUsers] = useState(usersData)
   const [searchQuery, setSearchQuery] = useState("")
+  const [addFriendSearchQuery, setAddFriendSearchQuery] = useState("")
   const { toast } = useToast()
 
   const handleAcceptRequest = (id: string) => {
@@ -106,11 +132,29 @@ export default function FriendsPage() {
     }
   }
 
+  const handleSendFriendRequest = (id: string) => {
+    const user = users.find((u) => u.id === id)
+    if (user) {
+      // Remove from available users list
+      setUsers(users.filter((u) => u.id !== id))
+
+      toast({
+        title: "Friend Request Sent",
+        description: `Friend request sent to ${user.username}`,
+        duration: 3000,
+      })
+    }
+  }
+
   const filteredFriends = friends.filter((friend) => friend.username.toLowerCase().includes(searchQuery.toLowerCase()))
 
+  const filteredUsers =
+    addFriendSearchQuery.trim() === ""
+      ? []
+      : users.filter((user) => user.username.toLowerCase().includes(addFriendSearchQuery.toLowerCase()))
+
   const dict = useDictionary()
-  if (!dict)
-    return null
+  if (!dict) return null
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -124,12 +168,17 @@ export default function FriendsPage() {
 
         <Tabs defaultValue="friends" className="space-y-4">
           <TabsList className="font-pixel text-xs w-full flex-nowrap">
-            <TabsTrigger className="uppercase" value="friends">{dict.friends.sections.myFriends.title}</TabsTrigger>
+            <TabsTrigger className="uppercase" value="friends">
+              {dict.friends.sections.myFriends.title}
+            </TabsTrigger>
             <TabsTrigger className="uppercase" value="requests">
               {dict.friends.sections.requests.title}
               {friendRequests.length > 0 && (
                 <Badge className="ml-2 bg-game-red text-white font-pixel text-[10px]">{friendRequests.length}</Badge>
               )}
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="add">
+              {dict.friends.sections.add?.title || "Add Friends"}
             </TabsTrigger>
           </TabsList>
 
@@ -137,7 +186,9 @@ export default function FriendsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="font-pixel text-sm uppercase">{dict.friends.sections.myFriends.title}</CardTitle>
-                <CardDescription className="font-pixel text-xs uppercase">{dict.friends.sections.myFriends.description}</CardDescription>
+                <CardDescription className="font-pixel text-xs uppercase">
+                  {dict.friends.sections.myFriends.description}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="relative">
@@ -153,7 +204,9 @@ export default function FriendsPage() {
                 <div className="space-y-2">
                   {filteredFriends.length === 0 ? (
                     <p className="text-center font-pixel text-sm text-muted-foreground py-4">
-                      {friends.length === 0 ? dict.friends.sections.myFriends.noFriends : dict.friends.sections.myFriends.noFriendsFound}
+                      {friends.length === 0
+                        ? dict.friends.sections.myFriends.noFriends
+                        : dict.friends.sections.myFriends.noFriendsFound}
                     </p>
                   ) : (
                     filteredFriends.map((friend) => (
@@ -215,7 +268,9 @@ export default function FriendsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="font-pixel text-sm uppercase">{dict.friends.sections.requests.title}</CardTitle>
-                <CardDescription className="font-pixel text-xs uppercase">{dict.friends.sections.requests.description}</CardDescription>
+                <CardDescription className="font-pixel text-xs uppercase">
+                  {dict.friends.sections.requests.description}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {friendRequests.length === 0 ? (
@@ -257,6 +312,64 @@ export default function FriendsPage() {
                     </div>
                   ))
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="add" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-sm uppercase">
+                  {dict.friends.sections.add?.title || "Add Friends"}
+                </CardTitle>
+                <CardDescription className="font-pixel text-xs uppercase">
+                  {dict.friends.sections.add?.description || "Find and add new friends to your network"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="relative">
+                  <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder={dict.friends.sections.add?.search || "Search for users..."}
+                    className="pl-8 font-pixel text-xs"
+                    value={addFriendSearchQuery}
+                    onChange={(e) => setAddFriendSearchQuery(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  {filteredUsers.length === 0 ? (
+                    <p className="text-center font-pixel text-sm text-muted-foreground py-4">
+                      {addFriendSearchQuery.trim() === ""
+                        ? dict.friends.sections.add?.searchPrompt || "Search for users to add as friends"
+                        : dict.friends.sections.add?.noUsersFound || "No users found with that username"}
+                    </p>
+                  ) : (
+                    filteredUsers.map((user) => (
+                      <div key={user.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <Avatar>
+                            <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} />
+                            <AvatarFallback className="font-pixel text-xs">
+                              {user.username.substring(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-pixel text-sm">{user.username}</p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 font-pixel text-xs"
+                          onClick={() => handleSendFriendRequest(user.id)}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          {dict.friends.sections.add?.addButton || "Add Friend"}
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -116,6 +116,28 @@ export const getReceivingPendingRequest = async (req: FastifyRequest, reply: Fas
 	});
 }
 
+export const getPendingRequests = async (req: FastifyRequest, reply: FastifyReply) => {
+	const id = req.headers['x-user-id'] as string;
+	if (!id) {
+		return reply.code(401).send({
+			message: 'Unauthentified user',
+			statusCode: 401
+		});
+	}
+
+	const friends = await Friend.find({
+		where: [
+			{ sender_id: id, status: FriendRequestStatus.PENDING },
+			{ receiver_id: id, status: FriendRequestStatus.PENDING }
+		]
+	});
+	return reply.code(200).send({
+		message: 'All requests friend on pending',
+		statusCode: 200,
+		friends
+	});
+}
+
 export const responseFriend = async (req: FastifyRequest<{ Body: { status: FriendRequestStatus } }>, reply: FastifyReply) => {
 	const userId = req.headers['x-user-id'] as string;
 	if (!userId) {

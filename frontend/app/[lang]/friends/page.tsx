@@ -4,16 +4,19 @@ import { useEffect, useState } from "react"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
-import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
-import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
+import { Search } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import { useDictionary } from "@/hooks/UseDictionnary"
-import { BaseUser, FriendRequest } from "@/types/types"
-
+import { BaseUser } from "@/types/user"
+import { FriendRequest, FriendRequestStatus, RelationStatus } from "@/types/friend"
 import api from "@/lib/api"
+import { UserCard } from "./components/UserCard"
+import { FriendRequestCard } from "./components/FriendRequestCard"
+import { FriendCard } from "./components/FriendCard"
+
+
 // TODO: Add online status to friends and avatar
 
 export default function FriendsPage() {
@@ -27,7 +30,7 @@ export default function FriendsPage() {
   const updateData = () => {
     api.get("/user").then((response) => setUsers(response.data.Users))
     api.get("/friend").then((response) => setFriends(response.data.friends))
-    api.get("/friend/pending/receive").then((response) => setFriendRequests(response.data.friends))
+    api.get("/friend/pending").then((response) => setFriendRequests(response.data.friends))
   }
 
   useEffect(() => {
@@ -50,7 +53,7 @@ export default function FriendsPage() {
     })
   }
 
-  const handleRejectRequest = (id: string) => {
+  const handleDeclineRequest = (id: string) => {
     api.put(`/friend/${id}`, { status: "refused" }).then(() => {
       updateData()
       toast({
@@ -89,13 +92,32 @@ export default function FriendsPage() {
 
   const userId = sessionStorage.getItem("userId")
 
-  const filteredFriends = friends.filter((friend) => (getUserFromId(friend.sender_id)?.name || "Unknown").toLowerCase().includes(searchQuery.toLowerCase()))
+  const getRelationStatus = (user: BaseUser) => {
+    const friend = friendRequests.find((friend) => friend.sender_id === user.id || friend.receiver_id === user.id)
+    if (friend) {
+      if (friend.status === FriendRequestStatus.ACCEPTED) return RelationStatus.FRIEND
+      if (friend.status === FriendRequestStatus.PENDING) return RelationStatus.PENDING
+    }
+    return RelationStatus.NONE
+  }
+
+
+  const filteredFriends =
+    searchQuery.trim() === ""
+      ? friends
+      : friends.filter((friend) =>
+        (getUserFromId(friend.sender_id)?.name || "Unknown").toLowerCase().includes(searchQuery.toLowerCase())
+      )
 
   const filteredUsers =
     addFriendSearchQuery.trim() === ""
       ? []
       : users.filter((user) => user.name.toLowerCase().includes(addFriendSearchQuery.toLowerCase())
-        && user.id !== userId && !friends.some((friend) => friend.sender_id === user.id))
+          && user.id !== userId && !friends.some((friend) => friend.sender_id === user.id || friend.receiver_id === user.id)
+        )
+
+  const receivedPendingRequests =
+    friendRequests.filter((request) => request.receiver_id === userId)
 
   const dict = useDictionary()
   if (!dict) return null
@@ -117,7 +139,7 @@ export default function FriendsPage() {
             </TabsTrigger>
             <TabsTrigger className="uppercase" value="requests">
               {dict.friends.sections.requests.title}
-              {friendRequests.length > 0 && (
+              {receivedPendingRequests.length > 0 && (
                 <Badge className="ml-2 bg-game-red text-white font-pixel text-[10px]">{friendRequests.length}</Badge>
               )}
             </TabsTrigger>
@@ -153,55 +175,16 @@ export default function FriendsPage() {
                         : dict.friends.sections.myFriends.noFriendsFound}
                     </p>
                   ) : (
-                    filteredFriends.map((friend) => (
-                      <div key={friend.sender_id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className="relative">
-                            <Avatar>
-                              {/* <AvatarImage src={getUserFromId(friend.sender_id)?.avatar || "/placeholder.svg"} alt={friend.name} /> */}
-                              <AvatarFallback className="font-pixel text-xs">
-                                P1
-                              </AvatarFallback>
-                            </Avatar>
-                            {/* <span
-                              className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background ${
-                                friend.status === "online" ? "bg-green-500" : "bg-gray-500"
-                              }`}
-                            /> */}
-                          </div>
-                          <div>
-                            <p className="font-pixel text-sm">{getUserFromId(friend.sender_id)?.name}</p>
-                            {/* <p className="font-pixel text-xs text-muted-foreground">
-                              {friend.status === "online" ? dict.userStatus.online : dict.userStatus.offline}
-                            </p> */}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => {
-                              toast({
-                                title: "Message Sent",
-                                description: `Opening chat with ${getUserFromId(friend.sender_id)?.name}`,
-                                duration: 3000,
-                              })
-                            }}
-                          >
-                            <MessageSquare className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8 text-destructive"
-                            onClick={() => handleRemoveFriend(friend.sender_id)}
-                          >
-                            <UserMinus className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))
+                    filteredFriends.map((request) => {
+                      const friend = getUserFromId(request.sender_id == userId ? request.receiver_id : request.sender_id)
+                      if (!friend) return null
+
+                      return (<FriendCard
+                        key={friend.id}
+                        friend={friend}
+                        onRemove={() => handleRemoveFriend(friend.id)}
+                      />)
+                    })
                   )}
                 </div>
               </CardContent>
@@ -217,48 +200,29 @@ export default function FriendsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {friendRequests.length === 0 ? (
+                {receivedPendingRequests.length === 0 ? (
                   <p className="text-center font-pixel text-sm text-muted-foreground py-4">
                     {dict.friends.sections.requests.noRequests}
                   </p>
                 ) : (
-                  friendRequests.map((request) => (
-                    <div key={request.sender_id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Avatar>
-                          {/* <AvatarImage src={request.avatar || "/placeholder.svg"} alt={request.name} /> */}
-                          <AvatarFallback className="font-pixel text-xs">
-                            P1
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-pixel text-sm">{getUserFromId(request.sender_id)?.name}</p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-green-500/20 text-green-500 hover:bg-green-500/30 hover:text-green-600"
-                          onClick={() => handleAcceptRequest(request.sender_id)}
-                        >
-                          <Check className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-600"
-                          onClick={() => handleRejectRequest(request.sender_id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))
+                  receivedPendingRequests.map((request) => {
+                    const friend = getUserFromId(request.sender_id)
+                    if (!friend) return null
+
+                    return (
+                      <FriendRequestCard
+                        key={friend.id}
+                        friend={friend}
+                        acceptRequest={() => handleAcceptRequest(friend.id)}
+                        declineRequest={() => handleDeclineRequest(friend.id)}
+                      />
+                    )
+                  })
                 )}
               </CardContent>
             </Card>
           </TabsContent>
+
           <TabsContent value="add" className="space-y-4">
             <Card>
               <CardHeader>
@@ -288,30 +252,16 @@ export default function FriendsPage() {
                         : dict.friends.sections.add?.noUsersFound || "No users found with that username"}
                     </p>
                   ) : (
-                    filteredUsers.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <Avatar>
-                            {/* <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} /> */}
-                            <AvatarFallback className="font-pixel text-xs">
-                              {user.name.substring(0, 2)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-pixel text-sm">{user.name}</p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 font-pixel text-xs"
-                          onClick={() => handleSendFriendRequest(user.id)}
-                        >
-                          <UserPlus className="h-4 w-4 mr-2" />
-                          {dict.friends.sections.add?.addButton || "Add Friend"}
-                        </Button>
-                      </div>
-                    ))
+                    filteredUsers.map((user) => {
+                      return (
+                        <UserCard
+                          key={user.id}
+                          user={user}
+                          sendRequest={() => handleSendFriendRequest(user.id)}
+                          relationStatus={getRelationStatus(user)}
+                        />
+                      )
+                    })
                   )}
                 </div>
               </CardContent>

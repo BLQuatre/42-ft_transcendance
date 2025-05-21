@@ -107,9 +107,9 @@ export class Game {
 
 		// Scoring
 		if (this.ball.x < 0)
-			this.scoring(this.left_team) ;
-		if (this.ball.x > 800)
 			this.scoring(this.right_team) ;
+		if (this.ball.x > 800)
+			this.scoring(this.left_team) ;
 	}
 
 	private paddleCollision(player: Player) {

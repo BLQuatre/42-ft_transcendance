@@ -33,30 +33,29 @@ export class Game {
 	}
 
 	getPlayerById(id: number): Player | undefined {
-		return [ ... this.left_team.players, ... this.right_team.players]
-			.find(player => player.id === id) ;
+		return [...this.left_team.players, ...this.right_team.players].find((player) => player.getId() === id);
 	}
 
 	getState(): State {
 		return {
 			left_team: {
-				score	: this.left_team.score,
-				players	: this.left_team.players.map(player => ({
-						top: player.paddle.top,
-						bot: player.paddle.bot
-					}))
+				score: this.left_team.score,
+				players: this.left_team.players.map((player) => ({
+					top: player.getPaddle().top,
+					bot: player.getPaddle().bot,
+				})),
 			},
 			right_team: {
-				score	: this.right_team.score,
-				players	: this.right_team.players.map(player => ({
-						top: player.paddle.top,
-						bot: player.paddle.bot
-					}))
+				score: this.right_team.score,
+				players: this.right_team.players.map((player) => ({
+					top: player.getPaddle().top,
+					bot: player.getPaddle().bot,
+				})),
 			},
 			ball: {
 				x: this.ball.x,
-				y: this.ball.y
-			}
+				y: this.ball.y,
+			},
 		} ;
 	}
 
@@ -71,7 +70,7 @@ export class Game {
 		team.players.forEach(player => {
 			player.resizeZone(areaBegin, (areaBegin + areaSize)) ;
 
-			const areaCenter = (player.zone.top + player.zone.bot) / 2 ;
+			const areaCenter = (player.getZone().top + player.getZone().bot) / 2 ;
 			const playerPaddleSize = (CONST.PADDLE_SIZE / team.players.length) ;
 
 			player.resizePaddle((areaCenter - (playerPaddleSize / 2)), (areaCenter + (playerPaddleSize / 2))) ;
@@ -110,10 +109,11 @@ export class Game {
 	}
 
 	private paddleCollision(player: Player) {
-		if (this.ball.y > player.paddle.top && this.ball.y < player.paddle.bot) {
-			const paddleCenter = (player.paddle.top + player.paddle.bot) / 2 ;
+		const paddle = player.getPaddle() ;
+		if (this.ball.y > paddle.top && this.ball.y < paddle.bot) {
+			const paddleCenter = (paddle.top + paddle.bot) / 2 ;
 			const distanceFromCenter = this.ball.y - paddleCenter ;
-			const normalizedOffset = distanceFromCenter / ((player.paddle.bot - player.paddle.top) / 2) ;
+			const normalizedOffset = distanceFromCenter / ((paddle.bot - paddle.top) / 2) ;
 
 			// 1. Determine new direction
 			const angle = normalizedOffset * (Math.PI / 4) ; // max ±45°

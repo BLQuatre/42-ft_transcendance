@@ -2,6 +2,7 @@
 export const FPS			= 60 ;
 export const BOARD_LENGTH	= 800 ;
 export const BOARD_HEIGHT	= 500 ;
+export const MAX_PLAYERS	= 8 ;
 
 
 // Player

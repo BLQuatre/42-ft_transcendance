@@ -1,58 +1,99 @@
 import { WebSocket } from 'ws';
 import { Range } from './types';
-import * as CONST from './constants' ;
+import * as CONST from './constants';
 
 
 export class Player {
-	id: number ;
-
-	paddle: Range ;
-	zone: Range ;
-
-	moving: { up: boolean, down: boolean } ;
-
-	socket?: WebSocket ; // TODO: check utility
+    private id: number;
+    private paddle: Range;
+    private zone: Range;
+    private moving: { up: boolean; down: boolean };
+    private ready: boolean;
+    private socket?: WebSocket;
 
 
-	constructor(id: number = 0, socket?: WebSocket) {
-		this.id = id ;
+    constructor(id: number = 0, socket?: WebSocket) {
+        this.id = id;
 
-		this.paddle = { top: 0, bot: 0 } ;
-		this.zone = { top: 0, bot: 0 } ;
+        this.paddle = { top: 0, bot: 0 };
+        this.zone = { top: 0, bot: 0 };
 
-		this.moving = { up: false, down: false } ;
+        this.moving = { up: false, down: false };
 
-		this.socket = socket ;
+        this.socket = socket;
 
-		this.autoUpdate() ;
-	}
+        this.ready = false;
 
-	autoUpdate() {
-		const interval = 1000 / CONST.FPS ;
+        this.autoUpdate();
+    }
 
-		setInterval(() => {
-			if (this.moving.up)		this.move(-CONST.PLAYER_MOV_SPD) ;
-			if (this.moving.down)	this.move( CONST.PLAYER_MOV_SPD) ;
-		}, interval) ;
-	}
+    private autoUpdate() {
+        const interval = 1000 / CONST.FPS;
 
-	setMoveUp(up: boolean)		{ this.moving.up = up ; }
-	setMoveDown(down: boolean)	{ this.moving.down = down ; }
-	resizePaddle(top: number, bot: number)	{ this.paddle = { top: top, bot: bot} ; }
-	resizeZone(top: number, bot: number)	{ this.zone = { top: top, bot: bot } ; }
+        setInterval(() => {
+            if (this.moving.up) this.move(-CONST.PLAYER_MOV_SPD);
+            if (this.moving.down) this.move(CONST.PLAYER_MOV_SPD);
+        }, interval);
+    }
 
-	private move(distance: number) { // a negative 'distance' means moving up, positive means down
-		this.paddle.top += distance ;
-		this.paddle.bot += distance ;
+    // Public methods to access private attributes
+    public getId() {
+        return this.id;
+    }
 
-		// Ensure being in the appropriate zone
-		if (this.paddle.top < this.zone.top) {
-			this.paddle.bot += this.zone.top - this.paddle.top ;
-			this.paddle.top = this.zone.top ;
-		}
-		if (this.paddle.bot > this.zone.bot) {
-			this.paddle.top += this.zone.bot - this.paddle.bot ;
-			this.paddle.bot = this.zone.bot ;
-		}
-	}
+    public getSocket() {
+        return this.socket;
+    }
+
+    public setMoveUp(up: boolean) {
+        this.moving.up = up;
+    }
+
+    public setMoveDown(down: boolean) {
+        this.moving.down = down;
+    }
+
+    public resizePaddle(top: number, bot: number) {
+        this.paddle = { top: top, bot: bot };
+    }
+
+    public resizeZone(top: number, bot: number) {
+        this.zone = { top: top, bot: bot };
+    }
+
+    // Ready state methods
+    public setReadyState(isReady: boolean) {
+        this.ready = isReady;
+    }
+
+    public toggleReadyState() {
+        this.ready = !this.ready;
+    }
+
+    public isReady() {
+        return this.ready;
+    }
+
+    public getPaddle(): Range {
+        return this.paddle;
+    }
+
+    public getZone(): Range {
+        return this.zone;
+    }
+
+    private move(distance: number) {
+        this.paddle.top += distance;
+        this.paddle.bot += distance;
+
+        // Ensure being in the appropriate zone
+        if (this.paddle.top < this.zone.top) {
+            this.paddle.bot += this.zone.top - this.paddle.top;
+            this.paddle.top = this.zone.top;
+        }
+        if (this.paddle.bot > this.zone.bot) {
+            this.paddle.top += this.zone.bot - this.paddle.bot;
+            this.paddle.bot = this.zone.bot;
+        }
+    }
 }

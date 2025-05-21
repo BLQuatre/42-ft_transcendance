@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 
-import { Game } from './game'
-import * as CONST from './constants' ;
+import { Game } from '@/lib/pong/game'
+import * as CONST from '@/lib/pong/constants' ;
 
 
 export default function PongGamePage() {
@@ -38,7 +38,7 @@ export default function PongGamePage() {
 		else						game.startUpdating()
 	}, [pausedState])
 
-	
+
 	useEffect(() => {
 		if (!canvasRef.current) return
 

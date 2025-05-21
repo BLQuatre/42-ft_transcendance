@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Users, CheckCircle, XCircle, Home, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
-import { cn } from "@/lib/Utils"
+import { cn } from "@/lib/utils"
 
 // Types
 export type Player = {

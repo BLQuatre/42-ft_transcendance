@@ -1,3 +1,3 @@
 import { UserEntity } from "../entities/User";
 
-export type PublicUser = Omit<UserEntity, 'password'> | null;
+export type PublicUser = Omit<UserEntity, 'password' | 'tfaEnable' | 'tfaSecret'> | null;

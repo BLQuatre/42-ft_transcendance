@@ -77,22 +77,25 @@ export const login = async (req: FastifyRequest<{ Body: LoginUser }>, reply: Fas
 	})
 
 	if (response) {
-		const accessToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_ACCESS, { expiresIn: '15min' });
-		const refreshToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_REFRESH, { expiresIn: '7D' });
-		return reply
-			.setCookie('refreshToken', refreshToken, {
-				path: '/',
-				httpOnly: true,
-				secure: true,
-				sameSite: 'strict',
-				maxAge: 7 * 24 * 60 * 60
-			})
-			.code(200)
-			.send({
-				message: "User logged in",
-				statusCode: 200,
-				user: response.data.user,
-				accessToken,
+		if (response.data.user.tfaEnable){
+			return reply.code(202).send({message: "We need our otp code to login you", statusCode: 202, id: response.data.user.id})
+		}
+			const accessToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_ACCESS, { expiresIn: '15min' });
+			const refreshToken = jwt.sign({ id: response.data.user.id, name: response.data.user.name }, JWT_REFRESH, { expiresIn: '7D' });
+			return reply
+				.setCookie('refreshToken', refreshToken, {
+					path: '/',
+					httpOnly: true,
+					secure: true,
+					sameSite: 'strict',
+					maxAge: 7 * 24 * 60 * 60
+				})
+				.code(200)
+				.send({
+					message: "User logged in",
+					statusCode: 200,
+					user: response.data.user,
+					accessToken,
 			})
 	}
 }

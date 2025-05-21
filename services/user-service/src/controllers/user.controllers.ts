@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 import { removePassword } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 import { PublicUser } from "../utils/types";
-import { LoginUser } from "../utils/interface";
+import { LoginUser, SimpleTfaSecret} from "../utils/interface";
 
 const User = AppDataSource.getRepository(UserEntity);
 
@@ -228,4 +228,44 @@ export const badRoute = async (req: FastifyRequest, reply: FastifyReply) => {
 		message: "unknow route",
 		statusCode: 404
 	});
+}
+
+export const setQrCode = async (
+  req: FastifyRequest<{ Body: SimpleTfaSecret }>,
+  reply: FastifyReply
+) => {
+  const { id } = req.params as { id: string };
+
+  const user = await User.findOneBy({ id });
+
+  if (!user) {
+    return reply.code(404).send({
+      message: "Unable to find user",
+      statusCode: 404
+    });
+  }
+
+  await User.update(user.id, {
+    tfaEnable: true,
+    tfaSecret: req.body // 👈 typé et nettoyé
+  });
+
+  return reply.code(201).send({
+    message: "QR code saved",
+    statusCode: 201
+  });
+};
+
+export const getQrCodeSecret = async ( req: FastifyRequest, reply: FastifyReply) => {
+	const { id } = req.params as { id: string};
+
+	const user = await User.findOneBy({id});
+
+	if (!user){
+		return reply.code(404).send({
+			message: "unable to find user",
+			statusCode: 404
+		})
+	}
+	return reply.code(200).send({message: "request succesfull", statusCode: 200, secret:user.tfaSecret.base32});
 }

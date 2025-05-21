@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Dino - Transcendance',
+  title: 'Dino Multi - Transcendance',
 }
 
 export default function RegisterLayout({

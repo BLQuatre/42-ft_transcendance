@@ -1,25 +1,46 @@
 "use client"
 
+import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
+import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom"
+
 
 export default function DinoGamePage() {
-	const	canvasRef = useRef<HTMLCanvasElement>(null)
-	const	[playerId, setPlayerId] = useState<number | null>(null)
-	const	[gameState, setGameState] = useState<any>(null)
-	const	[frame, setFrame] = useState(36)
-	const	keysRef = useRef({ up: false, down: false })
+	const params = useParams()
+	const roomId = params.roomId as string
+
+	const canvasRef = useRef<HTMLCanvasElement>(null)
+	const [gameState, setGameState] = useState<any>(null)
+
+	const [gameFinished, setGameFinished] = useState<boolean>(false)
+	const gameFinishedRef = useRef(gameFinished)
+	useEffect(() => {
+		gameFinishedRef.current = gameFinished
+	}, [gameFinished])
 
 	const socketRef = useRef<WebSocket | null>(null)
+	const router = useRouter()
 
-	// Constants
-	const FRAME_VAL = 36  // Keeping original value for slower animation
+	const [playerId, setPlayerId] = useState<number | null>(null)
+	const playerIdRef = useRef<number | null>(null);
+	useEffect(() => {
+		playerIdRef.current = playerId;
+	}, [playerId]);
 
-	const TYPE_CACTUS = 1
-	const TYPE_SMALL = 2
-	const TYPE_GROUP = 3
-	const TYPE_PTERO = 4
+	const keysRef = useRef({ up: false, down: false })
+
+	// Waiting room state
+	const [isLoading, setIsLoading] = useState(true)
+	const [room, setRoom] = useState<GameRoomType | null>(null)
+	const [gameInProgress, setGameInProgress] = useState(false)
+
+	const FRAME_VAL = 36
+	const [frame, setFrame] = useState(36)
+
+	const TYPE_CACTUS = 1 ; const TYPE_SMALL = 2 ; const TYPE_GROUP = 3 ; const TYPE_PTERO = 4 ;
 
 
 	// Load all images once
@@ -58,44 +79,114 @@ export default function DinoGamePage() {
 		}
 	}, [])
 
-	// WebSocket setup
+	// Initialize the socket connection
 	useEffect(() => {
-		const socket = new WebSocket("ws://localhost:3003")
-		socketRef.current = socket
-
+		if (!roomId) {
+			console.error("roomId is undefined or invalid during WebSocket initialization");
+			return;
+		}
+	
+		// Prevent creating multiple connections
+		if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
+			console.log("WebSocket connection already exists and is open");
+			return;
+		}
+	
+		console.log("Creating new WebSocket connection");
+		
+		const socket = new WebSocket("ws://localhost:3003");
+		socketRef.current = socket;
+	
 		socket.addEventListener("open", () => {
-			console.log("Connected to server")
-		})
-
+			console.log("Connected to game server");
+			
+			// After connection, immediately send join_room message with roomId
+			socket.send(JSON.stringify({ 
+				type: "join_room", 
+				roomId: roomId 
+			}));
+		});
+	
 		socket.addEventListener("message", (event) => {
-			const msg = JSON.parse(event.data)
-			if (msg.type === "assign") setPlayerId(msg.playerId)
-			if (msg.type === "state") setGameState(msg.gameState)
-		})
+			try {
+				const msg = JSON.parse(event.data);
+				console.log("Received WebSocket message:", msg.type);
+				
+				// Handle different message types
+				if (msg.type === "assign")
+					setPlayerId(msg.playerId);
+				else if (msg.type === "state")
+					setGameState(msg.gameState);
+				else if (msg.type === "room_update") {
+					if (!msg.room) {
+						console.error("Received room_update with no room data");
+						return;
+					}
+					
+					// Transform backend room state to match frontend format
+					const transformedRoom: GameRoomType = {
+						id: msg.room.id,
+						name: `DINO Room #${msg.room.id.slice(-6)}`,
+						gameType: "dino",
+						maxPlayers: 8,
+						status: msg.room.status,
+						players: msg.room.players.map((p: any) => ({
+							id: p.id.toString(),
+							name: p.name || `Player ${p.id}`,
+							avatar: null,
+							isReady: p.isReady,
+							isYou: p.id === playerIdRef.current
+						})) as Player[]
+					};
+					setRoom(transformedRoom);
+					setIsLoading(false);
+				} else if (msg.type === "game_start") {
+					console.log("Game starting!");
+					setGameInProgress(true);
+				} else if (msg.type === "game_end")
+					setGameFinished(true);
+			} catch (error) {
+				console.error("Error processing WebSocket message:", error);
+			}
+		});
+	
+		socket.addEventListener("close", (event) => {
+			console.log("WebSocket connection closed:", event.code, event.reason);
+			socketRef.current = null;
+			setIsLoading(false);
+			setRoom(null);
 
-		return () => socket.close()
-	}, [])
+			setTimeout(() => {
+				router.push('/');
+			}, 3000);
+		});
+	
+		socket.addEventListener("error", (error) => {
+			console.error("WebSocket error:", JSON.stringify(error));
+		});
+	
+		// Cleanup on unmount
+		return () => {
+			console.log("Cleaning up WebSocket connection");
+			if (socket && socket.readyState !== WebSocket.CLOSED) {
+				socket.close();
+			}
+			socketRef.current = null;
+		};
+	}, [roomId]);
 
 	// Input handling
 	useEffect(() => {
 		if (!playerId) return
 
 		const down = (e: KeyboardEvent) => {
-			if (e.key === " " || e.key === "ArrowUp") {
-				keysRef.current.up = true;
-			}
-			if (e.key === "ArrowDown") {
-				keysRef.current.down = true;
-			}
+			if (e.key === " " || e.key === "ArrowUp")	{ keysRef.current.up = true; }
+			if (e.key === "ArrowDown")					{ keysRef.current.down = true; }
 		}
 
 		const up = (e: KeyboardEvent) => {
-			if (e.key === " " || e.key === "ArrowUp") {
-				keysRef.current.up = false;
-			}
-			if (e.key === "ArrowDown") {
-				keysRef.current.down = false;
-			}
+			if (e.key === " " || e.key === "ArrowUp")	{ keysRef.current.up = false; }
+			if (e.key === "ArrowDown")					{ keysRef.current.down = false; }
 		}
 
 		window.addEventListener("keydown", down)
@@ -204,12 +295,39 @@ export default function DinoGamePage() {
 			ctx.fillText(`SCORE: ${gameState.score}`, 20, 30)
 
 			setFrame(f => (f - 1 + FRAME_VAL) % FRAME_VAL)
+			
 			requestAnimationFrame(draw)
 		}
+		const animId = requestAnimationFrame(draw)
 
-		requestAnimationFrame(draw)
+		return () => {
+			cancelAnimationFrame(animId)
+		}
 	}, [gameState, imagesLoaded])
 
+
+	// Toggle ready status
+	const handleToggleReady = () => {
+		if (!socketRef.current || playerIdRef.current === null) return
+		
+		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }))
+	}
+		
+	// If we're still in the waiting room phase
+	if (!gameInProgress) {
+		return (
+			<div className="min-h-screen bg-background">
+				<MainNav />
+				<GameRoom
+					room={room}
+					isLoading={isLoading}
+					onToggleReady={handleToggleReady}
+				/>
+			</div>
+		)
+	}
+
+	// Game is in progress, show the game view
 	return (
 		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
 			<MainNav />
@@ -218,12 +336,7 @@ export default function DinoGamePage() {
 					<div className="space-y-4">
 						<Card className="overflow-hidden">
 							<CardContent className="p-0">
-								<canvas
-									ref={canvasRef}
-									width={800}
-									height={500}
-									className="w-full h-auto bg-game-dark pixel-border"
-								/>
+								<canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
 							</CardContent>
 						</Card>
 					</div>

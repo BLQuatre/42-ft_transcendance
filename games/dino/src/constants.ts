@@ -1,6 +1,7 @@
 // General
 export const FPS				= 30 ;
 export const SCREEN_WIDTH		= 800 ;
+export const MAX_PLAYERS		= 8 ;
 
 
 // Player

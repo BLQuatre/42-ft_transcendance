@@ -55,7 +55,7 @@ export class Obstacle {
 	}
 
 
-	get_x()		{ return this.x ; }
-	get_y()		{ return this.y ; }
-	get_type()	{ return this.type ; }
+	getX()		{ return this.x ; }
+	getY()		{ return this.y ; }
+	getType()	{ return this.type ; }
 }

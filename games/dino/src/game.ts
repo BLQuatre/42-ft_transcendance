@@ -1,32 +1,47 @@
-import { Player } from './player' ;
 import { Obstacle } from './obstacle' ;
+import { Player } from './player' ;
 import * as CONST from './constants' ;
 
 export class Game {
-	score:number = 0 ; // Ramping up constantly, attributed to a player when he "loses"
-	dinos: { player: Player, score: number }[] = [] ;
-	obstacles: Obstacle[] = [] ;
+	private score: number ; // Ramping up constantly, attributed to a player when he "loses"
+	private dinos: { player: Player, score: number }[] ;
+	private obstacles: Obstacle[] ;
+	private finished: boolean ;
 	
-	private frameCount:number = 0 ;
-	private isUpdating:boolean = false ;
-	private lastWasClose:boolean = false ;
+	private frameCount:number ; // Made for the score to scale every three frames only
+	private lastWasClose:boolean ;
 
+	private intervalID: NodeJS.Timeout | null = null ;
 
-	autoUpdate() {
-		if (this.isUpdating)
-			return ;
-		this.isUpdating = true ;
+	constructor() {
+		this.score = 0 ;
+		this.dinos = [] ;
+		this.obstacles = [] ;
+		this.finished = false ;
 
+		this.frameCount = 0 ;
+		this.lastWasClose = false ;
+	}
+
+	startUpdating() {
+		if (this.intervalID !== null) return ;
+		
 		const interval = 1000 / CONST.FPS ;
 	
-		setInterval(() => {
+		this.intervalID = setInterval(() => {
 			if (this.frameCount === 0)
 				this.score++ ;
 			this.frameCount = ((this.frameCount + 1) % 3) ;
 
-			// TODO: see if a timeout before obstacles is needed
 			this.handleObstacle() ;
 		}, interval) ;
+	}
+
+	stopUpdating() {
+		if (this.intervalID !== null) {
+			clearInterval(this.intervalID) ;
+			this.intervalID = null ; // optional, but good practice
+		}
 	}
 	
 	private handleObstacle() {
@@ -46,15 +61,15 @@ export class Game {
 				this.obstacles.push(new Obstacle(type, this.score)) ;
 		}
 	
-		this.obstacles = this.obstacles.filter(obstacle => obstacle.get_x().from >= 0); // Erase off-screen obstacles
+		this.obstacles = this.obstacles.filter(obstacle => obstacle.getX().from >= 0); // Erase off-screen obstacles
 
 		this.checkObstacles() ;
 	}
 	
 
 	private canSpawnObstacle(type: 1 | 2 | 3 | 4): boolean {
-		const lastObstaclePos	= this.obstacles.at(-1)?.get_x()?.from ?? 0 ;
-		const lastType 			= this.obstacles.at(-1)?.get_type() ?? 0 ;
+		const lastObstaclePos	= this.obstacles.at(-1)?.getX()?.from ?? 0 ;
+		const lastType 			= this.obstacles.at(-1)?.getType() ?? 0 ;
 
 		const canSpawnFar = lastObstaclePos < CONST.SCREEN_WIDTH - CONST.MIN_OBSTCL_SPAN * CONST.CACTUS_WIDTH;
 		const canSpawnClose = (
@@ -73,19 +88,19 @@ export class Game {
 
 	getNumberPlayer() { return this.dinos.length ; }
 
-	getPlayerById(id: number): Player | undefined { return this.dinos.find(dino => dino.player.get_id() === id)?.player ; }
+	isFinished(): boolean { return (this.finished) ; }
 
 	getState() {
 		return {
 			dinos: this.dinos.map(dino => ({
-				y: dino.player.get_y().from,
-				lean: dino.player.get_leaning(),
+				y: dino.player.getY().from,
+				lean: dino.player.getLeaning(),
 				score: dino.score
 			})),
 			obstacles: this.obstacles.map(obstacle => ({
-				x: obstacle.get_x().from,
-				y: obstacle.get_y().to,
-				type: obstacle.get_type()
+				x: obstacle.getX().from,
+				y: obstacle.getY().to,
+				type: obstacle.getType()
 			})),
 			score: this.score
 		}
@@ -98,19 +113,19 @@ export class Game {
 			return ;
 
 		this.obstacles.forEach(obstacle => {
-			const obstacle_x = obstacle.get_x() ;
-			const first_dino_x = this.dinos.at(0)?.player.get_x() ?? { from: 0, to: 0 } ;	// assuming every players share the same x (as it's not modifiable)
+			const obstacle_x = obstacle.getX() ;
+			const first_dino_x = this.dinos.at(0)?.player.getX() ?? { from: 0, to: 0 } ;	// assuming every players share the same x (as it's not modifiable)
 																							// still using ?? logic to make following code lighter
 			
 			if (!(obstacle_x.to > first_dino_x.from && obstacle_x.from < first_dino_x.to)) // checking collision between obstacle and dino (x-axis wise)
 				return ;
 
-			const obstacle_y = obstacle.get_y() ;
+			const obstacle_y = obstacle.getY() ;
 			for (const dino of this.dinos) {
 				if (dino.score > -1)
 					continue ;
 
-				const dino_y = dino.player.get_y() ;
+				const dino_y = dino.player.getY() ;
 
 				if (obstacle_y.to > dino_y.from && obstacle_y.from < dino_y.to) { // checking collision between obstacle and dino (y-axis wise)
 					dino.player.stopUpdating() ;
@@ -118,5 +133,12 @@ export class Game {
 				}
 			}
 		}) ;
+
+		if (this.dinos.find((dino) => dino.score === -1) === undefined) {
+			this.stopUpdating()
+			setTimeout(() => {
+				this.finished = true ;
+			}, 100) ;
+		}
 	}
 }

@@ -61,11 +61,6 @@ export class Player {
         this.zone = { top: top, bot: bot };
     }
 
-    // Ready state methods
-    public setReadyState(isReady: boolean) {
-        this.ready = isReady;
-    }
-
     public toggleReadyState() {
         this.ready = !this.ready;
     }

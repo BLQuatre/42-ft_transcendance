@@ -1,6 +1,7 @@
 import { WebSocket } from 'ws';
-import * as CONST from './constants' ;
 import { Range } from './types' ;
+import * as CONST from './constants' ;
+
 
 export class Player {
 	private id: number ;
@@ -11,7 +12,8 @@ export class Player {
 	private in_jump: boolean ; // true when jumping, false when falling or on the ground
 	private leaning: boolean ;
 
-	socket?: WebSocket ;
+    private ready: boolean;
+	private socket?: WebSocket ;
 	
 	private intervalID: NodeJS.Timeout | null = null ;
 
@@ -26,33 +28,15 @@ export class Player {
 
 		this.socket = socket ;
 
-		this.autoUpdate() ;
+		this.ready = false ;
+
+		this.startUpdating() ;
 	}
 
-	private autoUpdate() {
+	private startUpdating() {
 		const interval = 1000 / CONST.FPS ;
 		
-		this.intervalID = setInterval(() => {
-			if (this.in_jump && this.y.from < CONST.JUMP_MAX_Y) {
-				this.y.to += this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
-				this.y.from += this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
-			}
-			else if (this.in_jump && this.y.from >= CONST.JUMP_MAX_Y)
-				this.in_jump = false ;
-			else if (!this.in_jump && this.y.from > 0) {
-				this.y.to -= this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
-				this.y.from -= this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
-			}
-
-			if (this.y.from > CONST.JUMP_MAX_Y) {
-				this.y.from	= CONST.JUMP_MAX_Y ;
-				this.y.to	= this.y.from + CONST.DINO_HEIGHT ;
-			}
-			if (this.y.from < 0) {
-				this.y.from	= 0 ;
-				this.y.to	= this.y.from + CONST.DINO_HEIGHT ;
-			}
-		}, interval) ;
+		this.intervalID = setInterval(() => { this.autoUpdate() }, interval) ;
 	}
 
 	stopUpdating() {
@@ -61,13 +45,40 @@ export class Player {
 			this.intervalID = null ; // optional, but good practice
 		}
 	}
+
+	private autoUpdate() {
+		if (this.in_jump && this.y.from < CONST.JUMP_MAX_Y) {
+			this.y.to += this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+			this.y.from += this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+		}
+		else if (this.in_jump && this.y.from >= CONST.JUMP_MAX_Y)
+			this.in_jump = false ;
+		else if (!this.in_jump && this.y.from > 0) {
+			this.y.to -= this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+			this.y.from -= this.y.from < CONST.SLOW_ZONE_Y ? CONST.JUMP_SPEED : CONST.JUMP_SPEED / 3 ;
+		}
+
+		if (this.y.from > CONST.JUMP_MAX_Y) {
+			this.y.from	= CONST.JUMP_MAX_Y ;
+			this.y.to	= this.y.from + CONST.DINO_HEIGHT ;
+		}
+		if (this.y.from < 0) {
+			this.y.from	= 0 ;
+			this.y.to	= this.y.from + CONST.DINO_HEIGHT ;
+		}
+	}
 	
 	
-	
-	get_id()		{ return this.id ; }
-	get_x()			{ return this.x ; }
-	get_y()			{ return this.y ; }
-	get_leaning()	{ return this.leaning ; }
+	getId()			{ return this.id ; }
+	getX()			{ return this.x ; }
+	getY()			{ return this.y ; }
+	getLeaning()	{ return this.leaning ; }
+	isReady()		{ return this.ready ; }
+	getSocket()		{ return this.socket ; }
+
+    toggleReadyState() {
+        this.ready = !this.ready;
+    }
 	
 	jump() {
 		if (this.y.from <= 0 && !this.leaning)

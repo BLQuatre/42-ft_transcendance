@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
-import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom" // Import your GameRoom component
+import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom"
 
 import * as CONST from '@/lib/pong/constants' ;
 
@@ -39,7 +39,6 @@ export default function PongGamePage() {
 	const [gameInProgress, setGameInProgress] = useState(false)
 
 
-	
 	// Initialize the socket connection
 	useEffect(() => {
 		if (!roomId) {
@@ -55,7 +54,6 @@ export default function PongGamePage() {
 	
 		console.log("Creating new WebSocket connection");
 		
-		// Your server is set up to accept connections on ws://localhost:3002 without a path
 		const socket = new WebSocket("ws://localhost:3002");
 		socketRef.current = socket;
 	
@@ -75,13 +73,11 @@ export default function PongGamePage() {
 				console.log("Received WebSocket message:", msg.type);
 				
 				// Handle different message types
-				if (msg.type === "assign") {
-					console.log("Assigned player ID:", msg.playerId);
+				if (msg.type === "assign") 
 					setPlayerId(msg.playerId);
-				} else if (msg.type === "state")
+				else if (msg.type === "state")
 					setGameState(msg.gameState);
 				else if (msg.type === "room_update") {
-					console.log("Room update received:", msg.room);
 					if (!msg.room) {
 						console.error("Received room_update with no room data");
 						return;
@@ -99,7 +95,7 @@ export default function PongGamePage() {
 							name: p.name || `Player ${p.id}`,
 							avatar: null,
 							isReady: p.isReady,
-							isYou: p.id === playerIdRef.current // Use current playerId value
+							isYou: p.id === playerIdRef.current
 						})) as Player[]
 					};
 					setRoom(transformedRoom);
@@ -194,7 +190,6 @@ export default function PongGamePage() {
 			draw()
 			if (gameFinishedRef.current === false)
 				requestAnimationFrame(gameLoop)
-			// requestAnimationFrame(gameLoop)
 		}
 		const animId = requestAnimationFrame(gameLoop)
 	

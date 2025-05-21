@@ -17,6 +17,8 @@ export class Game {
 	}
 
 	startUpdating() {
+		if (this.intervalID !== null) return ;
+
 		const interval = 1000 / CONST.FPS ;
 
 		this.intervalID = setInterval(() => this.update(), interval) ;
@@ -32,10 +34,6 @@ export class Game {
 
 	getNumberPlayer(): number {
 		return (this.left_team.players.length + this.right_team.players.length) ;
-	}
-
-	getPlayerById(id: number): Player | undefined {
-		return [...this.left_team.players, ...this.right_team.players].find((player) => player.getId() === id);
 	}
 
 	isFinished(): boolean {

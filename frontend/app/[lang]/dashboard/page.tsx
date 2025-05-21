@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 import { useAuth } from "@/contexts/auth-context"
+import UpdatePassword from "./components/UpdatePassword"
 
 // Sample data for charts
 const gamePlayData = [
@@ -202,7 +203,6 @@ export default function DashboardPage() {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const [saveSkinDialogOpen, setSaveSkinDialogOpen] = useState(false)
-  const [updatePasswordDialogOpen, setUpdatePasswordDialogOpen] = useState(false)
   const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
   const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
@@ -219,19 +219,6 @@ export default function DashboardPage() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     setIsLoading(true)
-
-    axios
-      .get("/api/auth/access", {
-        headers: {
-          Authorization: `token_here`,
-        },
-      })
-      .then((response) => {
-        console.log("Token valid:", response.data)
-      })
-      .catch((error) => {
-        console.error("Token invalid:", error.response?.data || error.message)
-      })
 
     setTimeout(() => {
       setIsLoading(false)
@@ -270,17 +257,6 @@ export default function DashboardPage() {
     console.log("Saving skin selections...")
     // Implement actual skin saving logic here
     setSaveSkinDialogOpen(false)
-  }
-
-  const handleUpdatePassword = (event: React.FormEvent) => {
-    event.preventDefault()
-    setUpdatePasswordDialogOpen(true)
-  }
-
-  const confirmUpdatePassword = () => {
-    console.log("Updating password...")
-    // Implement actual password update logic here
-    setUpdatePasswordDialogOpen(false)
   }
 
   const handleUploadAvatar = () => {
@@ -804,48 +780,7 @@ export default function DashboardPage() {
               </TabsContent>
 
               <TabsContent value="security" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-sm uppercase">
-                      {dict.dashboard.sections.settings.security.password.title}
-                    </CardTitle>
-                    <CardDescription className="font-pixel text-xs uppercase">
-                      {dict.dashboard.sections.settings.security.password.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <form onSubmit={handleUpdatePassword} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="currentPassword" className="font-pixel text-xs uppercase">
-                          {dict.dashboard.sections.settings.security.password.current}
-                        </Label>
-                        <Input id="currentPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="newPassword" className="font-pixel text-xs uppercase">
-                          {dict.dashboard.sections.settings.security.password.new}
-                        </Label>
-                        <Input id="newPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword" className="font-pixel text-xs uppercase">
-                          {dict.dashboard.sections.settings.security.password.confirm}
-                        </Label>
-                        <Input id="confirmPassword" type="password" className="font-pixel text-sm h-10 bg-muted" />
-                      </div>
-
-                      <Button
-                        type="submit"
-                        className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-                        disabled={isLoading}
-                      >
-                        {isLoading ? dict.common.updating : dict.dashboard.sections.settings.security.password.update}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
+                <UpdatePassword />
 
                 <Card>
                   <CardHeader>
@@ -981,35 +916,6 @@ export default function DashboardPage() {
               onClick={confirmSaveSkins}
             >
               Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Update Password Confirmation Dialog */}
-      <Dialog open={updatePasswordDialogOpen} onOpenChange={setUpdatePasswordDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-pixel text-lg uppercase">Confirm Password Update</DialogTitle>
-            <DialogDescription className="font-pixel text-xs uppercase">
-              Are you sure you want to update your password?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="font-pixel text-xs uppercase"
-              onClick={() => setUpdatePasswordDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              className="font-pixel text-xs uppercase bg-game-blue hover:bg-game-blue/90"
-              onClick={confirmUpdatePassword}
-            >
-              Update Password
             </Button>
           </DialogFooter>
         </DialogContent>

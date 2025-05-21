@@ -34,7 +34,7 @@ const start = async () => {
                 }
                 currentRoom = rooms.get(roomId)!;
 
-                if (currentRoom.getPlayers().length < CONST.MAX_PLAYERS) {
+                if (currentRoom.getPlayers().length < CONST.MAX_PLAYERS && !currentRoom.getGame()) {
                     assignedPlayer = new Player(++id, ws);
                     currentRoom.addPlayer(assignedPlayer);
 

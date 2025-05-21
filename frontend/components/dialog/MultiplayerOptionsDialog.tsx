@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -32,7 +31,6 @@ export function MultiplayerOptionsDialog({
   getTextColorClass,
   getBorderColorClass,
 }: MultiplayerOptionsDialogProps) {
-  const router = useRouter()
   const [roomCode, setRoomCode] = useState("")
   const [selectedOption, setSelectedOption] = useState<"create" | "join" | null>(null)
   const [playerCount, setPlayerCount] = useState<2 | 4 | 6 | 8>(2)

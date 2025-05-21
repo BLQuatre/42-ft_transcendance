@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
@@ -13,6 +14,7 @@ export default function PongGamePage() {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [gameState, setGameState] = useState<PongState | null>(null)
 	const socketRef = useRef<WebSocket | null>(null)
+	const router = useRouter()
 
 	const [playerId, setPlayerId] = useState<number | null>(null)
 	const playerIdRef = useRef<number | null>(null);
@@ -108,6 +110,12 @@ export default function PongGamePage() {
 		socket.addEventListener("close", (event) => {
 			console.log("WebSocket connection closed:", event.code, event.reason);
 			socketRef.current = null;
+			setIsLoading(false);
+			setRoom(null);
+
+			setTimeout(() => {
+				router.push('/');
+			}, 3000);
 		});
 	
 		socket.addEventListener("error", (error) => {
@@ -215,26 +223,13 @@ export default function PongGamePage() {
 	
 	// If we're still in the waiting room phase
 	if (!gameInProgress) {
-		// Create default room data if not provided by server yet
-		const defaultRoom: GameRoomType = room || {
-			id: roomId,
-			name: `PONG Room #${roomId.slice(-4)}`,
-			gameType: "pong",
-			maxPlayers: 4,
-			status: "waiting",
-			players: []
-		}
-	
 		return (
 			<div className="min-h-screen bg-background">
 				<MainNav />
 				<GameRoom
-					room={defaultRoom}
+					room={room}
 					isLoading={isLoading}
-					countdown={null}
 					onToggleReady={handleToggleReady}
-					onGameStart={() => {}}
-					showBackButton={true}
 				/>
 			</div>
 		)

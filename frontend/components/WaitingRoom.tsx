@@ -29,19 +29,13 @@ export type GameRoom = {
 interface GameRoomProps {
 	room: GameRoom | null
 	isLoading: boolean
-	countdown: number | null
 	onToggleReady: () => void
-	onGameStart: () => void
-	showBackButton?: boolean
 }
 
 export default function GameRoom({
 	room,
 	isLoading,
-	countdown,
 	onToggleReady,
-	onGameStart,
-	showBackButton = true,
 }: GameRoomProps) {
 	const [copied, setCopied] = useState(false)
 	const isPong = room?.gameType === "pong"
@@ -59,10 +53,18 @@ export default function GameRoom({
 		}
 	}
 
-	if (isLoading || !room) {
+	if (isLoading) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
 				<div className="font-pixel text-lg animate-pulse">CONNECTING TO GAME SERVER...</div>
+			</div>
+		)
+	}
+
+	if (!room) {
+		return (
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="font-pixel text-lg animate-pulse">ROOM FULL OR GAME LAUNCHED !</div>
 			</div>
 		)
 	}
@@ -84,7 +86,7 @@ export default function GameRoom({
 		<div className="min-h-screen bg-background">
 			<div className="container px-4 py-6 mx-auto max-w-5xl">
 				{/* Back Button - with more space below */}
-				{showBackButton && (
+				{(
 					<div className="mb-8">
 						<Button
 							variant="outline"

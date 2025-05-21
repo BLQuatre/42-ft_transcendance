@@ -2,6 +2,10 @@ dans le /profile/[id] faire en sorte que le GAME HISTORY -> HISTORY
 Si on use /components/ui/Switch.tsx le laisser sinon penser a l'enlever, il est seulement use sur le dashboard pour 2FA
 Ajouter des elements a droite/gauche de la page du pong (details si il reste du temps)
 Faire les toasts en mode retro && ajouter des animations
-Ajouter la page 404 en mode DVD
 Mettre a jour les traductions
 
+Faire en sorte de rediriger vers la page 404 avec la bonne [lang] pour le moment ca redirige vers /en/not-found
+
+
+Gerer l'affichage du chat par rapport au token
+Remove the number of players when creating the room 

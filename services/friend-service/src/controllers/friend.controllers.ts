@@ -40,6 +40,11 @@ export const createFriend = async (req: FastifyRequest, reply: FastifyReply) => 
 		{ sender_id: senderId, receiver_id: id}
 	]});
 	if (isExist) {
+		if (isExist.status === FriendRequestStatus.BLOCKED)
+			return reply.code(200).send({
+				message: "Ok",
+				statusCode: 200
+			})
 		return reply.code(409).send({
 			message: 'the friend request already exist',
 			statusCode: 409
@@ -172,7 +177,13 @@ export const responseFriend = async (req: FastifyRequest<{ Body: { status: Frien
 			statusCode: 403
 		});
 	}
-
+	if (req.body.status == FriendRequestStatus.REFUSED){
+		Friend.delete(friendRequest);
+		return reply.code(200).send({
+			message: 'Friend declined',
+			statusCode: 200
+		})
+	}
 	await Friend.update(friendRequest, {
 		status: req.body.status,
 		updated_at: new Date()

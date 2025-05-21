@@ -153,6 +153,11 @@ export const updateUser = async (req: FastifyRequest<{Body: CreateUserDto}>, rep
 	});
 
 	const res = await User.findOneBy({ id: userFind.id })
+	if (!res)
+		return reply.code(404).send({
+			message: "User not found",
+			statusCode: 404
+		})
 	const user = removePassword(res);
 	return reply.code(201).send({
 		message: 'User updated',
@@ -268,4 +273,14 @@ export const getQrCodeSecret = async ( req: FastifyRequest, reply: FastifyReply)
 		})
 	}
 	return reply.code(200).send({message: "request succesfull", statusCode: 200, secret:user.tfaSecret.base32});
+}
+
+export const heartbeat = async (req: FastifyRequest, reply: FastifyReply) => {
+	const { id } = req.params as { id: string };
+
+	await User.update(id, {
+	lastSeenAt: new Date(),	
+	})
+
+	return reply.code(200).send({ message: 'Ok', statusCode: 200});
 }

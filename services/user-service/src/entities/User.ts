@@ -29,10 +29,15 @@ export class UserEntity {
 	})
 	tfaSecret!: SimpleTfaSecret
 
+	@Column({ nullable: true })
+	avatar!: string
+
 	@CreateDateColumn()
 	created_at!: Date
 
 	@CreateDateColumn()
 	updated_at!: Date
 
+	@Column({ type: 'timestamp', nullable: true })
+	lastSeenAt!: Date
 }

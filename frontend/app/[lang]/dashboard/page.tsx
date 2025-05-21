@@ -12,11 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
-import { Switch } from "@/components/ui/Switch"
 import { Textarea } from "@/components/ui/TextArea"
 import { Separator } from "@/components/ui/Separator"
 import { SkinSelector } from "@/components/SkinSelector"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
+import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog"
 import { LogOut } from "lucide-react"
 import axios from "axios"
 import { useDictionary } from "@/hooks/UseDictionnary"
@@ -201,6 +201,10 @@ export default function DashboardPage() {
   const [saveSkinDialogOpen, setSaveSkinDialogOpen] = useState(false)
   const [updatePasswordDialogOpen, setUpdatePasswordDialogOpen] = useState(false)
   const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
+  const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const [secretHash, setSecretHash] = useState<string | undefined>(undefined)
+  const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false)
 
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
@@ -297,6 +301,46 @@ export default function DashboardPage() {
     console.log("Removing avatar...")
     // Implement actual avatar removal logic here
     setRemoveAvatarDialogOpen(false)
+  }
+
+  const handleSetup2FA = async () => {
+    // In a real app, you would fetch the secret hash from your backend here
+    try {
+      setIsLoading(true)
+
+      // Simulate API call to backend to get a secret hash
+      // In a real app, this would be an actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // Mock response from backend with the secret hash
+      const mockResponse = {
+        success: true,
+        data: {
+          secret: "JBSWY3DPEHPK3PXP", // Example secret hash from backend
+        },
+      }
+
+      if (mockResponse.success) {
+        // Store the secret hash from the backend
+        setSecretHash(mockResponse.data.secret)
+        // Open the 2FA setup dialog
+        setTwoFactorSetupOpen(true)
+      } else {
+        console.error("Failed to get 2FA secret from server")
+      }
+    } catch (error) {
+      console.error("Error initializing 2FA:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handle2FAComplete = () => {
+    // Simply enable 2FA
+    setTwoFactorEnabled(true)
+
+    // In a real app, you would make an API call to confirm 2FA is enabled
+    console.log("2FA has been enabled successfully")
   }
 
   const dict = useDictionary()
@@ -809,16 +853,23 @@ export default function DashboardPage() {
                       <div className="space-y-0.5">
                         <h3 className="font-pixel text-sm">2FA STATUS</h3>
                         <p className="font-pixel text-xs text-muted-foreground">
-                          TWO-FACTOR AUTHENTICATION IS CURRENTLY DISABLED
+                          {twoFactorEnabled
+                            ? "TWO-FACTOR AUTHENTICATION IS ENABLED"
+                            : "TWO-FACTOR AUTHENTICATION IS CURRENTLY DISABLED"}
                         </p>
                       </div>
-                      <Switch />
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button variant="outline" className="font-pixel">
-                      SETUP 2FA
-                    </Button>
+                    {twoFactorEnabled ? (
+                      <Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
+                        REMOVE 2FA
+                      </Button>
+                    ) : (
+                      <Button variant="outline" className="font-pixel" onClick={handleSetup2FA}>
+                        SETUP 2FA
+                      </Button>
+                    )}
                   </CardFooter>
                 </Card>
               </TabsContent>
@@ -829,6 +880,16 @@ export default function DashboardPage() {
 
       {/* Match Details Dialog */}
       <MatchDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} match={selectedMatch} />
+
+      {/* 2FA Setup Dialog with the secret hash from backend */}
+      <TwoFactorSetupDialog
+        open={twoFactorSetupOpen}
+        onOpenChange={setTwoFactorSetupOpen}
+        onComplete={handle2FAComplete}
+        secretHash={secretHash}
+        userEmail="player_one@example.com" // Pass the user's email
+        appName="RetroArcade" // Your app name
+      />
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
@@ -973,6 +1034,39 @@ export default function DashboardPage() {
               onClick={confirmRemoveAvatar}
             >
               Remove Avatar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Remove 2FA Confirmation Dialog */}
+      <Dialog open={remove2FADialogOpen} onOpenChange={setRemove2FADialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-pixel text-lg uppercase">Disable Two-Factor Authentication</DialogTitle>
+            <DialogDescription className="font-pixel text-xs uppercase">
+              Are you sure you want to disable two-factor authentication? This will make your account less secure.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="font-pixel text-xs uppercase"
+              onClick={() => setRemove2FADialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              className="font-pixel text-xs uppercase"
+              onClick={() => {
+                setTwoFactorEnabled(false)
+                setRemove2FADialogOpen(false)
+              }}
+            >
+              Disable 2FA
             </Button>
           </DialogFooter>
         </DialogContent>

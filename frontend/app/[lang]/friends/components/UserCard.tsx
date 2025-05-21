@@ -2,17 +2,26 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
-import { RelationStatus } from "@/types/friend";
+import { FriendRequestStatus } from "@/types/friend";
 import { BaseUser } from "@/types/user";
-import { User, UserCheck, UserPlus } from "lucide-react";
+import { User, UserCheck, UserLock, UserPlus } from "lucide-react";
 
 interface UserCardProps {
 	user: BaseUser;
+	status: FriendRequestStatus;
 	sendRequest: (id: string) => void;
-	relationStatus: RelationStatus
+	onBlock: (id: string) => void;
+	onUnblock: (id: string) => void;
 }
 
-export function UserCard({ user, sendRequest, relationStatus }: UserCardProps) {
+export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: UserCardProps) {
+	console.log(`UserId: ${user.id}, Status: ${status}`);
+
+
+	const isBlocked = status === FriendRequestStatus.BLOCKED;
+	const isRefused = status === FriendRequestStatus.REFUSED;
+	const isPending = status === FriendRequestStatus.PENDING;
+
 	return (
 		<div className="flex items-center justify-between p-3 bg-muted rounded-lg">
 			<div className="flex items-center space-x-3">
@@ -26,34 +35,52 @@ export function UserCard({ user, sendRequest, relationStatus }: UserCardProps) {
 					<p className="font-pixel text-sm">{user.name}</p>
 				</div>
 			</div>
-			{ relationStatus === RelationStatus.NONE ?
-				<Button
-					variant="outline"
-					size="sm"
-					className="h-8 font-pixel text-xs"
-					onClick={() => sendRequest(user.id)}
-				>
-					<UserPlus className="h-4 w-4 mr-2" />{"Add friend"}
-				</Button>
-				: relationStatus === RelationStatus.FRIEND ?
-				<Button
-					variant="outline"
-					size="sm"
-					className="h-8 font-pixel text-xs"
-					disabled
-				>
-					<User className="h-4 w-4 mr-2" />{"Friend"}
-				</Button>
-				:
-				<Button
-					variant="outline"
-					size="sm"
-					className="h-8 font-pixel text-xs"
-					disabled
-				>
-					<UserCheck className="h-4 w-4 mr-2" />{"Pending"}
-				</Button>
-			}
+
+			<div className="flex space-x-2">
+				{isBlocked ? (
+					<Button
+						variant="outline"
+						size="sm"
+						className="h-8 w-8 text-green-500"
+						onClick={() => onUnblock(user.id)}
+					>
+						<UserLock className="h-4 w-4" />
+					</Button>
+				) : (
+					<Button
+						variant="outline"
+						size="icon"
+						className="h-8 w-8 text-destructive"
+						onClick={() => onBlock(user.id)}
+					>
+						<UserLock className="h-4 w-4" />
+					</Button>
+				)}
+
+				{isRefused ? (
+					<Button
+						variant="outline"
+						size="sm"
+						className="h-8 w-8 font-pixel text-xs"
+						onClick={() => sendRequest(user.id)}
+					>
+						<UserPlus className="h-4 w-4" />
+					</Button>
+				) : (
+					<Button
+						variant="outline"
+						size="sm"
+						className="h-8 w-8 font-pixel text-xs"
+						disabled
+					>
+						{isPending ? (
+							<UserCheck className="h-4 w-4" />
+						) : (
+							<User className="h-4 w-4" />
+						)}
+					</Button>
+				)}
+			</div>
 		</div>
 	);
 }

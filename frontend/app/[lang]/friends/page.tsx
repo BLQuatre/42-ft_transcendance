@@ -10,7 +10,7 @@ import { Search } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { BaseUser } from "@/types/user"
-import { FriendRequest, FriendRequestStatus, RelationStatus } from "@/types/friend"
+import { FriendRequest, FriendRequestStatus } from "@/types/friend"
 import api from "@/lib/api"
 import { UserCard } from "./components/UserCard"
 import { FriendRequestCard } from "./components/FriendRequestCard"
@@ -23,6 +23,7 @@ export default function FriendsPage() {
   const [users, setUsers] = useState<BaseUser[]>([])
   const [friends, setFriends] = useState<FriendRequest[]>([])
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([])
+  const [blockedUsers, setBlockedUsers] = useState<FriendRequest[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [addFriendSearchQuery, setAddFriendSearchQuery] = useState("")
   const { toast } = useToast()
@@ -31,6 +32,7 @@ export default function FriendsPage() {
     api.get("/user").then((response) => setUsers(response.data.Users))
     api.get("/friend").then((response) => setFriends(response.data.friends))
     api.get("/friend/pending").then((response) => setFriendRequests(response.data.friends))
+    api.get("/friend/blocked").then((response) => setBlockedUsers(response.data.friends))
   }
 
   useEffect(() => {
@@ -40,14 +42,16 @@ export default function FriendsPage() {
   console.log(`Users: ${JSON.stringify(users, null, 2)}`)
   console.log(`Friends: ${JSON.stringify(friends, null, 2)}`)
   console.log(`Friend requests: ${JSON.stringify(friendRequests, null, 2)}`)
-
+  console.log(`Blocked users: ${JSON.stringify(blockedUsers, null, 2)}`)
 
   const handleAcceptRequest = (id: string) => {
     api.put(`/friend/${id}`, { status: "accepted" }).then(() => {
       updateData()
+
+      const user = getUserFromId(id)
       toast({
         title: "Friend Request Accepted",
-        description: `You are now friends with ${id}`,
+        description: `You are now friends with ${user?.name || id}`,
         duration: 3000,
       })
     })
@@ -56,9 +60,11 @@ export default function FriendsPage() {
   const handleDeclineRequest = (id: string) => {
     api.put(`/friend/${id}`, { status: "refused" }).then(() => {
       updateData()
+
+      const user = getUserFromId(id)
       toast({
         title: "Friend Request Rejected",
-        description: `You have rejected the friend request from ${id}`,
+        description: `You have rejected the friend request from ${user?.name || id}`,
         duration: 3000,
       })
     })
@@ -67,9 +73,11 @@ export default function FriendsPage() {
   const handleRemoveFriend = (id: string) => {
     api.delete(`/friend/${id}`).then(() => {
       updateData()
+
+      const user = getUserFromId(id)
       toast({
         title: "Friend Removed",
-        description: `You have removed ${id} as a friend`,
+        description: `You have removed ${user?.name || id} as a friend`,
         duration: 3000,
       })
     })
@@ -78,9 +86,52 @@ export default function FriendsPage() {
   const handleSendFriendRequest = (id: string) => {
     api.post(`/friend/${id}`).then(() => {
       updateData()
+
+      const user = getUserFromId(id)
       toast({
         title: "Friend Request Sent",
-        description: `Friend request sent to ${id}`,
+        description: `Friend request sent to ${user?.name || id}`,
+        duration: 3000,
+      })
+    }).catch((error) => {
+      const user = getUserFromId(id)
+      if (error.response.status === 409) {
+        toast({
+          title: "Friend Request Already Sent",
+          description: `You have already sent a friend request to ${user?.name || id}`,
+          duration: 3000,
+        })
+      } else if (error.response.status === 400) {
+        toast({
+          title: "Error",
+          description: `Cannot send friend request to ${user?.name || id}`,
+          duration: 3000,
+        })
+      }
+    })
+  }
+
+  const handleBlockUser = (id: string) => {
+    api.post(`/friend/blocked/${id}`).then(() => {
+      updateData()
+
+      const user = getUserFromId(id)
+      toast({
+        title: "User Blocked",
+        description: `You have blocked ${user?.name || id}`,
+        duration: 3000,
+      })
+    })
+  }
+
+  const handleUnblockUser = (id: string) => {
+    api.delete(`/friend/${id}`).then(() => {
+      updateData()
+
+      const user = getUserFromId(id)
+      toast({
+        title: "User Unblocked",
+        description: `You have unblocked ${user?.name || id}`,
         duration: 3000,
       })
     })
@@ -92,15 +143,19 @@ export default function FriendsPage() {
 
   const userId = sessionStorage.getItem("userId")
 
-  const getRelationStatus = (user: BaseUser) => {
-    const friend = friendRequests.find((friend) => friend.sender_id === user.id || friend.receiver_id === user.id)
-    if (friend) {
-      if (friend.status === FriendRequestStatus.ACCEPTED) return RelationStatus.FRIEND
-      if (friend.status === FriendRequestStatus.PENDING) return RelationStatus.PENDING
+  const getStatus = (user: BaseUser) => {
+    const blocked = blockedUsers.find((blocked) => blocked.receiver_id === user.id)
+    if (blocked)
+      return FriendRequestStatus.BLOCKED
+    const friend = friends.find((friend) => friend.sender_id === user.id || friend.receiver_id === user.id)
+    if (friend)
+      return FriendRequestStatus.ACCEPTED
+    const pending = friendRequests.find((friend) => friend.sender_id === user.id || friend.receiver_id === user.id)
+    if (pending) {
+      return FriendRequestStatus.PENDING
     }
-    return RelationStatus.NONE
+    return FriendRequestStatus.REFUSED
   }
-
 
   const filteredFriends =
     searchQuery.trim() === ""
@@ -182,7 +237,8 @@ export default function FriendsPage() {
                       return (<FriendCard
                         key={friend.id}
                         friend={friend}
-                        onRemove={() => handleRemoveFriend(friend.id)}
+                        onRemove={(id) => handleRemoveFriend(id)}
+                        onBlock={(id) => handleBlockUser(id)}
                       />)
                     })
                   )}
@@ -213,8 +269,8 @@ export default function FriendsPage() {
                       <FriendRequestCard
                         key={friend.id}
                         friend={friend}
-                        acceptRequest={() => handleAcceptRequest(friend.id)}
-                        declineRequest={() => handleDeclineRequest(friend.id)}
+                        acceptRequest={(id) => handleAcceptRequest(id)}
+                        declineRequest={(id) => handleDeclineRequest(id)}
                       />
                     )
                   })
@@ -257,8 +313,10 @@ export default function FriendsPage() {
                         <UserCard
                           key={user.id}
                           user={user}
-                          sendRequest={() => handleSendFriendRequest(user.id)}
-                          relationStatus={getRelationStatus(user)}
+                          status={getStatus(user)}
+                          sendRequest={(id) => handleSendFriendRequest(id)}
+                          onBlock={(id) => handleBlockUser(id)}
+                          onUnblock={(id) => handleUnblockUser(id)}
                         />
                       )
                     })

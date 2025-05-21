@@ -4,14 +4,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { useDictionary } from "@/hooks/UseDictionnary";
 import { BaseUser, UserStatus } from "@/types/user";
-import { UserMinus } from "lucide-react";
+import { UserLock, UserMinus } from "lucide-react";
 
 interface FriendCardProps {
 	friend: BaseUser;
 	onRemove: (id: string) => void;
+	onBlock: (id: string) => void;
 }
 
-export function FriendCard({ friend, onRemove }: FriendCardProps) {
+export function FriendCard({ friend, onRemove, onBlock }: FriendCardProps) {
 	const dict = useDictionary()
 	if (!dict) return null
 
@@ -34,6 +35,14 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
 				</div>
 			</div>
 			<div className="flex space-x-2">
+				<Button
+					variant="outline"
+					size="icon"
+					className="h-8 w-8 text-destructive"
+					onClick={() => onBlock(friend.id)}
+				>
+					<UserLock className="h-4 w-4" />
+				</Button>
 				{/* TODO: Add chat functionality */}
 				{/* <Button
 					variant="outline"
@@ -57,6 +66,7 @@ export function FriendCard({ friend, onRemove }: FriendCardProps) {
 				>
 					<UserMinus className="h-4 w-4" />
 				</Button>
+
 			</div>
 		</div>
 	);

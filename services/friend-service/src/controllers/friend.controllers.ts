@@ -41,9 +41,9 @@ export const createFriend = async (req: FastifyRequest, reply: FastifyReply) => 
 	]});
 	if (isExist) {
 		if (isExist.status === FriendRequestStatus.BLOCKED)
-			return reply.code(200).send({
+			return reply.code(400).send({
 				message: "Ok",
-				statusCode: 200
+				statusCode: 400
 			})
 		return reply.code(409).send({
 			message: 'the friend request already exist',

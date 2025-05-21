@@ -1,11 +1,11 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../*.{js,ts,jsx,tsx,mdx}';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-pixel: 'Press Start 2P', cursive;
+  --font-pixel: "Press Start 2P", cursive;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -127,7 +127,7 @@
 }
 
 ::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 @layer base {
@@ -164,136 +164,247 @@
     @apply border-4 border-solid border-game-dark;
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
   }
+
+  .minecraft-border {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(0, 0, 0, 0.5), inset 2px 2px 0 0 rgba(255, 255, 255, 0.5);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid rgba(128, 128, 128, 0.5);
+    pointer-events: none;
+    margin: 2px;
+  }
+
+  .minecraft-border-red {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(120, 0, 0, 0.7), inset 2px 2px 0 0 rgba(255, 85, 85, 0.7);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border-red:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--color-game-red);
+    pointer-events: none;
+    margin: 2px;
+  }
+
+  .minecraft-border-blue {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(0, 0, 120, 0.7), inset 2px 2px 0 0 rgba(85, 85, 255, 0.7);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border-blue:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--color-game-blue);
+    pointer-events: none;
+    margin: 2px;
+  }
+
+  .minecraft-border-orange {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(165, 80, 0, 0.7), inset 2px 2px 0 0 rgba(255, 165, 85, 0.7);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border-orange:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--color-game-orange);
+    pointer-events: none;
+    margin: 2px;
+  }
+
+  .minecraft-border-green {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(0, 100, 0, 0.7), inset 2px 2px 0 0 rgba(100, 255, 100, 0.7);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border-green:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--color-game-green);
+    pointer-events: none;
+    margin: 2px;
+  }
+
+  .minecraft-border-yellow {
+    position: relative;
+    border: 2px solid #000;
+    box-shadow: inset -2px -2px 0 0 rgba(150, 150, 0, 0.7), inset 2px 2px 0 0 rgba(255, 255, 100, 0.7);
+    background-clip: padding-box;
+    border-radius: 0;
+  }
+  .minecraft-border-yellow:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid var(--color-game-yellow);
+    pointer-events: none;
+    margin: 2px;
+  }
 }
 
 * {
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* IE and Edge */
-  }
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
 
-  *::-webkit-scrollbar {
-	display: none; /* Chrome, Safari, Opera */
-  }
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
 
-
-  /* Add this class to your existing globals.css file */
+/* Add this class to your existing globals.css file */
 .show-scrollbar {
-	/* For Chrome, Safari, and Opera */
-	&::-webkit-scrollbar {
-	  display: block;
-	  width: 8px;
-	  height: 8px;
-	}
-
-	/* For WebKit browsers - styling the scrollbar */
-	&::-webkit-scrollbar-track {
-	  background: rgba(0, 0, 0, 0.1);
-	  border-radius: 4px;
-	}
-
-	&::-webkit-scrollbar-thumb {
-	  background: var(--color-muted);
-	  border-radius: 4px;
-	}
-
-	&::-webkit-scrollbar-thumb:hover {
-	  background: var(--color-muted-foreground);
-	}
-
-	/* For Firefox */
-	scrollbar-width: thin;
-
-	/* For IE and Edge */
-	-ms-overflow-style: auto;
+  /* For Chrome, Safari, and Opera */
+  &::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    height: 8px;
   }
 
+  /* For WebKit browsers - styling the scrollbar */
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-muted);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted-foreground);
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+
+  /* For IE and Edge */
+  -ms-overflow-style: auto;
+}
 
 /* Dialog animations */
 @keyframes fadeIn {
-	from {
-	  opacity: 0;
-	}
-	to {
-	  opacity: 1;
-	}
+  from {
+    opacity: 0;
   }
-
-  @keyframes slideUp {
-	from {
-	  transform: translateY(10px);
-	  opacity: 0;
-	}
-	to {
-	  transform: translateY(0);
-	  opacity: 1;
-	}
+  to {
+    opacity: 1;
   }
+}
 
-  .animate-fadeIn {
-	animation: fadeIn 0.3s ease-out forwards;
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
   }
-
-  .animate-slideUp {
-	animation: slideUp 0.4s ease-out forwards;
-	animation-delay: 0.1s;
-	opacity: 0;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
+}
 
-  /* Pixel animation effect */
-  @keyframes pixelate {
-	0% {
-	  filter: blur(5px);
-	}
-	20% {
-	  filter: blur(0px);
-	}
-	25% {
-	  filter: blur(1px);
-	}
-	30% {
-	  filter: blur(0px);
-	}
-	100% {
-	  filter: blur(0px);
-	}
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+/* Pixel animation effect */
+@keyframes pixelate {
+  0% {
+    filter: blur(5px);
   }
-
-  .animate-pixelate {
-	animation: pixelate 0.5s ease-out forwards;
+  20% {
+    filter: blur(0px);
   }
+  25% {
+    filter: blur(1px);
+  }
+  30% {
+    filter: blur(0px);
+  }
+  100% {
+    filter: blur(0px);
+  }
+}
 
+.animate-pixelate {
+  animation: pixelate 0.5s ease-out forwards;
+}
 
-  /* Tournament bracket connector lines */
+/* Tournament bracket connector lines */
 .connector-right::after {
-	content: "";
-	position: absolute;
-	top: 50%;
-	right: -8px;
-	width: 8px;
-	height: 2px;
-	background-color: #e5e5e5; /* Use your muted color */
-	z-index: 1;
-  }
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 8px;
+  height: 2px;
+  background-color: #e5e5e5; /* Use your muted color */
+  z-index: 1;
+}
 
-  .connector-left::before {
-	content: "";
-	position: absolute;
-	top: 50%;
-	left: -8px;
-	width: 8px;
-	height: 2px;
-	background-color: #e5e5e5; /* Use your muted color */
-	z-index: 1;
-  }
+.connector-left::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  width: 8px;
+  height: 2px;
+  background-color: #e5e5e5; /* Use your muted color */
+  z-index: 1;
+}
 
-  /* Add vertical connectors for matches in the same round */
-  .connector-vertical::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: -8px;
-	width: 2px;
-	height: 100%;
-	background-color: #e5e5e5; /* Use your muted color */
-	z-index: 0;
-  }
+/* Add vertical connectors for matches in the same round */
+.connector-vertical::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 2px;
+  height: 100%;
+  background-color: #e5e5e5; /* Use your muted color */
+  z-index: 0;
+}

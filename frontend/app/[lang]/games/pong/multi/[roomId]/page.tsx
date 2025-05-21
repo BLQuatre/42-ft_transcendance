@@ -55,7 +55,6 @@ export default function PongGamePage() {
 		}
 
 		console.log("Creating new WebSocket connection");
-
 		const socket = new WebSocket("ws://localhost:3002");
 		socketRef.current = socket;
 
@@ -259,10 +258,10 @@ export default function PongGamePage() {
 
 								{/* Score display component */}
 								<ScoreDisplay
-								  leftScore={scores.left}
-								  rightScore={scores.right}
-								  winningScore={CONST.SCORE_WIN}
-								  gameFinished={gameFinished}
+									leftScore={scores.left}
+									rightScore={scores.right}
+									winningScore={CONST.SCORE_WIN}
+									gameFinished={gameFinished}
 								/>
 							</CardContent>
 						</Card>

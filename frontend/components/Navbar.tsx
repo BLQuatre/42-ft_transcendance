@@ -24,37 +24,6 @@ export function MainNav() {
         </span>
       </Link>
 
-      <nav className="hidden md:flex items-center space-x-6">
-        {/* Navigation links always visible regardless of login status */}
-        <Link
-          href="/"
-          className={cn(
-            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-            pathname === "/" ? "text-game-blue" : "text-muted-foreground",
-          )}
-        >
-          {dict.navbar.home}
-        </Link>
-        <Link
-          href="/games"
-          className={cn(
-            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-            pathname.startsWith("/games") ? "text-game-blue" : "text-muted-foreground",
-          )}
-        >
-          {dict.navbar.games}
-        </Link>
-        <Link
-          href="/shop"
-          className={cn(
-            "font-pixel text-sm transition-colors hover:text-game-blue uppercase",
-            pathname === "/shop" ? "text-game-blue" : "text-muted-foreground",
-          )}
-        >
-          {dict.navbar.shop}
-        </Link>
-      </nav>
-
       <div className="flex items-center space-x-4">
         {accessToken ? (
           <>

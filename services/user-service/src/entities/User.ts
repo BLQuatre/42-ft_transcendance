@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from "typeorm"
-import { GeneratedSecret, SimpleTfaSecret } from "../utils/interface";
+import { SimpleTfaSecret } from "../utils/interface";
 
 @Entity("user")
 export class UserEntity {

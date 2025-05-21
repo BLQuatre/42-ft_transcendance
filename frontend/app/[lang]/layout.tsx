@@ -1,11 +1,11 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import "../../styles/globals.css"
+import "../../styles/globals.css" // Updated path assuming styles are at project root
 import { Toaster } from "@/components/ui/Toaster"
-import { SimpleChat } from "@/components/SimpleChat"
 import { AuthProvider } from "@/contexts/auth-context"
 import InitAuth from "@/hooks/InitAuth"
+import SimpleChatWrapper from "@/components/SimpleChatWrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,12 +26,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
       </head>
       <body className={inter.className}>
-          <AuthProvider>
-            <InitAuth />
-            {children}
-            <SimpleChat />
-            <Toaster />
-          </AuthProvider>
+        <AuthProvider>
+          <InitAuth />
+          {children}
+          <SimpleChatWrapper />
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   )

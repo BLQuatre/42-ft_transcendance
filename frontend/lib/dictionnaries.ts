@@ -1,4 +1,4 @@
-import { Language } from '@/types/types';
+import { Language } from '@/types/language';
 import { request } from 'http';
 import { NextRequest, NextResponse } from 'next/server';
 

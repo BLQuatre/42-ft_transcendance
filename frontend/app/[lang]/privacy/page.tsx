@@ -1,7 +1,7 @@
 import { Footer } from "@/components/Footer"
 import { MainNav } from "@/components/Navbar"
 import { getDictionary } from "@/lib/dictionnaries"
-import { Language } from "@/types/types"
+import { Language } from "@/types/language"
 
 export default async function PrivacyPage({
   params,

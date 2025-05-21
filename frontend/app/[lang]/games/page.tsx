@@ -3,7 +3,7 @@ import { MainNav } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Gamepad2, Users } from "lucide-react"
 import { getDictionary } from "@/lib/dictionnaries"
-import type { Language } from "@/types/types"
+import { Language } from "@/types/language"
 import { GameButtons } from "@/components/GameButtons"
 
 export default async function GamesPage({

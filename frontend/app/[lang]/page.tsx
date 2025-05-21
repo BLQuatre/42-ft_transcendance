@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button"
 import { MainNav } from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { getDictionary } from "@/lib/dictionnaries"
-import type { Language } from "@/types/types"
+import { Language } from "@/types/language"
 import { GameButtons } from "@/components/GameButtons"
 import { LanguageSelectorDialog } from "@/components/dialog/LanguageSelectorDialog"
 

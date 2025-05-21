@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Language } from '@/types/types';
+import { Language } from '@/types/language';
 import { getDictionary } from '@/lib/dictionnaries';
 import { usePathname } from 'next/navigation';
 

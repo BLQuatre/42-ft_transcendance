@@ -5,6 +5,7 @@ import fastify from 'fastify';
 import { loginSingUp } from './routes/user.routes';
 import { authentication } from './routes/auth.routes';
 import fastifyCookie from '@fastify/cookie';
+import { twoFactorAuthentication } from './routes/2fa.routes';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
 
@@ -17,6 +18,7 @@ app.register(fastifyCookie, {
 });
 app.register(loginSingUp);
 app.register(authentication);
+app.register(twoFactorAuthentication);
 
 app.listen({
 	host: process.env.AUTH_HOST,

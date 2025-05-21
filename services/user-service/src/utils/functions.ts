@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 export function removePassword(user: UserEntity | null): PublicUser {
 	if (!user)
 		return user;
-	const { password, ...rest } = user;
+	const { password, tfaSecret, ...rest } = user;
 	return rest;
 }
 

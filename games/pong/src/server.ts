@@ -53,7 +53,6 @@ const start = async () => {
 
                 // Check if all players are ready to start the game
                 if (currentRoom.getPlayers().length >= 2 && currentRoom.getPlayers().every((p) => p.isReady())) {
-                    currentRoom.setGameInProgress(true);
                     broadcastToRoom(currentRoom, { type: 'game_start' });
                     startGame(currentRoom);
                 } else {

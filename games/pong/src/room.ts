@@ -5,12 +5,10 @@ export class Room {
     private id: string;
     private players: Player[];
 	private game?: Game;
-    private isGameInProgress: boolean;
 
-    constructor(id: string, players: Player[] = [], isGameInProgress: boolean = false) {
+    constructor(id: string) {
         this.id = id;
-        this.players = players;
-        this.isGameInProgress = isGameInProgress;
+        this.players = [];
     }
 
     public getId() {
@@ -27,7 +25,7 @@ export class Room {
 
 	public launchGame() {
 		this.game = new Game();
-		
+
 		this.getPlayers().forEach((player) => this.game!.addPlayer(player));
 
 		this.game.startUpdating();
@@ -41,7 +39,7 @@ export class Room {
                 name: `Player ${p.getId()}`,
                 isReady: p.isReady(),
             })),
-            status: this.isGameInProgress ? 'in-progress' : 'waiting',
+            status: this.game ? 'in-progress' : 'waiting',
         };
     }
 
@@ -49,15 +47,7 @@ export class Room {
         return this.players;
     }
 
-    public isGameRunning() {
-        return this.isGameInProgress;
-    }
-
     public getGame() {
         return this.game;
-    }
-
-    public setGameInProgress(status: boolean) {
-        this.isGameInProgress = status;
     }
 }

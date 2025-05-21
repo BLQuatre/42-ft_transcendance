@@ -35,7 +35,10 @@ export const createFriend = async (req: FastifyRequest, reply: FastifyReply) => 
 		});
 	}
 
-	const isExist = await Friend.findOneBy({ sender_id: id, receiver_id: senderId});
+	const isExist = await Friend.findOne({where: [
+		{ sender_id: id, receiver_id: senderId},
+		{ sender_id: senderId, receiver_id: id}
+	]});
 	if (isExist) {
 		return reply.code(409).send({
 			message: 'the friend request already exist',
@@ -191,8 +194,8 @@ export const deleteFriend = async (req:FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
 	const friendRequest = await Friend.findOne({
 		where: [
-			{ sender_id: id, receiver_id: userId, status: FriendRequestStatus.ACCEPTED },
-			{ sender_id: userId, receiver_id: id, status: FriendRequestStatus.ACCEPTED }
+			{ sender_id: id, receiver_id: userId },
+			{ sender_id: userId, receiver_id: id }
 		]
 	});
 	if (!friendRequest) {
@@ -206,5 +209,78 @@ export const deleteFriend = async (req:FastifyRequest, reply: FastifyReply) => {
 	return reply.code(200).send({
 		message: 'friend deleted with success',
 		statusCode: 200
+	});
+}
+
+export const blockFriend = async (req: FastifyRequest, reply: FastifyReply) => {
+	const senderId = req.headers['x-user-id'] as string;
+	const { id } = req.params as { id: string };
+	if (!senderId || !id) {
+		return reply.code(404).send({
+			message: 'unable to define user',
+			statusCode: 404
+		});
+	}
+	if (senderId == id) {
+		return reply.code(403).send({
+			message: 'forbidden to send friend request to herself',
+			statusCode: 403
+		});
+	}
+
+	const findSender = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${senderId}`);
+	const findReceiver = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${id}`);
+	if (findSender.data.statusCode !== 200 && findReceiver.data.statusCode !== 200) {
+		return reply.code(404).send({
+			message: 'unable to find sender or receiver',
+			statusCode: 404
+		});
+	}
+
+	const isExist = await Friend.findOne({ where: [
+		{sender_id: senderId, receiver_id: id}
+	]});
+	if (isExist) {
+		await Friend.update(isExist, {status: FriendRequestStatus.BLOCKED})
+		return reply.code(200).send({
+			message: 'the friend request updated',
+			statusCode: 200
+		});
+	}
+	const senderOnreceiver = await Friend.findOneBy({sender_id: id, receiver_id: senderId})
+	if (senderOnreceiver) {
+		await Friend.delete(senderOnreceiver);
+	}
+	const friend : FriendEntity = {
+		sender_id: senderId, receiver_id: id,
+		status: FriendRequestStatus.BLOCKED,
+		created_at: new Date(),
+		updated_at: new Date()
+	};
+	Friend.save(friend);
+	return reply.code(200).send({
+		message: ' BLocked friend request success',
+		statusCode: 201
+	});
+}
+
+export const getBlockedList = async (req: FastifyRequest, reply: FastifyReply) => {
+	const id = req.headers['x-user-id'] as string;
+	if (!id) {
+		return reply.code(401).send({
+			message: 'Unauthentified user',
+			statusCode: 401
+		});
+	}
+
+	const friends = await Friend.find({
+		where: [
+			{ sender_id: id, status: FriendRequestStatus.BLOCKED }
+		]
+	});
+	return reply.code(200).send({
+		message: 'All blocked list',
+		statusCode: 200,
+		friends
 	});
 }

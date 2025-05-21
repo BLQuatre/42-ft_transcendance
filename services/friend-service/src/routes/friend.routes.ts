@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { createFriend, deleteFriend, getFriends, getPendingRequests, getReceivingPendingRequest, getSendingPendingRequest, responseFriend } from "../controllers/friend.controllers";
+import { blockFriend, createFriend, deleteFriend, getBlockedList, getFriends, getPendingRequests, getReceivingPendingRequest, getSendingPendingRequest, responseFriend } from "../controllers/friend.controllers";
 
 export async function friendRoutes(app: FastifyInstance) {
 	app.post('/friend/:id', createFriend);
@@ -9,4 +9,6 @@ export async function friendRoutes(app: FastifyInstance) {
 	app.get('/friend/pending/receive', getReceivingPendingRequest);
 	app.get('/friend/pending', getPendingRequests);
 	app.delete('/friend/:id', deleteFriend);
+	app.post('/friend/blocked/:id', blockFriend),
+	app.get('/friend/blocked', getBlockedList)
 }

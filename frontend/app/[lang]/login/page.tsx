@@ -11,11 +11,12 @@ import { Label } from "@/components/ui/Label"
 import { MainNav } from "@/components/Navbar"
 import { FcGoogle } from "react-icons/fc"
 import { useDictionary } from "@/hooks/UseDictionnary"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from 'lucide-react'
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
+import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -28,31 +29,71 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [loginError, setLoginError] = useState<string | null>(null)
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>)   {
+  // 2FA state
+  const [twoFactorRequired, setTwoFactorRequired] = useState(false)
+  const [twoFactorError, setTwoFactorError] = useState<string | null>(null)
+  const [token, setTwoFactorToken] = useState<string | null>(null)
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
+    setLoginError(null)
 
     console.log("Login submitted");
 
-    axios.post('/api/auth/login', {
-      name: username,
-      password: password
-    })
-    .then(response => {
-      console.log("Successfull login: " + JSON.stringify(response.data))
-      setAccessToken(response.data.accessToken)
-      router.push("/")
-    })
-    .catch(error => {
-      if (error.status == 401 || error.status == 404) {
+    try {
+      const response = await axios.post('/api/auth/login', {
+        name: username,
+        password: password
+      })
+
+      console.log("Login response:", response.status, response.data)
+
+      // Check if 2FA is required (status 200 but no access token)
+      if (response.status === 202) {
+        // Store any token needed for the 2FA verification step
+        setTwoFactorToken(response.data.twoFactorToken || null)
+        // Show 2FA dialog
+        setTwoFactorRequired(true)
+        setIsLoading(false)
+      } else {
+        // Normal login success
+        setAccessToken(response.data.accessToken)
+        router.push("/")
+      }
+    } catch (error: any) {
+      console.error("Login error:", error)
+      if (error.response?.status === 401 || error.response?.status === 404) {
         setLoginError("Invalid username or password")
       } else {
-        console.error("Error: " + JSON.stringify(error))
+        setLoginError("An error occurred. Please try again.")
       }
-    })
-    .finally(() => {
       setIsLoading(false)
-    })
+    }
+  }
+
+  const handleVerify2FA = async (code: string) => {
+    setIsLoading(true)
+    setTwoFactorError(null)
+
+    try {
+      const response = await axios.post('/api/auth/verify-2fa', {
+        token
+      })
+
+      // 2FA verification successful
+      setAccessToken(response.data.accessToken)
+      setTwoFactorRequired(false)
+      router.push("/")
+    } catch (error: any) {
+      console.error("2FA verification error:", error)
+      if (error.response?.status === 401) {
+        setTwoFactorError("Invalid verification code")
+      } else {
+        setTwoFactorError("An error occurred. Please try again.")
+      }
+      setIsLoading(false)
+    }
   }
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,14 +224,14 @@ export default function LoginPage() {
                     <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
                   </Button>
                 </div>
-                <p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
+                <p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
               </div>
               <Button
                 type="submit"
                 className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
                 disabled={isLoading}
               >
-                {dict.connection.login}
+                {isLoading ? "Logging in..." : dict.connection.login}
               </Button>
             </form>
 
@@ -221,6 +262,15 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
+
+      {/* 2FA Verification Dialog */}
+      <TwoFactorVerifyDialog
+        open={twoFactorRequired}
+        onOpenChange={setTwoFactorRequired}
+        onVerify={handleVerify2FA}
+        isLoading={isLoading}
+        error={twoFactorError}
+      />
     </div>
   )
 }

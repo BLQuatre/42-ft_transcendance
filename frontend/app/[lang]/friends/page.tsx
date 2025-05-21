@@ -1,157 +1,101 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge"
 import { Search, UserPlus, Check, X, MessageSquare, UserMinus } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import { useDictionary } from "@/hooks/UseDictionnary"
-import { type Friend, UserStatus } from "@/types/types"
+import { BaseUser, FriendRequest } from "@/types/types"
 
-// Sample friends data
-const friendsData: Friend[] = [
-  {
-    username: "GAMER42",
-    status: UserStatus.ONLINE,
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    username: "PIXEL_MASTER",
-    status: UserStatus.OFFLINE,
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    username: "RETRO_FAN",
-    status: UserStatus.ONLINE,
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    username: "ARCADE_PRO",
-    status: UserStatus.OFFLINE,
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-]
-
-// Sample friend requests data
-const friendRequestsData = [
-  {
-    id: "r1",
-    username: "JUMP_MASTER",
-    avatar: "/placeholder.svg?height=40&width=40",
-    sentAt: "2 days ago",
-  },
-  {
-    id: "r2",
-    username: "DINO_KING",
-    avatar: "/placeholder.svg?height=40&width=40",
-    sentAt: "1 day ago",
-  },
-]
-
-// Sample users that can be added as friends
-const usersData = [
-  {
-    id: "u1",
-    username: "LEVEL_BOSS",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "u2",
-    username: "QUEST_HUNTER",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "u3",
-    username: "PIXEL_WIZARD",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "u4",
-    username: "GAME_LEGEND",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-]
+import api from "@/lib/api"
+// TODO: Add online status to friends and avatar
 
 export default function FriendsPage() {
-  const [friends, setFriends] = useState(friendsData)
-  const [friendRequests, setFriendRequests] = useState(friendRequestsData)
-  const [users, setUsers] = useState(usersData)
+  const [users, setUsers] = useState<BaseUser[]>([])
+  const [friends, setFriends] = useState<FriendRequest[]>([])
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [addFriendSearchQuery, setAddFriendSearchQuery] = useState("")
   const { toast } = useToast()
 
-  const handleAcceptRequest = (id: string) => {
-    const request = friendRequests.find((req) => req.id === id)
-    if (request) {
-      // Add to friends list
-      setFriends([
-        ...friends,
-        {
-          username: request.username,
-          avatar: request.avatar,
-          status: UserStatus.ONLINE,
-        },
-      ])
-      // Remove from requests
-      setFriendRequests(friendRequests.filter((req) => req.id !== id))
-
-      toast({
-        title: "Friend Request Accepted",
-        description: `You are now friends with ${request.username}`,
-        duration: 3000,
-      })
-    }
+  const updateData = () => {
+    api.get("/user").then((response) => setUsers(response.data.Users))
+    api.get("/friend").then((response) => setFriends(response.data.friends))
+    api.get("/friend/pending/receive").then((response) => setFriendRequests(response.data.friends))
   }
 
-  const handleRejectRequest = (id: string) => {
-    const request = friendRequests.find((req) => req.id === id)
-    setFriendRequests(friendRequests.filter((req) => req.id !== id))
+  useEffect(() => {
+    updateData()
+  }, [])
 
-    toast({
-      title: "Friend Request Rejected",
-      description: `You rejected ${request?.username}'s friend request`,
-      duration: 3000,
+  console.log(`Users: ${JSON.stringify(users, null, 2)}`)
+  console.log(`Friends: ${JSON.stringify(friends, null, 2)}`)
+  console.log(`Friend requests: ${JSON.stringify(friendRequests, null, 2)}`)
+
+
+  const handleAcceptRequest = (id: string) => {
+    api.put(`/friend/${id}`, { status: "accepted" }).then(() => {
+      updateData()
+      toast({
+        title: "Friend Request Accepted",
+        description: `You are now friends with ${id}`,
+        duration: 3000,
+      })
     })
   }
 
-  const handleRemoveFriend = (username: string) => {
-    const friend = friends.find((f) => f.username === username)
-    if (friend) {
-      setFriends(friends.filter((f) => f.username !== username))
-
+  const handleRejectRequest = (id: string) => {
+    api.put(`/friend/${id}`, { status: "refused" }).then(() => {
+      updateData()
       toast({
-        title: "Friend Removed",
-        description: `${friend.username} has been removed from your friends list`,
+        title: "Friend Request Rejected",
+        description: `You have rejected the friend request from ${id}`,
         duration: 3000,
       })
-    }
+    })
+  }
+
+  const handleRemoveFriend = (id: string) => {
+    api.delete(`/friend/${id}`).then(() => {
+      updateData()
+      toast({
+        title: "Friend Removed",
+        description: `You have removed ${id} as a friend`,
+        duration: 3000,
+      })
+    })
   }
 
   const handleSendFriendRequest = (id: string) => {
-    const user = users.find((u) => u.id === id)
-    if (user) {
-      // Remove from available users list
-      setUsers(users.filter((u) => u.id !== id))
-
+    api.post(`/friend/${id}`).then(() => {
+      updateData()
       toast({
         title: "Friend Request Sent",
-        description: `Friend request sent to ${user.username}`,
+        description: `Friend request sent to ${id}`,
         duration: 3000,
       })
-    }
+    })
   }
 
-  const filteredFriends = friends.filter((friend) => friend.username.toLowerCase().includes(searchQuery.toLowerCase()))
+  const getUserFromId = (id: string) => {
+    return users.find((user) => user.id === id)
+  }
+
+  const userId = sessionStorage.getItem("userId")
+
+  const filteredFriends = friends.filter((friend) => (getUserFromId(friend.sender_id)?.name || "Unknown").toLowerCase().includes(searchQuery.toLowerCase()))
 
   const filteredUsers =
     addFriendSearchQuery.trim() === ""
       ? []
-      : users.filter((user) => user.username.toLowerCase().includes(addFriendSearchQuery.toLowerCase()))
+      : users.filter((user) => user.name.toLowerCase().includes(addFriendSearchQuery.toLowerCase())
+        && user.id !== userId && !friends.some((friend) => friend.sender_id === user.id))
 
   const dict = useDictionary()
   if (!dict) return null
@@ -210,26 +154,26 @@ export default function FriendsPage() {
                     </p>
                   ) : (
                     filteredFriends.map((friend) => (
-                      <div key={friend.username} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                      <div key={friend.sender_id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                         <div className="flex items-center space-x-3">
                           <div className="relative">
                             <Avatar>
-                              <AvatarImage src={friend.avatar || "/placeholder.svg"} alt={friend.username} />
+                              {/* <AvatarImage src={getUserFromId(friend.sender_id)?.avatar || "/placeholder.svg"} alt={friend.name} /> */}
                               <AvatarFallback className="font-pixel text-xs">
-                                {friend.username.substring(0, 2)}
+                                P1
                               </AvatarFallback>
                             </Avatar>
-                            <span
+                            {/* <span
                               className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background ${
                                 friend.status === "online" ? "bg-green-500" : "bg-gray-500"
                               }`}
-                            />
+                            /> */}
                           </div>
                           <div>
-                            <p className="font-pixel text-sm">{friend.username}</p>
-                            <p className="font-pixel text-xs text-muted-foreground">
+                            <p className="font-pixel text-sm">{getUserFromId(friend.sender_id)?.name}</p>
+                            {/* <p className="font-pixel text-xs text-muted-foreground">
                               {friend.status === "online" ? dict.userStatus.online : dict.userStatus.offline}
-                            </p>
+                            </p> */}
                           </div>
                         </div>
                         <div className="flex space-x-2">
@@ -240,7 +184,7 @@ export default function FriendsPage() {
                             onClick={() => {
                               toast({
                                 title: "Message Sent",
-                                description: `Opening chat with ${friend.username}`,
+                                description: `Opening chat with ${getUserFromId(friend.sender_id)?.name}`,
                                 duration: 3000,
                               })
                             }}
@@ -251,7 +195,7 @@ export default function FriendsPage() {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 text-destructive"
-                            onClick={() => handleRemoveFriend(friend.username)}
+                            onClick={() => handleRemoveFriend(friend.sender_id)}
                           >
                             <UserMinus className="h-4 w-4" />
                           </Button>
@@ -279,16 +223,16 @@ export default function FriendsPage() {
                   </p>
                 ) : (
                   friendRequests.map((request) => (
-                    <div key={request.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <div key={request.sender_id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                       <div className="flex items-center space-x-3">
                         <Avatar>
-                          <AvatarImage src={request.avatar || "/placeholder.svg"} alt={request.username} />
+                          {/* <AvatarImage src={request.avatar || "/placeholder.svg"} alt={request.name} /> */}
                           <AvatarFallback className="font-pixel text-xs">
-                            {request.username.substring(0, 2)}
+                            P1
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-pixel text-sm">{request.username}</p>
+                          <p className="font-pixel text-sm">{getUserFromId(request.sender_id)?.name}</p>
                         </div>
                       </div>
                       <div className="flex space-x-2">
@@ -296,7 +240,7 @@ export default function FriendsPage() {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-green-500/20 text-green-500 hover:bg-green-500/30 hover:text-green-600"
-                          onClick={() => handleAcceptRequest(request.id)}
+                          onClick={() => handleAcceptRequest(request.sender_id)}
                         >
                           <Check className="h-4 w-4" />
                         </Button>
@@ -304,7 +248,7 @@ export default function FriendsPage() {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-red-500/20 text-red-500 hover:bg-red-500/30 hover:text-red-600"
-                          onClick={() => handleRejectRequest(request.id)}
+                          onClick={() => handleRejectRequest(request.sender_id)}
                         >
                           <X className="h-4 w-4" />
                         </Button>
@@ -348,13 +292,13 @@ export default function FriendsPage() {
                       <div key={user.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                         <div className="flex items-center space-x-3">
                           <Avatar>
-                            <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} />
+                            {/* <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.username} /> */}
                             <AvatarFallback className="font-pixel text-xs">
-                              {user.username.substring(0, 2)}
+                              {user.name.substring(0, 2)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-pixel text-sm">{user.username}</p>
+                            <p className="font-pixel text-sm">{user.name}</p>
                           </div>
                         </div>
                         <Button

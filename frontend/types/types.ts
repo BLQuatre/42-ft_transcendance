@@ -28,6 +28,17 @@ export interface PongGame extends BaseGame {
 
 export type Game = PongGame | DinoGame;
 
+export interface BaseUser {
+	id: string
+	name: string
+}
+
+export interface FriendRequest {
+	sender_id: string
+	receiver_id: string;
+	status: "pending" | "accepted" | "refused";
+}
+
 export interface User {
 	username: string;
 	displayName: string;
@@ -75,8 +86,7 @@ export enum UserStatus {
 	OFFLINE = "offline"
 }
 
-export interface Friend {
-	username: string;
+export interface Friend extends BaseUser {
 	avatar: string;
 	status: UserStatus;
 }

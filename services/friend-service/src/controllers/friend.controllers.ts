@@ -56,7 +56,7 @@ export const createFriend = async (req: FastifyRequest, reply: FastifyReply) => 
 	});
 }
 
-export const getFriend = async (req: FastifyRequest, reply: FastifyReply) => {
+export const getFriends = async (req: FastifyRequest, reply: FastifyReply) => {
 	const id = req.headers['x-user-id'] as string;
 	if (!id) {
 		return reply.code(401).send({

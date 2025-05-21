@@ -129,7 +129,7 @@ export default function DinoGamePage() {
 		};
 
 		// Set up interval to continuously send input state
-		const inputInterval = setInterval(sendInputs, 50); // Send updates every 50ms
+		const inputInterval = setInterval(sendInputs, 1000 / 60);
 
 		return () => {
 			clearInterval(inputInterval);

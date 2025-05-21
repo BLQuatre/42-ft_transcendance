@@ -12,6 +12,8 @@ export default function PongGamePage() {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [pausedState, setPausedState] = useState<boolean>(true)
 	const pausedRef = useRef(pausedState)
+	const [gameFinished, setGameFinished] = useState<boolean>(false)
+	const gameFinishedRef = useRef(gameFinished)
 
 	let keysPressed = { up: false, down: false }
 	const gameRef = useRef<Game | null>(null)
@@ -21,10 +23,22 @@ export default function PongGamePage() {
 
 
 	useEffect(() => {
-		if (!gameRef.current)
-			gameRef.current = new Game()
+		if (!gameRef.current) gameRef.current = new Game()
 	}, [])
 
+	useEffect(() => {
+		gameFinishedRef.current = gameFinished
+
+		if (gameFinished === true) setPausedState(true)
+	}, [gameFinished])
+
+	useEffect(() => {
+		const game = gameRef.current!
+		pausedRef.current = pausedState
+
+		if (pausedState === true)	game.stopUpdating()
+		else						game.startUpdating()
+	}, [pausedState])
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
@@ -45,18 +59,6 @@ export default function PongGamePage() {
 
 		return () => clearInterval(intervalId)
 	}, [])
-
-
-
-	useEffect(() => {
-		const game = gameRef.current!
-		pausedRef.current = pausedState
-
-		if (pausedState === true)
-			game.stopUpdating()
-		else
-			game.startUpdating()
-	}, [pausedState])
 
 
 	useEffect(() => {
@@ -148,7 +150,11 @@ export default function PongGamePage() {
 		const gameLoop = () => {
 			draw()
 			handleInput()
-			frameRef.current = requestAnimationFrame(gameLoop)
+			if (game.get_score().left == CONST.SCORE_WIN || game.get_score().right == CONST.SCORE_WIN)
+				setGameFinished(true) ;
+
+			if (gameFinishedRef.current === false)
+				frameRef.current = requestAnimationFrame(gameLoop)
 		}
 		frameRef.current = requestAnimationFrame(gameLoop)
 
@@ -158,7 +164,7 @@ export default function PongGamePage() {
 			if (e.key === "w" || e.key === "ArrowUp")	keysPressed.up = true
 			if (e.key === "s" || e.key === "ArrowDown")	keysPressed.down = true
 
-			if (e.key === "p") setPausedState(prev => !prev)
+			if (e.key === "p" && gameFinishedRef.current === false) setPausedState((prev) => !prev)
 		}
 		const keyup = (e: KeyboardEvent) => {
 			if (e.key === "w" || e.key === "ArrowUp")	keysPressed.up = false
@@ -177,36 +183,49 @@ export default function PongGamePage() {
 	}, [])
 
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
-      <MainNav />
+	return (
+		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
+			<MainNav />
 
-      <div className="flex-1 container py-6 relative">
-        <div className="grid gap-8 relative">
-          <div className="space-y-4">
-            <Card className="overflow-hidden relative">
-              <CardContent className="p-0">
-                <canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
+			<div className="flex-1 container py-6 relative">
+				<div className="grid gap-8 relative">
+					<div className="space-y-4">
+						<Card className="overflow-hidden relative">
+							<CardContent className="p-0">
+								<canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
 
-                {/* Blur overlay applied only to game area */}
-                {pausedState && <div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>}
+								{/* Blur overlay applied only to game area */}
+								{pausedState && <div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>}
 
-                {/* Pause instructions on top of blur */}
-                {pausedState && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-                    <div className="text-white text-center">
-                      <h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
-                      <div className="text-sm opacity-80">
-                        <p>Use ↑/↓ or W/S to move your paddle</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+								{/* Pause instructions on top of blur */}
+								{(pausedState && !gameFinished) && (
+									<div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+										<div className="text-white text-center">
+											<h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+											<div className="text-sm opacity-80">
+												<p>Use ↑/↓ or W/S to move your paddle</p>
+											</div>
+										</div>
+									</div>
+								)}
+								
+								{/* Trophy on the side of the winner on top of blur */}
+								{gameFinished && (
+									<div className="absolute inset-0 flex justify-between items-center z-30 px-8">
+										{gameRef.current!.get_score().left === CONST.SCORE_WIN && (
+											<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
+										)}
+										<div></div> {/* spacer */}
+										{gameRef.current!.get_score().right === CONST.SCORE_WIN && (
+											<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
+										)}
+									</div>
+								)}
+							</CardContent>
+						</Card>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 }

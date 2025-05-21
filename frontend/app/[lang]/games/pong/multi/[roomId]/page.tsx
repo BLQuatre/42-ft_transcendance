@@ -8,11 +8,22 @@ import { Card, CardContent } from "@/components/ui/Card"
 import { PongState } from "@/types/types" // Ensure this matches your backend types
 import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom" // Import your GameRoom component
 
+import * as CONST from '@/lib/pong/constants' ;
+
+
 export default function PongGamePage() {
 	const params = useParams()
 	const roomId = params.roomId as string
+
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [gameState, setGameState] = useState<PongState | null>(null)
+
+	const [gameFinished, setGameFinished] = useState<boolean>(false)
+	const gameFinishedRef = useRef(gameFinished)
+	useEffect(() => {
+		gameFinishedRef.current = gameFinished
+	}, [gameFinished])
+
 	const socketRef = useRef<WebSocket | null>(null)
 	const router = useRouter()
 
@@ -67,11 +78,8 @@ export default function PongGamePage() {
 				if (msg.type === "assign") {
 					console.log("Assigned player ID:", msg.playerId);
 					setPlayerId(msg.playerId);
-				}
-				else if (msg.type === "state") {
+				} else if (msg.type === "state")
 					setGameState(msg.gameState);
-				}
-				// Handle room state updates
 				else if (msg.type === "room_update") {
 					console.log("Room update received:", msg.room);
 					if (!msg.room) {
@@ -96,12 +104,11 @@ export default function PongGamePage() {
 					};
 					setRoom(transformedRoom);
 					setIsLoading(false);
-				}
-				// Handle game start
-				else if (msg.type === "game_start") {
+				} else if (msg.type === "game_start") {
 					console.log("Game starting!");
 					setGameInProgress(true);
-				}
+				} else if (msg.type === "game_end")
+					setGameFinished(true);
 			} catch (error) {
 				console.error("Error processing WebSocket message:", error);
 			}
@@ -185,7 +192,9 @@ export default function PongGamePage() {
 	
 		const gameLoop = () => {
 			draw()
-			requestAnimationFrame(gameLoop)
+			if (gameFinishedRef.current === false)
+				requestAnimationFrame(gameLoop)
+			// requestAnimationFrame(gameLoop)
 		}
 		const animId = requestAnimationFrame(gameLoop)
 	
@@ -240,17 +249,28 @@ export default function PongGamePage() {
 		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
 			<MainNav />
 	
-			<div className="flex-1 container py-6">
-				<div className="grid gap-8">
+			<div className="flex-1 container py-6 relative">
+				<div className="grid gap-8 relative">
 					<div className="space-y-4">
-						<Card className="overflow-hidden">
+						<Card className="overflow-hidden relative">
 							<CardContent className="p-0">
-								<canvas
-									ref={canvasRef}
-									width={800}
-									height={500}
-									className="w-full h-auto bg-game-dark pixel-border"
-								/>
+								<canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
+
+								{/* Victory screen */}
+								{gameFinished && (
+									<div>
+										<div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>
+										<div className="absolute inset-0 flex justify-between items-center z-30 px-8">
+											{gameState?.left_team.score === CONST.SCORE_WIN && (
+												<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
+											)}
+											<div></div> {/* spacer */}
+											{gameState?.right_team.score === CONST.SCORE_WIN && (
+												<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
+											)}
+										</div>
+									</div>
+								)}
 							</CardContent>
 						</Card>
 					</div>

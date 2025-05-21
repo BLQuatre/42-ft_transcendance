@@ -3,14 +3,16 @@ import { Player } from './player' ;
 import * as CONST from './constants' ;
 
 export class Game {
-	left_team: Team ; right_team: Team ;
-	ball: Ball = {} as Ball ;
+	private left_team: Team ; private right_team: Team ;
+	private ball: Ball = {} as Ball ;
+	private finished: boolean ;
 
 	private intervalID: NodeJS.Timeout | null = null ;
 
 	constructor() {
 		this.left_team	= { players: [] , score: 0 } ;
 		this.right_team	= { players: [] , score: 0 } ;
+		this.finished = false ;
 		this.resetBall() ;
 	}
 
@@ -34,6 +36,10 @@ export class Game {
 
 	getPlayerById(id: number): Player | undefined {
 		return [...this.left_team.players, ...this.right_team.players].find((player) => player.getId() === id);
+	}
+
+	isFinished(): boolean {
+		return (this.finished) ;
 	}
 
 	getState(): State {
@@ -131,6 +137,12 @@ export class Game {
 
 	private scoring(team: Team) {
 		team.score += 1 ;
+		if (team.score === CONST.SCORE_WIN) {
+			this.stopUpdating()
+			setTimeout(() => {
+				this.finished = true ;
+			}, 100) ;
+		}
 		this.resetBall() ;
 	}
 

@@ -1,7 +1,6 @@
 import Fastify from 'fastify';
 import { WebSocketServer } from 'ws';
 
-import { Game } from './game';
 import { Room } from './room';
 import { Player } from './player';
 import * as CONST from './constants';
@@ -111,10 +110,14 @@ function startGame(room: Room) {
 
     const interval = 1000 / CONST.FPS;
     setInterval(() => {
-        const state = {
+        const state = !room.getGame()!.isFinished()
+		? {
             type: 'state',
             gameState: room.getGame()!.getState(),
-        };
+        } : {
+			type: 'game_end'
+		} ;
+
         broadcastToRoom(room, state);
     }, interval);
 }

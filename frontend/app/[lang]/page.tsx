@@ -26,10 +26,10 @@ export default async function HomePage({
         <section className="py-8 md:py-16 lg:py-20 border-b border-muted">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center mb-8">
-              <h2 className="font-pixel text-2xl md:text-4xl text-game-orange animate-pulse uppercase">
+              <h2 className="font-pixel text-2xl md:text-4xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pulse">
                 {dict.home.games}
               </h2>
-              <div className="w-32 h-1 bg-game-orange"></div>
+              <div className="w-32 h-1 bg-linear-to-r from-game-blue via-game-orange to-game-red"></div>
               <p className="font-pixel text-sm md:text-base text-muted-foreground max-w-[700px] mx-auto uppercase">
                 {dict.home.description}
               </p>

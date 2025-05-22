@@ -262,6 +262,7 @@ export default function DashboardPage() {
     axios.get("/api/auth/logout").then(() => {
       console.log("Logout successful")
       setAccessToken(null)
+      sessionStorage.removeItem("userId")
 
       setLogoutDialogOpen(false)
       window.location.href = "/login"

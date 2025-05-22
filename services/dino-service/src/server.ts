@@ -51,7 +51,7 @@ const start = async () => {
                 assignedPlayer.toggleReadyState(); // Use the Player class method
 
                 // Check if all players are ready to start the game
-                if (currentRoom.getPlayers().length >= 2 && currentRoom.getPlayers().every((p) => p.isReady())) {
+                if (currentRoom.getPlayers().every((p) => p.isReady())) {
                     broadcastToRoom(currentRoom, { type: 'game_start' });
                     startGame(currentRoom);
                 } else {

@@ -317,9 +317,12 @@ export default function GameRoom({
 							<p className="font-pixel text-xs text-muted-foreground">
 								Game will start automatically when all players are ready
 							</p>
-							<p className="font-pixel text-xs text-muted-foreground">
-								At least 2 players
-							</p>
+							{isPong && (
+								<p className="font-pixel text-xs text-muted-foreground">
+									At least 2 players
+								</p>
+								
+							)}
 						</div>
 					)}
 				</div>

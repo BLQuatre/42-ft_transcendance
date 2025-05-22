@@ -6,14 +6,15 @@ import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom"
+import DinoLane from "@/app/[lang]/games/dino/components/DinoLane"
 
 
 export default function DinoGamePage() {
 	const params = useParams()
 	const roomId = params.roomId as string
 
-	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [gameState, setGameState] = useState<any>(null)
+	const [frozenLanes, setFrozenLanes] = useState<Record<number, { dino: any, obstacles: any[] }>>({});
 
 	const [gameFinished, setGameFinished] = useState<boolean>(false)
 	const gameFinishedRef = useRef(gameFinished)
@@ -37,15 +38,18 @@ export default function DinoGamePage() {
 	const [room, setRoom] = useState<GameRoomType | null>(null)
 	const [gameInProgress, setGameInProgress] = useState(false)
 
-	const FRAME_VAL = 36
 	const [frame, setFrame] = useState(36)
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			setFrame((prev) => (prev + 1) % 2) ;
+		}, 250)
 
-	const TYPE_CACTUS = 1 ; const TYPE_SMALL = 2 ; const TYPE_GROUP = 3 ; const TYPE_PTERO = 4 ;
+		return () => { clearInterval(intervalId) ; }
+	}, []) ;
 
 
 	// Load all images once
 	const images = useRef<any>({}) ;
-	const [imagesLoaded, setImagesLoaded] = useState(false) ;
 	useEffect(() => {
 		const imageSources = {
 			dinoStanding:	"/img/dino_standing.png",
@@ -60,18 +64,9 @@ export default function DinoGamePage() {
 			ptero2:			"/img/ptero2.png",
 		} ;
 
-		let loadedCount = 0;
-		const total = Object.keys(imageSources).length;
-
 		for (const [key, src] of Object.entries(imageSources)) {
 			const img = new Image();
 			img.src = `${window.location.origin}${src}`;
-			img.onload = () => {
-				loadedCount++;
-				if (loadedCount === total) {
-					setImagesLoaded(true);
-				}
-			} ;
 			img.onerror = (e) => {
 				console.error(`Image failed to load: ${img.src}`, e);
 			} ;
@@ -115,8 +110,30 @@ export default function DinoGamePage() {
 				// Handle different message types
 				if (msg.type === "assign")
 					setPlayerId(msg.playerId);
-				else if (msg.type === "state")
-					setGameState(msg.gameState);
+				else if (msg.type === "state") {
+					const newState = msg.gameState;
+
+					setFrozenLanes((currentFrozenLanes) => {
+						const updatedFrozenLanes = { ...currentFrozenLanes };
+
+						newState.dinos.forEach((dino: any, index: number) => {
+							// Check if dino just died (score >= 0, meaning they got a final score) and lane isn't already frozen
+							if (dino.score >= 0 && !(index in currentFrozenLanes)) {
+								console.log("Freezing lane", index, "with final score:", dino.score);
+
+								// Freeze the lane with current state just before death
+								updatedFrozenLanes[index] = {
+									dino: dino,
+									obstacles: [...newState.obstacles] // snapshot current obstacles
+								};
+							}
+						});
+
+						return updatedFrozenLanes;
+					});
+
+					setGameState(newState);
+				}
 				else if (msg.type === "room_update") {
 					if (!msg.room) {
 						console.error("Received room_update with no room data");
@@ -128,7 +145,7 @@ export default function DinoGamePage() {
 						id: msg.room.id,
 						name: `DINO Room #${msg.room.id.slice(-6)}`,
 						gameType: "dino",
-						maxPlayers: 8,
+						maxPlayers: 4,
 						status: msg.room.status,
 						players: msg.room.players.map((p: any) => ({
 							id: p.id.toString(),
@@ -227,85 +244,6 @@ export default function DinoGamePage() {
 		};
 	}, [playerId]);
 
-	// Rendering
-	useEffect(() => {
-		if (!canvasRef.current || !gameState || !imagesLoaded) return
-		const canvas = canvasRef.current
-		const ctx = canvas.getContext("2d")
-		if (!ctx) return
-
-		const img = images.current
-
-		const draw = () => {
-			// Clear only the score area at the top
-			ctx.clearRect(0, 0, canvas.width, 50);
-
-			const offset = canvas.height / (gameState.dinos.length + 1)
-			let i = 0
-
-			gameState.dinos.forEach((dino: any) => {
-				i++
-
-				if (dino.score > -1) {
-					ctx.font = "16px Arial"
-					ctx.fillStyle = "#555"
-					ctx.fillText(`${dino.score}`, canvas.width - 100, offset * i - offset / 2)
-					return
-				}
-
-				// Only clear the area for active players
-				ctx.clearRect(0, (offset * (i - 1)), canvas.width, offset);
-
-				ctx.fillStyle = "#555"
-				ctx.fillRect(20, offset * i - 6, canvas.width - 40, 2)
-
-				// Draw dino
-				if (dino.lean) {
-					const leanImg = (Math.floor(frame / 12) % 2) === 0 ? img.dinoLean1 : img.dinoLean2
-					if (leanImg.complete) {
-						ctx.drawImage(leanImg, 40, offset * i - 48 - dino.y, 64, 48)
-					}
-				} else {
-					const runImg = dino.y > 0 ? img.dinoStanding : ((Math.floor(frame / 12) % 2) === 0 ? img.dinoRun1 : img.dinoRun2)
-					if (runImg.complete) {
-						ctx.drawImage(runImg, 40, offset * i - 48 - dino.y, 48, 48)
-					}
-				}
-
-				// Draw obstacles
-				gameState.obstacles.forEach((ob: any) => {
-					const y = offset * i - ob.y
-					if (ob.type === TYPE_CACTUS && img.cactus.complete)
-						ctx.drawImage(img.cactus, ob.x, y, 32, 48)
-					else if (ob.type === TYPE_SMALL && img.small.complete)
-						ctx.drawImage(img.small, ob.x, y, 16, 32)
-					else if (ob.type === TYPE_GROUP && img.group.complete)
-						ctx.drawImage(img.group, ob.x, y, 48, 48)
-					else if (ob.type === TYPE_PTERO) {
-						const pteroImg = (Math.floor(frame / 12) % 2) === 0 ? img.ptero1 : img.ptero2
-						if (pteroImg.complete)
-							ctx.drawImage(pteroImg, ob.x, y, 48, 48)
-					}
-				})
-			})
-
-			// Score
-			ctx.font = '20px "Press Start 2P"'
-			ctx.fillStyle = "#FFF"
-			ctx.fillText(`SCORE: ${gameState.score}`, 20, 30)
-
-			setFrame(f => (f - 1 + FRAME_VAL) % FRAME_VAL)
-
-			requestAnimationFrame(draw)
-		}
-		const animId = requestAnimationFrame(draw)
-
-		return () => {
-			cancelAnimationFrame(animId)
-		}
-	}, [gameState, imagesLoaded])
-
-
 	// Toggle ready status
 	const handleToggleReady = () => {
 		if (!socketRef.current || playerIdRef.current === null) return
@@ -329,17 +267,33 @@ export default function DinoGamePage() {
 
 	// Game is in progress, show the game view
 	return (
-		<div className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
+		<div className="min-h-screen bg-background flex flex-col overflow-hidden">
 			<MainNav />
-			<div className="flex-1 container py-6">
-				<div className="grid gap-8">
-					<div className="space-y-4">
-						<Card className="overflow-hidden">
-							<CardContent className="p-0">
-								<canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
-							</CardContent>
-						</Card>
-					</div>
+			<div className="flex-1 flex items-center justify-center px-4 w-[80%] mx-auto">
+				<div className="w-full">
+					<Card className="overflow-hidden">
+						<div className="pl-8 py-2 font-pixel text-2xl">
+							SCORE: {gameState?.score || 0}
+						</div>
+
+						<CardContent className="p-0">
+							{gameState?.dinos.map((dino: any, index: number) => {
+								const isFrozen = frozenLanes[index] !== undefined;
+								const laneDino = isFrozen ? frozenLanes[index].dino : dino;
+								const laneObstacles = isFrozen ? frozenLanes[index].obstacles : gameState.obstacles;
+
+								return (
+									<DinoLane
+										key={`dino-lane-${index}`}
+										dino={laneDino}
+										obstacles={laneObstacles}
+										images={images.current}
+										frame={isFrozen ? -1 : frame}
+									/>
+								);
+							})}
+						</CardContent>
+					</Card>
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 
 import { useState } from "react"
 import { MainNav } from "@/components/Navbar"
@@ -20,16 +20,11 @@ import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog"
 import { LogOut } from "lucide-react"
 import axios from "axios"
 import { useDictionary } from "@/hooks/UseDictionnary"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/Dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 import { useAuth } from "@/contexts/auth-context"
 import UpdatePassword from "./components/UpdatePassword"
+import { BaseUser } from "@/types/user"
+import { Skin } from "@/types/skins"
 
 // Sample data for charts
 const gamePlayData = [
@@ -109,36 +104,31 @@ const dinoHistory = [
 ]
 
 // Sample skin data
-const characterSkins = [
+const characterSkins: Skin[] = [
   {
     id: "cs1",
     name: "CLASSIC PIXEL",
-    image: "/placeholder.svg?height=100&width=100",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=100"
   },
   {
     id: "cs2",
     name: "NEON WARRIOR",
-    image: "/placeholder.svg?height=100&width=100",
-    owned: false,
+    image: "/images/placeholder.svg?height=100&width=100"
   },
   {
     id: "cs3",
     name: "ROBOT PLAYER",
-    image: "/placeholder.svg?height=100&width=100",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=100"
   },
   {
     id: "cs4",
     name: "GHOST MODE",
-    image: "/placeholder.svg?height=100&width=100",
-    owned: false,
+    image: "/images/placeholder.svg?height=100&width=100"
   },
   {
     id: "cs5",
     name: "RETRO HERO",
-    image: "/placeholder.svg?height=100&width=100",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=100"
   },
 ]
 
@@ -146,26 +136,22 @@ const pongMapSkins = [
   {
     id: "pms1",
     name: "CLASSIC ARENA",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
   {
     id: "pms2",
     name: "SPACE VOID",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: false,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
   {
     id: "pms3",
     name: "NEON GRID",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
   {
     id: "pms4",
     name: "RETRO ARCADE",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: false,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
 ]
 
@@ -173,25 +159,24 @@ const dinoMapSkins = [
   {
     id: "dms1",
     name: "RETRO DESERT",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
   {
     id: "dms2",
     name: "CYBER CITY",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: false,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
   {
     id: "dms3",
     name: "PIXEL FOREST",
-    image: "/placeholder.svg?height=100&width=200",
-    owned: true,
+    image: "/images/placeholder.svg?height=100&width=200"
   },
 ]
 
 export default function DashboardPage() {
   const { setAccessToken } = useAuth()
+
+  const [user, setUser] = useState<BaseUser | null>(null)
 
   const [isLoading, setIsLoading] = useState(false)
   const [activeSettingsTab, setActiveSettingsTab] = useState("account")
@@ -202,7 +187,6 @@ export default function DashboardPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
-  const [saveSkinDialogOpen, setSaveSkinDialogOpen] = useState(false)
   const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
   const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
@@ -245,18 +229,16 @@ export default function DashboardPage() {
 
   const confirmDeleteAccount = () => {
     console.log("Deleting account...")
-    // Implement actual account deletion logic here
     setDeleteAccountDialogOpen(false)
   }
 
-  const handleSaveSkins = () => {
-    setSaveSkinDialogOpen(true)
-  }
-
-  const confirmSaveSkins = () => {
+  const saveSkins = () => {
     console.log("Saving skin selections...")
-    // Implement actual skin saving logic here
-    setSaveSkinDialogOpen(false)
+    setIsLoading(true)
+
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1000)
   }
 
   const handleUploadAvatar = () => {
@@ -324,6 +306,16 @@ export default function DashboardPage() {
     // In a real app, you would make an API call to confirm 2FA is enabled
     console.log("2FA has been enabled successfully")
   }
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId")
+
+    if (userId) {
+      axios.get(`/api/user/${userId}`).then((response) => {
+        setUser(response.data)
+      })
+    }
+  })
 
   const dict = useDictionary()
   if (!dict) return null
@@ -666,8 +658,12 @@ export default function DashboardPage() {
             </Card>
 
             <div className="flex justify-end">
-              <Button className="font-pixel bg-game-blue hover:bg-game-blue/90" onClick={handleSaveSkins}>
-                SAVE SELECTIONS
+              <Button
+                className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
+                disabled={isLoading}
+                onClick={saveSkins}
+              >
+                {isLoading ? "Saving selections..." : "Save selections"}
               </Button>
             </div>
           </TabsContent>
@@ -887,35 +883,6 @@ export default function DashboardPage() {
               onClick={confirmDeleteAccount}
             >
               Delete Account
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Save Skins Confirmation Dialog */}
-      <Dialog open={saveSkinDialogOpen} onOpenChange={setSaveSkinDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="font-pixel text-lg uppercase">Confirm Skin Selection</DialogTitle>
-            <DialogDescription className="font-pixel text-xs uppercase">
-              Are you sure you want to save your skin selections?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="font-pixel text-xs uppercase"
-              onClick={() => setSaveSkinDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              className="font-pixel text-xs uppercase bg-game-blue hover:bg-game-blue/90"
-              onClick={confirmSaveSkins}
-            >
-              Save Changes
             </Button>
           </DialogFooter>
         </DialogContent>

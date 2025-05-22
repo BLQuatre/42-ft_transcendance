@@ -4,17 +4,12 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/Card"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
-import { Check } from "lucide-react"
+import { Skin } from "@/types/skins"
 
 interface SkinSelectorProps {
   title: string
   description: string
-  skins: {
-    id: string
-    name: string
-    image: string
-    owned?: boolean
-  }[]
+  skins: Skin[]
   defaultSelected?: string
   onSelect?: (id: string) => void
 }
@@ -36,22 +31,15 @@ export function SkinSelector({ skins, defaultSelected, onSelect }: SkinSelectorP
           key={skin.id}
           className={cn(
             "cursor-pointer transition-all hover:scale-105",
-            selectedSkin === skin.id ? "border-2 border-game-blue" : "",
-            !skin.owned ? "opacity-60" : "",
+            selectedSkin === skin.id ? "border-2 border-game-blue" : ""
           )}
-          onClick={() => skin.owned && handleSelect(skin.id)}
+          onClick={() => handleSelect(skin.id)}
         >
           <CardContent className="p-3 text-center relative">
-            {selectedSkin === skin.id && (
-              <div className="absolute top-1 right-1 bg-game-blue rounded-full p-0.5">
-                <Check className="h-3 w-3 text-white" />
-              </div>
-            )}
             <div className="relative w-full h-24 mb-2 bg-muted rounded-md overflow-hidden">
               <Image src={skin.image || "/placeholder.svg"} alt={skin.name} fill className="object-cover" />
             </div>
             <p className="font-pixel text-xs truncate">{skin.name}</p>
-            {!skin.owned && <p className="font-pixel text-[10px] text-muted-foreground">LOCKED</p>}
           </CardContent>
         </Card>
       ))}

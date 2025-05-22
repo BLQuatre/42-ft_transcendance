@@ -19,20 +19,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-      </head>
-      <body className={inter.className}>
-        <AuthProvider>
-          <InitAuth />
-          {children}
-          <SimpleChatWrapper />
-          <Toaster />
-        </AuthProvider>
-      </body>
-    </html>
+    <div className={inter.className}>
+      <AuthProvider>
+        <InitAuth />
+        {children}
+        <SimpleChatWrapper />
+        <Toaster />
+      </AuthProvider>
+    </div>
   )
 }

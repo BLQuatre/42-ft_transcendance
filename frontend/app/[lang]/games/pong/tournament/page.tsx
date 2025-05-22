@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { TournamentBracket } from "@/components/TournamentBracket"
 import { UpcomingMatches } from "@/components/UpcomingMatches"
 import { useToast } from "@/hooks/UseToast"
+import { MainNav } from "@/components/Navbar"
 
 type Player = {
   name: string
@@ -234,16 +235,11 @@ export default function TournamentPage({
 
   return (
     <div className="min-h-screen bg-background">
+		<MainNav />
       <div className="container px-4 py-8 mx-auto">
         {/* Header Section */}
         <section className={`mb-12 pb-8 border-b border-${gameColor}/20`}>
           <div className="flex items-center justify-between mb-4">
-            <Button variant="ghost" size="sm" className={`font-pixel text-xs text-${gameColor}`} asChild>
-              <Link href={`/`}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                BACK
-              </Link>
-            </Button>
           </div>
 
           <h1 className={`font-pixel text-2xl md:text-3xl text-${gameColor} uppercase mb-6`}>PONG TOURNAMENT</h1>

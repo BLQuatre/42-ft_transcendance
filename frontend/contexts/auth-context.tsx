@@ -10,7 +10,17 @@ type AuthContextType = {
   refreshAccessToken: () => Promise<void>;
 };
 
-const noRefreshPaths = ['/login', '/register'];
+// Paths that are only accessible when not connected
+const onlyNotConnectedPaths = [
+  '/login',
+  '/register'
+];
+
+// Paths that are only accessible when connected
+const onlyConnectedPaths = [
+  '/dashboard',
+  '/friends'
+];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -32,13 +42,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log(`New access token: ${data.accessToken}`);
         setAccessToken(data.accessToken);
 
-        if (noRefreshPaths.includes(pathname.slice(3))) {
+        if (onlyNotConnectedPaths.includes(pathname.slice(3))) {
           window.location.href = '/';
         }
       } else {
         axios.get('/api/auth/logout').then(() => {
           setAccessToken(null);
-          if (!noRefreshPaths.includes(pathname.slice(3)))
+          if (onlyConnectedPaths.includes(pathname.slice(3)))
             window.location.href = '/login';
         }).catch((error) => {
           console.error('Logout error:', error);

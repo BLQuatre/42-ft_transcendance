@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Trophy, Users } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { TournamentBracket } from "@/components/TournamentBracket"
@@ -12,8 +12,8 @@ import { useToast } from "@/hooks/UseToast"
 type Player = {
   name: string
   score: number | null
-  isBot?: boolean
 }
+
 
 type Match = {
   id: number
@@ -180,7 +180,7 @@ export default function TournamentPage({
   const [tournamentData, setTournamentData] = useState<TournamentData>(getTournamentData(gameType))
 
   // Determine game color
-  const gameColor = gameType === "pong" ? "game-blue" : "game-orange"
+  const gameColor = "game-blue"
 
   // Handle adding a local player
   const handleInvitePlayer = (matchId: number, slotNumber: 1 | 2, playerName: string) => {
@@ -234,60 +234,6 @@ export default function TournamentPage({
     })
   }
 
-  // Handle adding a bot
-  const handleAddBot = (matchId: number, slotNumber: 1 | 2) => {
-    // Update the tournament data
-    const updatedTournamentData = { ...tournamentData }
-
-    // Find the match and update the player
-    const roundIndex = updatedTournamentData.bracketData.rounds.findIndex((round) =>
-      round.matches.some((match) => match.id === matchId),
-    )
-
-    if (roundIndex !== -1) {
-      const matchIndex = updatedTournamentData.bracketData.rounds[roundIndex].matches.findIndex(
-        (match) => match.id === matchId,
-      )
-
-      if (matchIndex !== -1) {
-        if (slotNumber === 1) {
-          updatedTournamentData.bracketData.rounds[roundIndex].matches[matchIndex].player1 = {
-            name: "Tournament Bot",
-            score: null,
-            isBot: true,
-          }
-        } else {
-          updatedTournamentData.bracketData.rounds[roundIndex].matches[matchIndex].player2 = {
-            name: "Tournament Bot",
-            score: null,
-            isBot: true,
-          }
-        }
-      }
-    }
-
-    // Also update upcoming matches if needed
-    const upcomingMatchIndex = updatedTournamentData.upcomingMatches.findIndex((match) => match.id === matchId)
-
-    if (upcomingMatchIndex !== -1) {
-      if (slotNumber === 1) {
-        updatedTournamentData.upcomingMatches[upcomingMatchIndex].player1.name = "Tournament Bot"
-      } else {
-        updatedTournamentData.upcomingMatches[upcomingMatchIndex].player2.name = "Tournament Bot"
-      }
-    }
-
-    // Update state
-    setTournamentData(updatedTournamentData)
-
-    // Show toast notification
-    toast({
-      title: "Bot Added",
-      description: `Added local bot to match #${matchId}`,
-      duration: 3000,
-    })
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container px-4 py-8 mx-auto">
@@ -306,9 +252,7 @@ export default function TournamentPage({
             </Badge>
           </div>
 
-          <h1 className={`font-pixel text-2xl md:text-3xl text-${gameColor} uppercase mb-6`}>
-        	{gameType === "pong" ? "PONG" : "DINO RUN"} TOURNAMENT
-          </h1>
+          <h1 className={`font-pixel text-2xl md:text-3xl text-${gameColor} uppercase mb-6`}>PONG TOURNAMENT</h1>
         </section>
 
         {/* Tournament Bracket Section */}
@@ -324,9 +268,8 @@ export default function TournamentPage({
               <div className="min-w-[600px] max-w-[800px] mx-auto">
                 <TournamentBracket
                   bracketData={tournamentData.bracketData}
-                  gameType={gameType as "pong" | "dino"}
+                  gameType="pong"
                   onInvitePlayer={handleInvitePlayer}
-                  onAddBot={handleAddBot}
                 />
               </div>
             </div>
@@ -341,7 +284,7 @@ export default function TournamentPage({
           <div className={`bg-${gameColor}/5 rounded-lg p-6`}>
             <UpcomingMatches
               matches={tournamentData.upcomingMatches}
-              gameType={gameType}
+              gameType="pong"
               dict={{ common: { play: "PLAY" } }}
             />
           </div>

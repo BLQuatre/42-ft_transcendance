@@ -9,7 +9,6 @@ import { InvitePlayerDialog } from "./dialog/InvitePlayerDialog"
 type Player = {
   name: string
   score: number | null
-  isBot?: boolean
 }
 
 type Match = {
@@ -33,14 +32,12 @@ type TournamentBracketProps = {
   bracketData: BracketData
   gameType: "pong" | "dino"
   onInvitePlayer?: (matchId: number, slotNumber: 1 | 2, playerId: string) => void
-  onAddBot?: (matchId: number, slotNumber: 1 | 2) => void
 }
 
 export function TournamentBracket({
   bracketData,
   gameType,
   onInvitePlayer = () => {},
-  onAddBot = () => {},
 }: TournamentBracketProps) {
   const [hoveredMatch, setHoveredMatch] = useState<number | null>(null)
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
@@ -114,7 +111,6 @@ export function TournamentBracket({
                       <div className="flex items-center justify-between w-full">
                         <span className="font-pixel text-xs uppercase truncate max-w-[100px]">
                           {isEmptySlot(match.player1.name) ? "EMPTY SLOT" : match.player1.name}
-                          {match.player1.isBot && " (BOT)"}
                         </span>
 
                         {isEmptySlot(match.player1.name) ? (
@@ -150,7 +146,6 @@ export function TournamentBracket({
                       <div className="flex items-center justify-between w-full">
                         <span className="font-pixel text-xs uppercase truncate max-w-[100px]">
                           {isEmptySlot(match.player2.name) ? "EMPTY SLOT" : match.player2.name}
-                          {match.player2.isBot && " (BOT)"}
                         </span>
 
                         {isEmptySlot(match.player2.name) ? (
@@ -187,7 +182,6 @@ export function TournamentBracket({
           slotNumber={currentInvite.slotNumber}
           gameType={gameType}
           onInvite={onInvitePlayer}
-          onAddBot={onAddBot}
         />
       )}
     </>

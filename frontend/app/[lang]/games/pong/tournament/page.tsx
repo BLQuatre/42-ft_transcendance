@@ -41,9 +41,7 @@ type TournamentData = {
   upcomingMatches: any[]
 }
 
-// This would typically come from an API or database
 const getTournamentData = (gameType: string): TournamentData => {
-  // Mock data for demonstration
   const isActive = true
   const participants = 8
   const rounds = 3
@@ -246,10 +244,6 @@ export default function TournamentPage({
                 BACK
               </Link>
             </Button>
-
-            <Badge variant="outline" className={`font-pixel text-xs bg-${gameColor}/10 text-${gameColor}`}>
-              LOCAL MODE
-            </Badge>
           </div>
 
           <h1 className={`font-pixel text-2xl md:text-3xl text-${gameColor} uppercase mb-6`}>PONG TOURNAMENT</h1>

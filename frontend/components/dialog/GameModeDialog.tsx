@@ -209,7 +209,7 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
                       selectedMode === "tournament" ? "text-white/80" : "text-muted-foreground"
                     }`}
                   >
-                    COMPETE IN A TOURNAMENT
+                    COMPETE IN A LOCAL TOURNAMENT
                   </p>
                 </div>
               </div>

@@ -10,7 +10,7 @@ up:
 		make cert; \
 	fi
 
-	@if [ -f ".env.docker" ]; then \
+	@if [ -f ".env" ]; then \
 		COMPOSE_BAKE=true $(DOCKER_COMPOSE_CMD) -p $(NAME) -f $(DOCKER_COMPOSE_PATH) up --build -d; \
 	else \
 		echo "No .env file found in srcs folder, please create one before running make"; \

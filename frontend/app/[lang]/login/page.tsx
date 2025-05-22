@@ -59,6 +59,7 @@ export default function LoginPage() {
       } else {
         // Normal login success
         setAccessToken(response.data.accessToken)
+        sessionStorage.setItem("userId", response.data.user.id)
         router.push("/")
       }
     } catch (error: any) {

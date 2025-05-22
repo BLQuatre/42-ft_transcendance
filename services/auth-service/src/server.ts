@@ -8,7 +8,7 @@ import fastifyCookie from '@fastify/cookie';
 import { twoFactorAuthentication } from './routes/2fa.routes';
 import { googleAuthentication } from './routes/google.route';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 const app = fastify({
 	logger: process.env.DEBUG === 'true',
@@ -20,7 +20,7 @@ app.register(fastifyCookie, {
 app.register(loginSingUp);
 app.register(authentication);
 app.register(twoFactorAuthentication);
-app.register(googleAuthentication);
+// app.register(googleAuthentication);
 
 app.listen({
 	host: process.env.AUTH_HOST,

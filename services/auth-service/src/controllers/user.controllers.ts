@@ -9,7 +9,7 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 const JWT_ACCESS = getEnv('JWT_ACCESS');
 const JWT_REFRESH = getEnv('JWT_REFRESH');

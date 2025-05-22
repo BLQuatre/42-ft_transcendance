@@ -6,7 +6,7 @@ import { FriendRequestStatus } from "../utils/interface";
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 const Friend = AppDataSource.getRepository(FriendEntity);
 

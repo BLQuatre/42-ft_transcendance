@@ -8,7 +8,7 @@ export enum UserStatus {
 	OFFLINE = "offline"
 }
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 function isOnline(lastSeenAt: Date | null): boolean {
 	if (!lastSeenAt) return false;

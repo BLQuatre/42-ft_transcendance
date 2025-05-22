@@ -8,11 +8,10 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { chatRoutes } from "./routes/chat";
 import { chatGeneralRoutes} from "./routes/chatGeneral";
-dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 const app = fastify({
 	logger: process.env.DEBUG === 'true',
-	
 });
 
 // app.register(userRoutes);

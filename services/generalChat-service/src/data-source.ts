@@ -4,7 +4,7 @@ import { ChatGeneral} from './entities/ChatGeneral';
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 export const AppDataSource = new DataSource({
     type: 'postgres',

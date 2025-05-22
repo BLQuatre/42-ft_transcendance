@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from './data-source';
 import { friendRoutes } from './routes/friend.routes';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 const app = fastify({
 	logger: process.env.DEBUG === 'true',

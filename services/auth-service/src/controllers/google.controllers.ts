@@ -5,7 +5,7 @@ import axios from "axios";
 import path from 'path';
 import { OAuth2Client } from 'google-auth-library'
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 const idClient = getEnv('ID_CLIENT');
 

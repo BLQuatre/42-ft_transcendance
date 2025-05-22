@@ -5,7 +5,7 @@ import fastify from "fastify";
 import { AppDataSource } from "./data-source";
 import { userRoutes } from './routes/user.routes';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
 
 const app = fastify({
 	logger: process.env.DEBUG === 'true',

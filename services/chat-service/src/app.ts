@@ -5,7 +5,7 @@ import typeormPlugin from "./plugins/typeorm.plugin";
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 export async function buildApp() {
 	const app = fastify({

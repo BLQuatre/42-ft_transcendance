@@ -231,7 +231,7 @@ export default function PongGamePage() {
 	// If we're still in the waiting room phase
 	if (!gameInProgress) {
 		return (
-			<div className="min-h-screen bg-background">
+			<div className="min-h-screen bg-background h-screen overflow-hidden">
 				<MainNav />
 				<GameRoom
 					room={room}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
+import { ScoreDisplay } from "@/components/ScoreDisplay"
 
 import { Game } from '@/lib/pong/game'
 import * as CONST from '@/lib/pong/constants' ;
@@ -18,6 +19,8 @@ export default function PongGamePage() {
 	let keysPressed = { up: false, down: false }
 	const gameRef = useRef<Game | null>(null)
 	const frameRef = useRef<number | null>(null)
+	const [scores, setScores] = useState({ left: 0, right: 0 })
+
 
 	let bot = { knownBallY: 0, inputs: { up: false, down: false } }
 
@@ -105,16 +108,6 @@ export default function PongGamePage() {
 			ctx.fillStyle = "#FFFFFF"
 			ctx.arc(ball.x, ball.y, 10, 0, Math.PI * 2)
 			ctx.fill()
-
-
-			// Draw score
-			ctx.font = '16px "Press Start 2P"'
-
-			const score = game.get_score() ;
-			ctx.fillStyle = "#4A9DFF"
-			ctx.fillText(score.left.toString(), canvas.width / 4, 30)
-			ctx.fillStyle = "#FFA500"
-			ctx.fillText(score.right.toString(), (canvas.width / 4) * 3, 30)
 		}
 
 		const handleInput = () => {
@@ -150,6 +143,12 @@ export default function PongGamePage() {
 		const gameLoop = () => {
 			draw()
 			handleInput()
+
+	  		const currentScores = game.get_score()
+      		if (currentScores.left !== scores.left || currentScores.right !== scores.right) {
+      		  setScores({ left: currentScores.left, right: currentScores.right })
+      		}
+
 			if (game.get_score().left == CONST.SCORE_WIN || game.get_score().right == CONST.SCORE_WIN)
 				setGameFinished(true) ;
 
@@ -197,6 +196,14 @@ export default function PongGamePage() {
 								{/* Blur overlay applied only to game area */}
 								{pausedState && <div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>}
 
+								{/* Score display component */}
+								<ScoreDisplay
+								  leftScore={scores.left}
+								  rightScore={scores.right}
+								  winningScore={CONST.SCORE_WIN}
+								  gameFinished={gameFinished}
+								/>
+
 								{/* Pause instructions on top of blur */}
 								{(pausedState && !gameFinished) && (
 									<div className="absolute inset-0 flex flex-col items-center justify-center z-20">
@@ -206,19 +213,6 @@ export default function PongGamePage() {
 												<p>Use ↑/↓ or W/S to move your paddle</p>
 											</div>
 										</div>
-									</div>
-								)}
-								
-								{/* Trophy on the side of the winner on top of blur */}
-								{gameFinished && (
-									<div className="absolute inset-0 flex justify-between items-center z-30 px-8">
-										{gameRef.current!.get_score().left === CONST.SCORE_WIN && (
-											<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
-										)}
-										<div></div> {/* spacer */}
-										{gameRef.current!.get_score().right === CONST.SCORE_WIN && (
-											<div className="text-yellow-400 text-6xl animate-bounce">🏆</div>
-										)}
 									</div>
 								)}
 							</CardContent>

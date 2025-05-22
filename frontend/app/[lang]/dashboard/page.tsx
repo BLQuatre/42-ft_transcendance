@@ -26,6 +26,9 @@ import UpdatePassword from "./components/UpdatePassword"
 import { BaseUser } from "@/types/user"
 import { Skin } from "@/types/skins"
 import api from "@/lib/api"
+import { GameType } from "@/types/game"
+import { cn, handleImageUpload } from "@/lib/utils"
+import { useToast } from "@/hooks/UseToast"
 
 // Sample data for charts
 const gamePlayData = [
@@ -133,7 +136,7 @@ const characterSkins: Skin[] = [
   },
 ]
 
-const pongMapSkins = [
+const pongMapSkins: Skin[] = [
   {
     id: "pms1",
     name: "CLASSIC ARENA",
@@ -156,7 +159,7 @@ const pongMapSkins = [
   },
 ]
 
-const dinoMapSkins = [
+const dinoMapSkins: Skin[] = [
   {
     id: "dms1",
     name: "RETRO DESERT",
@@ -176,40 +179,79 @@ const dinoMapSkins = [
 
 export default function DashboardPage() {
   const { setAccessToken } = useAuth()
+  const { toast } = useToast()
 
   const [user, setUser] = useState<BaseUser | null>(null)
-
   const [isLoading, setIsLoading] = useState(false)
-  const [activeSettingsTab, setActiveSettingsTab] = useState("account")
+
+  const [username, setUsername] = useState("")
+  const [usernameError, setUsernameError] = useState<string | null>(null)
+
   const [selectedMatch, setSelectedMatch] = useState<null | {
-    type: "pong" | "dino"
+    type: GameType
     details: any
   }>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
+
+  // Dialogs
+  const [matchDialogOpen, setMatchDialogOpen] = useState(false)
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
+  const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false)
+
   const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
   const [secretHash, setSecretHash] = useState<string | undefined>(undefined)
-  const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false)
-
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-  const handleMatchClick = (type: "pong" | "dino", details: any) => {
+  // MATCH DETAILS
+  const handleMatchClick = (type: GameType, details: any) => {
     setSelectedMatch({ type, details })
-    setDialogOpen(true)
+    setMatchDialogOpen(true)
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  // ACCOUNT
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = event.target.value
+    setUsername(newUsername)
+
+    if (newUsername.length > 0 && newUsername.length < 6) {
+      setUsernameError("6 characters minimum")
+    } else {
+      setUsernameError(null)
+    }
+  }
+
+  const saveAccountChanges = (event: React.FormEvent) => {
     event.preventDefault()
     setIsLoading(true)
 
-    setTimeout(() => {
+    api.put(`/user/${user?.id}`, {
+      name: username
+    }).then(() => {
+      updateData()
+      toast({
+        title: "Account Updated",
+        description: "Your account has been updated successfully",
+        duration: 3000,
+      })
+    }).catch((error) => {
+      if (error.status === 409) {
+        setUsernameError("Username already taken")
+      } else {
+        toast({
+          title: "Error",
+          description: "There was an error updating your account",
+          duration: 3000,
+        })
+        console.log("Error updating account", error)
+      }
+    }).finally(() => {
       setIsLoading(false)
-    }, 1000)
+    })
   }
 
+  // LOGOUT
   const handleLogout = () => {
     setLogoutDialogOpen(true)
   }
@@ -217,13 +259,18 @@ export default function DashboardPage() {
   const confirmLogout = () => {
     console.log("Logging out...")
 
-    setAccessToken(null)
-    axios.get("/api/auth/logout")
+    axios.get("/api/auth/logout").then(() => {
+      console.log("Logout successful")
+      setAccessToken(null)
 
-    window.location.href = "/login"
-    setLogoutDialogOpen(false)
+      setLogoutDialogOpen(false)
+      window.location.href = "/login"
+    }).catch((error) => {
+      console.error("Logout error:", error)
+    })
   }
 
+  // Delete account
   const handleDeleteAccount = () => {
     setDeleteAccountDialogOpen(true)
   }
@@ -233,6 +280,7 @@ export default function DashboardPage() {
     setDeleteAccountDialogOpen(false)
   }
 
+  // Save skin selections
   const saveSkins = () => {
     console.log("Saving skin selections...")
     setIsLoading(true)
@@ -242,21 +290,37 @@ export default function DashboardPage() {
     }, 1000)
   }
 
-  const handleUploadAvatar = () => {
-    // Trigger the hidden file input click
+  // Avatar
+  const handleUploadAvatarBtn = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click()
     }
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      console.log("File selected:", file)
-      // Here you would typically upload the file to your server
-      // and update the user's avatar
+  const handleUploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const response = await handleImageUpload(file);
+      await api.put(`/user/${user?.id}`, {
+        avatar: response
+      }).then(() => {
+        updateData()
+        toast({
+          title: "Avatar Updated",
+          description: "Your avatar has been updated successfully",
+          duration: 3000,
+        })
+      })
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: `There was an error updating your avatar: ${err.message}`,
+        duration: 3000,
+      })
     }
-  }
+  };
 
   const handleRemoveAvatar = () => {
     setRemoveAvatarDialogOpen(true)
@@ -264,10 +328,10 @@ export default function DashboardPage() {
 
   const confirmRemoveAvatar = () => {
     console.log("Removing avatar...")
-    // Implement actual avatar removal logic here
     setRemoveAvatarDialogOpen(false)
   }
 
+  // 2FA
   const handleSetup2FA = async () => {
     // In a real app, you would fetch the secret hash from your backend here
     try {
@@ -308,16 +372,22 @@ export default function DashboardPage() {
     console.log("2FA has been enabled successfully")
   }
 
-  useEffect(() => {
+  const updateData = () => {
     const userId = sessionStorage.getItem("userId")
+    console.log("userId: " + userId)
 
     if (userId) {
       api.get(`/user/${userId}`).then((response) => {
         setUser(response.data.user)
+        setUsername(response.data.user.name || "")
       }).catch((error) => {
         console.error("Error fetching user data:", error)
       })
     }
+  }
+
+  useEffect(() => {
+    updateData()
   }, [])
 
   const dict = useDictionary()
@@ -336,8 +406,8 @@ export default function DashboardPage() {
 
           <div className="flex items-center space-x-4">
             <Avatar className="h-10 w-10 border-2 border-game-blue">
-              <AvatarImage src="/placeholder.svg?height=40&width=40" alt="@player" />
-              <AvatarFallback className="font-pixel text-xs">P1</AvatarFallback>
+              <AvatarImage src={user?.avatar} alt={user?.name || "..."} />
+              <AvatarFallback className="font-pixel text-xs">{(user?.name || "..").substring(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">
               <p className="font-pixel text-sm">{user?.name || "..."}</p>
@@ -547,7 +617,7 @@ export default function DashboardPage() {
                       <div
                         key={index}
                         className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-                        onClick={() => handleMatchClick("pong", game)}
+                        onClick={() => handleMatchClick(GameType.PONG, game)}
                       >
                         <div className="flex items-center space-x-2">
                           <div
@@ -585,7 +655,7 @@ export default function DashboardPage() {
                       <div
                         key={index}
                         className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-                        onClick={() => handleMatchClick("pong", game)}
+                        onClick={() => handleMatchClick(GameType.DINO, game)}
                       >
                         <div className="flex items-center space-x-2">
                           <div
@@ -672,7 +742,7 @@ export default function DashboardPage() {
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-4">
-            <Tabs defaultValue={activeSettingsTab} onValueChange={setActiveSettingsTab} className="space-y-4">
+            <Tabs defaultValue="account" className="space-y-4">
               <TabsList className="font-pixel text-xs overflow-x-auto w-full flex-nowrap">
                 <TabsTrigger className="uppercase" value="account">
                   {dict.dashboard.sections.settings.title}
@@ -695,7 +765,7 @@ export default function DashboardPage() {
                   <CardContent className="space-y-4">
                     <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                       <Avatar className="h-20 w-20 border-2 border-game-blue">
-                        <AvatarImage src="/placeholder.svg?height=80&width=80" alt="@player" />
+                        <AvatarImage src={user?.avatar} alt="@player" />
                         <AvatarFallback className="font-pixel text-lg">P1</AvatarFallback>
                       </Avatar>
                       <div className="space-y-2">
@@ -707,7 +777,7 @@ export default function DashboardPage() {
                             variant="outline"
                             size="sm"
                             className="font-pixel text-xs uppercase"
-                            onClick={handleUploadAvatar}
+                            onClick={handleUploadAvatarBtn}
                           >
                             {dict.common.upload}
                           </Button>
@@ -722,40 +792,37 @@ export default function DashboardPage() {
                           <input
                             type="file"
                             ref={fileInputRef}
-                            onChange={handleFileChange}
+                            onChange={handleUploadAvatar}
                             className="hidden"
-                            accept="image/*"
+                            accept="image/jpeg,image/png"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={saveAccountChanges} className="space-y-4">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="username" className="font-pixel text-xs uppercase">
                             {dict.dashboard.sections.settings.account.username}
                           </Label>
-                          <Input id="username" defaultValue="PLAYER_ONE" className="font-pixel text-sm h-10 bg-muted" />
+                          <Input
+                            id="username"
+                            type="text"
+                            autoComplete="username"
+                            value={username}
+                            onChange={handleUsernameChange}
+                            error={usernameError !== null}
+                            className="font-pixel text-sm h-10 bg-muted"
+                          />
+                          <p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>{usernameError || " "}</p>
                         </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="bio" className="font-pixel text-xs uppercase">
-                          {dict.dashboard.sections.settings.account.bio}
-                        </Label>
-                        <Textarea
-                          id="bio"
-                          rows={3}
-                          defaultValue="Retro gaming enthusiast. Pong champion."
-                          className="w-full rounded-md border border-input bg-muted px-3 py-2 text-sm font-pixel"
-                        />
                       </div>
 
                       <Button
                         type="submit"
                         className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-                        disabled={isLoading}
+                        disabled={isLoading || usernameError !== null || username == user?.name}
                       >
                         {isLoading ? dict.common.saving : dict.common.save}
                       </Button>
@@ -819,7 +886,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Match Details Dialog */}
-      <MatchDetailsDialog open={dialogOpen} onOpenChange={setDialogOpen} match={selectedMatch} />
+      <MatchDetailsDialog open={matchDialogOpen} onOpenChange={setMatchDialogOpen} match={selectedMatch} />
 
       {/* 2FA Setup Dialog with the secret hash from backend */}
       <TwoFactorSetupDialog

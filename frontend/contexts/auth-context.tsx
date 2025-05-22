@@ -15,6 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
 
   const refreshAccessToken = async () => {
@@ -41,6 +42,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    const refresh = async () => {
+      await refreshAccessToken();
+      setLoading(false);
+    }
     console.log(`[AuthProvider] useEffect called`);
     console.log(`[AuthProvider] pathname: ${pathname} (${pathname.slice(3)})`);
 
@@ -49,8 +54,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     //   || pathname.startsWith('/images')
     // )
     //   return;
-    refreshAccessToken();
+    refresh();
   }, []);
+
+  if (loading)
+    return null
 
   return (
     <AuthContext.Provider value={{ accessToken, setAccessToken, refreshAccessToken }}>

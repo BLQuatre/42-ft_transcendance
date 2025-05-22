@@ -125,7 +125,7 @@ export const confirmPassword = async(req: FastifyRequest<{Body: {password: strin
 	});
 }
 
-export const updateUser = async (req: FastifyRequest<{Body: CreateUserDto}>, reply: FastifyReply) => {
+export const updateUser = async (req: FastifyRequest<{Body: { name?: string, avatar?: string }}>, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
 
 	const token = req.headers['x-user-id'];
@@ -144,13 +144,25 @@ export const updateUser = async (req: FastifyRequest<{Body: CreateUserDto}>, rep
 		});
 	}
 
-	const isValid = await validateBody(CreateUserDto)(req, reply);
-	if (!isValid) return;
-
-	await User.update(userFind.id, {
-		name: req.body.name,
+	const updated: { updated_at: Date, name?: string, avatar?: string } = {
 		updated_at: new Date()
-	});
+	}
+
+	if (req.body.name) {
+		const userName = await User.findOneBy({ name: req.body.name });
+		if (userName) {
+			return reply.code(409).send({
+				message: 'User already exist',
+				statusCode: 409
+			});
+		}
+		updated.name = req.body.name;
+	}
+
+	if (req.body.avatar)
+		updated.avatar = req.body.avatar;
+
+	await User.update(userFind.id, updated);
 
 	const res = await User.findOneBy({ id: userFind.id })
 	if (!res)
@@ -279,7 +291,7 @@ export const heartbeat = async (req: FastifyRequest, reply: FastifyReply) => {
 	const { id } = req.params as { id: string };
 
 	await User.update(id, {
-	lastSeenAt: new Date(),	
+	lastSeenAt: new Date(),
 	})
 
 	return reply.code(200).send({ message: 'Ok', statusCode: 200});

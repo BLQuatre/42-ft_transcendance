@@ -34,12 +34,15 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
     // If multiplayer is selected, open the multiplayer dialog
     if (mode === "multiplayer") {
       setIsMultiplayerDialogOpen(true)
-      // Keep the main dialog open for now
     } else {
       // Navigate to the appropriate URL based on game type and mode
       router.push(`/games/${gameType}/${mode}`)
       onOpenChange(false)
     }
+	if (mode === "tournament") {
+	  router.push(`/games/${gameType}/tournament`)
+	  onOpenChange(false)
+	}
   }
 
   const getColorClass = () => {

@@ -1,8 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { formatDistanceToNow } from "date-fns"
-import { Clock, Trophy } from "lucide-react"
+import { Trophy } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 
@@ -16,7 +15,6 @@ type Match = {
   round: string
   player1: Player
   player2: Player
-  scheduledTime: string
   isLive: boolean
 }
 
@@ -26,15 +24,12 @@ type UpcomingMatchesProps = {
   dict: any
 }
 
-export function UpcomingMatches({ matches, gameType, dict }: UpcomingMatchesProps) {
-  const gameColor = gameType === "pong" ? "game-blue" : "game-orange"
+const redirectToPlay = () => {
+  window.location.href = `/games/pong/local`
+}
 
-  const formatMatchTime = (dateString: string) => {
-    const date = new Date(dateString)
-    const timeString = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    const relativeTime = formatDistanceToNow(date, { addSuffix: true })
-    return { timeString, relativeTime }
-  }
+export function UpcomingMatches({ matches, gameType }: UpcomingMatchesProps) {
+  const gameColor = gameType === "pong" ? "game-blue" : "game-orange"
 
   return (
     <div className="space-y-4">
@@ -44,7 +39,6 @@ export function UpcomingMatches({ matches, gameType, dict }: UpcomingMatchesProp
         </div>
       ) : (
         matches.map((match) => {
-          const { timeString, relativeTime } = formatMatchTime(match.scheduledTime)
 
           return (
             <div
@@ -59,32 +53,17 @@ export function UpcomingMatches({ matches, gameType, dict }: UpcomingMatchesProp
                   <Trophy className={`h-4 w-4 mr-2 text-${gameColor}`} />
                   <span className="font-pixel text-xs uppercase">{match.round}</span>
                 </div>
-                <div className="flex items-center">
-                  <Clock className={`h-4 w-4 mr-2 text-${gameColor}`} />
-                  <span className="font-pixel text-xs uppercase">{timeString}</span>
-                  <span className="font-pixel text-xs text-muted-foreground uppercase ml-2">({relativeTime})</span>
-                </div>
               </div>
 
               <div className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center">
-                      {match.player1.avatar ? (
-                        <Image
-                          src={match.player1.avatar || "/placeholder.svg"}
-                          alt={match.player1.name}
-                          width={40}
-                          height={40}
-                          className="rounded-full mr-3"
-                        />
-                      ) : (
                         <div
                           className={`w-10 h-10 rounded-full bg-${gameColor}/20 flex items-center justify-center mr-3`}
                         >
                           <span className="font-pixel text-xs uppercase">{match.player1.name.charAt(0)}</span>
                         </div>
-                      )}
                       <span className="font-pixel text-sm uppercase">{match.player1.name}</span>
                     </div>
                   </div>
@@ -117,8 +96,11 @@ export function UpcomingMatches({ matches, gameType, dict }: UpcomingMatchesProp
 
                 {match.isLive && (
                   <div className="flex justify-center mt-4">
-                    <Button className={`font-pixel text-xs uppercase bg-${gameColor} hover:bg-${gameColor}/90`}>
-                      WATCH LIVE
+                    <Button
+					className={`font-pixel text-xs uppercase bg-${gameColor} hover:bg-${gameColor}/90`}
+          			onClick={redirectToPlay}
+					>
+                      PLAY LOCAL
                     </Button>
                   </div>
                 )}

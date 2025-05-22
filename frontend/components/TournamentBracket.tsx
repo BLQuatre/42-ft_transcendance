@@ -125,7 +125,7 @@ export function TournamentBracket({
                             onClick={() => handleOpenInviteDialog(match.id, 1)}
                           >
                             <UserPlus className="h-3 w-3 mr-1" />
-                            INVITE
+                            ADD PLAYER
                           </Button>
                         ) : (
                           <span className="font-pixel text-xs font-bold ml-2">
@@ -161,7 +161,7 @@ export function TournamentBracket({
                             onClick={() => handleOpenInviteDialog(match.id, 2)}
                           >
                             <UserPlus className="h-3 w-3 mr-1" />
-                            INVITE
+                            ADD PLAYER
                           </Button>
                         ) : (
                           <span className="font-pixel text-xs font-bold ml-2">

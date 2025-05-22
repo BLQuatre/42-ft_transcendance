@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, useEffect } from 'react';
 
@@ -19,21 +20,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const refreshAccessToken = async () => {
-    try {
-      console.log('Refreshing access token...');
+    console.log('Refreshing access token...');
 
+    try {
       const res = await fetch('/api/auth/refresh', {
         credentials: 'include',
       });
 
       if (res.ok) {
-        console.log('Access token refreshed');
         const data = await res.json();
         console.log(`New access token: ${data.accessToken}`);
         setAccessToken(data.accessToken);
+
+        if (noRefreshPaths.includes(pathname.slice(3))) {
+          window.location.href = '/';
+        }
       } else {
-        console.error('Failed to refresh access token');
-        setAccessToken(null);
+        axios.get('/api/auth/logout').then(() => {
+          setAccessToken(null);
+          if (!noRefreshPaths.includes(pathname.slice(3)))
+            window.location.href = '/login';
+        }).catch((error) => {
+          console.error('Logout error:', error);
+        });
       }
     } catch (error) {
       console.error('Error refreshing access token:', error);
@@ -46,14 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await refreshAccessToken();
       setLoading(false);
     }
-    console.log(`[AuthProvider] useEffect called`);
-    console.log(`[AuthProvider] pathname: ${pathname} (${pathname.slice(3)})`);
 
-    // if (noRefreshPaths.includes(pathname.slice(3))
-    //   || pathname.startsWith('/api')
-    //   || pathname.startsWith('/images')
-    // )
-    //   return;
     refresh();
   }, []);
 

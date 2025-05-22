@@ -20,7 +20,7 @@ export default function SimpleChatWrapper() {
   		pathname?.endsWith(path)
 	);
 
-  	if (isNotFound) return null
+  	if (isNotFound || !accessToken) return null
 
  	 return <SimpleChat />
 }

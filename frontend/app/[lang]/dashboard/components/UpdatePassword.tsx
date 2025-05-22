@@ -118,6 +118,7 @@ export default function UpdatePassword() {
 						value={currentPassword}
 						onChange={handleCurrentPasswordChange}
 						error={passwordError !== null}
+						required
 						className="font-pixel text-sm h-10 bg-muted"
 					/>
 					<p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
@@ -134,6 +135,7 @@ export default function UpdatePassword() {
 						value={newPassword}
 						onChange={handleNewPasswordChange}
 						error={newPasswordError !== null}
+						required
 						className="font-pixel text-sm h-10 bg-muted"
 					/>
 					<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
@@ -150,6 +152,7 @@ export default function UpdatePassword() {
 						value={confirmPassword}
 						onChange={handleConfirmPasswordChange}
 						error={newPasswordError !== null}
+						required
 						className="font-pixel text-sm h-10 bg-muted"
 					/>
 					<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>

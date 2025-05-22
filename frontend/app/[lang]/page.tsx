@@ -6,7 +6,6 @@ import { Footer } from "@/components/Footer"
 import { getDictionary } from "@/lib/dictionnaries"
 import { Language } from "@/types/language"
 import { GameButtons } from "@/components/GameButtons"
-import { LanguageSelectorDialog } from "@/components/dialog/LanguageSelectorDialog"
 
 export default async function HomePage({
   params,
@@ -19,7 +18,6 @@ export default async function HomePage({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <MainNav />
-      <LanguageSelectorDialog />
 
       <main className="flex-1">
         {/* Games Section - Moved to the top for prominence */}

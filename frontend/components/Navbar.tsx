@@ -32,7 +32,6 @@ export function MainNav() {
           <Button variant="ghost" size="icon" onClick={() => setLanguageDialogOpen(true)} className="p-0 h-9 w-9">
             <Languages className="h-5 w-5" />
           </Button>
-          <LanguageSelectorDialog open={languageDialogOpen} onOpenChange={setLanguageDialogOpen} />
         </div>
         {accessToken ? (
           <>
@@ -72,6 +71,8 @@ export function MainNav() {
           </>
         )}
       </div>
+
+      <LanguageSelectorDialog open={languageDialogOpen} onOpenChange={setLanguageDialogOpen} />
     </div>
   )
 }

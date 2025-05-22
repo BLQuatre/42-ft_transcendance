@@ -25,6 +25,7 @@ import { useAuth } from "@/contexts/auth-context"
 import UpdatePassword from "./components/UpdatePassword"
 import { BaseUser } from "@/types/user"
 import { Skin } from "@/types/skins"
+import api from "@/lib/api"
 
 // Sample data for charts
 const gamePlayData = [
@@ -311,11 +312,13 @@ export default function DashboardPage() {
     const userId = sessionStorage.getItem("userId")
 
     if (userId) {
-      axios.get(`/api/user/${userId}`).then((response) => {
-        setUser(response.data)
+      api.get(`/user/${userId}`).then((response) => {
+        setUser(response.data.user)
+      }).catch((error) => {
+        console.error("Error fetching user data:", error)
       })
     }
-  })
+  }, [])
 
   const dict = useDictionary()
   if (!dict) return null
@@ -337,7 +340,7 @@ export default function DashboardPage() {
               <AvatarFallback className="font-pixel text-xs">P1</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">
-              <p className="font-pixel text-sm">PLAYER_ONE</p>
+              <p className="font-pixel text-sm">{user?.name || "..."}</p>
               <Button
                 onClick={handleLogout}
                 variant="outline"

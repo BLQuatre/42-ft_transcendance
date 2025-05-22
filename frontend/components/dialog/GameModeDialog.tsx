@@ -95,7 +95,7 @@ export function GameModeDialog({ open, onOpenChange, gameType, gameTitle, dict }
                     selectedMode === "ai" ? "text-white/80" : "text-muted-foreground"
                   }`}
                 >
-                  PLAY AGAINST THE COMPUTER
+                  BEAT YOUR HIGHEST SCORE
                 </p>
               </div>
             </div>

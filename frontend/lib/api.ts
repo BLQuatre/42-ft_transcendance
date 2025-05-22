@@ -11,7 +11,7 @@ export function injectAuthContext(context: ReturnType<typeof useAuth>) {
 
 const api = axios.create({
   baseURL: '/api/',
-  withCredentials: true,
+  withCredentials: true, // TODO: See if necessary because it only contains refresh token
 });
 
 api.interceptors.request.use((config) => {

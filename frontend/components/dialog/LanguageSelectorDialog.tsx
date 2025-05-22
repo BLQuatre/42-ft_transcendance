@@ -5,50 +5,80 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 import { Button } from "@/components/ui/Button"
+import { getCookie, setCookie } from "cookies-next"
 
 const languages: { code: string; name: string; flag: string }[] = [
-  { code: "en", name: "English", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/2560px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" },
-  { code: "fr", name: "Français", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/2560px-Flag_of_France.svg.png" },
+  {
+    code: "en",
+    name: "English",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/2560px-Flag_of_the_United_Kingdom_%283-5%29.svg.png",
+  },
+  {
+    code: "fr",
+    name: "Français",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/2560px-Flag_of_France.svg.png",
+  },
   { code: "ru", name: "Русский", flag: "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg" },
-  { code: "ro", name: "Română", flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png" },
+  {
+    code: "ro",
+    name: "Română",
+    flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Moldova.svg/1280px-Flag_of_Moldova.svg.png",
+  },
 ]
 
-export function LanguageSelectorDialog() {
-  const [isOpen, setIsOpen] = useState(false)
+interface LanguageSelectorDialogProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function LanguageSelectorDialog({ open, onOpenChange }: LanguageSelectorDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    // const hasSelectedLanguage = getCookie("selectedLanguage")
+  // Use either the controlled state from props or internal state
+  const isDialogOpen = open !== undefined ? open : internalOpen
+  const setIsDialogOpen = onOpenChange || setInternalOpen
 
-    // if (!hasSelectedLanguage) {
-      // setIsOpen(true)
-    // }
-  }, [])
+  useEffect(() => {
+    // Only auto-open if we're using internal state
+    if (onOpenChange === undefined) {
+      const hasSelectedLanguage = getCookie("selectedLanguage")
+      if (!hasSelectedLanguage) {
+        setInternalOpen(true)
+      }
+    }
+  }, [onOpenChange])
 
   const selectLanguage = (lang: string) => {
     // Set cookie with 1 year expiration
-    // setCookie("selectedLanguage", lang, {
-    //   maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
-    //   path: "/",
-    //   sameSite: "lax"
-    // })
+    setCookie("selectedLanguage", lang, {
+      maxAge: 60 * 60 * 24 * 365, // 1 year in seconds
+      path: "/",
+      sameSite: "lax"
+    })
 
-    setIsOpen(false)
+    setIsDialogOpen(false)
     router.push(`/${lang}`)
   }
 
   // Prevent dialog from closing when user tries to dismiss it
   const handleOpenChange = (open: boolean) => {
-    // Only allow closing if it's being opened (which shouldn't happen)
+    // If we have external control, always use it
+    if (onOpenChange) {
+      onOpenChange(open)
+      return
+    }
+
+    // For internal control, only allow closing if it's being opened
     // or if we're explicitly closing it after language selection
     if (open) {
-      setIsOpen(open)
+      setInternalOpen(open)
     }
-    // Ignore attempts to close the dialog
+    // Ignore attempts to close the dialog otherwise
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         className="sm:max-w-md bg-card pixel-border"
         onPointerDownOutside={(e) => e.preventDefault()}

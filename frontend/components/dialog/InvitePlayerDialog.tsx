@@ -67,7 +67,11 @@ export function InvitePlayerDialog({
           </div>
         </div>
         <DialogFooter className="mt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="font-pixel text-xs uppercase">
+          <Button
+            className="font-pixel text-xs uppercase"
+            variant="cancel"
+            onClick={() => onOpenChange(false)}
+          >
             Cancel
           </Button>
           <Button

@@ -72,10 +72,10 @@ export function TwoFactorVerifyDialog({
         </div>
 
         <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
-          <Button 
-            type="button" 
-            variant="outline" 
-            className="font-pixel text-xs uppercase" 
+          <Button
+            type="button"
+            variant="cancel"
+            className="font-pixel text-xs uppercase"
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >

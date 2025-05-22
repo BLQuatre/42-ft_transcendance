@@ -117,7 +117,8 @@
 		"total": "Total",
 		"upload": "Upload",
 		"remove": "Remove",
-		"save": "Save Changes"
+		"save": "Save Changes",
+		"cancel": "Cancel"
 	},
 
 	"profile": {

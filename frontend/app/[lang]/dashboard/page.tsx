@@ -911,7 +911,7 @@ export default function DashboardPage() {
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="cancel"
               className="font-pixel text-xs uppercase"
               onClick={() => setLogoutDialogOpen(false)}
             >
@@ -941,7 +941,7 @@ export default function DashboardPage() {
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="cancel"
               className="font-pixel text-xs uppercase"
               onClick={() => setDeleteAccountDialogOpen(false)}
             >
@@ -971,7 +971,7 @@ export default function DashboardPage() {
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="cancel"
               className="font-pixel text-xs uppercase"
               onClick={() => setRemoveAvatarDialogOpen(false)}
             >
@@ -1001,7 +1001,7 @@ export default function DashboardPage() {
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="cancel"
               className="font-pixel text-xs uppercase"
               onClick={() => setRemove2FADialogOpen(false)}
             >

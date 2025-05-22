@@ -4,25 +4,28 @@ import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { ArrowRight } from "lucide-react"
 import { GameModeDialog } from "@/components/dialog/GameModeDialog"
+import { GameType } from "@/types/game"
+import { cn } from "@/lib/utils"
+import { getBgColor } from "@/lib/colors"
 
 type GameButtonsProps = {
-  gameType: "pong" | "dino"
-  gameTitle: string
+  gameType: GameType
   buttonText: string
-  buttonColor: "blue" | "orange"
-  dict: any
 }
 
-export function GameButtons({ gameType, gameTitle, buttonText, buttonColor, dict }: GameButtonsProps) {
+export function GameButtons({ gameType, buttonText }: GameButtonsProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
-
-  const getButtonClass = () => {
-    return buttonColor === "blue" ? "bg-game-blue hover:bg-game-blue/90" : "bg-game-orange hover:bg-game-orange/90"
-  }
 
   return (
     <>
-      <Button className={`font-pixel ${getButtonClass()} w-fit mt-2 cursor-pointer`} onClick={() => setDialogOpen(true)}>
+      <Button
+        className={cn(
+          "font-pixel w-fit mt-2 cursor-pointer",
+          getBgColor(gameType),
+          `hover:${getBgColor(gameType)}/90`
+        )}
+        onClick={() => setDialogOpen(true)}
+      >
         <span className="flex items-center uppercase">
           {buttonText}
           <ArrowRight className="ml-2 h-4 w-4" />
@@ -33,8 +36,6 @@ export function GameButtons({ gameType, gameTitle, buttonText, buttonColor, dict
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         gameType={gameType}
-        gameTitle={gameTitle}
-        dict={dict}
       />
     </>
   )

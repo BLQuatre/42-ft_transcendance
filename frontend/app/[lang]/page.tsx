@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer"
 import { getDictionary } from "@/lib/dictionnaries"
 import { Language } from "@/types/language"
 import { GameButtons } from "@/components/GameButtons"
+import { GameType } from "@/types/game"
 
 export default async function HomePage({
   params,
@@ -53,11 +54,8 @@ export default async function HomePage({
                   <div className="flex flex-col space-y-3 mt-auto">
                     <div className="flex justify-between items-center">
                       <GameButtons
-                        gameType="pong"
-                        gameTitle={dict.games.pong.title}
+                        gameType={GameType.PONG}
                         buttonText={`${dict.common.play} ${dict.games.pong.title}`}
-                        buttonColor="blue"
-                        dict={dict}
                       />
                       <Button
                         asChild
@@ -93,11 +91,8 @@ export default async function HomePage({
                   <div className="flex flex-col space-y-3 mt-auto">
                     <div className="flex justify-between items-center">
                       <GameButtons
-                        gameType="dino"
-                        gameTitle={dict.games.dino.title}
+                        gameType={GameType.DINO}
                         buttonText={`${dict.common.play} ${dict.games.dino.title}`}
-                        buttonColor="orange"
-                        dict={dict}
                       />
                       <Button
                         asChild

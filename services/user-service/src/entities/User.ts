@@ -9,15 +9,21 @@ export class UserEntity {
 	@Column({ unique: true, nullable: false })
 	name!: string;
 
-	@Column({ nullable: false })
+	@Column({
+		nullable: true
+	})
 	password!: string
 
-	// @Column({
-	// 	unique: true,
-	// 	nullable: false
-	// })
-	// email!: string
+	@Column({
+		unique: true,
+		nullable: true
+	})
+	email!: string
 
+	@Column({
+		default: false
+	})
+	isGoogleSignIn!: Boolean
 	@Column({
 		default: false
 	})

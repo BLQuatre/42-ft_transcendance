@@ -78,7 +78,12 @@ export const verifyUser = async (req: FastifyRequest<{Body: LoginUser}>, reply: 
 			statusCode: 404
 		});
 	}
-
+	if (userFind.isGoogleSignIn){
+		return reply.code(400).send({
+			message: "you can only to log in with google sing-in",
+			statusCode: 400
+		})
+	}
 	const verif = await bcrypt.compare(req.body.password, userFind.password);
 	if (!verif) {
 		return reply.code(401).send({
@@ -295,4 +300,32 @@ export const heartbeat = async (req: FastifyRequest, reply: FastifyReply) => {
 	})
 
 	return reply.code(200).send({ message: 'Ok', statusCode: 200});
+}
+
+export const findbyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
+	const { email } = req.body as { email: string}
+	const user = await User.findOne({ where: { email }});
+	if (!user)
+		return reply.code(200).send({
+			message: "User not Found",
+			isExist: false
+		})
+	return reply.code(200).send({
+		message: "User found",
+		isExist: true,
+		user
+	})
+}
+
+export const createUserByGoogle = async (req: FastifyRequest, reply: FastifyReply) => {
+	const {email} = req.body as { email:string, name: string};
+	const newUser = await User.save({email: email, isGoogleSignIn: true, name: `${email.split('@')[0]}${Date.now()}`});
+	return reply.code(201).send({
+		message: 'User created',
+		statusCode: 201,
+		user: {
+			name: newUser.name,
+			id: newUser.id,
+		}
+	})
 }

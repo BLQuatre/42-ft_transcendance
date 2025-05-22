@@ -26,7 +26,9 @@ export function removePassword(user: UserEntity): PublicUser{
 		id: user.id,
 		name: user.name,
 		avatar: user.avatar,
-		status: isOnline(user.lastSeenAt) ? UserStatus.ONLINE : UserStatus.OFFLINE
+		status: isOnline(user.lastSeenAt) ? UserStatus.ONLINE : UserStatus.OFFLINE,
+		tfaEnable: user.tfaEnable,
+		isGoogleSignIn: user.isGoogleSignIn
 	}
 }
 

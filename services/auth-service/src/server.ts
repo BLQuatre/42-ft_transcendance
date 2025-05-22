@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import path from 'path';
 import dotenv from 'dotenv';
-import fastify from 'fastify';
+import fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import { loginSingUp } from './routes/user.routes';
 import { authentication } from './routes/auth.routes';
 import fastifyCookie from '@fastify/cookie';
 import { twoFactorAuthentication } from './routes/2fa.routes';
-import { googleAuthentication } from './routes/google.route';
+import { authRoutes } from './routes/google.route';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
@@ -17,10 +17,11 @@ const app = fastify({
 app.register(fastifyCookie, {
 	secret: process.env.COOKIE_SECRET
 });
+
 app.register(loginSingUp);
 app.register(authentication);
 app.register(twoFactorAuthentication);
-// app.register(googleAuthentication);
+app.register(authRoutes);
 
 app.listen({
 	host: process.env.AUTH_HOST,

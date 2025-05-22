@@ -11,4 +11,7 @@ export interface PublicUser {
     name: string;
     avatar: string | null;
     status: UserStatus;
+    tfaEnable: Boolean,
+    isGoogleSignIn: Boolean
+
 };

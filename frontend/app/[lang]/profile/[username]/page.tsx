@@ -96,8 +96,8 @@ const dinoHistory = [
 
 // Sample user data - in a real app, this would come from an API
 const userData = {
-  GAMER42: {
-    username: "GAMER42",
+  gamer42: {
+    username: "gamer42",
     displayName: "The Gamer",
     avatar: "/placeholder.svg?height=100&width=100",
     joinDate: "04/12/2022",
@@ -126,7 +126,7 @@ const userData = {
     recentGames: [],
   },
   PIXEL_MASTER: {
-    username: "PIXEL_MASTER",
+    username: "pixel_master",
     displayName: "Pixel Master",
     avatar: "/placeholder.svg?height=100&width=100",
     joinDate: "02/28/2022",
@@ -155,7 +155,7 @@ const userData = {
     recentGames: [],
   },
   RETRO_FAN: {
-    username: "RETRO_FAN",
+    username: "retro_fan",
     displayName: "Retro Fan",
     avatar: "/placeholder.svg?height=100&width=100",
     joinDate: "06/15/2022",

@@ -334,6 +334,15 @@ export function SimpleChat() {
     setActiveFriend(null)
   }
 
+  // Add a new function to handle profile navigation after the handleBackToFriends function
+  const navigateToProfile = (username: string) => {
+    // In a real application, this would navigate to the user's profile page
+    // For this demo, we'll just show an alert
+    window.location.href = `/profile/${username.toLowerCase()}`
+
+    // Alternatively, you could use router.push(`/profile/${username}`) in a real Next.js app
+  }
+
   // 4. Add new functions before the return statement
   const handleSendGameInvite = () => {
     if (!activeFriend || !selectedGame) return
@@ -446,7 +455,7 @@ export function SimpleChat() {
       {isOpen && (
         <Card
           ref={chatRef}
-          className="mb-2 flex flex-col shadow-lg w-[350px] sm:w-[400px] h-[450px] transition-all duration-200 ease-in-out border-2 animate-in slide-in-from-bottom-5"
+          className="mb-2 flex flex-col shadow-lg w-[400px] sm:w-[500px] h-[550px] transition-all duration-200 ease-in-out border-2 animate-in slide-in-from-bottom-5"
         >
           <CardHeader className="p-3 border-b flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center space-x-2">
@@ -491,11 +500,11 @@ export function SimpleChat() {
 
           {/* Navigation Bar */}
           <div className="border-b px-1 py-1 flex justify-center bg-muted/30">
-            <div className="flex space-x-2">
+            <div className="flex w-full gap-1">
               <Button
                 variant={activeView === "general" ? "secondary" : "ghost"}
                 size="sm"
-                className="h-8 px-2"
+                className="h-8 px-2 flex-1"
                 onClick={() => {
                   setActiveView("general")
                   setActiveFriend(null)
@@ -508,7 +517,7 @@ export function SimpleChat() {
               <Button
                 variant={activeView === "friends" ? "secondary" : "ghost"}
                 size="sm"
-                className="h-8 px-2"
+                className="h-8 px-2 flex-1"
                 onClick={() => {
                   setActiveView("friends")
                   setActiveFriend(null)
@@ -632,9 +641,13 @@ export function SimpleChat() {
                                   <div className="flex items-center space-x-2">
                                     <p
                                       className={cn(
-                                        "font-pixel text-[10px] font-bold",
+                                        "font-pixel text-[10px] font-bold cursor-pointer hover:underline",
                                         message.sender === "PLAYER_ONE" ? "text-game-blue" : "",
                                       )}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        navigateToProfile(message.sender)
+                                      }}
                                     >
                                       {message.sender}
                                     </p>
@@ -670,6 +683,17 @@ export function SimpleChat() {
                                 } p-2 shadow-sm`}
                               >
                                 <p className="font-pixel text-[10px] text-muted-foreground/70">{message.timestamp}</p>
+                                {message.sender !== "PLAYER_ONE" && (
+                                  <p
+                                    className="font-pixel text-[10px] font-bold cursor-pointer hover:underline"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      navigateToProfile(message.sender)
+                                    }}
+                                  >
+                                    {message.sender}
+                                  </p>
+                                )}
                                 <p className="font-pixel text-xs mt-0.5">{message.content}</p>
                               </div>
                             </div>

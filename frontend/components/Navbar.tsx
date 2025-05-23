@@ -4,17 +4,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
-import { User, Users, Languages } from "lucide-react"
+import { User, Users } from "lucide-react"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { useAuth } from "@/contexts/auth-context"
-import { LanguageSelectorDialog } from "@/components/dialog/LanguageSelectorDialog"
-import { useState } from "react"
 
 export function MainNav() {
   const { accessToken } = useAuth()
 
   const pathname = usePathname()
-  const [languageDialogOpen, setLanguageDialogOpen] = useState(false)
 
   const dict = useDictionary()
   if (!dict) return null
@@ -28,11 +25,6 @@ export function MainNav() {
       </Link>
 
       <div className="flex items-center space-x-4">
-        <div className="relative">
-          <Button variant="ghost" size="icon" onClick={() => setLanguageDialogOpen(true)} className="p-0 h-9 w-9">
-            <Languages className="h-5 w-5" />
-          </Button>
-        </div>
         {accessToken ? (
           <>
             <div className="relative">
@@ -71,8 +63,6 @@ export function MainNav() {
           </>
         )}
       </div>
-
-      <LanguageSelectorDialog open={languageDialogOpen} onOpenChange={setLanguageDialogOpen} />
     </div>
   )
 }

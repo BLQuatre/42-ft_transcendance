@@ -9,20 +9,26 @@ import axios, { AxiosResponse } from 'axios' ;
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({path:path.resolve(__dirname, '../../../.env.dev')})
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') })
 
 async function getName(uuid: string): Promise<string> {
 	return axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${uuid}`).then((user) => user.data.user.name as string)
 }
 
-const fastify = Fastify() ;
+const fastify = Fastify({
+    logger: process.env.DEBUG === 'true',
+}) ;
 
 const rooms: Map<string, Room> = new Map() ;
 
 
 const start = async () => {
-	await fastify.listen({ port: 3011 }).catch(console.error) ;
-	console.log(`Server running on http://${process.env.DINO_HOST}:${process.env.DINO_PORT}`) ;
+	await fastify.listen({
+        host: process.env.DINO_HOST,
+        port: parseInt(process.env.DINO_PORT || "0", 10)
+    }).catch(console.error) ;
+
+    console.log(`Server running on http://${process.env.DINO_HOST}:${process.env.DINO_PORT}`); ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 

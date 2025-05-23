@@ -4,7 +4,8 @@ import * as CONST from './constants' ;
 
 
 export class Player {
-	private id: number ;
+	private id: string ;
+	private name: string ;
 
 	private x: Range ; // from left to right
 	private y: Range ; // from bot to top
@@ -18,8 +19,9 @@ export class Player {
 	private intervalID: NodeJS.Timeout | null = null ;
 
 
-	constructor(id: number = 0, socket?: WebSocket) {
+	constructor(id: string, name: string, socket?: WebSocket) {
 		this.id = id ;
+		this.name = name;
 
 		this.x = { from: CONST.DINO_POS, to: (CONST.DINO_POS + CONST.DINO_WIDTH) } ;
 		this.y = { from: 0, to: CONST.DINO_HEIGHT } ;
@@ -70,6 +72,7 @@ export class Player {
 	
 	
 	getId()			{ return this.id ; }
+	getName()		{ return this.name ; }
 	getX()			{ return this.x ; }
 	getY()			{ return this.y ; }
 	getLeaning()	{ return this.leaning ; }

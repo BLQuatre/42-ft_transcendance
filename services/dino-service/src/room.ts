@@ -19,7 +19,7 @@ export class Room {
         this.players.push(player);
     }
 
-    public removePlayer(playerId: number) {
+    public removePlayer(playerId: string) {
         this.players = this.players.filter((p) => p.getId() !== playerId);
     }
 
@@ -36,7 +36,7 @@ export class Room {
             id: this.id,
             players: this.players.map((p) => ({
                 id: p.getId(),
-                name: `Player ${p.getId()}`,
+                name: p.getName(),
                 isReady: p.isReady(),
             })),
             status: this.game ? 'in-progress' : 'waiting',

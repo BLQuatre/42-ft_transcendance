@@ -1,27 +1,28 @@
 import Fastify from 'fastify' ;
 import { WebSocketServer } from 'ws' ;
+
 import { Room } from './room';
 import { Player } from './player';
 import * as CONST from './constants' ;
+
+import axios, { AxiosResponse } from 'axios' ;
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+dotenv.config({path:path.resolve(__dirname, '../../../.env.dev')})
 
-const fastify = Fastify({
-    logger: process.env.DEBUG === 'true',
-}) ;
+async function getName(uuid: string): Promise<string> {
+	return axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${uuid}`).then((user) => user.data.user.name as string)
+}
 
-let id = 0 ;
+const fastify = Fastify() ;
+
 const rooms: Map<string, Room> = new Map() ;
 
-const start = async () => {
-	await fastify.listen({
-        host: process.env.DINO_HOST,
-        port: parseInt(process.env.DINO_PORT || "0", 10)
-    }).catch(console.error) ;
 
-    console.log(`Server running on http://${process.env.DINO_HOST}:${process.env.DINO_PORT}`); ;
+const start = async () => {
+	await fastify.listen({ port: 3011 }).catch(console.error) ;
+	console.log(`Server running on http://${process.env.DINO_HOST}:${process.env.DINO_PORT}`) ;
 
 	const wss = new WebSocketServer({ server: fastify.server }) ;
 
@@ -31,10 +32,17 @@ const start = async () => {
 		let assignedPlayer: Player | null = null;
         let currentRoom: Room | null = null;
 
-		ws.on('message', (message) => {
+		ws.on('message', async (message) => {
             const data = JSON.parse(message.toString());
 
+            if (data.type === 'assign') {
+                const name = await getName(data.uuid)
+                assignedPlayer = new Player(data.uuid, name, ws);
+            }
+
             if (data.type === 'join_room') {
+                if (!assignedPlayer) return;
+
                 const roomId = data.roomId;
                 if (!rooms.has(roomId)) {
                     rooms.set(roomId, new Room(roomId));
@@ -42,7 +50,6 @@ const start = async () => {
                 currentRoom = rooms.get(roomId)!;
 
                 if (currentRoom.getPlayers().length < CONST.MAX_PLAYERS && !currentRoom.getGame()) {
-                    assignedPlayer = new Player(++id, ws);
                     currentRoom.addPlayer(assignedPlayer);
 
                     // Notify the player of their ID

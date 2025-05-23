@@ -103,7 +103,12 @@ export default function DinoGamePage() {
 		socket.addEventListener("open", () => {
 			console.log("Connected to game server");
 
-			// After connection, immediately send join_room message with roomId
+			// After connection, immediately send uuid
+			socket.send(JSON.stringify({
+				type: "assign",
+				uuid: sessionStorage.getItem('userId')
+			}));
+			// Then, send join_room message with roomId
 			socket.send(JSON.stringify({
 				type: "join_room",
 				roomId: roomId

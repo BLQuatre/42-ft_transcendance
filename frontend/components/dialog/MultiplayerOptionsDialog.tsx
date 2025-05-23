@@ -48,7 +48,7 @@ export function MultiplayerOptionsDialog({
       } else if (option === MultiplayerOption.JOIN && roomCode.trim()) {
         window.location.assign(`/games/${gameType}/multi/${roomCode.trim()}`)
       } else if (option === MultiplayerOption.MATCHMAKING) {
-        window.location.assign(`/games/${gameType}/multi/matchmaking`)
+        window.location.assign(`/games/matchmaking/${gameType}`)
       }
     } catch (error) {
       console.error("Navigation error:", error)
@@ -72,10 +72,7 @@ export function MultiplayerOptionsDialog({
         </DialogHeader>
 
         <div className="animate-slideUp">
-          <div className={cn(
-            "grid grid-cols-1 gap-4 mb-6",
-            gameType === GameType.PONG ? "md:grid-cols-3" : "md:grid-cols-2"
-          )}>
+          <div className="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
             <Button
               variant="custom"
               className={cn(

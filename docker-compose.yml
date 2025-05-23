@@ -134,6 +134,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  matchmaking_service:
+    container_name: matchmaking_service
+    build:
+      context: ./services/matchmaking-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
     networks:
       - transcendance
     restart: always

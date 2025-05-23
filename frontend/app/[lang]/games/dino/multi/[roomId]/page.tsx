@@ -97,7 +97,7 @@ export default function DinoGamePage() {
 
 		console.log("Creating new WebSocket connection");
 
-		const socket = new WebSocket("wss://localhost/tpm_dino/");
+		const socket = new WebSocket("wss://localhost/tmp_dino/");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
@@ -120,15 +120,15 @@ export default function DinoGamePage() {
 					setPlayerId(msg.playerId);
 				else if (msg.type === "state") {
 					const newState = msg.gameState;
-				
+
 					setFrozenLanes((currentFrozenLanes) => {
 						const updatedFrozenLanes = { ...currentFrozenLanes };
-						
+
 						newState.dinos.forEach((dino: any, index: number) => {
 							// Check if dino just died (score >= 0, meaning they got a final score) and lane isn't already frozen
 							if (dino.score >= 0 && !(index in currentFrozenLanes)) {
 								console.log("Freezing lane", index, "with final score:", dino.score);
-								
+
 								// Freeze the lane with current state just before death
 								updatedFrozenLanes[index] = {
 									dino: dino,
@@ -136,10 +136,10 @@ export default function DinoGamePage() {
 								};
 							}
 						});
-						
+
 						return updatedFrozenLanes;
 					});
-					
+
 					setGameState(newState);
 				}
 				else if (msg.type === "room_update") {
@@ -289,7 +289,7 @@ export default function DinoGamePage() {
 								const isFrozen = frozenLanes[index] !== undefined;
 								const laneDino = isFrozen ? frozenLanes[index].dino : dino;
 								const laneObstacles = isFrozen ? frozenLanes[index].obstacles : gameState.obstacles;
-								
+
 								return (
 									<DinoLane
 										key={`dino-lane-${index}`}

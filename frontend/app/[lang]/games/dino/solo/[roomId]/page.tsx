@@ -74,49 +74,49 @@ export default function DinoGamePage() {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
 		}
-	
+
 		// Prevent creating multiple connections
 		if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
 			console.log("WebSocket connection already exists and is open");
 			return;
 		}
-	
+
 		console.log("Creating new WebSocket connection");
-		
-		const socket = new WebSocket("ws://localhost:3003");
+
+		const socket = new WebSocket("wss://localhost/tmp_dino/");
 		socketRef.current = socket;
-	
+
 		socket.addEventListener("open", () => {
 			console.log("Connected to game server");
-			
+
 			// After connection, immediately send join_room message with roomId, then toggle_ready to launch the game
-			socket.send(JSON.stringify({ 
-				type: "join_room", 
-				roomId: roomId 
+			socket.send(JSON.stringify({
+				type: "join_room",
+				roomId: roomId
 			}));
 
 			socket.send(JSON.stringify({ type: "toggle_ready" }));
 		});
-	
+
 		socket.addEventListener("message", (event) => {
 			try {
 				const msg = JSON.parse(event.data);
 				console.log("Received WebSocket message:", msg.type);
-				
+
 				// Handle different message types
 				if (msg.type === "assign")
 					setPlayerId(msg.playerId);
 				else if (msg.type === "state") {
 					const newState = msg.gameState;
-				
+
 					setFrozenLanes((currentFrozenLanes) => {
 						const updatedFrozenLanes = { ...currentFrozenLanes };
-						
+
 						newState.dinos.forEach((dino: any, index: number) => {
 							// Check if dino just died (score >= 0, meaning they got a final score) and lane isn't already frozen
 							if (dino.score >= 0 && !(index in currentFrozenLanes)) {
 								console.log("Freezing lane", index, "with final score:", dino.score);
-								
+
 								// Freeze the lane with current state just before death
 								updatedFrozenLanes[index] = {
 									dino: dino,
@@ -124,10 +124,10 @@ export default function DinoGamePage() {
 								};
 							}
 						});
-						
+
 						return updatedFrozenLanes;
 					});
-					
+
 					setGameState(newState);
 				} else if (msg.type === "game_start")
 					console.log("Game starting!");
@@ -137,7 +137,7 @@ export default function DinoGamePage() {
 				console.error("Error processing WebSocket message:", error);
 			}
 		});
-	
+
 		socket.addEventListener("close", (event) => {
 			console.log("WebSocket connection closed:", event.code, event.reason);
 			socketRef.current = null;
@@ -146,11 +146,11 @@ export default function DinoGamePage() {
 				router.push('/');
 			}, 3000);
 		});
-	
+
 		socket.addEventListener("error", (error) => {
 			console.error("WebSocket error:", JSON.stringify(error));
 		});
-	
+
 		// Cleanup on unmount
 		return () => {
 			console.log("Cleaning up WebSocket connection");
@@ -230,7 +230,7 @@ export default function DinoGamePage() {
 								const isFrozen = frozenLanes[index] !== undefined;
 								const laneDino = isFrozen ? frozenLanes[index].dino : dino;
 								const laneObstacles = isFrozen ? frozenLanes[index].obstacles : gameState.obstacles;
-								
+
 								return (
 									<DinoLane
 										key={`dino-lane-${index}`}

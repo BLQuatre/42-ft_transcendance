@@ -10,6 +10,7 @@ import { chatRoutes } from "./routes/chat";
 import { chatGeneralRoutes} from "./routes/chatGeneral";
 import { historyRoutes } from "./routes/history";
 import { dinoRoutes } from "./routes/dino";
+import { pongRoutes } from "./routes/pong";
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 const app = fastify({
@@ -25,6 +26,7 @@ app.register(chatRoutes);
 app.register(chatGeneralRoutes);
 app.register(historyRoutes);
 app.register(dinoRoutes);
+app.register(pongRoutes);
 
 app.listen({
 	host: process.env.GATEWAY_HOST,

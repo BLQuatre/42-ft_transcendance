@@ -6,7 +6,8 @@ import { ArrowRight } from "lucide-react"
 import { GameModeDialog } from "@/components/dialog/GameModeDialog"
 import { GameType } from "@/types/game"
 import { cn } from "@/lib/utils"
-import { getBgColor } from "@/lib/colors"
+import { getBgColor, getHoverBgColor } from "@/lib/colors"
+import { useAuth } from "@/contexts/auth-context"
 
 type GameButtonsProps = {
   gameType: GameType
@@ -14,17 +15,29 @@ type GameButtonsProps = {
 }
 
 export function GameButtons({ gameType, buttonText }: GameButtonsProps) {
+  const { accessToken } = useAuth()
+
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const disabled = accessToken === null && gameType === GameType.DINO
 
   return (
     <>
       <Button
+        asChild
         className={cn(
-          "font-pixel w-fit mt-2 cursor-pointer",
+          "font-pixel w-fit mt-2",
+          (disabled)
+            ? "cursor-not-allowed opacity-50"
+            : "cursor-pointer",
           getBgColor(gameType),
-          `hover:${getBgColor(gameType)}/90`
+          getHoverBgColor(gameType)
         )}
-        onClick={() => setDialogOpen(true)}
+        onClick={() => {
+          if (!disabled)
+            setDialogOpen(true)
+        } }
+        disabled={disabled}
       >
         <span className="flex items-center uppercase">
           {buttonText}

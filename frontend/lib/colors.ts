@@ -13,7 +13,7 @@ export function getBorderColor(gameType: GameType) {
 }
 
 export function getHoverBgColor(gameType: GameType) {
-	return gameType === GameType.PONG ? "bg-game-blue/90" : "bg-game-orange/90"
+	return gameType === GameType.PONG ? "hover:bg-game-blue/90" : "hover:bg-game-orange/90"
 }
 
 export function getHoverTextColor(gameType: GameType) {

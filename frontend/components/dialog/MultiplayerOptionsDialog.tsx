@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/Button"
 import { GameType } from "@/types/game"
 import { getBgColor, getBorderColor } from "@/lib/colors"
 import { cn } from "@/lib/utils"
-import { Game } from "@/lib/pong/game"
 
 type MultiplayerOptionsDialogProps = {
   open: boolean
@@ -45,8 +44,7 @@ export function MultiplayerOptionsDialog({
     try {
       if (option === MultiplayerOption.CREATE) {
         const newRoomCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-
-        window.location.assign(`/games/${gameType}/multi/${newRoomCode}`)
+		window.location.assign(`/games/${gameType}/multi/${newRoomCode}`)
       } else if (option === MultiplayerOption.JOIN && roomCode.trim()) {
         window.location.assign(`/games/${gameType}/multi/${roomCode.trim()}`)
       } else if (option === MultiplayerOption.MATCHMAKING) {

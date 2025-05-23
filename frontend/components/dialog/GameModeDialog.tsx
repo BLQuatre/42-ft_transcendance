@@ -31,7 +31,7 @@ enum GameMode {
   LOCAL = "local",
   TOURNAMENT = "tournament",
   SOLO = "solo",
-  AGAINST_AI = "against ai"
+  AGAINST_AI = "ai"
 }
 
 export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogProps) {
@@ -45,10 +45,14 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
     setSelectedMode(mode)
 
     if (mode === GameMode.MULTIPLAYER) {
-      setIsMultiplayerDialogOpen(true)
-    } else {
-      router.push(`/games/${gameType}/${mode}`)
-      onOpenChange(false)
+		setIsMultiplayerDialogOpen(true)
+    } else if (gameType === 'dino' && mode === GameMode.SOLO) {
+		const newRoomCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+        window.location.assign(`/games/${gameType}/${mode}/${newRoomCode}`)
+		onOpenChange(false)
+	} else {
+		window.location.assign(`/games/${gameType}/${mode}`)
+		onOpenChange(false)
     }
   }
 

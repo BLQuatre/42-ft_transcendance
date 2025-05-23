@@ -74,6 +74,20 @@ services:
       - transcendance
     restart: always
 
+  general_chat_service:
+    container_name: general_chat_service
+    build:
+      context: services/generalChat-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
+
   friend_service:
     container_name: friend_service
     build:

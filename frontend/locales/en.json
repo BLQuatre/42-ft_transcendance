@@ -136,7 +136,7 @@
 			"stats": {
 				"title": "Statistics",
 				"gamesPlayed": "Games Played",
-				"winRate": "Win Rate",
+				"winRate": "PONG Win Rate",
 				"bestScore": "Best Score",
 				"wins": "Wins",
 				"losses": "Losses",
@@ -186,8 +186,8 @@
 				"title": "Overview",
 
 				"totalGames": "Total Games",
-				"winRate": "Win Rate",
-				"highScore": "High Score",
+				"winRate": "PONG Win Rate",
+				"highScore": "DINO RUN Highest Score",
 				"charts": {
 					"activity": {
 						"title": "Activity",
@@ -195,7 +195,7 @@
 					},
 					"score": {
 						"title": "Score Progresion",
-						"description": "Your score over time",
+						"description": "Your average score over time",
 						"label": "Score"
 					}
 				}

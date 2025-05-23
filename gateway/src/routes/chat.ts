@@ -15,32 +15,15 @@ interface messageSocket {
     }
 }
 
+interface SchemaId {
+    user_id: string;
+}
+
 export const chatRoutes: FastifyPluginAsync = async (fastify) => {
     fastify.get('/ws/chat-friend', { websocket: true}, async (connection, req) => {
-        const token = req.headers['authorization']?.split(' ')[1];
-        if (!token) {
-            connection.close(4001, "Token not found");
-            return;
-        }
+        const { user_id } =req.query as SchemaId;
 
-        try {
-            const authResponse = await axios.get(`http://${process.env.AUTH_HOST}:${process.env.AUTH_PORT}/auth/access`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            if (authResponse.data.statusCode !== 200) {
-                connection.close(4002, "invalid Token");
-                return ;
-            }
-
-            // const authData = await authResponse.data;
-            const userId = authResponse.data.id;
-
-            const upstream = new WebSocket(`http://${process.env.CHAT_HOST}:${process.env.CHAT_PORT}/chat/ws`, {
-            headers: {
-                'x-user-id': userId
-            }
+            const upstream = new WebSocket(`http://${process.env.CHAT_HOST}:${process.env.CHAT_PORT}/chat/ws?user_id=${user_id}`, {
         });
 
         upstream.on('open', () => {
@@ -75,32 +58,5 @@ export const chatRoutes: FastifyPluginAsync = async (fastify) => {
         connection.on('close', (code , reason) => {
             upstream.close()
         });
-    } catch (err) {
-        const error = err as AxiosError;
-
-        if (error.response) {
-            const statusCode = error.response.status;
-            const responseData = error.response.data;
-
-            // Envoie l'erreur détaillée au client WebSocket (en JSON)
-            connection.send(JSON.stringify({
-                error: true,
-                status: statusCode,
-                message: responseData || "Erreur d'authentification"
-            }));
-
-            // Et ferme ensuite
-            connection.close(4001, "Erreur d'authentification");
-        } else {
-            console.error('Communication error with microservice:', err);
-
-            connection.send(JSON.stringify({
-                error: true,
-                message: "Erreur interne lors de la communication avec le microservice"
-            }));
-
-            connection.close(5000, "Erreur interne");
-        }
-    }
     });
 }

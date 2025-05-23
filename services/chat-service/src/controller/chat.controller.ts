@@ -8,28 +8,32 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 interface ActiveConnection {
-	userId: string;
+	user_id: string;
 	socket: WebSocket;
+}
+
+interface SchemaId {
+	user_id: string
 }
 
 export class ChatController {
 	private activeConnections: Map<string, ActiveConnection> = new Map();
 	private chatService = new ChatService();
 
-	async handleConnection(connection: WebSocket, request: FastifyRequest) {
-		const userId = request.headers['x-user-id'] as string;
+	async handleConnection(connection: WebSocket, req: FastifyRequest) {
+		const { user_id } = req.query as SchemaId 
 
-		if (!userId) {
+		if (!user_id) {
 			connection.close(4000, 'User ID is required');
 			return;
 		}
 		try {
-			const dataUserId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${userId}`)
+			const dataUserId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${user_id}`)
 
-			this.activeConnections.set(userId, { userId, socket: connection });
+			this.activeConnections.set(user_id, { user_id: user_id, socket: connection });
 
 			connection.on('close', () => {
-				this.activeConnections.delete(userId);
+				this.activeConnections.delete(user_id);
 			});
 
 			connection.on('message', async (message: string) => {
@@ -37,10 +41,10 @@ export class ChatController {
 
 				switch (type) {
 					case 'SEND_MESSAGE':
-						await this.handleSendMessage(userId, data.receiverId, data.content, dataUserId.data.user.name);
+						await this.handleSendMessage(user_id, data.receiverId, data.content, dataUserId.data.user.name);
 						break;
 					case 'GET_HISTORY':
-						await this.handleGetHistory(userId, data.otherUserId);
+						await this.handleGetHistory(user_id, data.otherUserId);
 						break;
 					default:
 						connection.send(JSON.stringify({

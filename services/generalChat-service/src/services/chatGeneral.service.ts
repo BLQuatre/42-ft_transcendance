@@ -4,11 +4,11 @@ import { AppDataSource } from '../data-source';
 export class ChatService {
     private chatGeneral = AppDataSource.getRepository(ChatGeneral);
 
-    async saveMessage(content: string, userId: string, username: string) {
+    async saveMessage(content: string, userId: string, name: string) {
         const message = this.chatGeneral.create({
             content,
             userId,
-            username
+            name
         });
 
         return await this.chatGeneral.save(message);

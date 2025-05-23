@@ -16,7 +16,7 @@ const wsFastify: FastifyPluginAsync = async (fastify, opts) => {
                     const savedMessage = await chatService.saveMessage(
                         data.content,
                         data.userId,
-                        data.username
+                        data.name
                     );
 
                     fastify.websocketServer.clients.forEach((client) => {

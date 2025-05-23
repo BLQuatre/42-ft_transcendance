@@ -12,7 +12,7 @@ export class ChatGeneral {
     userId!: string;
 
     @Column()
-    username!: string;
+    name!: string;
 
     @CreateDateColumn()
     created_at!: Date;

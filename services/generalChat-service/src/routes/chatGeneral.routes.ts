@@ -10,8 +10,8 @@ const chatGeneralRoutes: FastifyPluginAsync = async (fastify, opts) => {
     });
 
     fastify.post('/messages', async (request, reply) => {
-        const { content, userId, username} = request.body as {content : string, userId: string, username: string};
-        return await chatService.saveMessage(content, userId, username)
+        const { content, userId, name} = request.body as {content : string, userId: string, name: string};
+        return await chatService.saveMessage(content, userId, name)
     });
 };
 

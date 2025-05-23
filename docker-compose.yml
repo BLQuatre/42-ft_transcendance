@@ -21,7 +21,7 @@ services:
   gateway:
     container_name: gateway
     build:
-      context: ./gateway
+      context: gateway
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -35,12 +35,10 @@ services:
   auth_service:
     container_name: auth_service
     build:
-      context: ./services/auth-service
+      context: services/auth-service
       dockerfile: Dockerfile
     env_file:
       - .env
-    ports:
-      - "3002:3002"
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,12 +49,10 @@ services:
   user_service:
     container_name: user_service
     build:
-      context: ./services/user-service
+      context: services/user-service
       dockerfile: Dockerfile
     env_file:
       - .env
-    ports:
-      - "3005:3005"
     depends_on:
       postgres:
         condition: service_healthy
@@ -67,7 +63,7 @@ services:
   chat_service:
     container_name: chat_service
     build:
-      context: ./services/chat-service
+      context: services/chat-service
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -81,7 +77,7 @@ services:
   friend_service:
     container_name: friend_service
     build:
-      context: ./services/friend-service
+      context: services/friend-service
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -95,7 +91,7 @@ services:
   pong_service:
     container_name: pong_service
     build:
-      context: ./services/pong-service
+      context: services/pong-service
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -106,7 +102,7 @@ services:
   dino_service:
     container_name: dino_service
     build:
-      context: ./services/dino-service
+      context: services/dino-service
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -117,12 +113,10 @@ services:
   game_history_service:
     container_name: game_history_service
     build:
-      context: ./services/game-history-service
+      context: services/game-history-service
       dockerfile: Dockerfile
     env_file:
       - .env
-    ports:
-      - "3007:3007"
     depends_on:
       postgres:
         condition: service_healthy
@@ -133,7 +127,7 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: ./frontend
+      context: frontend
       dockerfile: Dockerfile
     env_file:
       - .env
@@ -144,7 +138,7 @@ services:
   nginx:
     container_name: nginx
     build:
-      context: ./proxy
+      context: proxy
       dockerfile: Dockerfile
     env_file:
       - .env

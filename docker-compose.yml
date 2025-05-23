@@ -88,6 +88,28 @@ services:
       - transcendance
     restart: always
 
+  pong_service:
+    container_name: pong_service
+    build:
+      context: ./services/pong-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - transcendance
+    restart: always
+
+  dino_service:
+    container_name: dino_service
+    build:
+      context: ./services/dino-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    networks:
+      - transcendance
+    restart: always
+
   frontend:
     container_name: frontend
     build:

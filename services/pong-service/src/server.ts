@@ -12,8 +12,8 @@ const rooms: Map<string, Room> = new Map();
 
 
 const start = async () => {
-    await fastify.listen({ port: 3002 });
-    console.log('Server running on http://localhost:3002');
+    await fastify.listen({ port: 3010 });
+    console.log('Server running on http://localhost:3010');
 
     const wss = new WebSocketServer({ server: fastify.server });
 
@@ -61,7 +61,7 @@ const start = async () => {
 
 			if (data.type === 'move' && data.playerId && data.direction) {
 				if (assignedPlayer?.getId() !== data.playerId) return;
-			
+
 				if		(data.direction === 'up')		assignedPlayer?.setMoveUp(true) ;
 				else if	(data.direction === 'notup')	assignedPlayer?.setMoveUp(false) ;
 				else if	(data.direction === 'down')		assignedPlayer?.setMoveDown(true) ;

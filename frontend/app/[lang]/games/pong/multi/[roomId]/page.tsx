@@ -55,7 +55,7 @@ export default function PongGamePage() {
 		}
 
 		console.log("Creating new WebSocket connection");
-		const socket = new WebSocket("ws://localhost:3002");
+		const socket = new WebSocket("ws://localhost:3010");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {

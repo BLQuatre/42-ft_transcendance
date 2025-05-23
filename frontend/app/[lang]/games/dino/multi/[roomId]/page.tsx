@@ -85,33 +85,33 @@ export default function DinoGamePage() {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
 		}
-	
+
 		// Prevent creating multiple connections
 		if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
 			console.log("WebSocket connection already exists and is open");
 			return;
 		}
-	
+
 		console.log("Creating new WebSocket connection");
-		
-		const socket = new WebSocket("ws://localhost:3003");
+
+		const socket = new WebSocket("ws://localhost:3011");
 		socketRef.current = socket;
-	
+
 		socket.addEventListener("open", () => {
 			console.log("Connected to game server");
-			
+
 			// After connection, immediately send join_room message with roomId
-			socket.send(JSON.stringify({ 
-				type: "join_room", 
-				roomId: roomId 
+			socket.send(JSON.stringify({
+				type: "join_room",
+				roomId: roomId
 			}));
 		});
-	
+
 		socket.addEventListener("message", (event) => {
 			try {
 				const msg = JSON.parse(event.data);
 				console.log("Received WebSocket message:", msg.type);
-				
+
 				// Handle different message types
 				if (msg.type === "assign")
 					setPlayerId(msg.playerId);
@@ -122,7 +122,7 @@ export default function DinoGamePage() {
 						console.error("Received room_update with no room data");
 						return;
 					}
-					
+
 					// Transform backend room state to match frontend format
 					const transformedRoom: GameRoomType = {
 						id: msg.room.id,
@@ -149,7 +149,7 @@ export default function DinoGamePage() {
 				console.error("Error processing WebSocket message:", error);
 			}
 		});
-	
+
 		socket.addEventListener("close", (event) => {
 			console.log("WebSocket connection closed:", event.code, event.reason);
 			socketRef.current = null;
@@ -160,11 +160,11 @@ export default function DinoGamePage() {
 				router.push('/');
 			}, 3000);
 		});
-	
+
 		socket.addEventListener("error", (error) => {
 			console.error("WebSocket error:", JSON.stringify(error));
 		});
-	
+
 		// Cleanup on unmount
 		return () => {
 			console.log("Cleaning up WebSocket connection");
@@ -295,7 +295,7 @@ export default function DinoGamePage() {
 			ctx.fillText(`SCORE: ${gameState.score}`, 20, 30)
 
 			setFrame(f => (f - 1 + FRAME_VAL) % FRAME_VAL)
-			
+
 			requestAnimationFrame(draw)
 		}
 		const animId = requestAnimationFrame(draw)
@@ -309,10 +309,10 @@ export default function DinoGamePage() {
 	// Toggle ready status
 	const handleToggleReady = () => {
 		if (!socketRef.current || playerIdRef.current === null) return
-		
+
 		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }))
 	}
-		
+
 	// If we're still in the waiting room phase
 	if (!gameInProgress) {
 		return (

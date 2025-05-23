@@ -10,15 +10,20 @@ const GOOGLE_CLIENT_ID = process.env.ID_CLIENT!;
 const GOOGLE_CLIENT_SECRET = process.env.SECRET_CLIENT!;
 const GOOGLE_REDIRECT_URI = 'http://localhost:3002/auth/google/callback';
 
-export const googleRedir = async (req: FastifyRequest, reply: any) => {
-    const redirectUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-    `client_id=${GOOGLE_CLIENT_ID}&` +
-    `redirect_uri=${GOOGLE_REDIRECT_URI}&` +
-    `response_type=code&` +
-    `scope=openid%20email%20profile`;
+export const googleRedir = async (req: FastifyRequest, reply: FastifyReply) => {
+  const params = new URLSearchParams({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: GOOGLE_REDIRECT_URI,
+    response_type: 'code',
+    scope: 'openid email profile',
+    access_type: 'offline', // optional: to get refresh token
+    prompt: 'consent',       // optional: to force consent screen
+  });
 
-   return reply.redirect(redirectUrl);
-}
+  const redirectUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+
+  return reply.redirect(redirectUrl);
+};
 
 export const googleLogSign = async (req: FastifyRequest, reply: FastifyReply) => {
     console.log(`client_id : ${GOOGLE_CLIENT_ID}`);
@@ -60,7 +65,7 @@ export const googleLogSign = async (req: FastifyRequest, reply: FastifyReply) =>
             if (createUser){
                 const accessToken = jwt.sign({id: createUser.data.user.id, name: createUser.data.user.name}, process.env.JWT_ACCESS!, { expiresIn: '15m' });
                 const refreshToken = jwt.sign({id: createUser.data.user.id, name: createUser.data.user.name}, process.env.JWT_REFRESH!, { expiresIn: '7d' });
-          
+
                 // 6. Répondre avec access token + cookie refresh token
                 reply
                   .setCookie('refresh_token', refreshToken, {
@@ -77,12 +82,12 @@ export const googleLogSign = async (req: FastifyRequest, reply: FastifyReply) =>
                     user: createUser.data.user,
                     accessToken
                   });
-                
+
             }
         } else {
             const accessToken = jwt.sign({id: findUser.data.user.id, name: findUser.data.user.name}, process.env.JWT_ACCESS!, { expiresIn: '15m' });
                 const refreshToken = jwt.sign({id: findUser.data.user.id, name: findUser.data.user.name}, process.env.JWT_REFRESH!, { expiresIn: '7d' });
-          
+
                 // 6. Répondre avec access token + cookie refresh token
                 reply
                   .setCookie('refresh_token', refreshToken, {

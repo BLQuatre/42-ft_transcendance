@@ -244,6 +244,27 @@ export default function DashboardPage() {
 
 	const confirmDeleteAccount = () => {
 		console.log("Deleting account...")
+
+		try {
+			api.delete(`/user/${user?.id}`).then(() => {
+				toast({
+					title: "Account Deleted",
+					description: "Your account has been deleted successfully",
+					duration: 3000,
+				})
+				setAccessToken(null)
+				sessionStorage.removeItem("userId")
+				window.location.href = "/login"
+			}).catch((error) => {
+				console.error("Error deleting account:", error)
+			})
+		} catch (err: any) {
+			toast({
+				title: "Error",
+				description: `There was an error when deleting your account: ${err.message}`,
+				duration: 3000,
+			})
+		}
 		setDeleteAccountDialogOpen(false)
 	}
 

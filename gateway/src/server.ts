@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { chatRoutes } from "./routes/chat";
 import { chatGeneralRoutes} from "./routes/chatGeneral";
+import { historyRoutes } from "./routes/history";
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 const app = fastify({
@@ -21,6 +22,7 @@ app.register(usersRoutes);
 app.register(friendRoutes);
 app.register(chatRoutes);
 app.register(chatGeneralRoutes);
+app.register(historyRoutes);
 
 app.listen({
 	host: process.env.GATEWAY_HOST,

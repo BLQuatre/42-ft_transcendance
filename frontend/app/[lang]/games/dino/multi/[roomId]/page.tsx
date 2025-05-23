@@ -7,9 +7,12 @@ import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom"
 import DinoLane from "@/app/[lang]/games/dino/components/DinoLane"
+import { useAuth } from "@/contexts/auth-context"
 
 
 export default function DinoGamePage() {
+	const { accessToken } = useAuth()
+
 	const params = useParams()
 	const roomId = params.roomId as string
 
@@ -76,6 +79,11 @@ export default function DinoGamePage() {
 
 	// Initialize the socket connection
 	useEffect(() => {
+		if (!accessToken) {
+			console.error("accessToken is undefined or invalid during WebSocket initialization");
+			return;
+		}
+
 		if (!roomId) {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
@@ -89,7 +97,7 @@ export default function DinoGamePage() {
 
 		console.log("Creating new WebSocket connection");
 
-		const socket = new WebSocket("ws://localhost:3011");
+		const socket = new WebSocket("wss://localhost/tpm_dino/");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
@@ -190,7 +198,7 @@ export default function DinoGamePage() {
 			}
 			socketRef.current = null;
 		};
-	}, [roomId]);
+	}, [roomId, accessToken]);
 
 	// Input handling
 	useEffect(() => {

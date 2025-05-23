@@ -10,9 +10,12 @@ import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/Waiting
 import { ScoreDisplay } from "@/components/ScoreDisplay"
 
 import * as CONST from '@/lib/pong/constants' ;
+import { useAuth } from "@/contexts/auth-context"
 
 
 export default function PongGamePage() {
+	const { accessToken } = useAuth()
+
 	const params = useParams()
 	const roomId = params.roomId as string
 
@@ -43,6 +46,11 @@ export default function PongGamePage() {
 
 	// Initialize the socket connection
 	useEffect(() => {
+		if (!accessToken) {
+			console.error("accessToken is undefined or invalid during WebSocket initialization");
+			return;
+		}
+
 		if (!roomId) {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
@@ -55,7 +63,7 @@ export default function PongGamePage() {
 		}
 
 		console.log("Creating new WebSocket connection");
-		const socket = new WebSocket("ws://localhost:3010");
+		const socket = new WebSocket("wss://localhost/tmp_pong/");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
@@ -134,7 +142,7 @@ export default function PongGamePage() {
 			}
 			socketRef.current = null;
 		};
-	}, [roomId]);
+	}, [roomId, accessToken]);
 
 
 	// Handle game rendering

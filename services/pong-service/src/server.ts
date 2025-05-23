@@ -1,19 +1,26 @@
 import Fastify from 'fastify';
 import { WebSocketServer } from 'ws';
-
 import { Room } from './room';
 import { Player } from './player';
 import * as CONST from './constants';
+import dotenv from 'dotenv';
+import path from 'path';
 
-const fastify = Fastify();
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+
+const fastify = Fastify({
+    logger: process.env.DEBUG === 'true',
+}) ;
 
 let id = 0;
 const rooms: Map<string, Room> = new Map();
 
-
 const start = async () => {
-    await fastify.listen({ port: 3010 });
-    console.log('Server running on http://localhost:3010');
+    await fastify.listen({
+        host: process.env.PONG_HOST,
+        port: parseInt(process.env.PONG_PORT || "0", 10)
+    });
+    console.log(`Server running on http://${process.env.PONG_HOST}:${process.env.PONG_PORT}`);
 
     const wss = new WebSocketServer({ server: fastify.server });
 

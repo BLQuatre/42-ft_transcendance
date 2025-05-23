@@ -108,22 +108,20 @@ export function MultiplayerOptionsDialog({
               JOIN WITH CODE
             </Button>
 
-            {gameType === GameType.PONG &&
-                <Button
-                variant="custom"
-                className={cn(
-                  "font-pixel text-xs border-2 p-6 h-auto text-white",
-                  getBorderColor(gameType),
-                  selectedOption === MultiplayerOption.MATCHMAKING
-                    ? getBgColor(gameType)
-                    : "hover:bg-muted"
-                )}
-                onClick={() => setSelectedOption(MultiplayerOption.MATCHMAKING)}
-                disabled={isLoading}
-              >
-                MATCHMAKING
-              </Button>
-            }
+            <Button
+              variant="custom"
+              className={cn(
+                "font-pixel text-xs border-2 p-6 h-auto text-white",
+                getBorderColor(gameType),
+                selectedOption === MultiplayerOption.MATCHMAKING
+                  ? getBgColor(gameType)
+                  : "hover:bg-muted"
+              )}
+              onClick={() => setSelectedOption(MultiplayerOption.MATCHMAKING)}
+              disabled={isLoading}
+            >
+              MATCHMAKING
+            </Button>
           </div>
 
           {selectedOption === "join" && (

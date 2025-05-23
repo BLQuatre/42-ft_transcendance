@@ -18,7 +18,7 @@ import { GameType } from "@/types/game"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { getBorderColor, getBgColor, getTextColor } from "@/lib/colors"
 import { cn } from "@/lib/utils"
-import { Game } from "@/lib/pong/game"
+import { useAuth } from "@/contexts/auth-context"
 
 type GameModeDialogProps = {
   open: boolean
@@ -36,6 +36,7 @@ enum GameMode {
 
 export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogProps) {
   const router = useRouter()
+  const { accessToken } = useAuth()
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null)
   const [isMultiplayerDialogOpen, setIsMultiplayerDialogOpen] = useState(false)
 
@@ -180,30 +181,43 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
           {/* Multiplayer Mode Card */}
           <div
             className={cn(
-              "rounded-md border-2 p-4 cursor-pointer transition-all",
-              selectedMode === GameMode.MULTIPLAYER
+              "rounded-md border-2 p-4 transition-all",
+              (accessToken === null)
+                ? "cursor-not-allowed opacity-50"
+                : "cursor-pointer",
+              selectedMode === GameMode.MULTIPLAYER && !(accessToken === null)
                 ? [getBorderColor(gameType), getBgColor(gameType), "text-white"]
                 : "border-muted bg-muted/50 hover:bg-muted"
             )}
-            onClick={() => setSelectedMode(GameMode.MULTIPLAYER)}
+            onClick={() => {
+              if (!(accessToken === null)) {
+                setSelectedMode(GameMode.MULTIPLAYER);
+              }
+            }}
           >
             <div className="flex flex-col items-center text-center space-y-4">
               <div className={cn(
                 "w-16 h-16 rounded-full flex items-center justify-center",
-                selectedMode === GameMode.MULTIPLAYER ? "bg-white/20" : getBgColor(gameType)
+                selectedMode === GameMode.MULTIPLAYER && !(accessToken === null)
+                  ? "bg-white/20"
+                  : getBgColor(gameType)
               )}>
                 <Users className="h-8 w-8 text-white" />
               </div>
               <div>
                 <h3 className={cn(
                   "font-pixel text-sm mb-2",
-                  selectedMode === GameMode.MULTIPLAYER ? "text-white" : getTextColor(gameType)
+                  selectedMode === GameMode.MULTIPLAYER && !(accessToken === null)
+                    ? "text-white"
+                    : getTextColor(gameType)
                 )}>
                   MULTIPLAYER
                 </h3>
                 <p className={cn(
                   "font-pixel text-xs",
-                  selectedMode === "multiplayer" ? "text-white/80" : "text-muted-foreground"
+                  selectedMode === GameMode.MULTIPLAYER && !(accessToken === null)
+                    ? "text-white/80"
+                    : "text-muted-foreground"
                 )}>
                   PLAY WITH FRIENDS
                 </p>

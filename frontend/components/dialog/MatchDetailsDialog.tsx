@@ -105,9 +105,9 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
   const userResult = gameSession?.results?.find((result) => result.player.user_id === userId);
   const result = userResult?.is_winner ? "WIN" : "LOSE";
 
-  const navigateToProfile = (username: string | null) => {
-    if (username) {
-      router.push(`/profile/${username}`);
+  const navigateToProfile = (userId: string | null) => {
+    if (userId) {
+      router.push(`/profile/${userId}`);
       onOpenChange(false);
     }
   };
@@ -154,7 +154,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                         <div className="flex items-center space-x-4">
                           <div
                             className={`w-8 h-8 rounded-full overflow-hidden bg-muted flex items-center justify-center ${
-                              isHuman ? "cursor-pointer" : ""
+                              isHuman && result.player.user_id ? "cursor-pointer" : ""
                             }`}
                             onClick={() => isHuman && result.player.user_id && navigateToProfile(result.player.user_id)}
                           >
@@ -185,8 +185,8 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                             <p className="font-pixel text-xs flex items-center gap-2">
                               {isHuman ? (
                                 <span
-                                  className="cursor-pointer hover:underline transition-all"
-                                  onClick={() => result.player.user_id && navigateToProfile(displayName)}
+                                  className={result.player.user_id ? "cursor-pointer hover:underline transition-all" : ""}
+                                  onClick={() => result.player.user_id && navigateToProfile(result.player.user_id)}
                                 >
                                   {displayName}
                                 </span>

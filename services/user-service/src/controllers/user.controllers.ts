@@ -318,10 +318,16 @@ export const findbyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const createUserByGoogle = async (req: FastifyRequest, reply: FastifyReply) => {
-	const {email} = req.body as { email:string, name: string};
-	const newUser = await User.save({email: email, isGoogleSignIn: true, name: `${email.split('@')[0]}${Date.now()}`});
+	const { email } = req.body as { email: string, name: string };
+
+	const newUser = await User.save({
+		email: email,
+		isGoogleSignIn: true,
+		name: `${email.split('@')[0].slice(0, 10)}${Date.now()}`.slice(0, 20)
+	});
+
 	return reply.code(201).send({
-		message: 'User created',
+		message: 'User created (Google Sign In)',
 		statusCode: 201,
 		user: {
 			name: newUser.name,
@@ -379,7 +385,7 @@ export const deleteTfa = async (req: FastifyRequest, reply: FastifyReply) => {
 
 export const tfaSetup = async (req: FastifyRequest, reply: FastifyReply) => {
 	const id = req.headers['x-user-id'] as string;
-	
+
 	const user = await User.findOneBy({ id })
 	if (!user)
 		return reply.code(404).send({
@@ -389,20 +395,20 @@ export const tfaSetup = async (req: FastifyRequest, reply: FastifyReply) => {
 	const secret = speakeasy.generateSecret({
 	  name: `ft_transcendance`
 	});
-  
+
 	const cleanSecret = {
 	  ascii: secret.ascii,
 	  hex: secret.hex,
 	  base32: secret.base32,
 	  otpauth_url: secret.otpauth_url
 	};
-	
+
 	await User.update(user.id, {
 		tfaSecret: cleanSecret
 	})
-  
+
 	const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url!);
-  
+
 	return reply.code(201).send({
 	  message: "QR code generated",
 	  statusCode: 201,

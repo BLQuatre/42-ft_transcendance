@@ -19,6 +19,7 @@ import { useDictionary } from "@/hooks/UseDictionnary"
 import { getBorderColor, getBgColor, getTextColor } from "@/lib/colors"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/UseToast"
 
 type GameModeDialogProps = {
   open: boolean
@@ -35,8 +36,9 @@ enum GameMode {
 }
 
 export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogProps) {
-  const router = useRouter()
   const { accessToken } = useAuth()
+  const { toast } = useToast()
+
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null)
   const [isMultiplayerDialogOpen, setIsMultiplayerDialogOpen] = useState(false)
 
@@ -194,7 +196,13 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                 : "border-muted bg-muted/50 hover:bg-muted"
             )}
             onClick={() => {
-              if (!(accessToken === null)) {
+              if (accessToken === null) {
+                toast({
+                  title: "Error",
+                  description: "You need to be logged in to play this game",
+                  duration: 3000
+                })
+              } else {
                 setSelectedMode(GameMode.MULTIPLAYER);
               }
             }}

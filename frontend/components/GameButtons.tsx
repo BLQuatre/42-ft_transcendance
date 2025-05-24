@@ -8,6 +8,7 @@ import { GameType } from "@/types/game"
 import { cn } from "@/lib/utils"
 import { getBgColor, getHoverBgColor } from "@/lib/colors"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/UseToast"
 
 type GameButtonsProps = {
   gameType: GameType
@@ -16,6 +17,7 @@ type GameButtonsProps = {
 
 export function GameButtons({ gameType, buttonText }: GameButtonsProps) {
   const { accessToken } = useAuth()
+  const { toast } = useToast()
 
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -34,8 +36,15 @@ export function GameButtons({ gameType, buttonText }: GameButtonsProps) {
           getHoverBgColor(gameType)
         )}
         onClick={() => {
-          if (!disabled)
+          if (disabled) {
+            toast({
+              title: "Error",
+              description: "You need to be logged in to play this game",
+              duration: 3000
+            })
+          } else {
             setDialogOpen(true)
+          }
         } }
         disabled={disabled}
       >

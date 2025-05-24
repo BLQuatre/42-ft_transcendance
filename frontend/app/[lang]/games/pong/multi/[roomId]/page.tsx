@@ -5,12 +5,15 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
-import { PongState } from "@/types/types" // Ensure this matches your backend types
 import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom" // Import your GameRoom component
 import { ScoreDisplay } from "@/components/ScoreDisplay"
 
-import * as CONST from '@/lib/pong/constants' ;
 import { useAuth } from "@/contexts/auth-context"
+import { BaseUser } from "@/types/user"
+import api from "@/lib/api"
+
+import { PongState } from "@/types/types" // Ensure this matches your backend types
+import * as CONST from '@/lib/pong/constants' 
 
 
 export default function PongGamePage() {
@@ -18,6 +21,15 @@ export default function PongGamePage() {
 
 	const params = useParams()
 	const roomId = params.roomId as string
+
+	const playerId = localStorage.getItem('userId')
+	const [user, setUser] = useState<BaseUser | null>(null);
+	useEffect(() => {
+		api.get(`/user/${playerId}`).then(response => {
+			setUser(response.data.user);
+		});
+	}, []);
+	
 
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [gameState, setGameState] = useState<PongState | null>(null)
@@ -30,12 +42,6 @@ export default function PongGamePage() {
 
 	const socketRef = useRef<WebSocket | null>(null)
 	const router = useRouter()
-
-	const [playerId, setPlayerId] = useState<number | null>(null)
-	const playerIdRef = useRef<number | null>(null);
-	useEffect(() => {
-		playerIdRef.current = playerId;
-	}, [playerId]);
 
 	// Waiting room state
 	const [isLoading, setIsLoading] = useState(true)
@@ -51,6 +57,11 @@ export default function PongGamePage() {
 			return;
 		}
 
+		if (!user) {
+			console.error("user data not yet defined");
+			return;
+		}
+
 		if (!roomId) {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
@@ -63,13 +74,20 @@ export default function PongGamePage() {
 		}
 
 		console.log("Creating new WebSocket connection");
-		const socket = new WebSocket("wss://localhost/tmp_pong/");
+
+		const socket = new WebSocket("wss://localhost/api/ws/pong");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
 			console.log("Connected to game server");
 
-			// After connection, immediately send join_room message with roomId
+			// After connection, immediately send uuid
+			socket.send(JSON.stringify({
+				type: "assign",
+				uuid: playerId,
+				name: user?.name || 'Player'
+			}));
+			// Then, send join_room message with roomId
 			socket.send(JSON.stringify({
 				type: "join_room",
 				roomId: roomId
@@ -81,10 +99,7 @@ export default function PongGamePage() {
 				const msg = JSON.parse(event.data);
 				console.log("Received WebSocket message:", msg.type);
 
-				// Handle different message types
-				if (msg.type === "assign")
-					setPlayerId(msg.playerId);
-				else if (msg.type === "state")
+				if (msg.type === "state")
 					setGameState(msg.gameState);
 				else if (msg.type === "room_update") {
 					if (!msg.room) {
@@ -104,7 +119,7 @@ export default function PongGamePage() {
 							name: p.name || `Player ${p.id}`,
 							avatar: null,
 							isReady: p.isReady,
-							isYou: p.id === playerIdRef.current
+							isYou: p.id === playerId
 						})) as Player[]
 					};
 					setRoom(transformedRoom);
@@ -142,7 +157,7 @@ export default function PongGamePage() {
 			}
 			socketRef.current = null;
 		};
-	}, [roomId, accessToken]);
+	}, [roomId, accessToken, user]);
 
 
 	// Handle game rendering
@@ -230,7 +245,7 @@ export default function PongGamePage() {
 
 	// Toggle ready status
 	const handleToggleReady = () => {
-		if (!socketRef.current || playerIdRef.current === null) return
+		if (!socketRef.current) return
 
 		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }))
 	}

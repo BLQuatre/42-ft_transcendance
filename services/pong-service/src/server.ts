@@ -5,7 +5,6 @@ import { Player } from './player';
 import * as CONST from './constants';
 import dotenv from 'dotenv';
 import path from 'path';
-import axios from 'axios';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
@@ -14,7 +13,6 @@ const fastify = Fastify({
     logger: process.env.DEBUG === 'true',
 }) ;
 
-let id = 0;
 const rooms: Map<string, Room> = new Map();
 
 const start = async () => {

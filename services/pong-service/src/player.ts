@@ -4,7 +4,8 @@ import * as CONST from './constants';
 
 
 export class Player {
-    private id: number;
+    private id: string;
+    private name: string
     private paddle: Range;
     private zone: Range;
     private moving: { up: boolean; down: boolean };
@@ -12,8 +13,9 @@ export class Player {
     private socket?: WebSocket;
 
 
-    constructor(id: number = 0, socket?: WebSocket) {
+    constructor(id: string, name: string, socket?: WebSocket) {
         this.id = id;
+        this.name = name;
 
         this.paddle = { top: 0, bot: 0 };
         this.zone = { top: 0, bot: 0 };
@@ -39,6 +41,10 @@ export class Player {
     // Public methods to access private attributes
     public getId() {
         return this.id;
+    }
+
+    public getName() {
+        return this.name;
     }
 
     public getSocket() {

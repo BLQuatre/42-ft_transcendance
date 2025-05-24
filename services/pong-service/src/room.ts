@@ -19,7 +19,7 @@ export class Room {
         this.players.push(player);
     }
 
-    public removePlayer(playerId: number) {
+    public removePlayer(playerId: string) {
         this.players = this.players.filter((p) => p.getId() !== playerId);
     }
 

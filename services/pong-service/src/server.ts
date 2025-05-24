@@ -5,8 +5,10 @@ import { Player } from './player';
 import * as CONST from './constants';
 import dotenv from 'dotenv';
 import path from 'path';
+import axios from 'axios';
 
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+
 
 const fastify = Fastify({
     logger: process.env.DEBUG === 'true',
@@ -33,7 +35,14 @@ const start = async () => {
         ws.on('message', (message) => {
             const data = JSON.parse(message.toString());
 
-            if (data.type === 'join_room') {
+            if (data.type === "assign") {
+                assignedPlayer = new Player(data.uuid, data.name, ws);
+                console.log(`assigned Player (${assignedPlayer.getName()})`);
+            }
+
+            else if (data.type === 'join_room') {
+                if (!assignedPlayer) return ;
+
                 const roomId = data.roomId;
                 if (!rooms.has(roomId)) {
                     rooms.set(roomId, new Room(roomId));
@@ -41,10 +50,10 @@ const start = async () => {
                 currentRoom = rooms.get(roomId)!;
 
                 if (currentRoom.getPlayers().length < CONST.MAX_PLAYERS && !currentRoom.getGame()) {
-                    assignedPlayer = new Player(++id, ws);
                     currentRoom.addPlayer(assignedPlayer);
 
                     // Notify the player of their ID
+					console.log(`assigned ${assignedPlayer.getName()} to room#${currentRoom.getId()}`)
                     ws.send(JSON.stringify({ type: 'assign', playerId: assignedPlayer.getId() }));
 
                     // Broadcast room update

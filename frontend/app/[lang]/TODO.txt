@@ -4,9 +4,7 @@ Mettre a jour les traductions
 
 Faire en sorte de rediriger vers la page 404 avec la bonne [lang] pour le moment ca redirige vers /en/not-found
 
-Gerer l'affichage du chat par rapport au token
 
-FIX MISTAKE ON DIALOG OF GAME MODE (BEAT YOUR SCORE ON BOTH)
+TRADS
+	Tab Account au lieu de settings
 
-
-BACK HOME COMPONENT

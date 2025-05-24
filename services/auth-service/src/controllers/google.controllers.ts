@@ -3,12 +3,12 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import dotenv from 'dotenv';
 import { FastifyReply, FastifyRequest } from 'fastify';
+
 dotenv.config({ path: path.resolve(__dirname, '../../../../.env.dev')});
 
-
-const GOOGLE_CLIENT_ID = process.env.ID_CLIENT!;
-const GOOGLE_CLIENT_SECRET = process.env.SECRET_CLIENT!;
-const GOOGLE_REDIRECT_URI = 'http://localhost:3002/auth/google/callback';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
+const GOOGLE_REDIRECT_URI = 'https://localhost/api/auth/google/callback';
 
 export const googleRedir = async (req: FastifyRequest, reply: FastifyReply) => {
   const params = new URLSearchParams({

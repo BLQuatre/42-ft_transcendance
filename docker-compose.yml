@@ -134,6 +134,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - transcendance
+    restart: always
 
   matchmaking_service:
     container_name: matchmaking_service

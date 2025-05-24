@@ -32,7 +32,6 @@ export const getOneUser = async (req: FastifyRequest, reply: FastifyReply) => {
 				statusCode: 404
 			});
 		}
-		// TODO: Name of this function, removePassword return a publicUser ???
 		const publicUser : PublicUser = removePassword(user);
 		return reply.code(200).send({
 			message: 'User find',

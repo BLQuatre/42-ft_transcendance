@@ -9,9 +9,6 @@ const dictionaries: Record<Language, () => Promise<any>> = {
 	ro: () => import('@/locales/ro.json').then((module) => module.default)
 };
 
-// TODO: See the diff between const fun = () => {}
-// and function fun() {}
-
 export const getDictionary = async (locale: Language) => {
 	const dictionaryLoader = dictionaries[locale];
 	if (!dictionaryLoader) {

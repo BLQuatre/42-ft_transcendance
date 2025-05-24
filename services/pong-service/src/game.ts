@@ -2,6 +2,13 @@ import { Team, Ball, State } from './types' ;
 import { Player } from './player' ;
 import * as CONST from './constants' ;
 
+import axios from 'axios' ;
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+
+
 export class Game {
 	private left_team: Team ; private right_team: Team ;
 	private ball: Ball = {} as Ball ;
@@ -135,12 +142,8 @@ export class Game {
 
 	private scoring(team: Team) {
 		team.score += 1 ;
-		if (team.score === CONST.SCORE_WIN) {
-			this.stopUpdating()
-			setTimeout(() => {
-				this.finished = true ;
-			}, 100) ;
-		}
+		if (team.score === CONST.SCORE_WIN)
+			this.endGame() ;
 		this.resetBall() ;
 	}
 
@@ -152,12 +155,41 @@ export class Game {
 			angle = Math.random() * 2 * Math.PI;
 		} while (
 			Math.abs(Math.cos(angle)) < 0.3 || // too vertical
-			Math.abs(Math.sin(angle)) < 0.3    // too horizontal
+			Math.abs(Math.sin(angle)) < 0.3		// too horizontal
 		) ;
 
 		this.ball.x = CONST.BOARD_LENGTH / 2 ;
 		this.ball.y = CONST.BOARD_HEIGHT / 2 ;
 		this.ball.vx = Math.cos(angle) * CONST.BALL_SPD ;
 		this.ball.vy = Math.sin(angle) * CONST.BALL_SPD ;
+	}
+
+	private endGame() {
+		this.stopUpdating();
+
+		setTimeout(() => {
+			this.finished = true;
+		}, 100);
+		
+		const allPlayers = [...this.left_team.players, ...this.right_team.players];
+		
+		const payload = {
+			game_type: 'PONG',
+			players: allPlayers.map((pl) => {
+			const isLeftTeam = this.left_team.players.includes(pl) ;
+			const score = isLeftTeam ? this.left_team.score : this.right_team.score ;
+			const isWinner = score === CONST.SCORE_WIN ;
+		
+			return {
+				user_id: pl.getId(),
+				username: pl.getName(),
+				is_bot: false,
+				score: score,
+				is_winner: isWinner,
+			} ;
+			}),
+		} ;
+		
+		axios.post(`http://${process.env.GAMEH_HOST}:${process.env.GAMEH_PORT}/history`, payload) ;
 	}
 }

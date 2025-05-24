@@ -1,20 +1,35 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useAuth } from "@/contexts/auth-context"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { ScoreDisplay } from "@/components/ScoreDisplay"
+import { BaseUser } from "@/types/user"
+import api from "@/lib/api"
 
 import { Game } from '@/lib/pong/game'
 import * as CONST from '@/lib/pong/constants' ;
 
 
 export default function PongGamePage() {
+	const { accessToken } = useAuth()
+
+	const playerId = localStorage.getItem('userId')
+	const userRef = useRef<BaseUser | null>(null)
+	useEffect(() => {
+		api.get(`/user/${playerId}`).then(response => {
+			userRef.current = response.data.user;
+		});
+	}, []);
+
+
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 	const [pausedState, setPausedState] = useState<boolean>(true)
 	const pausedRef = useRef(pausedState)
 	const [gameFinished, setGameFinished] = useState<boolean>(false)
 	const gameFinishedRef = useRef(gameFinished)
+	const submittedRef = useRef(false)
 
 	let keysPressed = { up: false, down: false }
 	const gameRef = useRef<Game | null>(null)
@@ -144,13 +159,35 @@ export default function PongGamePage() {
 			draw()
 			handleInput()
 
-	  		const currentScores = game.get_score()
-      		if (currentScores.left !== scores.left || currentScores.right !== scores.right) {
-      		  setScores({ left: currentScores.left, right: currentScores.right })
-      		}
+			const currentScores = game.get_score()
+			if (currentScores.left !== scores.left || currentScores.right !== scores.right) {
+				setScores({ left: currentScores.left, right: currentScores.right })
+			}
 
-			if (game.get_score().left == CONST.SCORE_WIN || game.get_score().right == CONST.SCORE_WIN)
+			if ((game.get_score().left == CONST.SCORE_WIN || game.get_score().right == CONST.SCORE_WIN) && !submittedRef.current) {
 				setGameFinished(true) ;
+				
+				const user = userRef.current ;
+				if (accessToken && user) {
+					submittedRef.current = true ;
+					
+					api.post('/history', {
+						game_type: 'PONG',
+						players: [{
+							user_id: localStorage.getItem("userId"),
+							username: user.name,
+							is_bot: false,
+							score: currentScores.left,
+							is_winner: currentScores.left === CONST.SCORE_WIN
+						}, {
+							username: 'AI',
+							is_bot: true,
+							score: currentScores.right,
+							is_winner: currentScores.right === CONST.SCORE_WIN
+						}]
+					}) ;
+				}
+			}
 
 			if (gameFinishedRef.current === false)
 				frameRef.current = requestAnimationFrame(gameLoop)
@@ -198,10 +235,10 @@ export default function PongGamePage() {
 
 								{/* Score display component */}
 								<ScoreDisplay
-								  leftScore={scores.left}
-								  rightScore={scores.right}
-								  winningScore={CONST.SCORE_WIN}
-								  gameFinished={gameFinished}
+									leftScore={scores.left}
+									rightScore={scores.right}
+									winningScore={CONST.SCORE_WIN}
+									gameFinished={gameFinished}
 								/>
 
 								{/* Pause instructions on top of blur */}

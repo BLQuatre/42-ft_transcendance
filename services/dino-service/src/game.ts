@@ -2,6 +2,13 @@ import { Obstacle } from './obstacle' ;
 import { Player } from './player' ;
 import * as CONST from './constants' ;
 
+import axios from 'axios' ;
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+
+
 export class Game {
 	private score: number ; // Ramping up constantly, attributed to a player when he "loses"
 	private dinos: { player: Player, score: number }[] ;
@@ -135,10 +142,32 @@ export class Game {
 		}) ;
 
 		if (this.dinos.find((dino) => dino.score === -1) === undefined) {
-			this.stopUpdating()
-			setTimeout(() => {
-				this.finished = true ;
-			}, 100) ;
+			this.endGame() ;
 		}
+	}
+
+	private endGame() {
+		this.stopUpdating() ;
+	
+		setTimeout(() => {
+			this.finished = true ;
+		}, 100) ;
+
+		const highestScore = this.dinos.reduce((max, team) =>  Math.max(max, team.score), 0) ;
+		
+		const payload = {
+			game_type: 'DINO',
+			players: this.dinos.map((dino) => {
+				return {
+					user_id: dino.player.getId(),
+					username: dino.player.getName(),
+					is_bot: false,
+					score: dino.score,
+					is_winner: dino.score === highestScore,
+				} ;
+			}),
+		} ;
+		
+		axios.post(`http://${process.env.GAMEH_HOST}:${process.env.GAMEH_PORT}/history`, payload) ;
 	}
 }

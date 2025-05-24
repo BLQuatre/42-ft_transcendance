@@ -61,10 +61,10 @@ export default function RegisterPage() {
   }
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newUsername = event.target.value;
+    const newUsername = event.target.value.slice(0, 20);
     setUsername(newUsername);
 
-    if (newUsername.length > 0 &&newUsername.length < 6) {
+    if (newUsername.length > 0 && newUsername.length < 6) {
       setUsernameError("6 characters minimum");
     } else {
       setUsernameError(null);

@@ -42,7 +42,8 @@ export const tfaSetup = async (req: FastifyRequest, reply: FastifyReply) => {
   return reply.code(201).send({
     message: "QR code generated",
     statusCode: 201,
-    qrCodeUrl
+    qrCodeUrl,
+    secret: (secret.otpauth_url || "secret=Error").split("secret=")[1]
   });
 };
 

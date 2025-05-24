@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/Dialog"
 import { Input } from "@/components/ui/Input"
 import { Separator } from "@/components/ui/Separator"
-import { generateQRCode, generateTOTPUri } from "@/lib/qr-code"
+import api from "@/lib/api"
 
 type TwoFactorSetupDialogProps = {
   open: boolean
@@ -40,64 +40,26 @@ export function TwoFactorSetupDialog({
   const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
 
+  const userId = sessionStorage.getItem("userId")
+
   useEffect(() => {
     if (open) {
       setLoading(true)
-
-      // If a secret hash is provided directly, use it
-      if (secretHash) {
-        generateQRCodeFromHash(secretHash)
-      } else {
-        // Otherwise simulate getting one from the backend
-        fetchSecretFromBackend()
-      }
+      setup()
     }
   }, [open, secretHash])
 
-  // Function to generate QR code from provided hash
-  const generateQRCodeFromHash = async (hash: string) => {
+  const setup = async () => {
     try {
-      // Format the hash into a TOTP URI
-      const uri = generateTOTPUri(appName, userEmail, hash)
+      const response = await api.get(`/auth/tfa/setup/${userId}`)
+      if (response.data.qrCodeUrl)
+        setQrCodeDataUrl(response.data.qrCodeUrl)
+      if (response.data.secret)
+        setSecret(response.data.secret)
 
-      // Generate the QR code
-      const dataUrl = await generateQRCode(uri)
-
-      setQrCodeDataUrl(dataUrl)
-      setSecret(hash)
-      setLoading(false)
     } catch (error) {
-      console.error("Failed to generate QR code:", error)
-      setError("Failed to generate QR code. Please try again.")
-      setLoading(false)
-    }
-  }
-
-  // Mock function to simulate fetching a secret from the backend
-  const fetchSecretFromBackend = async () => {
-    try {
-      // In a real app, this would be an API call to your backend
-      // For demo purposes, we'll simulate a delay and return a mock secret
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Mock response from backend
-      const mockResponse = {
-        success: true,
-        data: {
-          secret: "JBSWY3DPEHPK3PXP", // Example secret
-          factorId: "factor_" + Math.random().toString(36).substring(2, 11),
-        },
-      }
-
-      if (mockResponse.success) {
-        // Generate QR code from the secret
-        await generateQRCodeFromHash(mockResponse.data.secret)
-      } else {
-        throw new Error("Failed to get 2FA secret from server")
-      }
-    } catch (error) {
-      console.error("Error fetching 2FA secret:", error)
-      setError("Failed to initialize 2FA setup. Please try again.")
+      console.error("Error setting up 2FA:", error)
+    } finally {
       setLoading(false)
     }
   }
@@ -167,7 +129,7 @@ export function TwoFactorSetupDialog({
                 <p>1. SCAN THIS QR CODE WITH YOUR AUTHENTICATOR APP</p>
                 <div className="flex justify-center p-2 bg-muted rounded-md">
                   {qrCodeDataUrl ? (
-                    <img src={qrCodeDataUrl || "/placeholder.svg"} alt="2FA QR Code" className="w-48 h-48" />
+                    <img src={qrCodeDataUrl} alt="2FA QR Code" className="w-48 h-48" />
                   ) : (
                     <div className="w-48 h-48 flex items-center justify-center bg-muted">
                       <p className="font-pixel text-xs text-muted-foreground">QR CODE LOADING...</p>
@@ -181,7 +143,7 @@ export function TwoFactorSetupDialog({
               <div className="font-pixel text-xs space-y-2">
                 <p>2. OR MANUALLY ENTER THIS SECRET CODE:</p>
                 <div className="flex items-center space-x-2">
-                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-pixel">
+                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-pixel">
                     {secret}
                   </code>
                   <Button

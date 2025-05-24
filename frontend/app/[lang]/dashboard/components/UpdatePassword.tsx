@@ -75,6 +75,12 @@ export default function UpdatePassword() {
 				password: newPassword
 			})
 
+			setCurrentPassword("")
+			setNewPassword("")
+			setConfirmPassword("")
+			setPasswordError(null)
+			setNewPasswordError(null)
+
 			toast({
 				title: "Password Updated",
 				description: "Your password has been updated successfully",
@@ -160,7 +166,11 @@ export default function UpdatePassword() {
 				<Button
 					type="submit"
 					className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-					disabled={isLoading}
+					disabled={
+						isLoading || !currentPassword || !newPassword || !confirmPassword
+						|| newPasswordError !== null || passwordError !== null
+						|| newPassword !== confirmPassword
+					}
 				>
 					{isLoading ? dict.common.updating : dict.dashboard.sections.settings.security.password.update}
 				</Button>

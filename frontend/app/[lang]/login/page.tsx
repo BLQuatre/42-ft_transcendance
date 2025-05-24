@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/Button"
@@ -17,6 +17,7 @@ import axios from "axios"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
 import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
+import api from "@/lib/api"
 
 export default function LoginPage() {
 	const router = useRouter()
@@ -29,10 +30,11 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("")
 	const [loginError, setLoginError] = useState<string | null>(null)
 
+	const userId = useRef<string | null>(null)
+
 	// 2FA state
-	const [twoFactorRequired, setTwoFactorRequired] = useState(false)
-	const [twoFactorError, setTwoFactorError] = useState<string | null>(null)
-	const [token, setTwoFactorToken] = useState<string | null>(null)
+	const [twoFactorVerifyDialog, setTwoFactorVerifyDialog] = useState(false)
+	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
 
 	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
@@ -51,13 +53,10 @@ export default function LoginPage() {
 
 			// Check if 2FA is required (status 200 but no access token)
 			if (response.status === 202) {
-				// Store any token needed for the 2FA verification step
-				setTwoFactorToken(response.data.twoFactorToken || null)
-				// Show 2FA dialog
-				setTwoFactorRequired(true)
+				userId.current = response.data.id
+				setTwoFactorVerifyDialog(true)
 				setIsLoading(false)
 			} else {
-				// Normal login success
 				setAccessToken(response.data.accessToken)
 				sessionStorage.setItem("userId", response.data.user.id)
 				router.push("/")
@@ -79,24 +78,25 @@ export default function LoginPage() {
 
 	const handleVerify2FA = async (code: string) => {
 		setIsLoading(true)
-		setTwoFactorError(null)
+
+		if (!userId.current) {
+			setTwoFactorVerifyError("An error occurred. Please try again.")
+			setIsLoading(false)
+			return
+		}
+
+		setTwoFactorVerifyError(null)
 
 		try {
-			const response = await axios.post('/api/auth/verify-2fa', {
-				token
-			})
+			const response = await api.post(`/auth/tfa/verify/${userId.current}`, { token: code })
 
-			// 2FA verification successful
 			setAccessToken(response.data.accessToken)
-			setTwoFactorRequired(false)
+			sessionStorage.setItem("userId", userId.current)
+			setTwoFactorVerifyDialog(false)
 			router.push("/")
 		} catch (error: any) {
-			console.error("2FA verification error:", error)
-			if (error.response?.status === 401) {
-				setTwoFactorError("Invalid verification code")
-			} else {
-				setTwoFactorError("An error occurred. Please try again.")
-			}
+			setTwoFactorVerifyError("Invalid verification code")
+		} finally {
 			setIsLoading(false)
 		}
 	}
@@ -270,11 +270,11 @@ export default function LoginPage() {
 
 			{/* 2FA Verification Dialog */}
 			<TwoFactorVerifyDialog
-				open={twoFactorRequired}
-				onOpenChange={setTwoFactorRequired}
+				open={twoFactorVerifyDialog}
+				onOpenChange={setTwoFactorVerifyDialog}
 				onVerify={handleVerify2FA}
 				isLoading={isLoading}
-				error={twoFactorError}
+				error={twoFactorVerifyError}
 			/>
 		</div>
 	)

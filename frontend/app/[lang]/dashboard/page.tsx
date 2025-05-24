@@ -28,6 +28,7 @@ import api from "@/lib/api"
 import { GameType } from "@/types/game"
 import { cn, handleImageUpload } from "@/lib/utils"
 import { useToast } from "@/hooks/UseToast"
+import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
 
 // Sample skin data
 const characterSkins: Skin[] = [
@@ -163,7 +164,13 @@ export default function DashboardPage() {
 
 	const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
 	const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
-	const [secretHash, setSecretHash] = useState<string | undefined>(undefined)
+
+	const [twoFactorVerifyOpen, setTwoFactorVerifyOpen] = useState(false)
+	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
+	const [twoFactorVerifyLoading, setTwoFactorVerifyLoading] = useState(false)
+
+
+
 	const fileInputRef = React.useRef<HTMLInputElement>(null)
 
 	// Add these new states for chart data
@@ -319,45 +326,37 @@ export default function DashboardPage() {
 		setRemoveAvatarDialogOpen(false)
 	}
 
-	// 2FA
-	const handleSetup2FA = async () => {
-		// In a real app, you would fetch the secret hash from your backend here
-		try {
-			setIsLoading(true)
-
-			// Simulate API call to backend to get a secret hash
-			// In a real app, this would be an actual API call
-			await new Promise((resolve) => setTimeout(resolve, 1000))
-
-			// Mock response from backend with the secret hash
-			const mockResponse = {
-				success: true,
-				data: {
-					secret: "JBSWY3DPEHPK3PXP", // Example secret hash from backend
-				},
-			}
-
-			if (mockResponse.success) {
-				// Store the secret hash from the backend
-				setSecretHash(mockResponse.data.secret)
-				// Open the 2FA setup dialog
-				setTwoFactorSetupOpen(true)
-			} else {
-				console.error("Failed to get 2FA secret from server")
-			}
-		} catch (error) {
-			console.error("Error initializing 2FA:", error)
-		} finally {
-			setIsLoading(false)
-		}
+	const handle2FAComplete = () => {
+		updateData()
+		toast({
+			title: "2FA Enabled",
+			description: "2FA has been enabled successfully",
+			duration: 3000,
+		})
 	}
 
-	const handle2FAComplete = () => {
-		// Simply enable 2FA
-		setTwoFactorEnabled(true)
+	const confirmRemove2FA = async (code: string) => {
+		setTwoFactorVerifyLoading(true)
+		setTwoFactorVerifyError(null)
 
-		// In a real app, you would make an API call to confirm 2FA is enabled
-		console.log("2FA has been enabled successfully")
+		try {
+			const response = await api.post(`/user/tfa-delete`, { token: code })
+			if (response.data.statusCode === 200) {
+				setTwoFactorVerifyOpen(false)
+				setRemove2FADialogOpen(false)
+				toast({
+					title: "2FA Disabled",
+					description: "2FA has been disabled successfully",
+					duration: 3000,
+				})
+				updateData()
+			}
+		} catch (error) {
+			setTwoFactorVerifyError("Invalid code")
+		} finally {
+
+			setTwoFactorVerifyLoading(false)
+		}
 	}
 
 	const updateData = () => {
@@ -368,6 +367,7 @@ export default function DashboardPage() {
 			api.get(`/user/${userId}`).then((response) => {
 				setUser(response.data.user)
 				setUsername(response.data.user.name || "")
+				setTwoFactorEnabled(response.data.user.tfaEnable || false)
 			}).catch((error) => {
 				console.error("Error fetching user data:", error)
 			})
@@ -1023,7 +1023,7 @@ export default function DashboardPage() {
 												REMOVE 2FA
 											</Button>
 										) : (
-											<Button variant="outline" className="font-pixel" onClick={handleSetup2FA}>
+											<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
 												SETUP 2FA
 											</Button>
 										)}
@@ -1038,14 +1038,19 @@ export default function DashboardPage() {
 			{/* Match Details Dialog */}
 			<MatchDetailsDialog open={matchDialogOpen} onOpenChange={setMatchDialogOpen} match={selectedMatch} />
 
+			<TwoFactorVerifyDialog
+				open={twoFactorVerifyOpen}
+				onOpenChange={setTwoFactorVerifyOpen}
+				onVerify={confirmRemove2FA}
+				isLoading={twoFactorVerifyLoading}
+				error={twoFactorVerifyError}
+			/>
+
 			{/* 2FA Setup Dialog with the secret hash from backend */}
 			<TwoFactorSetupDialog
 				open={twoFactorSetupOpen}
 				onOpenChange={setTwoFactorSetupOpen}
 				onComplete={handle2FAComplete}
-				secretHash={secretHash}
-				userEmail="player_one@example.com" // Pass the user's email
-				appName="RetroArcade" // Your app name
 			/>
 
 			{/* Logout Confirmation Dialog */}
@@ -1160,10 +1165,7 @@ export default function DashboardPage() {
 							type="button"
 							variant="destructive"
 							className="font-pixel text-xs uppercase"
-							onClick={() => {
-								setTwoFactorEnabled(false)
-								setRemove2FADialogOpen(false)
-							}}
+							onClick={() => setTwoFactorVerifyOpen(true)}
 						>
 							Disable 2FA
 						</Button>

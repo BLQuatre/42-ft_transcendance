@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog"
 import { Input } from "@/components/ui/Input"
+import { cn } from "@/lib/utils"
 
 type TwoFactorVerifyDialogProps = {
   open: boolean
@@ -64,10 +65,12 @@ export function TwoFactorVerifyDialog({
               placeholder="123456"
               className="font-pixel text-sm h-10 bg-muted"
               maxLength={6}
+              autoComplete="off"
               autoFocus
               disabled={isLoading}
+              error={error !== null}
             />
-            {error && <p className="text-xs text-destructive font-pixel mt-1">{error}</p>}
+            <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
           </div>
         </div>
 

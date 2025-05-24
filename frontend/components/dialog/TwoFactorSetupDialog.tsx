@@ -14,44 +14,38 @@ import {
 import { Input } from "@/components/ui/Input"
 import { Separator } from "@/components/ui/Separator"
 import api from "@/lib/api"
+import { cn } from "@/lib/utils"
 
 type TwoFactorSetupDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onComplete?: () => void
-  // Optional props for direct integration with backend
-  secretHash?: string
-  userEmail?: string
-  appName?: string
 }
 
 export function TwoFactorSetupDialog({
   open,
   onOpenChange,
-  onComplete,
-  secretHash,
-  userEmail = "player_one@example.com",
-  appName = "RetroArcade",
+  onComplete
 }: TwoFactorSetupDialogProps) {
   const [loading, setLoading] = useState(false)
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("")
   const [secret, setSecret] = useState("")
   const [verificationCode, setVerificationCode] = useState("")
-  const [error, setError] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-
-  const userId = sessionStorage.getItem("userId")
 
   useEffect(() => {
     if (open) {
+      setError(null)
+      setVerificationCode("")
       setLoading(true)
       setup()
     }
-  }, [open, secretHash])
+  }, [open])
 
   const setup = async () => {
     try {
-      const response = await api.get(`/auth/tfa/setup/${userId}`)
+      const response = await api.get(`/user/tfa/setup`)
       if (response.data.qrCodeUrl)
         setQrCodeDataUrl(response.data.qrCodeUrl)
       if (response.data.secret)
@@ -80,18 +74,17 @@ export function TwoFactorSetupDialog({
     setError("")
 
     try {
-      // In a real app, this would be an API call to verify the code
-      // For demo purposes, we'll simulate a delay and success
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await api.post(`/user/tfa-activate`, {
+        token: verificationCode
+      })
 
-      // Mock verification - in a real app, you would call your backend API
-      if (verificationCode.length === 6 && /^\d+$/.test(verificationCode)) {
-        // Success scenario
+      if (response.data.statusCode === 200) {
         setLoading(false)
+        setError(null)
+        setVerificationCode("")
         onOpenChange(false)
         if (onComplete) onComplete()
       } else {
-        // Error scenario
         throw new Error("Invalid verification code")
       }
     } catch (error) {
@@ -142,14 +135,14 @@ export function TwoFactorSetupDialog({
 
               <div className="font-pixel text-xs space-y-2">
                 <p>2. OR MANUALLY ENTER THIS SECRET CODE:</p>
-                <div className="flex items-center space-x-2">
-                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-pixel">
+                <div className="flex items-center space-x-2 w-full justify-between">
+                  <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-pixel overflow-x-auto max-w-xs whitespace-nowrap">
                     {secret}
                   </code>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-8 w-8 flex-shrink-0"
                     onClick={handleCopySecret}
                     title="Copy to clipboard"
                   >
@@ -166,14 +159,16 @@ export function TwoFactorSetupDialog({
                   id="verificationCode"
                   value={verificationCode}
                   onChange={(e) => {
+                    setError(null)
                     setVerificationCode(e.target.value.replace(/\D/g, "").substring(0, 6))
-                    setError("")
                   }}
                   placeholder="123456"
                   className="font-pixel text-sm h-10 bg-muted"
                   maxLength={6}
+                  autoComplete="off"
+                  error={error !== null}
                 />
-                {error && <p className="text-xs text-destructive font-pixel mt-1">{error}</p>}
+                <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
               </div>
             </div>
 

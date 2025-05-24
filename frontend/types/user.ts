@@ -10,7 +10,9 @@ export interface BaseUser {
 	id: string
 	name: string
 	avatar: string
-	status: UserStatus
+	status: UserStatus,
+	tfaEnable: boolean,
+	isGoogleSignIn: boolean
 }
 
 export interface User {

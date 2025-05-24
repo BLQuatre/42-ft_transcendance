@@ -163,7 +163,6 @@ export default function DashboardPage() {
 	const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false)
 
 	const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
-	const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
 
 	const [twoFactorVerifyOpen, setTwoFactorVerifyOpen] = useState(false)
 	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
@@ -370,7 +369,6 @@ export default function DashboardPage() {
 			api.get(`/user/${userId}`).then((response) => {
 				setUser(response.data.user)
 				setUsername(response.data.user.name || "")
-				setTwoFactorEnabled(response.data.user.tfaEnable || false)
 			}).catch((error) => {
 				console.error("Error fetching user data:", error)
 			})
@@ -977,24 +975,28 @@ export default function DashboardPage() {
 											<div className="space-y-0.5">
 												<h3 className="font-pixel text-sm">2FA STATUS</h3>
 												<p className="font-pixel text-xs text-muted-foreground">
-													{twoFactorEnabled
-														? "TWO-FACTOR AUTHENTICATION IS ENABLED"
-														: "TWO-FACTOR AUTHENTICATION IS CURRENTLY DISABLED"}
+													{(user?.isGoogleSignIn || false)
+														? "2FA CANNOT BE ENABLED WITH GOOGLE AUTHENTICATION"
+														: (user?.tfaEnable || false)
+															? "TWO-FACTOR AUTHENTICATION IS ENABLED"
+															: "TWO-FACTOR AUTHENTICATION IS CURRENTLY DISABLED"}
 												</p>
 											</div>
 										</div>
 									</CardContent>
-									<CardFooter>
-										{twoFactorEnabled ? (
-											<Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
-												REMOVE 2FA
-											</Button>
-										) : (
-											<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
-												SETUP 2FA
-											</Button>
-										)}
-									</CardFooter>
+									{(!(user?.isGoogleSignIn || false)) &&
+										<CardFooter>
+											{(user?.tfaEnable || false) ? (
+												<Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
+													REMOVE 2FA
+												</Button>
+											) : (
+												<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
+													SETUP 2FA
+												</Button>
+											)}
+										</CardFooter>
+									}
 								</Card>
 							</TabsContent>
 						</Tabs>

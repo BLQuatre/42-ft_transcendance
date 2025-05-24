@@ -61,7 +61,10 @@ export default function RegisterPage() {
   }
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newUsername = event.target.value.slice(0, 20);
+    const rawValue = event.target.value;
+    const alphanumericValue = rawValue.replace(/[^a-zA-Z0-9]/g, '');
+
+    const newUsername = alphanumericValue.slice(0, 20);
     setUsername(newUsername);
 
     if (newUsername.length > 0 && newUsername.length < 6) {

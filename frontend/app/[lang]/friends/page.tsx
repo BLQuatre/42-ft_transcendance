@@ -15,6 +15,7 @@ import api from "@/lib/api"
 import { UserCard } from "./components/UserCard"
 import { FriendRequestCard } from "./components/FriendRequestCard"
 import { FriendCard } from "./components/FriendCard"
+import { BlockedUserCard } from "./components/BlockedUserCard"
 
 
 // TODO: Add online status to friends and avatar
@@ -164,7 +165,7 @@ export default function FriendsPage() {
         (getUserFromId(friend.sender_id)?.name || "Unknown").toLowerCase().includes(searchQuery.toLowerCase())
       )
 
-  const filteredUsers =
+  const filteredAddUsers =
     addFriendSearchQuery.trim() === ""
       ? []
       : users.filter((user) => user.name.toLowerCase().includes(addFriendSearchQuery.toLowerCase())
@@ -199,7 +200,10 @@ export default function FriendsPage() {
               )}
             </TabsTrigger>
             <TabsTrigger className="uppercase" value="add">
-              {dict.friends.sections.add?.title || "Add Friends"}
+              {"Add Friends"}
+            </TabsTrigger>
+            <TabsTrigger className="uppercase" value="block">
+              {"Blocked Users"}
             </TabsTrigger>
           </TabsList>
 
@@ -301,14 +305,14 @@ export default function FriendsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  {filteredUsers.length === 0 ? (
+                  {filteredAddUsers.length === 0 ? (
                     <p className="text-center font-pixel text-sm text-muted-foreground py-4">
                       {addFriendSearchQuery.trim() === ""
                         ? dict.friends.sections.add?.searchPrompt || "Search for users to add as friends"
                         : dict.friends.sections.add?.noUsersFound || "No users found with that username"}
                     </p>
                   ) : (
-                    filteredUsers.map((user) => {
+                    filteredAddUsers.map((user) => {
                       return (
                         <UserCard
                           key={user.id}
@@ -316,6 +320,41 @@ export default function FriendsPage() {
                           status={getStatus(user)}
                           sendRequest={(id) => handleSendFriendRequest(id)}
                           onBlock={(id) => handleBlockUser(id)}
+                          onUnblock={(id) => handleUnblockUser(id)}
+                        />
+                      )
+                    })
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="block" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-pixel text-sm uppercase">
+                  {"Blocked Users"}
+                </CardTitle>
+                <CardDescription className="font-pixel text-xs uppercase">
+                  {"See all users you blocked"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  {blockedUsers.length === 0 ? (
+                    <p className="text-center font-pixel text-sm text-muted-foreground py-4">
+                      You have no blocked users
+                    </p>
+                  ) : (
+                    blockedUsers.map((blocked) => {
+                      const user = getUserFromId(blocked.receiver_id)
+                      if (!user) return null
+
+                      return (
+                        <BlockedUserCard
+                          key={user.id}
+                          user={user}
                           onUnblock={(id) => handleUnblockUser(id)}
                         />
                       )

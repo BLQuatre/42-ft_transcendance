@@ -400,16 +400,24 @@ export default function DashboardPage() {
 				// Fetch all game history
 				const response = await api.get(`/history/${userId}`)
 				if (response.data && response.data.history) {
-					// Filter for Pong games
-					const pongGames = response.data.history.filter(
-						(game: GameHistoryItem) => game.gameSession?.game_type === "PONG"
-					)
+					// Filter for Pong games and sort by date (newest first)
+					const pongGames = response.data.history
+						.filter((game: GameHistoryItem) => game.gameSession?.game_type === "PONG")
+						.sort((a: GameHistoryItem, b: GameHistoryItem) => {
+							const dateA = new Date(a.gameSession?.created_at || 0).getTime();
+							const dateB = new Date(b.gameSession?.created_at || 0).getTime();
+							return dateB - dateA; // Descending order (newest first)
+						});
 					setPongGameHistory(pongGames)
 
-					// Filter for Dino games
-					const dinoGames = response.data.history.filter(
-						(game: GameHistoryItem) => game.gameSession?.game_type === "DINO"
-					)
+					// Filter for Dino games and sort by date (newest first)
+					const dinoGames = response.data.history
+						.filter((game: GameHistoryItem) => game.gameSession?.game_type === "DINO")
+						.sort((a: GameHistoryItem, b: GameHistoryItem) => {
+							const dateA = new Date(a.gameSession?.created_at || 0).getTime();
+							const dateB = new Date(b.gameSession?.created_at || 0).getTime();
+							return dateB - dateA; // Descending order (newest first)
+						});
 					setDinoGameHistory(dinoGames)
 
 					// Process data for charts using all game history

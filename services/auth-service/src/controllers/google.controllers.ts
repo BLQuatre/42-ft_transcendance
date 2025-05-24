@@ -75,7 +75,7 @@ export const googleLogSign = async (req: FastifyRequest, reply: FastifyReply) =>
 						maxAge: 7 * 24 * 60 * 60,
 					})
 					.code(302)
-					.redirect('https://localhost/');
+					.redirect('/');
 		} else {
 			const refreshToken = jwt.sign({id: findUser.data.user.id, name: findUser.data.user.name}, process.env.JWT_REFRESH!, { expiresIn: '7d' });
 
@@ -88,7 +88,7 @@ export const googleLogSign = async (req: FastifyRequest, reply: FastifyReply) =>
 					maxAge: 7 * 24 * 60 * 60,
 				})
 				.code(302)
-				.redirect('https://localhost/');
+				.redirect('/');
 		}
 	} catch (err) {
 		console.error('Google Callback Error: ', err);

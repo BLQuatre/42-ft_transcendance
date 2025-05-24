@@ -60,6 +60,10 @@ export default function RegisterPage() {
     })
   }
 
+	async function handleGoogleLogin() {
+		window.location.href = '/api/auth/google';
+	}
+
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = event.target.value;
     const alphanumericValue = rawValue.replace(/[^a-zA-Z0-9]/g, '');
@@ -228,7 +232,7 @@ export default function RegisterPage() {
             <Button
               variant="outline"
               className="mt-4 font-pixel flex items-center justify-center gap-2 uppercase"
-              onClick={() => setIsLoading(true)}
+              onClick={handleGoogleLogin}
             >
               <FcGoogle className="h-5 w-5" />
               {dict.connection.google.register}

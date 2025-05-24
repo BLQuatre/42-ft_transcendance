@@ -2,12 +2,11 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
-import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Badge } from "@/components/ui/Badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Separator } from "@/components/ui/Separator"
 import { Button } from "@/components/ui/Button"
-import { User, Gamepad2, Trophy, Target, Download, Calendar, Clock, Shield } from "lucide-react"
+import { User, Download, Calendar, Clock, Shield } from "lucide-react"
 import type { BaseUser } from "@/types/user"
 
 type Player = {
@@ -48,6 +47,7 @@ interface ConsultDataDialogProps {
         created_at?: string
         updated_at?: string
         isTfaEnabled?: boolean
+        email?: string
       })
     | null
   stats: {
@@ -114,7 +114,7 @@ export function ConsultDataDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`w-full max-w-5xl h-[80vh] max-h-[1000px] overflow-hidden`}>
+      <DialogContent className={`max-w-6xl max-h-[1200px] overflow-hidden`}>
         <DialogHeader className="pb-2 border-b">
           <DialogTitle className="font-pixel text-xl uppercase flex items-center gap-3">
             <div className="p-2 bg-game-blue/10 rounded-lg">
@@ -128,26 +128,20 @@ export function ConsultDataDialog({
         </DialogHeader>
 
         <Tabs defaultValue="profile" className="flex-1 flex flex-col h-full">
-          <TabsList className="grid w-full grid-cols-4 font-pixel text-xs mb-2">
+          <TabsList className="grid w-full grid-cols-2 font-pixel text-xs mb-2">
             <TabsTrigger value="profile" className="uppercase">
               Profile
-            </TabsTrigger>
-            <TabsTrigger value="statistics" className="uppercase">
-              Statistics
-            </TabsTrigger>
-            <TabsTrigger value="games" className="uppercase">
-              Game History
             </TabsTrigger>
             <TabsTrigger value="raw" className="uppercase">
               Raw Data
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-1">
             <TabsContent value="profile" className="h-full">
-              <ScrollArea className="h-full pr-4">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6 h-full">
                 <div className="space-y-6">
-                  <Card className="border-2 border-game-blue/20">
+                  <Card className="h-full border-2 border-muted">
                     <CardHeader className="pb-4">
                       <CardTitle className="font-pixel text-lg uppercase flex items-center gap-2">
                         <User className="h-5 w-5 text-game-blue" />
@@ -165,6 +159,7 @@ export function ConsultDataDialog({
                         <div className="space-y-2">
                           <h3 className="font-pixel text-2xl text-game-blue">{user?.name || "Unknown User"}</h3>
                           <p className="font-pixel text-sm text-muted-foreground">ID: {user?.id || "N/A"}</p>
+                          <p className="font-pixel text-sm text-muted-foreground">Email: {user?.email || "N/A"}</p>
                           <div className="flex gap-2">
                             {user?.isTfaEnabled && (
                               <Badge variant="default" className="font-pixel text-xs bg-game-green">
@@ -215,194 +210,6 @@ export function ConsultDataDialog({
                     </CardContent>
                   </Card>
                 </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="statistics" className="h-full">
-              <ScrollArea className="h-full pr-4">
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Card className="border-2 border-game-red/20">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="font-pixel text-xs uppercase flex items-center gap-2">
-                          <Gamepad2 className="h-4 w-4 text-game-red" />
-                          Total Games
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-pixel text-3xl text-game-red">{stats.total_games_played}</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-game-green/20">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="font-pixel text-xs uppercase flex items-center gap-2">
-                          <Trophy className="h-4 w-4 text-game-green" />
-                          Win Rate
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-pixel text-3xl text-game-green">{overallWinRate}%</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-game-orange/20">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="font-pixel text-xs uppercase flex items-center gap-2">
-                          <Target className="h-4 w-4 text-game-orange" />
-                          Pong Win Rate
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-pixel text-3xl text-game-orange">{Math.floor(stats.pong_win_rate)}%</p>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-game-blue/20">
-                      <CardHeader className="pb-3">
-                        <CardTitle className="font-pixel text-xs uppercase flex items-center gap-2">
-                          <Target className="h-4 w-4 text-game-blue" />
-                          Best Dino Score
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-pixel text-3xl text-game-blue">{stats.best_dino_score}</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border-2 border-game-blue/20">
-                      <CardHeader>
-                        <CardTitle className="font-pixel text-lg uppercase text-game-blue">Pong Games</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                          <span className="font-pixel text-sm">Total Played:</span>
-                          <span className="font-pixel text-lg font-bold">{pongGameHistory.length}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-game-green/10 rounded-lg">
-                          <span className="font-pixel text-sm">Wins:</span>
-                          <span className="font-pixel text-lg font-bold text-game-green">
-                            {pongGameHistory.filter((game) => game.is_winner).length}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-game-red/10 rounded-lg">
-                          <span className="font-pixel text-sm">Losses:</span>
-                          <span className="font-pixel text-lg font-bold text-game-red">
-                            {pongGameHistory.filter((game) => !game.is_winner).length}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="border-2 border-game-orange/20">
-                      <CardHeader>
-                        <CardTitle className="font-pixel text-lg uppercase text-game-orange">Dino Games</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                          <span className="font-pixel text-sm">Total Played:</span>
-                          <span className="font-pixel text-lg font-bold">{dinoGameHistory.length}</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-game-green/10 rounded-lg">
-                          <span className="font-pixel text-sm">Wins:</span>
-                          <span className="font-pixel text-lg font-bold text-game-green">
-                            {dinoGameHistory.filter((game) => game.is_winner).length}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-game-blue/10 rounded-lg">
-                          <span className="font-pixel text-sm">Average Score:</span>
-                          <span className="font-pixel text-lg font-bold text-game-blue">
-                            {dinoGameHistory.length > 0
-                              ? Math.round(
-                                  dinoGameHistory.reduce((sum, game) => sum + game.score, 0) / dinoGameHistory.length,
-                                )
-                              : 0}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="games" className="h-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-                <Card className="border-2 border-game-blue/20">
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-lg uppercase text-game-blue">Recent Pong Games</CardTitle>
-                    <CardDescription className="font-pixel text-xs">Last 10 matches</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ScrollArea className="h-[350px]">
-                      <div className="space-y-3">
-                        {pongGameHistory.slice(0, 10).map((game, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center p-3 bg-muted/30 rounded-lg border border-muted"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-3 h-3 rounded-full ${game.is_winner ? "bg-game-green" : "bg-game-red"}`}
-                              />
-                              <div>
-                                <span className="font-pixel text-sm">{formatDate(game.gameSession.created_at)}</span>
-                                <p className="font-pixel text-xs text-muted-foreground">Score: {game.score}</p>
-                              </div>
-                            </div>
-                            <Badge variant={game.is_winner ? "default" : "destructive"} className="font-pixel text-xs">
-                              {game.is_winner ? "WIN" : "LOSS"}
-                            </Badge>
-                          </div>
-                        ))}
-                        {pongGameHistory.length === 0 && (
-                          <p className="font-pixel text-sm text-center py-8 text-muted-foreground">
-                            No Pong games found
-                          </p>
-                        )}
-                      </div>
-                    </ScrollArea>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-2 border-game-orange/20">
-                  <CardHeader>
-                    <CardTitle className="font-pixel text-lg uppercase text-game-orange">Recent Dino Games</CardTitle>
-                    <CardDescription className="font-pixel text-xs">Last 10 attempts</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ScrollArea className="h-[350px]">
-                      <div className="space-y-3">
-                        {dinoGameHistory.slice(0, 10).map((game, index) => (
-                          <div
-                            key={index}
-                            className="flex justify-between items-center p-3 bg-muted/30 rounded-lg border border-muted"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-3 h-3 rounded-full ${game.is_winner ? "bg-game-green" : "bg-game-red"}`}
-                              />
-                              <div>
-                                <span className="font-pixel text-sm">{formatDate(game.gameSession.created_at)}</span>
-                                <p className="font-pixel text-xs text-muted-foreground">Score: {game.score}</p>
-                              </div>
-                            </div>
-                            <Badge variant={game.is_winner ? "default" : "destructive"} className="font-pixel text-xs">
-                              {game.is_winner ? "WIN" : "LOSS"}
-                            </Badge>
-                          </div>
-                        ))}
-                        {dinoGameHistory.length === 0 && (
-                          <p className="font-pixel text-sm text-center py-8 text-muted-foreground">
-                            No Dino games found
-                          </p>
-                        )}
-                      </div>
-                    </ScrollArea>
-                  </CardContent>
-                </Card>
               </div>
             </TabsContent>
 
@@ -425,8 +232,8 @@ export function ConsultDataDialog({
                     Download Full JSON
                   </Button>
                 </CardHeader>
-                <CardContent className="h-[calc(100%-120px)]">
-                  <ScrollArea className="h-full">
+                <CardContent>
+                  <div className="h-full overflow-y-auto pr-2">
                     <div className="space-y-4">
                       <div className="p-4 bg-muted/50 rounded-lg border">
                         <h4 className="font-pixel text-sm uppercase mb-2 text-game-blue">User Information</h4>
@@ -435,50 +242,10 @@ export function ConsultDataDialog({
                             {
                               id: user?.id,
                               name: user?.name,
+                              email: user?.email,
                               created_at: user?.created_at,
                               updated_at: user?.updated_at,
                               isTfaEnabled: user?.isTfaEnabled,
-                            },
-                            null,
-                            2,
-                          )}
-                        </pre>
-                      </div>
-
-                      <div className="p-4 bg-muted/50 rounded-lg border">
-                        <h4 className="font-pixel text-sm uppercase mb-2 text-game-green">Statistics Summary</h4>
-                        <pre className="font-mono text-xs overflow-x-auto">
-                          {JSON.stringify(
-                            {
-                              ...stats,
-                              totalGames,
-                              totalWins,
-                              overallWinRate,
-                            },
-                            null,
-                            2,
-                          )}
-                        </pre>
-                      </div>
-
-                      <div className="p-4 bg-muted/50 rounded-lg border">
-                        <h4 className="font-pixel text-sm uppercase mb-2 text-game-orange">Game History Summary</h4>
-                        <pre className="font-mono text-xs overflow-x-auto">
-                          {JSON.stringify(
-                            {
-                              pongGames: pongGameHistory.length,
-                              dinoGames: dinoGameHistory.length,
-                              totalGames: pongGameHistory.length + dinoGameHistory.length,
-                              recentPongGames: pongGameHistory.slice(0, 3).map((game) => ({
-                                date: game.gameSession.created_at,
-                                score: game.score,
-                                won: game.is_winner,
-                              })),
-                              recentDinoGames: dinoGameHistory.slice(0, 3).map((game) => ({
-                                date: game.gameSession.created_at,
-                                score: game.score,
-                                won: game.is_winner,
-                              })),
                             },
                             null,
                             2,
@@ -493,7 +260,7 @@ export function ConsultDataDialog({
                         </p>
                       </div>
                     </div>
-                  </ScrollArea>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

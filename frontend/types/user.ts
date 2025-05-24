@@ -10,9 +10,9 @@ export interface BaseUser {
 	id: string
 	name: string
 	avatar: string
-	status: UserStatus,
-	tfaEnable: boolean,
-	isGoogleSignIn: boolean
+	status: UserStatus
+	created_at: string  // Add creation timestamp
+	updated_at: string  // Add update timestamp
 }
 
 export interface User {
@@ -27,4 +27,6 @@ export interface User {
 		dino: DinoGameStats;
 	};
 	recentGames: Game[];
+	created_at: string;  // Add creation timestamp
+	updated_at: string;  // Add update timestamp
 }

@@ -13,5 +13,6 @@ export interface PublicUser {
     status: UserStatus;
     tfaEnable: Boolean,
     isGoogleSignIn: Boolean
-
+	created_at: Date;  // Add creation timestamp
+	updated_at: Date;  // Add update timestamp
 };

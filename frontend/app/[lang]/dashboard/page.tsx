@@ -982,7 +982,7 @@ export default function DashboardPage() {
 							</TabsContent>
 
 							<TabsContent value="security" className="space-y-4">
-								<UpdatePassword />
+								<UpdatePassword googleAuth={user?.isGoogleSignIn || false} />
 
 								<Card>
 									<CardHeader>

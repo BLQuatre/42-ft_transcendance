@@ -33,14 +33,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('Refreshing access token...');
 
     try {
-      const res = await fetch('/api/auth/refresh', {
-        credentials: 'include',
+      const response = await axios.get('/api/auth/refresh', {
+        withCredentials: true
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log(`New access token: ${data.accessToken}`);
-        setAccessToken(data.accessToken);
+      if (response.status === 200) {
+        console.log(`New access token: ${response.data.accessToken}`);
+        setAccessToken(response.data.accessToken);
 
         if (onlyNotConnectedPaths.includes(pathname.slice(3))) {
           window.location.href = '/';
@@ -55,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       }
     } catch (error) {
-      console.error('Error refreshing access token:', error);
+      if (!onlyNotConnectedPaths.includes(pathname.slice(3)))
+        console.error('Error refreshing access token:', error);
       setAccessToken(null);
     }
   };

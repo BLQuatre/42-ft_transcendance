@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/Separator"
 import { SkinSelector } from "@/components/SkinSelector"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
 import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog"
-import { LogOut } from "lucide-react"
+import { ChartNoAxesCombined, Gamepad2, LogOut, Origami } from "lucide-react"
 import axios from "axios"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/Dialog"
@@ -585,23 +585,7 @@ export default function DashboardPage() {
 									<CardTitle className="font-pixel text-sm uppercase">
 										{dict.dashboard.sections.overview.totalGames}
 									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="square"
-										strokeLinejoin="round"
-										className="text-game-blue h-4 w-4"
-									>
-										<path d="M17 12h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2Z"></path>
-										<path d="M10 6H7a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"></path>
-										<path d="M17 6h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Z"></path>
-										<path d="M10 17H7a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2Z"></path>
-									</svg>
+									<Gamepad2 className="text-game-red h-5 w-5" />
 								</CardHeader>
 								<CardContent>
 									<div className="font-pixel text-2xl">{stats.total_games_played}</div>
@@ -613,21 +597,7 @@ export default function DashboardPage() {
 									<CardTitle className="font-pixel text-sm uppercase">
 										{dict.dashboard.sections.overview.winRate}
 									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="square"
-										strokeLinejoin="round"
-										className="text-game-orange h-4 w-4"
-									>
-										<path d="M12 2v20"></path>
-										<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"></path>
-									</svg>
+									<ChartNoAxesCombined className="text-game-orange h-5 w-5"/>
 								</CardHeader>
 								<CardContent>
 									<div className="font-pixel text-2xl">{Math.floor(stats.pong_win_rate)}%</div>
@@ -639,22 +609,7 @@ export default function DashboardPage() {
 									<CardTitle className="font-pixel text-sm uppercase">
 										{dict.dashboard.sections.overview.highScore}
 									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="square"
-										strokeLinejoin="round"
-										className="text-game-red h-4 w-4"
-									>
-										<path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path>
-										<path d="M2 20h20"></path>
-										<path d="M14 12v.01"></path>
-									</svg>
+									<Origami className="text-game-blue h-5 w-5" />
 								</CardHeader>
 								<CardContent>
 									<div className="font-pixel text-2xl">{stats.best_dino_score}</div>

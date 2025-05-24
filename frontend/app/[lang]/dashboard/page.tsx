@@ -185,15 +185,18 @@ export default function DashboardPage() {
 
 	// ACCOUNT
 	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newUsername = event.target.value
-		setUsername(newUsername)
+		const rawValue = event.target.value;
+		const alphanumericValue = rawValue.replace(/[^a-zA-Z0-9]/g, '');
+
+		const newUsername = alphanumericValue.slice(0, 20);
+		setUsername(newUsername);
 
 		if (newUsername.length > 0 && newUsername.length < 6) {
-			setUsernameError("6 characters minimum")
+			setUsernameError("6 characters minimum");
 		} else {
-			setUsernameError(null)
+			setUsernameError(null);
 		}
-	}
+	};
 
 	const saveAccountChanges = (event: React.FormEvent) => {
 		event.preventDefault()
@@ -879,7 +882,7 @@ export default function DashboardPage() {
 										<div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
 											<Avatar className="h-20 w-20 border-2 border-game-blue">
 												<AvatarImage src={user?.avatar} alt="@player" />
-												<AvatarFallback className="font-pixel text-lg">P1</AvatarFallback>
+												<AvatarFallback className="font-pixel text-lg">{(user?.name || "Player").substring(0, 2).toUpperCase()}</AvatarFallback>
 											</Avatar>
 											<div className="space-y-2">
 												<h3 className="font-pixel text-sm uppercase">
@@ -926,6 +929,7 @@ export default function DashboardPage() {
 														value={username}
 														onChange={handleUsernameChange}
 														error={usernameError !== null}
+														required
 														className="font-pixel text-sm h-10 bg-muted"
 													/>
 													<p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>{usernameError || " "}</p>

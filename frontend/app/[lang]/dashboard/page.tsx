@@ -323,9 +323,30 @@ export default function DashboardPage() {
 		setRemoveAvatarDialogOpen(true)
 	}
 
-	const confirmRemoveAvatar = () => {
-		console.log("Removing avatar...")
-		setRemoveAvatarDialogOpen(false)
+	const confirmRemoveAvatar = async () => {
+		setIsLoading(true)
+
+		try {
+			await api.put(`/user/${user?.id}`, {
+				avatar: ""
+			}).then(() => {
+				updateData()
+				toast({
+					title: "Avatar Removed",
+					description: "Your avatar has been removed successfully",
+					duration: 3000,
+				})
+			})
+		} catch (err: any) {
+			toast({
+				title: "Error",
+				description: `There was an error removing your avatar: ${err.message}`,
+				duration: 3000,
+			})
+		} finally {
+			setIsLoading(false)
+			setRemoveAvatarDialogOpen(false)
+		}
 	}
 
 	const handle2FAComplete = () => {
@@ -1097,6 +1118,7 @@ export default function DashboardPage() {
 							variant="cancel"
 							className="font-pixel text-xs uppercase"
 							onClick={() => setRemoveAvatarDialogOpen(false)}
+							disabled={isLoading}
 						>
 							Cancel
 						</Button>
@@ -1105,6 +1127,7 @@ export default function DashboardPage() {
 							variant="destructive"
 							className="font-pixel text-xs uppercase"
 							onClick={confirmRemoveAvatar}
+							disabled={isLoading}
 						>
 							Remove Avatar
 						</Button>

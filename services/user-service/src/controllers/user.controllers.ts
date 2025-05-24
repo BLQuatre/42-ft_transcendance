@@ -150,7 +150,7 @@ export const updateUser = async (req: FastifyRequest<{Body: { name?: string, ava
 		});
 	}
 
-	const updated: { updated_at: Date, name?: string, avatar?: string } = {
+	const updated: { updated_at: Date, name?: string, avatar?: string | null } = {
 		updated_at: new Date()
 	}
 
@@ -165,10 +165,9 @@ export const updateUser = async (req: FastifyRequest<{Body: { name?: string, ava
 		updated.name = req.body.name;
 	}
 
-	if (req.body.avatar)
-		updated.avatar = req.body.avatar;
+	updated.avatar = req.body.avatar === '' ? null : req.body.avatar;
 
-	await User.update(userFind.id, updated);
+	await User.update(userFind.id, updated as any);
 
 	const res = await User.findOneBy({ id: userFind.id })
 	if (!res)

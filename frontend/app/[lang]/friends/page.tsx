@@ -142,7 +142,7 @@ export default function FriendsPage() {
     return users.find((user) => user.id === id)
   }
 
-  const userId = sessionStorage.getItem("userId")
+  const userId = localStorage.getItem("userId")
 
   const getStatus = (user: BaseUser) => {
     const blocked = blockedUsers.find((blocked) => blocked.receiver_id === user.id)

@@ -58,7 +58,7 @@ export default function LoginPage() {
 				setIsLoading(false)
 			} else {
 				setAccessToken(response.data.accessToken)
-				sessionStorage.setItem("userId", response.data.user.id)
+				localStorage.setItem("userId", response.data.user.id)
 				router.push("/")
 			}
 		} catch (error: any) {

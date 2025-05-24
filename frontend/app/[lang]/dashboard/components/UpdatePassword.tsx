@@ -60,7 +60,7 @@ export default function UpdatePassword() {
 		event.preventDefault()
 		setIsLoading(true)
 
-		const userId = sessionStorage.getItem("userId")
+		const userId = localStorage.getItem("userId")
 
 		console.log("Update password submitted");
 		console.log("userId: " + userId)

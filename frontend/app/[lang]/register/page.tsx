@@ -45,7 +45,7 @@ export default function RegisterPage() {
     .then(response => {
       console.log("Successfull register: " + JSON.stringify(response.data))
       setAccessToken(response.data.accessToken)
-      sessionStorage.setItem("userId", response.data.user.id)
+      localStorage.setItem("userId", response.data.user.id)
       router.push("/")
     })
     .catch(error => {

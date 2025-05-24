@@ -360,7 +360,7 @@ export default function DashboardPage() {
 	}
 
 	const updateData = () => {
-		const userId = sessionStorage.getItem("userId")
+		const userId = localStorage.getItem("userId")
 		console.log("userId: " + userId)
 
 		if (userId) {
@@ -376,7 +376,7 @@ export default function DashboardPage() {
 
 	const fetchStats = async () => {
 		try {
-			const userId = sessionStorage.getItem("userId")
+			const userId = localStorage.getItem("userId")
 			if (userId) {
 				const response = await api.get(`/history/stats/${userId}`)
 				if (response.data && response.data.statusCode === 200) {
@@ -395,7 +395,7 @@ export default function DashboardPage() {
 	// Add this new function to fetch game history
 	const fetchGameHistory = async () => {
 		try {
-			const userId = sessionStorage.getItem("userId")
+			const userId = localStorage.getItem("userId")
 			if (userId) {
 				// Fetch all game history
 				const response = await api.get(`/history/${userId}`)

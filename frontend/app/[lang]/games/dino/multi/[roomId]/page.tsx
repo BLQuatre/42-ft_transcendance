@@ -34,7 +34,7 @@ export default function DinoGamePage() {
 	const socketRef = useRef<WebSocket | null>(null)
 	const router = useRouter()
 
-	const playerId = sessionStorage.getItem('userId')
+	const playerId = localStorage.getItem('userId')
 	const keysRef = useRef({ up: false, down: false })
 
 	// Waiting room state

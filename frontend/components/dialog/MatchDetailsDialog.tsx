@@ -101,7 +101,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
   const gameSession = match.details;
   const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString();
 
-  const userId = sessionStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
   const userResult = gameSession?.results?.find((result) => result.player.user_id === userId);
   const result = userResult?.is_winner ? "WIN" : "LOSE";
 

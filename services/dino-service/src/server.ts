@@ -5,15 +5,6 @@ import { Room } from './room';
 import { Player } from './player';
 import * as CONST from './constants' ;
 
-import axios, { AxiosResponse } from 'axios' ;
-import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') })
-
-async function getName(uuid: string): Promise<string> {
-	return axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${uuid}`).then((user) => user.data.user.name as string)
-}
 
 const fastify = Fastify({
     logger: process.env.DEBUG === 'true',
@@ -38,15 +29,16 @@ const start = async () => {
 		let assignedPlayer: Player | null = null;
         let currentRoom: Room | null = null;
 
-		ws.on('message', async (message) => {
+		ws.on('message', (message) => {
             const data = JSON.parse(message.toString());
 
-            if (data.type === 'assign') {
-                const name = await getName(data.uuid)
-                assignedPlayer = new Player(data.uuid, name, ws);
-            }
+			console.log(`message received : ${message}`)
 
-            if (data.type === 'join_room') {
+            if (data.type === 'assign') {
+				assignedPlayer = new Player(data.uuid, data.name, ws);
+				console.log(`assigned Player (${assignedPlayer.getName()})`)
+			}
+            else if (data.type === 'join_room') {
                 if (!assignedPlayer) return;
 
                 const roomId = data.roomId;
@@ -58,17 +50,14 @@ const start = async () => {
                 if (currentRoom.getPlayers().length < CONST.MAX_PLAYERS && !currentRoom.getGame()) {
                     currentRoom.addPlayer(assignedPlayer);
 
-                    // Notify the player of their ID
-                    ws.send(JSON.stringify({ type: 'assign', playerId: assignedPlayer.getId() }));
+					console.log(`assigned ${assignedPlayer.getName()} to room#${currentRoom.getId()}`)
 
                     // Broadcast room update
                     broadcastRoomUpdate(currentRoom);
                 } else {
                     ws.close(); // Room is full
                 }
-            }
-
-            if (data.type === 'toggle_ready' && assignedPlayer && currentRoom) {
+            } else if (data.type === 'toggle_ready' && assignedPlayer && currentRoom) {
                 assignedPlayer.toggleReadyState(); // Use the Player class method
 
                 // Check if all players are ready to start the game
@@ -78,9 +67,7 @@ const start = async () => {
                 } else {
                     broadcastRoomUpdate(currentRoom);
                 }
-            }
-
-			if ((data.type === 'jump' || data.type === 'up' || data.type === 'down') && data.playerId) {
+            } else if ((data.type === 'jump' || data.type === 'up' || data.type === 'down') && data.playerId) {
 				if (assignedPlayer?.getId() !== data.playerId) return;
 
 				if (data.type === 'jump')

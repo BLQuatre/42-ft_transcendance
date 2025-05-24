@@ -5,9 +5,13 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
+
+import { useAuth } from "@/contexts/auth-context"
+import { BaseUser } from "@/types/user"
+import api from "@/lib/api"
+
 import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom"
 import DinoLane from "@/app/[lang]/games/dino/components/DinoLane"
-import { useAuth } from "@/contexts/auth-context"
 
 
 export default function DinoGamePage() {
@@ -15,6 +19,8 @@ export default function DinoGamePage() {
 
 	const params = useParams()
 	const roomId = params.roomId as string
+
+	const userRef = useRef<BaseUser | null>(null)
 
 	const [gameState, setGameState] = useState<any>(null)
 	const [frozenLanes, setFrozenLanes] = useState<Record<number, { dino: any, obstacles: any[] }>>({});
@@ -28,12 +34,7 @@ export default function DinoGamePage() {
 	const socketRef = useRef<WebSocket | null>(null)
 	const router = useRouter()
 
-	const [playerId, setPlayerId] = useState<number | null>(null)
-	const playerIdRef = useRef<number | null>(null);
-	useEffect(() => {
-		playerIdRef.current = playerId;
-	}, [playerId]);
-
+	const playerId = sessionStorage.getItem('userId')
 	const keysRef = useRef({ up: false, down: false })
 
 	// Waiting room state
@@ -43,6 +44,10 @@ export default function DinoGamePage() {
 
 	const [frame, setFrame] = useState(36)
 	useEffect(() => {
+		api.get(`/user/${playerId}`).then((response => {
+			userRef.current = response.data.user
+		}))
+
 		const intervalId = setInterval(() => {
 			setFrame((prev) => (prev + 1) % 2) ;
 		}, 250)
@@ -84,6 +89,11 @@ export default function DinoGamePage() {
 			return;
 		}
 
+		if (!userRef.current) {
+			console.error("user data not yet defined");
+			return;
+		}
+
 		if (!roomId) {
 			console.error("roomId is undefined or invalid during WebSocket initialization");
 			return;
@@ -97,7 +107,7 @@ export default function DinoGamePage() {
 
 		console.log("Creating new WebSocket connection");
 
-		const socket = new WebSocket("wss://localhost/tmp_dino/");
+		const socket = new WebSocket("wss://localhost/api/ws/dino");
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
@@ -106,7 +116,8 @@ export default function DinoGamePage() {
 			// After connection, immediately send uuid
 			socket.send(JSON.stringify({
 				type: "assign",
-				uuid: sessionStorage.getItem('userId')
+				uuid: playerId,
+				name: userRef.current?.name || 'Player'
 			}));
 			// Then, send join_room message with roomId
 			socket.send(JSON.stringify({
@@ -120,10 +131,7 @@ export default function DinoGamePage() {
 				const msg = JSON.parse(event.data);
 				console.log("Received WebSocket message:", msg.type);
 
-				// Handle different message types
-				if (msg.type === "assign")
-					setPlayerId(msg.playerId);
-				else if (msg.type === "state") {
+				if (msg.type === "state") {
 					const newState = msg.gameState;
 
 					setFrozenLanes((currentFrozenLanes) => {
@@ -146,8 +154,7 @@ export default function DinoGamePage() {
 					});
 
 					setGameState(newState);
-				}
-				else if (msg.type === "room_update") {
+				} else if (msg.type === "room_update") {
 					if (!msg.room) {
 						console.error("Received room_update with no room data");
 						return;
@@ -165,7 +172,7 @@ export default function DinoGamePage() {
 							name: p.name || `Player ${p.id}`,
 							avatar: null,
 							isReady: p.isReady,
-							isYou: p.id === playerIdRef.current
+							isYou: p.id === playerId
 						})) as Player[]
 					};
 					setRoom(transformedRoom);
@@ -203,12 +210,10 @@ export default function DinoGamePage() {
 			}
 			socketRef.current = null;
 		};
-	}, [roomId, accessToken]);
+	}, [roomId, accessToken, userRef.current]);
 
 	// Input handling
 	useEffect(() => {
-		if (!playerId) return
-
 		const down = (e: KeyboardEvent) => {
 			if (e.key === " " || e.key === "ArrowUp")	{ keysRef.current.up = true; }
 			if (e.key === "ArrowDown")					{ keysRef.current.down = true; }
@@ -226,11 +231,11 @@ export default function DinoGamePage() {
 			window.removeEventListener("keydown", down)
 			window.removeEventListener("keyup", up)
 		}
-	}, [playerId])
+	}, [])
 
 	// Continuous input sending
 	useEffect(() => {
-		if (!playerId || !socketRef.current) return;
+		if (!socketRef.current) return;
 
 		const sendInputs = () => {
 			if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
@@ -255,11 +260,11 @@ export default function DinoGamePage() {
 		return () => {
 			clearInterval(inputInterval);
 		};
-	}, [playerId]);
+	}, [socketRef.current]);
 
 	// Toggle ready status
 	const handleToggleReady = () => {
-		if (!socketRef.current || playerIdRef.current === null) return
+		if (!socketRef.current) return
 
 		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }))
 	}

@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { confirmPassword, createUser, createUserByGoogle, delUser, findbyEmail, getAllUsers, getOneUser, getQrCodeSecret, heartbeat, setQrCode, updatePassword, updateUser, verifyUser } from '../controllers/user.controllers';
+import { activateTfa, confirmPassword, createUser, createUserByGoogle, deleteTfa, delUser, findbyEmail, getAllUsers, getOneUser, getQrCodeSecret, heartbeat, setQrCode, updatePassword, updateUser, verifyUser } from '../controllers/user.controllers';
 
 export async function userRoutes(app: FastifyInstance) {
 	app.get('/user', getAllUsers);
@@ -15,5 +15,7 @@ export async function userRoutes(app: FastifyInstance) {
 	app.get('/user/heartbeat/:id', heartbeat);
 	app.post('/user/mail', findbyEmail);
 	app.post('/user/google', createUserByGoogle);
+	app.get('/user/tfa-activate/:id', activateTfa);
+	app.get('/user/tfa-delete/:id', deleteTfa);
 }
 	// app.get('/user/*', badRoute);

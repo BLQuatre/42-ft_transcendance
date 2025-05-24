@@ -267,7 +267,6 @@ export const setQrCode = async (
   }
 
   await User.update(user.id, {
-    tfaEnable: true,
     tfaSecret: req.body // 👈 typé et nettoyé
   });
 
@@ -327,4 +326,33 @@ export const createUserByGoogle = async (req: FastifyRequest, reply: FastifyRepl
 			id: newUser.id,
 		}
 	})
+}
+
+export const activateTfa = async (req: FastifyRequest, reply: FastifyReply) => {
+	const { id } = req.params as {id :string };
+	const user = await User.findOneBy({ id });
+	if (!user)
+		return reply.code(404).send({
+			message: "User not Found",
+			isExist: false
+		})
+	await User.update(user.id, {
+		tfaEnable: true
+	})
+	return reply.code(200).send({ message: "Tfa actived", statusCode: 200});
+}
+
+export const deleteTfa = async (req: FastifyRequest, reply: FastifyReply) => {
+	const { id } = req.params as {id :string };
+	const user = await User.findOneBy({ id });
+	if (!user)
+		return reply.code(404).send({
+			message: "User not Found",
+			isExist: false
+		})
+	await User.update(user.id, {
+		tfaEnable: false,
+		tfaSecret: null
+	})
+	return reply.code(200).send({ message: "Tfa desactivated", statusCode: 200});
 }

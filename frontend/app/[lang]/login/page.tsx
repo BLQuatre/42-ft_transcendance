@@ -229,7 +229,7 @@ export default function LoginPage() {
 										<span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
 									</Button>
 								</div>
-								<p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
 							</div>
 							<Button
 								type="submit"

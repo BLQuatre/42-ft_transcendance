@@ -35,7 +35,12 @@ const start = async () => {
 			console.log(`message received : ${message}`)
 
             if (data.type === 'assign') {
-				assignedPlayer = new Player(data.uuid, data.name, ws);
+				const uuid = data.uuid
+				if (Array.from(rooms.values()).some(room => room.getPlayers().some(player => player.getId() === uuid))) {
+					ws.close()
+					return;
+				}
+				assignedPlayer = new Player(uuid, data.name, ws);
 				console.log(`assigned Player (${assignedPlayer.getName()})`)
 			}
             else if (data.type === 'join_room') {

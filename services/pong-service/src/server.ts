@@ -34,6 +34,11 @@ const start = async () => {
             const data = JSON.parse(message.toString());
 
             if (data.type === "assign") {
+				const uuid = data.uuid
+				if (Array.from(rooms.values()).some(room => room.getPlayers().some(player => player.getId() === uuid))) {
+					ws.close()
+					return;
+				}
                 assignedPlayer = new Player(data.uuid, data.name, ws);
                 console.log(`assigned Player (${assignedPlayer.getName()})`);
             }

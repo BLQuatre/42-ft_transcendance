@@ -54,16 +54,16 @@ export default function DinoGamePage() {
 	const images = useRef<any>({}) ;
 	useEffect(() => {
 		const imageSources = {
-			dinoStanding:	"/img/dino_standing.png",
-			dinoRun1:		"/img/dino_running1.png",
-			dinoRun2:		"/img/dino_running2.png",
-			dinoLean1:		"/img/dino_leaning1.png",
-			dinoLean2:		"/img/dino_leaning2.png",
-			cactus:			"/img/cactus.png",
-			small:			"/img/cactus_small.png",
-			group:			"/img/cactus_group.png",
-			ptero1:			"/img/ptero1.png",
-			ptero2:			"/img/ptero2.png",
+			dinoStanding:	"/images/dino/dino_standing.png",
+			dinoRun1:		"/images/dino/dino_running1.png",
+			dinoRun2:		"/images/dino/dino_running2.png",
+			dinoLean1:		"/images/dino/dino_leaning1.png",
+			dinoLean2:		"/images/dino/dino_leaning2.png",
+			cactus:			"/images/dino/cactus.png",
+			small:			"/images/dino/cactus_small.png",
+			group:			"/images/dino/cactus_group.png",
+			ptero1:			"/images/dino/ptero1.png",
+			ptero2:			"/images/dino/ptero2.png",
 		} ;
 
 		for (const [key, src] of Object.entries(imageSources)) {

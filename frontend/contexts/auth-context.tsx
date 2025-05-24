@@ -45,18 +45,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (onlyNotConnectedPaths.includes(pathname.slice(3))) {
           window.location.href = '/';
         }
-      } else {
-        axios.get('/api/auth/logout').then(() => {
-          setAccessToken(null);
-          if (onlyConnectedPaths.includes(pathname.slice(3)))
-            window.location.href = '/login';
-        }).catch((error) => {
-          console.error('Logout error:', error);
-        });
       }
     } catch (error) {
-      if (!onlyNotConnectedPaths.includes(pathname.slice(3)))
-        console.error('Error refreshing access token:', error);
+      axios.get('/api/auth/logout').then(() => {
+        setAccessToken(null);
+        if (onlyConnectedPaths.includes(pathname.slice(3)))
+          window.location.href = '/login';
+      }).catch((error) => {
+        console.error('Logout error:', error);
+      });
       setAccessToken(null);
     }
   };

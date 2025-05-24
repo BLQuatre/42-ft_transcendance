@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.status === 200) {
         console.log(`New access token: ${response.data.accessToken}`);
         setAccessToken(response.data.accessToken);
+        localStorage.setItem('userId', response.data.id);
 
         if (onlyNotConnectedPaths.includes(pathname.slice(3))) {
           window.location.href = '/';

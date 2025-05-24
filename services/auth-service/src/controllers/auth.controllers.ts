@@ -76,7 +76,8 @@ export const refreshAuthentication = async (req: AuthRequest, reply: FastifyRepl
 			.send({
 				message: 'Refresh token authentified',
 				statusCode: 200,
-				accessToken
+				accessToken,
+				id: decode.id
 		});
 	} catch (err){
 		if (err instanceof TokenExpiredError) {

@@ -8,6 +8,8 @@ import { removePassword } from "../utils/functions";
 import { CreatePasswordDto } from "../entities/CreatePasswordDto";
 import { PublicUser } from "../utils/types";
 import { LoginUser, SimpleTfaSecret} from "../utils/interface";
+import speakeasy from 'speakeasy';
+import qrcode from 'qrcode';
 
 const User = AppDataSource.getRepository(UserEntity);
 
@@ -329,13 +331,22 @@ export const createUserByGoogle = async (req: FastifyRequest, reply: FastifyRepl
 }
 
 export const activateTfa = async (req: FastifyRequest, reply: FastifyReply) => {
-	const { id } = req.params as {id :string };
+	const id = req.headers['x-user-id'] as string;
+	const { token } = req.body as { token: string};
 	const user = await User.findOneBy({ id });
-	if (!user)
+	if (!user || !user.tfaSecret)
 		return reply.code(404).send({
 			message: "User not Found",
 			isExist: false
 		})
+	const verified = speakeasy.totp.verify({
+		secret: user.tfaSecret.base32,
+		encoding: 'base32',
+		token
+	})
+	if (!verified) {
+			return reply.code(401).send({ message: "Invalid code", statusCode: 401})
+		}
 	await User.update(user.id, {
 		tfaEnable: true
 	})
@@ -343,16 +354,59 @@ export const activateTfa = async (req: FastifyRequest, reply: FastifyReply) => {
 }
 
 export const deleteTfa = async (req: FastifyRequest, reply: FastifyReply) => {
-	const { id } = req.params as {id :string };
+	const id = req.headers['x-user-id'] as string;
+	const { token } = req.body as { token: string};
 	const user = await User.findOneBy({ id });
-	if (!user)
+	if (!user || !user.tfaSecret)
 		return reply.code(404).send({
 			message: "User not Found",
 			isExist: false
 		})
+	const verified = speakeasy.totp.verify({
+		secret: user.tfaSecret.base32,
+		encoding: 'base32',
+		token
+	})
+	if (!verified) {
+			return reply.code(401).send({ message: "Invalid code", statusCode: 401})
+		}
 	await User.update(user.id, {
 		tfaEnable: false,
-		tfaSecret: null
+		tfaSecret: undefined
 	})
 	return reply.code(200).send({ message: "Tfa desactivated", statusCode: 200});
 }
+
+export const tfaSetup = async (req: FastifyRequest, reply: FastifyReply) => {
+	const id = req.headers['x-user-id'] as string;
+	
+	const user = await User.findOneBy({ id })
+	if (!user)
+		return reply.code(404).send({
+			message: "User not found",
+			statusCode: 404
+		})
+	const secret = speakeasy.generateSecret({
+	  name: `ft_transcendance`
+	});
+  
+	const cleanSecret = {
+	  ascii: secret.ascii,
+	  hex: secret.hex,
+	  base32: secret.base32,
+	  otpauth_url: secret.otpauth_url
+	};
+	
+	await User.update(user.id, {
+		tfaSecret: cleanSecret
+	})
+  
+	const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url!);
+  
+	return reply.code(201).send({
+	  message: "QR code generated",
+	  statusCode: 201,
+	  qrCodeUrl,
+	  secret: (secret.otpauth_url || "secret=Error").split("secret=")[1]
+	});
+  };

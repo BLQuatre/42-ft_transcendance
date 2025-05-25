@@ -71,6 +71,7 @@
 			"players": "2-8 players"
 		},
 		"dino": {
+			"title": "Dino Run",
 			"description": "A challenging endless runner where you control a dinosaur avoiding obstacles in a prehistoric landscape.",
 			"explications": [
 				"Press space bar or up arrow to jump over cactus and other obstacles",
@@ -80,7 +81,34 @@
 				"Try to beat your high score with each attempt"
 			],
 			"type": "Endless Runner",
-			"players": "1-8 player(s)"
+			"players": "1-8 player(s)",
+			"multi": {
+				"score": "SCORE",
+				"waitingRoom": {
+					"title": "Waiting Room",
+					"description": "Waiting for other players to join...",
+					"ready": "Ready",
+					"notReady": "Not Ready",
+					"startGame": "Start Game",
+					"waitingForPlayers": "Waiting for more players...",
+					"waitingForReady": "Waiting for all players to be ready..."
+				},
+				"roomPrefix": "DINO Room",
+				"errors": {
+					"noToken": "Access token is undefined or invalid during WebSocket initialization",
+					"noUser": "User data not yet defined",
+					"noRoom": "Room ID is undefined or invalid during WebSocket initialization",
+					"connectionExists": "WebSocket connection already exists and is open",
+					"connectionClosed": "WebSocket connection closed",
+					"noRoomData": "Received room_update with no room data"
+				},
+				"connection": {
+					"connected": "Connected to game server",
+					"creating": "Creating new WebSocket connection",
+					"cleaning": "Cleaning up WebSocket connection",
+					"gameStarting": "Game starting!"
+				}
+			}
 		}
 	},
 

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/Input"
 import { Separator } from "@/components/ui/Separator"
 import api from "@/lib/api"
 import { cn } from "@/lib/utils"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 type TwoFactorSetupDialogProps = {
   open: boolean
@@ -33,6 +34,7 @@ export function TwoFactorSetupDialog({
   const [verificationCode, setVerificationCode] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const dict = useDictionary()
 
   useEffect(() => {
     if (open) {
@@ -66,7 +68,7 @@ export function TwoFactorSetupDialog({
 
   const handleVerify = async () => {
     if (!verificationCode) {
-      setError("Please enter the verification code")
+      setError(dict?.dialogs?.twoFactorSetup?.errors?.enterCode || "Please enter the verification code")
       return
     }
 
@@ -89,7 +91,7 @@ export function TwoFactorSetupDialog({
       }
     } catch (error) {
       setLoading(false)
-      setError("Invalid verification code. Please try again.")
+      setError(dict?.dialogs?.twoFactorSetup?.errors?.invalidCode || "Invalid verification code. Please try again.")
     }
   }
 
@@ -103,9 +105,11 @@ export function TwoFactorSetupDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-170">
         <DialogHeader>
-          <DialogTitle className="font-pixel text-lg uppercase">Setup Two-Factor Authentication</DialogTitle>
+          <DialogTitle className="font-pixel text-lg uppercase">
+            {dict?.dialogs?.twoFactorSetup?.title || "Setup Two-Factor Authentication"}
+          </DialogTitle>
           <DialogDescription className="font-pixel text-xs uppercase">
-            Secure your account with an authenticator app
+            {dict?.dialogs?.twoFactorSetup?.description || "Secure your account with an authenticator app"}
           </DialogDescription>
         </DialogHeader>
 
@@ -119,13 +123,15 @@ export function TwoFactorSetupDialog({
           <>
             <div className="space-y-4 py-4">
               <div className="font-pixel text-xs space-y-2">
-                <p>1. SCAN THIS QR CODE WITH YOUR AUTHENTICATOR APP</p>
+                <p>{dict?.dialogs?.twoFactorSetup?.scanQrCode || "1. SCAN THIS QR CODE WITH YOUR AUTHENTICATOR APP"}</p>
                 <div className="flex justify-center p-2 bg-muted rounded-md">
                   {qrCodeDataUrl ? (
                     <img src={qrCodeDataUrl} alt="2FA QR Code" className="w-48 h-48" />
                   ) : (
                     <div className="w-48 h-48 flex items-center justify-center bg-muted">
-                      <p className="font-pixel text-xs text-muted-foreground">QR CODE LOADING...</p>
+                      <p className="font-pixel text-xs text-muted-foreground">
+                        {dict?.dialogs?.twoFactorSetup?.qrLoading || "QR CODE LOADING..."}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -134,7 +140,7 @@ export function TwoFactorSetupDialog({
               <Separator />
 
               <div className="font-pixel text-xs space-y-2">
-                <p>2. OR MANUALLY ENTER THIS SECRET CODE:</p>
+                <p>{dict?.dialogs?.twoFactorSetup?.manualCode || "2. OR MANUALLY ENTER THIS SECRET CODE:"}</p>
                 <div className="flex items-center space-x-2 w-full justify-between">
                   <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-pixel overflow-x-auto max-w-xs whitespace-nowrap">
                     {secret}
@@ -144,7 +150,7 @@ export function TwoFactorSetupDialog({
                     size="icon"
                     className="h-8 w-8 flex-shrink-0"
                     onClick={handleCopySecret}
-                    title="Copy to clipboard"
+                    title={dict?.dialogs?.twoFactorSetup?.copyToClipboard || "Copy to clipboard"}
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
@@ -154,7 +160,7 @@ export function TwoFactorSetupDialog({
               <Separator />
 
               <div className="font-pixel text-xs space-y-2">
-                <p>3. ENTER THE CODE FROM YOUR AUTHENTICATOR APP:</p>
+                <p>{dict?.dialogs?.twoFactorSetup?.enterCode || "3. ENTER THE CODE FROM YOUR AUTHENTICATOR APP:"}</p>
                 <Input
                   id="verificationCode"
                   value={verificationCode}
@@ -168,13 +174,13 @@ export function TwoFactorSetupDialog({
                   autoComplete="off"
                   error={error !== null}
                 />
-                <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
+                <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
               </div>
             </div>
 
             <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:space-x-2">
               <Button type="button" variant="cancel" className="font-pixel text-xs uppercase" onClick={handleCancel}>
-                Cancel
+                {dict?.common?.cancel || "Cancel"}
               </Button>
               <Button
                 type="button"
@@ -182,7 +188,7 @@ export function TwoFactorSetupDialog({
                 onClick={handleVerify}
                 disabled={!verificationCode || verificationCode.length < 6}
               >
-                Verify & Enable
+                {dict?.dialogs?.twoFactorSetup?.verifyEnable || "Verify & Enable"}
               </Button>
             </DialogFooter>
           </>

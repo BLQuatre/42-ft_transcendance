@@ -664,6 +664,21 @@
 			"joinRoomButton": "JOIN ROOM",
 			"joinMatchmakingButton": "JOIN MATCHMAKING",
 			"selectOption": "SELECT AN OPTION"
+		},
+
+		"twoFactorSetup": {
+			"title": "Setup Two-Factor Authentication",
+			"description": "Secure your account with an authenticator app",
+			"scanQrCode": "1. SCAN THIS QR CODE WITH YOUR AUTHENTICATOR APP",
+			"qrLoading": "QR CODE LOADING...",
+			"manualCode": "2. OR MANUALLY ENTER THIS SECRET CODE:",
+			"copyToClipboard": "Copy to clipboard",
+			"enterCode": "3. ENTER THE CODE FROM YOUR AUTHENTICATOR APP:",
+			"verifyEnable": "Verify & Enable",
+			"errors": {
+				"enterCode": "Please enter the verification code",
+				"invalidCode": "Invalid verification code. Please try again."
+			}
 		}
 	},
 

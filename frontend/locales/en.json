@@ -150,7 +150,8 @@
 		"upload": "Upload",
 		"remove": "Remove",
 		"save": "Save Changes",
-		"cancel": "Cancel"
+		"cancel": "Cancel",
+		"close": "CLOSE"
 	},
 
 	"profile": {
@@ -630,6 +631,14 @@
 				"title": "Error",
 				"description": "You need to be logged in to play this game"
 			}
+		},
+		"matchDetails": {
+			"pongTitle": "PONG MATCH DETAILS",
+			"dinoTitle": "DINO RUN DETAILS",
+			"playerScores": "PLAYER SCORES",
+			"loading": "Loading player details...",
+			"bot": "BOT",
+			"score": "SCORE"
 		}
 	},
 

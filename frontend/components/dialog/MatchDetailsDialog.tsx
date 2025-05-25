@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import api from "@/lib/api"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 type Player = {
   id: string
@@ -55,6 +56,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
   const router = useRouter();
   const [playerData, setPlayerData] = useState<Record<string, EnhancedUserData>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const dict = useDictionary();
 
   useEffect(() => {
     if (!open || !match) return;
@@ -103,7 +105,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
 
   const userId = localStorage.getItem("userId");
   const userResult = gameSession?.results?.find((result) => result.player.user_id === userId);
-  const result = userResult?.is_winner ? "WIN" : "LOSE";
+  const result = userResult?.is_winner ? dict?.profile?.sections?.history?.win || "WIN" : dict?.profile?.sections?.history?.lose || "LOSE";
 
   const navigateToProfile = (userId: string | null) => {
     if (userId) {
@@ -117,7 +119,9 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader className="animate-fadeIn">
           <DialogTitle className="font-pixel text-sm">
-            {isPong ? "PONG MATCH DETAILS" : "DINO RUN DETAILS"}
+            {isPong
+              ? dict?.dialogs?.matchDetails?.pongTitle || "PONG MATCH DETAILS"
+              : dict?.dialogs?.matchDetails?.dinoTitle || "DINO RUN DETAILS"}
           </DialogTitle>
           <DialogDescription className="font-pixel text-xs">
             {`${gameDate} • ${result}`}
@@ -126,10 +130,10 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
 
         <div className="space-y-4 animate-slideUp">
           <div className="space-y-2">
-            <h3 className="font-pixel text-xs text-muted-foreground">PLAYER SCORES</h3>
+            <h3 className="font-pixel text-xs text-muted-foreground">{dict?.dialogs?.matchDetails?.playerScores || "PLAYER SCORES"}</h3>
             <div className="grid grid-cols-1 gap-2">
               {isLoading ? (
-                <div className="text-center py-4 font-pixel text-xs">Loading player details...</div>
+                <div className="text-center py-4 font-pixel text-xs">{dict?.dialogs?.matchDetails?.loading || "Loading player details..."}</div>
               ) : (
                 gameSession?.results
                   ?.sort((a, b) => b.score - a.score)
@@ -195,7 +199,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                               )}
                               {result.player.is_bot && (
                                 <span className="bg-muted text-muted-foreground text-[8px] px-1 py-0.5 rounded">
-                                  BOT
+                                  {dict?.dialogs?.matchDetails?.bot || "BOT"}
                                 </span>
                               )}
                             </p>
@@ -203,7 +207,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
                         </div>
                         <div className="flex items-center space-x-4">
                           <div className="flex flex-col items-end">
-                            <p className="font-pixel text-xs text-muted-foreground">SCORE</p>
+                            <p className="font-pixel text-xs text-muted-foreground">{dict?.dialogs?.matchDetails?.score || "SCORE"}</p>
                             <div className="flex items-center gap-2">
                               <p className={`font-pixel text-xs font-bold ${isCurrentUser ? "text-game-blue" : ""}`}>
                                 {result.score}
@@ -221,7 +225,7 @@ export function MatchDetailsDialog({ open, onOpenChange, match }: MatchDetailsDi
           <DialogFooter className="pt-4">
             <DialogClose asChild>
               <Button variant="outline" className="font-pixel text-xs mr-2">
-                CLOSE
+                {dict?.common?.close || "CLOSE"}
               </Button>
             </DialogClose>
           </DialogFooter>

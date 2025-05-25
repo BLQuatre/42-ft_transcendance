@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Separator } from "@/components/ui/Separator"
-import { SkinSelector } from "@/components/SkinSelector"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
 import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog"
 import { BarChartIcon as ChartNoAxesCombined, Gamepad2, LogOut, Origami } from "lucide-react"
@@ -30,83 +29,12 @@ import {
 import { useAuth } from "@/contexts/auth-context"
 import UpdatePassword from "./components/UpdatePassword"
 import type { BaseUser } from "@/types/user"
-import type { Skin } from "@/types/skins"
 import api from "@/lib/api"
 import { GameType } from "@/types/game"
 import { cn, handleImageUpload } from "@/lib/utils"
 import { useToast } from "@/hooks/UseToast"
 import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
 import { ConsultDataDialog } from "@/components/dialog/ConsultDataDialog"
-
-// Sample skin data
-const characterSkins: Skin[] = [
-	{
-		id: "cs1",
-		name: "CLASSIC PIXEL",
-		image: "/images/placeholder.svg?height=100&width=100",
-	},
-	{
-		id: "cs2",
-		name: "NEON WARRIOR",
-		image: "/images/placeholder.svg?height=100&width=100",
-	},
-	{
-		id: "cs3",
-		name: "ROBOT PLAYER",
-		image: "/images/placeholder.svg?height=100&width=100",
-	},
-	{
-		id: "cs4",
-		name: "GHOST MODE",
-		image: "/images/placeholder.svg?height=100&width=100",
-	},
-	{
-		id: "cs5",
-		name: "RETRO HERO",
-		image: "/images/placeholder.svg?height=100&width=100",
-	},
-]
-
-const pongMapSkins: Skin[] = [
-	{
-		id: "pms1",
-		name: "CLASSIC ARENA",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-	{
-		id: "pms2",
-		name: "SPACE VOID",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-	{
-		id: "pms3",
-		name: "NEON GRID",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-	{
-		id: "pms4",
-		name: "RETRO ARCADE",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-]
-
-const dinoMapSkins: Skin[] = [
-	{
-		id: "dms1",
-		name: "RETRO DESERT",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-	{
-		id: "dms2",
-		name: "CYBER CITY",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-	{
-		id: "dms3",
-		name: "PIXEL FOREST",
-		image: "/images/placeholder.svg?height=100&width=200",
-	},
-]
 
 type Player = {
 	id: string
@@ -298,16 +226,6 @@ export default function DashboardPage() {
 	// Consult data
 	const handleConsultData = () => {
 		setConsultDataDialogOpen(true)
-	}
-
-	// Save skin selections
-	const saveSkins = () => {
-		console.log("Saving skin selections...")
-		setIsLoading(true)
-
-		setTimeout(() => {
-			setIsLoading(false)
-		}, 1000)
 	}
 
 	// Avatar
@@ -601,9 +519,6 @@ export default function DashboardPage() {
 						<TabsTrigger className="uppercase" value="history">
 							{dict.dashboard.sections.history.title}
 						</TabsTrigger>
-						<TabsTrigger className="uppercase" value="skins">
-							{dict.dashboard.sections.skins.title}
-						</TabsTrigger>
 						<TabsTrigger className="uppercase" value="settings">
 							{dict.dashboard.sections.settings.title}
 						</TabsTrigger>
@@ -817,63 +732,6 @@ export default function DashboardPage() {
 									</div>
 								</CardContent>
 							</Card>
-						</div>
-					</TabsContent>
-
-					<TabsContent value="skins" className="space-y-6">
-						<Card>
-							<CardHeader>
-								<CardTitle className="font-pixel text-sm">CHARACTER SKINS</CardTitle>
-								<CardDescription className="font-pixel text-xs">CHOOSE YOUR PLAYER APPEARANCE</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<SkinSelector
-									title="CHARACTER SKIN"
-									description="CHOOSE YOUR PLAYER APPEARANCE"
-									skins={characterSkins}
-									defaultSelected="cs1"
-								/>
-							</CardContent>
-						</Card>
-
-						<Card>
-							<CardHeader>
-								<CardTitle className="font-pixel text-sm">PONG MAP SKINS</CardTitle>
-								<CardDescription className="font-pixel text-xs">SELECT YOUR PONG GAME ENVIRONMENT</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<SkinSelector
-									title="PONG MAP"
-									description="SELECT YOUR PONG GAME ENVIRONMENT"
-									skins={pongMapSkins}
-									defaultSelected="pms1"
-								/>
-							</CardContent>
-						</Card>
-
-						<Card>
-							<CardHeader>
-								<CardTitle className="font-pixel text-sm">DINO RUN MAP SKINS</CardTitle>
-								<CardDescription className="font-pixel text-xs">SELECT YOUR DINO RUN ENVIRONMENT</CardDescription>
-							</CardHeader>
-							<CardContent>
-								<SkinSelector
-									title="DINO RUN MAP"
-									description="SELECT YOUR DINO RUN ENVIRONMENT"
-									skins={dinoMapSkins}
-									defaultSelected="dms1"
-								/>
-							</CardContent>
-						</Card>
-
-						<div className="flex justify-end">
-							<Button
-								className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-								disabled={isLoading}
-								onClick={saveSkins}
-							>
-								{isLoading ? "Saving selections..." : "Save selections"}
-							</Button>
 						</div>
 					</TabsContent>
 

@@ -86,23 +86,6 @@
 		}
 	},
 
-	"shop": {
-		"title": "Boutique",
-		"description": "Personnalisez votre expérience de jeu",
-		"balance": "Votre solde",
-
-		"status": {
-			"buy": "Acheter",
-			"select": "Sélectionner",
-			"selected": "Sélectionné"
-		},
-
-		"categories": {
-			"characters": "Skins de personnages",
-			"maps": "Thèmes de carte"
-		}
-	},
-
 	"footer": {
 		"terms": "Conditions",
 		"privacy": "Confidentialité"

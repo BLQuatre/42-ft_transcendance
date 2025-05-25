@@ -181,6 +181,30 @@
 		"title": "Dashboard",
 		"description": "Manage your account",
 
+		"logoutDialog": {
+			"title": "Confirm Logout",
+			"description": "Are you sure you want to log out of your account?",
+			"confirm": "Logout"
+		},
+
+		"deleteAccountDialog": {
+			"title": "Delete Account",
+			"description": "Are you sure you want to delete your account? This action will anonymize you and permanently erase all your data.",
+			"confirm": "Delete Account"
+		},
+
+		"removeAvatarDialog": {
+			"title": "Confirm Remove Avatar",
+			"description": "Are you sure you want to remove your profile picture? The default avatar will be used instead.",
+			"confirm": "Remove Avatar"
+		},
+
+		"remove2faDialog": {
+			"title": "Disable 2FA",
+			"description": "Are you sure you want to disable Two-Factor Authentication? This will remove the extra layer of security from your account.",
+			"confirm": "Disable 2FA"
+		},
+
 		"sections": {
 			"overview": {
 				"title": "Overview",
@@ -201,6 +225,26 @@
 				}
 			},
 
+			"history": {
+				"title": "History",
+				"players": "Players",
+
+				"pong": {
+					"title": "Pong Match History",
+					"description": "Your recent Pong games",
+					"noGames": "No recent Pong games found."
+				},
+				"dino": {
+					"title": "Dino Run History",
+					"description": "Your recent Dino Run games",
+					"noGames": "No recent Dino Run games found."
+				}
+			},
+
+			"skins": {
+				"title": "Skins"
+			},
+
 			"settings": {
 				"title": "Settings",
 
@@ -212,8 +256,9 @@
 					"bio": "Bio",
 
 					"dangerZone": {
-						"title": "Danger Zone",
+						"title": "Privacy Zone",
 						"description": "Once you delete your account, there is no going back. Please be certain.",
+						"consultData": "Consult data",
 						"delete": "Delete Account"
 					}
 				},
@@ -226,6 +271,15 @@
 						"new": "New Password",
 						"confirm": "Confirm New Password",
 						"update": "Update Password"
+					},
+					"twoFactor": {
+						"title": "Two-Factor Authentication",
+						"description": "Add an extra layer of security to your account",
+						"status": "2FA Status",
+						"enable": "Enable 2FA",
+						"disable": "Disable 2FA",
+						"enabled": "Two-Factor Authentication is enabled",
+						"disabled": "Two-Factor Authentication is disabled"
 					}
 				}
 			}

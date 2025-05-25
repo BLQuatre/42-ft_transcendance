@@ -1,7 +1,6 @@
-// components/SimpleChatWrapper.tsx
 "use client"
 
-const Blacklist = [
+const noChatPaths = [
 	"/not-found",
 	"/login",
 	"/register",
@@ -10,17 +9,19 @@ const Blacklist = [
 import { usePathname } from "next/navigation"
 import { SimpleChat } from "./SimpleChat"
 import { useAuth } from "@/contexts/auth-context"
+import { useEffect, useState } from "react"
 
 export default function SimpleChatWrapper() {
 	const { accessToken } = useAuth()
+	const pathname = usePathname()
+	const currentPath = pathname.slice(3)
 
-  	const pathname = usePathname()
+	const [open, setOpen] = useState(false)
 
-	const isNotFound = Blacklist.some((path) =>
-  		pathname?.endsWith(path)
-	);
+	useEffect(() => {
+		setOpen(noChatPaths.every((path) => !currentPath.startsWith(path)) && accessToken !== null)
+	}, [accessToken])
 
-  	if (isNotFound || !accessToken) return null
-
- 	 return <SimpleChat />
+	if (!open) return null
+	return <SimpleChat />
 }

@@ -103,7 +103,8 @@ export class ChatController {
 			}))
 			this.sendToUser(userId, {
 				type: 'SENT_HISTORY',
-				data: msg,
+				messages: msg,
+				friendId: otherUserId,
 			});
 		} catch (error) {
 			console.error('[ERROR] Error in handleGetHistory:', error);

@@ -680,6 +680,14 @@
 				"enterCode": "Please enter the verification code",
 				"invalidCode": "Invalid verification code. Please try again."
 			}
+		},
+
+		"twoFactorVerify": {
+			"title": "Two-Factor Authentication",
+			"description": "Enter the 6-digit code from your authenticator app",
+			"enterCode": "ENTER VERIFICATION CODE:",
+			"verify": "Verify",
+			"verifying": "Verifying..."
 		}
 	},
 

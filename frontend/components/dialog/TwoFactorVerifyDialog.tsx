@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/Dialog"
 import { Input } from "@/components/ui/Input"
 import { cn } from "@/lib/utils"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 type TwoFactorVerifyDialogProps = {
   open: boolean
@@ -30,6 +31,7 @@ export function TwoFactorVerifyDialog({
   error
 }: TwoFactorVerifyDialogProps) {
   const [verificationCode, setVerificationCode] = useState("")
+  const dict = useDictionary()
 
   // Reset the code when dialog opens
   useEffect(() => {
@@ -45,17 +47,19 @@ export function TwoFactorVerifyDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md z-100">
         <DialogHeader>
-          <DialogTitle className="font-pixel text-lg uppercase">Two-Factor Authentication</DialogTitle>
+          <DialogTitle className="font-pixel text-lg uppercase">
+            {dict?.dialogs?.twoFactorVerify?.title || "Two-Factor Authentication"}
+          </DialogTitle>
           <DialogDescription className="font-pixel text-xs uppercase">
-            Enter the 6-digit code from your authenticator app
+            {dict?.dialogs?.twoFactorVerify?.description || "Enter the 6-digit code from your authenticator app"}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="font-pixel text-xs space-y-2">
-            <p>ENTER VERIFICATION CODE:</p>
+            <p>{dict?.dialogs?.twoFactorVerify?.enterCode || "ENTER VERIFICATION CODE:"}</p>
             <Input
               id="verificationCode"
               value={verificationCode}
@@ -70,7 +74,7 @@ export function TwoFactorVerifyDialog({
               disabled={isLoading}
               error={error !== null}
             />
-            <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
+            <p className={cn("font-pixel text-xs text-destructive mt-1", error ? "" : "select-none")}>{error || " "}</p>
           </div>
         </div>
 
@@ -82,7 +86,7 @@ export function TwoFactorVerifyDialog({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {dict?.common?.cancel || "Cancel"}
           </Button>
           <Button
             type="button"
@@ -93,10 +97,10 @@ export function TwoFactorVerifyDialog({
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Verifying...
+                {dict?.dialogs?.twoFactorVerify?.verifying || "Verifying..."}
               </>
             ) : (
-              "Verify"
+              dict?.dialogs?.twoFactorVerify?.verify || "Verify"
             )}
           </Button>
         </DialogFooter>

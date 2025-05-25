@@ -85,7 +85,10 @@
 				"First player to reach 10 points wins the game"
 			],
 			"type": "Classic Arcade",
-			"players": "2-8 players"
+			"players": "2-8 players",
+			"pauseInstructions": "Press P to play/pause",
+			"moveInstructions": "Use ↑/↓ or W/S to move your paddle",
+			"winner": "WINNER!"
 		},
 		"dino": {
 			"title": "Dino Run",

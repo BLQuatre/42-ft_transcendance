@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/Card"
 import { ScoreDisplay } from "@/components/ScoreDisplay"
 import { BaseUser } from "@/types/user"
 import api from "@/lib/api"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 import { Game } from '@/lib/pong/game'
 import * as CONST from '@/lib/pong/constants' ;
@@ -14,6 +15,7 @@ import * as CONST from '@/lib/pong/constants' ;
 
 export default function PongGamePage() {
 	const { accessToken } = useAuth()
+	const dict = useDictionary()
 
 	const playerId = localStorage.getItem('userId')
 	const userRef = useRef<BaseUser | null>(null)
@@ -166,11 +168,11 @@ export default function PongGamePage() {
 
 			if ((game.get_score().left == CONST.SCORE_WIN || game.get_score().right == CONST.SCORE_WIN) && !submittedRef.current) {
 				setGameFinished(true) ;
-				
+
 				const user = userRef.current ;
 				if (accessToken && user) {
 					submittedRef.current = true ;
-					
+
 					api.post('/history', {
 						game_type: 'PONG',
 						players: [{
@@ -245,9 +247,11 @@ export default function PongGamePage() {
 								{(pausedState && !gameFinished) && (
 									<div className="absolute inset-0 flex flex-col items-center justify-center z-20">
 										<div className="text-white text-center">
-											<h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+											<h2 className="text-3xl font-bold mb-4 animate-pulse">
+												{dict?.games?.pong?.pauseInstructions || "Press P to play/pause"}
+											</h2>
 											<div className="text-sm opacity-80">
-												<p>Use ↑/↓ or W/S to move your paddle</p>
+												<p>{dict?.games?.pong?.moveInstructions || "Use ↑/↓ or W/S to move your paddle"}</p>
 											</div>
 										</div>
 									</div>

@@ -1,4 +1,5 @@
 import { Trophy } from "lucide-react"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 interface ScoreDisplayProps {
   leftScore: number
@@ -8,6 +9,7 @@ interface ScoreDisplayProps {
 }
 
 export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished }: ScoreDisplayProps) {
+  const dict = useDictionary()
   const leftWon = leftScore === winningScore
   const rightWon = rightScore === winningScore
 
@@ -34,7 +36,7 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
             <div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-bounce">
               <Trophy className="h-16 w-16 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.7)]" />
               <span className="text-yellow-400 font-bold text-lg mt-2 font-pixel drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
-                WINNER!
+                {dict?.games?.pong?.winner || "WINNER!"}
               </span>
             </div>
           )}
@@ -44,7 +46,7 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
             <div className="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-bounce">
               <Trophy className="h-16 w-16 text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.7)]" />
               <span className="text-yellow-400 font-bold text-lg mt-2 font-pixel drop-shadow-[0_0_2px_rgba(0,0,0,1)]">
-                WINNER!
+                {dict?.games?.pong?.winner || "WINNER!"}
               </span>
             </div>
           )}

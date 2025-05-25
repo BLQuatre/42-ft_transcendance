@@ -83,7 +83,7 @@
 				"Move your paddle up and down using the w/s keys (P1) or up/down arrows (P2)",
 				"Hit the ball with your paddle to send it back to your opponent",
 				"Score points when your opponent misses the ball",
-				"First player to reach 10 points wins the game"
+				"First player to reach 7 points wins the game"
 			],
 			"type": "Classic Arcade",
 			"players": "2-8 players",
@@ -104,7 +104,7 @@
 				"Try to beat your high score with each attempt"
 			],
 			"type": "Endless Runner",
-			"players": "1-8 player(s)",
+			"players": "1-4 player(s)",
 			"multi": {
 				"score": "SCORE",
 				"waitingRoom": {

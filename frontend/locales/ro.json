@@ -83,7 +83,7 @@
 				"Mută paleta sus și jos folosind tastele w/s (J1) sau săgețile sus/jos (J2)",
 				"Lovește mingea cu paleta pentru a o trimite înapoi la adversar",
 				"Marchează puncte când adversarul ratează mingea",
-				"Primul jucător care ajunge la 10 puncte câștigă jocul"
+				"Primul jucător care ajunge la 7 puncte câștigă jocul"
 			],
 			"type": "Arcade Clasic",
 			"players": "2-8 jucători",
@@ -104,7 +104,7 @@
 				"Încearcă să-ți bați cel mai bun scor la fiecare încercare"
 			],
 			"type": "Runner Infinit",
-			"players": "1-8 jucător(i)",
+			"players": "1-4 jucător(i)",
 			"multi": {
 				"score": "SCOR",
 				"waitingRoom": {

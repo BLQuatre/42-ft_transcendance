@@ -83,7 +83,7 @@
 				"Déplacez votre raquette avec les touches w/s (J1) ou flèches haut/bas (J2)",
 				"Frappez la balle avec votre raquette pour la renvoyer à l'adversaire",
 				"Marquez un point lorsque l'adversaire rate la balle",
-				"Le premier à atteindre 10 points gagne la partie"
+				"Le premier à atteindre 7 points gagne la partie"
 			],
 			"type": "Arcade Classique",
 			"players": "2 à 8 joueurs",
@@ -104,7 +104,7 @@
 				"Essayez de battre votre meilleur score à chaque tentative"
 			],
 			"type": "Runner Infini",
-			"players": "1 à 8 joueur(s)",
+			"players": "1 à 4 joueur(s)",
 			"multi": {
 				"score": "SCORE",
 				"waitingRoom": {

@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/Separator"
 import { Button } from "@/components/ui/Button"
 import { User, Download, Calendar, Clock, Shield } from "lucide-react"
 import type { BaseUser } from "@/types/user"
+import { useDictionary } from "@/hooks/UseDictionnary"
+
 
 type Player = {
   id: string
@@ -46,7 +48,7 @@ interface ConsultDataDialogProps {
     | (BaseUser & {
         created_at?: string
         updated_at?: string
-        isTfaEnabled?: boolean
+        tfaEnable?: boolean
         email?: string
       })
     | null
@@ -112,28 +114,31 @@ export function ConsultDataDialog({
     URL.revokeObjectURL(url)
   }
 
+	const dict = useDictionary()
+	if (!dict) return null
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`max-w-6xl max-h-[1200px] overflow-hidden`}>
         <DialogHeader className="pb-2 border-b">
-          <DialogTitle className="font-pixel text-xl uppercase flex items-center gap-3">
+          <DialogTitle className="font-pixel text-xl flex items-center gap-3 uppercase">
             <div className="p-2 bg-game-blue/10 rounded-lg">
               <User className="h-6 w-6 text-game-blue" />
             </div>
-            Your Data Overview
+            {dict.dialogs.consultData.title}
           </DialogTitle>
           <DialogDescription className="font-pixel text-sm uppercase text-muted-foreground">
-            Complete overview of your account data and gaming activity
+            {dict.dialogs.consultData.description}
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="profile" className="flex-1 flex flex-col h-full">
           <TabsList className="grid w-full grid-cols-2 font-pixel text-xs mb-2">
             <TabsTrigger value="profile" className="uppercase">
-              Profile
+              {dict.dialogs.consultData.profile.title}
             </TabsTrigger>
             <TabsTrigger value="raw" className="uppercase">
-              Raw Data
+              {dict.dialogs.consultData.rawData.title}
             </TabsTrigger>
           </TabsList>
 
@@ -145,7 +150,7 @@ export function ConsultDataDialog({
                     <CardHeader className="pb-4">
                       <CardTitle className="font-pixel text-lg uppercase flex items-center gap-2">
                         <User className="h-5 w-5 text-game-blue" />
-                        Profile Information
+                        {dict.dialogs.consultData.profile.description}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -161,10 +166,10 @@ export function ConsultDataDialog({
                           <p className="font-pixel text-sm text-muted-foreground">ID: {user?.id || "N/A"}</p>
                           <p className="font-pixel text-sm text-muted-foreground">Email: {user?.email || "N/A"}</p>
                           <div className="flex gap-2">
-                            {user?.isTfaEnabled && (
+                            {user?.tfaEnable && (
                               <Badge variant="default" className="font-pixel text-xs bg-game-green">
                                 <Shield className="h-3 w-3 mr-1" />
-                                2FA Enabled
+                                {dict.dialogs.consultData.profile.tfaEnabled}
                               </Badge>
                             )}
                           </div>
@@ -177,32 +182,32 @@ export function ConsultDataDialog({
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4 text-game-blue" />
-                            <p className="font-pixel text-sm text-muted-foreground uppercase">Account Created</p>
+                            <p className="font-pixel text-sm text-muted-foreground uppercase">{dict.dialogs.consultData.profile.accountCreated}</p>
                           </div>
                           <p className="font-pixel text-lg">
-                            {user?.created_at ? formatDate(user.created_at) : "Unknown"}
+                            {user?.created_at ? formatDate(user.created_at) : dict.dialogs.consultData.profile.unknown}
                           </p>
                           {user && (
                             <p className="font-pixel text-xs text-muted-foreground">
                               {user.created_at
                                 ? `${Math.floor((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24))} days ago`
-                                : "No creation date available"}
+                                : dict.dialogs.consultData.profile.noCreationDate}
                             </p>
                           )}
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-game-orange" />
-                            <p className="font-pixel text-sm text-muted-foreground uppercase">Last Updated</p>
+                            <p className="font-pixel text-sm text-muted-foreground uppercase">{dict.dialogs.consultData.profile.accountUpdated}</p>
                           </div>
                           <p className="font-pixel text-lg">
-                            {user?.updated_at ? formatDate(user.updated_at) : "Unknown"}
+                            {user?.updated_at ? formatDate(user.updated_at) : dict.dialogs.consultData.profile.unknown}
                           </p>
                           {user && (
                             <p className="font-pixel text-xs text-muted-foreground">
                               {user.updated_at
                                 ? `${Math.floor((Date.now() - new Date(user.updated_at).getTime()) / (1000 * 60 * 60 * 24))} days ago`
-                                : "No update date available"}
+                                : dict.dialogs.consultData.profile.noUpdateDate}
                             </p>
                           )}
                         </div>
@@ -217,9 +222,9 @@ export function ConsultDataDialog({
               <Card className="h-full border-2 border-muted">
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="font-pixel text-lg uppercase">Raw User Data</CardTitle>
+                    <CardTitle className="font-pixel text-lg uppercase">{dict.dialogs.consultData.rawData.title}</CardTitle>
                     <CardDescription className="font-pixel text-sm">
-                      Technical data stored about your account
+                      {dict.dialogs.consultData.rawData.description}
                     </CardDescription>
                   </div>
                   <Button
@@ -229,14 +234,14 @@ export function ConsultDataDialog({
                     className="font-pixel text-xs uppercase gap-2"
                   >
                     <Download className="h-4 w-4" />
-                    Download Full JSON
+                    {dict.dialogs.consultData.rawData.download}
                   </Button>
                 </CardHeader>
                 <CardContent>
                   <div className="h-full overflow-y-auto pr-2">
                     <div className="space-y-4">
                       <div className="p-4 bg-muted/50 rounded-lg border">
-                        <h4 className="font-pixel text-sm uppercase mb-2 text-game-blue">User Information</h4>
+                        <h4 className="font-pixel text-sm uppercase mb-2 text-game-blue">{dict.dialogs.consultData.rawData.userInfo}</h4>
                         <pre className="font-mono text-xs overflow-x-auto">
                           {JSON.stringify(
                             {
@@ -245,7 +250,7 @@ export function ConsultDataDialog({
                               email: user?.email,
                               created_at: user?.created_at,
                               updated_at: user?.updated_at,
-                              isTfaEnabled: user?.isTfaEnabled,
+                              isTfaEnabled: user?.tfaEnable,
                             },
                             null,
                             2,
@@ -255,8 +260,7 @@ export function ConsultDataDialog({
 
                       <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <p className="font-pixel text-xs text-yellow-800">
-                          💡 This shows a summary of your data. Click "Download Full JSON" above to get the complete
-                          dataset.
+							{dict.dialogs.consultData.rawData.summary}
                         </p>
                       </div>
                     </div>

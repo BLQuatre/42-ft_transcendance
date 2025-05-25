@@ -29,4 +29,5 @@ export interface User {
 	recentGames: Game[];
 	created_at: string;  // Add creation timestamp
 	updated_at: string;  // Add update timestamp
+	tfaEnable: boolean;
 }

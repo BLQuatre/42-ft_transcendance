@@ -286,5 +286,30 @@
 				}
 			}
 		}
+	},
+	"dialogs":
+	{
+		"consultData": {
+			"title": "Your Data Overview",
+			"description": "Complete overview of your account data",
+			"confirm": "Consult Data",
+			"profile": {
+				"title": "Profile",
+				"description": "profile information",
+				"tfaEnabled": "2FA Enabled",
+				"unknown": "Unknown",
+				"accountCreated": "Account Created",
+				"accountUpdated": "Last Updated",
+				"noCreationDate": "No creation date available",
+				"noUpdateDate": "No update date available"
+			},
+			"rawData": {
+				"title": "Raw User Data",
+				"description": "Technical data stored about your account",
+				"download": "Download Full JSON",
+				"userInfo": "User Information",
+				"summary": "💡 This shows a summary of your data. Click \"Download Full JSON\" above to get the complete dataset."
+			}
+		}
 	}
 }

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { cn } from "@/lib/utils"
 import BackToHomeButton from "@/components/BackToHome"
+import { useDictionary } from "@/hooks/UseDictionnary" // Add dictionary hook
 
 // Types
 export type Player = {
@@ -35,6 +36,7 @@ interface GameRoomProps {
 export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomProps) {
   const [copied, setCopied] = useState(false)
   const isPong = room?.gameType === "pong"
+  const dict = useDictionary() // Add dictionary hook
 
   // Copy room code to clipboard
   const copyRoomCode = () => {
@@ -49,10 +51,12 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
     }
   }
 
+  if (!dict) return null // Add early return if dictionary isn't loaded
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="font-pixel text-lg animate-pulse">CONNECTING TO GAME SERVER...</div>
+        <div className="font-pixel text-lg animate-pulse">{dict.games.dino.multi.connection.connected}</div>
       </div>
     )
   }
@@ -60,7 +64,7 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
   if (!room) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="font-pixel text-lg animate-pulse">ROOM FULL OR GAME LAUNCHED !</div>
+        <div className="font-pixel text-lg animate-pulse">{dict.games.dino.multi.errors.noRoomData}</div>
       </div>
     )
   }
@@ -69,7 +73,7 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
   if (room.players.length === 0) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="font-pixel text-lg animate-pulse">JOINING ROOM...</div>
+        <div className="font-pixel text-lg animate-pulse">{dict.games.dino.multi.connection.creating}</div>
       </div>
     )
   }
@@ -113,11 +117,15 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
                         : "bg-green-500/10 text-green-500",
                   )}
                 >
-                  {room.status === "waiting" ? "LOBBY" : room.status === "starting" ? `STARTING` : "IN PROGRESS"}
+                  {room.status === "waiting"
+                    ? dict.games.dino.multi.waitingRoom.title
+                    : room.status === "starting"
+                      ? dict.games.dino.multi.connection.gameStarting
+                      : dict.common.play}
                 </Badge>
                 {allPlayersReady && room.status === "waiting" && (
                   <Badge variant="outline" className="bg-blue-500/10 text-blue-500 font-pixel text-xs">
-                    READY TO START
+                    {dict.games.dino.multi.waitingRoom.waitingForReady}
                   </Badge>
                 )}
               </div>
@@ -138,12 +146,12 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
                 {currentPlayer?.isReady ? (
                   <>
                     <XCircle className="mr-2 h-4 w-4" />
-                    CANCEL READY
+                    {dict.games.dino.multi.waitingRoom.notReady}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="mr-2 h-4 w-4" />
-                    I'M READY
+                    {dict.games.dino.multi.waitingRoom.ready}
                   </>
                 )}
               </Button>
@@ -159,7 +167,7 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
           )}
         >
           <div>
-            <div className="font-pixel text-xs text-muted-foreground mb-1">ROOM CODE</div>
+            <div className="font-pixel text-xs text-muted-foreground mb-1">{dict.games.dino.multi.roomCode}</div>
             <div className="font-pixel text-lg tracking-wider">{room.id.toUpperCase()}</div>
           </div>
           <Button
@@ -178,12 +186,12 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
             {copied ? (
               <>
                 <Check className="h-4 w-4 mr-1" />
-                COPIED!
+                {dict.games.dino.multi.copied}
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4 mr-1" />
-                COPY CODE
+                {dict.games.dino.multi.copyCode}
               </>
             )}
           </Button>
@@ -200,7 +208,7 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
           >
             <div className="flex items-center">
               <Users className="h-4 w-4 mr-2" />
-              <h3 className="font-pixel text-sm uppercase">Players</h3>
+              <h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.history.players}</h3>
             </div>
             <span className="font-pixel text-xs text-muted-foreground">
               {room.players.length}/{room.maxPlayers}
@@ -238,7 +246,7 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
                     <div className="flex items-center">
                       <span className="font-pixel text-sm">
                         {player.name}
-                        {player.isYou && " (You)"}
+                        {player.isYou && ` (${dict.games.dino.multi.waitingRoom.you})`}
                       </span>
                     </div>
                   </div>
@@ -248,12 +256,12 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
                   {player.isReady ? (
                     <Badge className="font-pixel text-xs bg-green-500">
                       <CheckCircle className="mr-1 h-3 w-3" />
-                      READY
+                      {dict.games.dino.multi.waitingRoom.ready}
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="font-pixel text-xs text-muted-foreground">
                       <XCircle className="mr-1 h-3 w-3" />
-                      NOT READY
+                      {dict.games.dino.multi.waitingRoom.notReady}
                     </Badge>
                   )}
                 </div>
@@ -272,15 +280,15 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-pixel text-sm text-muted-foreground/70">Waiting for player...</span>
+                      <span className="font-pixel text-sm text-muted-foreground/70">{dict.games.dino.multi.waitingRoom.waitingForPlayers}</span>
                     </div>
-                    <span className="font-pixel text-xs text-muted-foreground/50">Empty slot</span>
+                    <span className="font-pixel text-xs text-muted-foreground/50">{dict.games.dino.multi.waitingRoom.emptySlot}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center">
                   <Badge variant="outline" className="font-pixel text-xs text-muted-foreground/50 border-dashed">
-                    OPEN
+                    {dict.games.dino.multi.waitingRoom.open}
                   </Badge>
                 </div>
               </div>
@@ -290,9 +298,9 @@ export default function GameRoom({ room, isLoading, onToggleReady }: GameRoomPro
           {room.status === "waiting" && (
             <div className="text-center">
               <p className="font-pixel text-xs text-muted-foreground">
-                Game will start automatically when all players are ready
+                {dict.games.dino.multi.waitingRoom.autoStart}
               </p>
-              {isPong && <p className="font-pixel text-xs text-muted-foreground">At least 2 players</p>}
+              {isPong && <p className="font-pixel text-xs text-muted-foreground">{dict.games.pong.players}</p>}
             </div>
           )}
         </div>

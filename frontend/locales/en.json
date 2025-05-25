@@ -92,13 +92,18 @@
 			"multi": {
 				"score": "SCORE",
 				"waitingRoom": {
-					"title": "Waiting Room",
+					"title": "LOBBY",
 					"description": "Waiting for other players to join...",
-					"ready": "Ready",
-					"notReady": "Not Ready",
+					"ready": "READY",
+					"notReady": "NOT READY",
+					"cancelReady": "CANCEL READY",
 					"startGame": "Start Game",
-					"waitingForPlayers": "Waiting for more players...",
-					"waitingForReady": "Waiting for all players to be ready..."
+					"waitingForPlayers": "Waiting for player...",
+					"waitingForReady": "READY TO START",
+					"emptySlot": "Empty slot",
+					"open": "OPEN",
+					"you": "You",
+					"autoStart": "Game will start automatically when all players are ready"
 				},
 				"roomPrefix": "DINO Room",
 				"errors": {

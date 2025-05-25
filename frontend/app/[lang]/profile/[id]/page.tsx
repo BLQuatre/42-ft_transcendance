@@ -340,21 +340,21 @@ export default function UserProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-pixel text-sm uppercase">
-                    GAMES PLAYED THIS WEEK
+                    {dict.profile.sections.charts.activity.title}
                   </CardTitle>
                   <CardDescription className="font-pixel text-xs uppercase">
-                    ACTIVITY OVER THE LAST 7 DAYS
+                    {dict.profile.sections.charts.activity.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
                   <ChartContainer
                     config={{
                       pong: {
-                        label: "Pong Games",
+                        label: "PONG",
                         color: "hsl(var(--chart-1))",
                       },
                       dino: {
-                        label: "Dino Games",
+                        label: "DINO RUN",
                         color: "hsl(var(--chart-2))",
                       },
                     }}
@@ -366,8 +366,8 @@ export default function UserProfilePage() {
                         <YAxis />
                         <ChartTooltip content={<ChartTooltipContent />} />
                         <Legend />
-                        <Bar dataKey="pong" fill="var(--color-primary)" name={dict.games.pong.title} />
-                        <Bar dataKey="dino" fill="var(--color-secondary)" name={dict.games.dino.title} />
+                        <Bar dataKey="pong" fill="var(--color-primary)" name="PONG" />
+                        <Bar dataKey="dino" fill="var(--color-secondary)" name="DINO RUN" />
                       </BarChart>
                     </ResponsiveContainer>
                   </ChartContainer>
@@ -377,17 +377,17 @@ export default function UserProfilePage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-pixel text-sm uppercase">
-                    SCORE PROGRESSION
+                    {dict.profile.sections.charts.score.title}
                   </CardTitle>
                   <CardDescription className="font-pixel text-xs uppercase">
-                    AVERAGE SCORE BY WEEK
+                    {dict.profile.sections.charts.score.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="h-80">
                   <ChartContainer
                     config={{
                       score: {
-                        label: "Score",
+                        label: dict.profile.sections.charts.score.label,
                         color: "hsl(var(--chart-3))",
                       },
                     }}
@@ -406,7 +406,7 @@ export default function UserProfilePage() {
                           strokeWidth={2}
                           dot={{ r: 4 }}
                           activeDot={{ r: 6 }}
-                          name="Average Score"
+                          name={dict.profile.sections.charts.score.label}
                         />
                       </LineChart>
                     </ResponsiveContainer>
@@ -420,15 +420,15 @@ export default function UserProfilePage() {
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">PONG MATCH HISTORY</CardTitle>
-                  <CardDescription className="font-pixel text-xs">RECENT PONG GAMES</CardDescription>
+                  <CardTitle className="font-pixel text-sm">{dict.profile.sections.history.pong.title}</CardTitle>
+                  <CardDescription className="font-pixel text-xs">{dict.profile.sections.history.pong.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 h-[480px] overflow-y-auto pr-2 show-scrollbar">
                     {gameHistory.pong.length > 0 ? (
                       gameHistory.pong.map((gameResult, index) => {
                         const isWinner = gameResult.is_winner || false
-                        const result = isWinner ? "WIN" : "LOOSE"
+                        const result = isWinner ? dict.profile.sections.history.win : dict.profile.sections.history.lose
                         const gameSession = gameResult.gameSession
                         const playerCount = gameSession?.results?.length || 0
                         const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString()
@@ -446,7 +446,7 @@ export default function UserProfilePage() {
                                 }`}
                               ></div>
                               <p className="font-pixel text-xs">
-                                {playerCount} PLAYERS • {gameDate}
+                                {playerCount} {dict.dashboard.sections.history.players} • {gameDate}
                               </p>
                             </div>
                             <div>
@@ -463,7 +463,7 @@ export default function UserProfilePage() {
                       })
                     ) : (
                       <div className="flex items-center justify-center h-64">
-                        <p className="font-pixel text-sm text-muted-foreground">No game history available</p>
+                        <p className="font-pixel text-sm text-muted-foreground">{dict.profile.sections.history.noGames}</p>
                       </div>
                     )}
                   </div>
@@ -472,8 +472,8 @@ export default function UserProfilePage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-pixel text-sm">DINO RUN HISTORY</CardTitle>
-                  <CardDescription className="font-pixel text-xs">RECENT DINO RUN ATTEMPTS</CardDescription>
+                  <CardTitle className="font-pixel text-sm">{dict.profile.sections.history.dino.title}</CardTitle>
+                  <CardDescription className="font-pixel text-xs">{dict.profile.sections.history.dino.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3 h-[480px] overflow-y-auto pr-2 show-scrollbar">
@@ -515,7 +515,7 @@ export default function UserProfilePage() {
                       })
                     ) : (
                       <div className="flex items-center justify-center h-64">
-                        <p className="font-pixel text-sm text-muted-foreground">No game history available</p>
+                        <p className="font-pixel text-sm text-muted-foreground">{dict.profile.sections.history.noGames}</p>
                       </div>
                     )}
                   </div>

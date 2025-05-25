@@ -577,11 +577,11 @@ export default function DashboardPage() {
 									<ChartContainer
 										config={{
 											pong: {
-												label: "Pong Games",
+												label: "PONG",
 												color: "hsl(var(--chart-1))",
 											},
 											dino: {
-												label: "Dino Games",
+												label: "DINO RUN",
 												color: "hsl(var(--chart-2))",
 											},
 										}}
@@ -593,8 +593,8 @@ export default function DashboardPage() {
 												<YAxis />
 												<ChartTooltip content={<ChartTooltipContent />} />
 												<Legend />
-												<Bar dataKey="pong" fill="var(--color-primary)" name={dict.games.pong.title} />
-												<Bar dataKey="dino" fill="var(--color-secondary)" name={dict.games.dino.title} />
+												<Bar dataKey="pong" fill="var(--color-primary)" name="PONG" />
+												<Bar dataKey="dino" fill="var(--color-secondary)" name="DINO RUN" />
 											</BarChart>
 										</ResponsiveContainer>
 									</ChartContainer>

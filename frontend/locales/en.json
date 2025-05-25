@@ -176,7 +176,29 @@
 				"totalDistance": "Total Distance"
 			},
 			"history": {
-				"title": "Game History"
+				"title": "Game History",
+				"pong": {
+					"title": "PONG MATCH HISTORY",
+					"description": "RECENT PONG GAMES"
+				},
+				"dino": {
+					"title": "DINO RUN HISTORY",
+					"description": "RECENT DINO RUN ATTEMPTS"
+				},
+				"win": "WIN",
+				"lose": "LOSE",
+				"noGames": "No game history available"
+			},
+			"charts": {
+				"activity": {
+					"title": "GAMES PLAYED THIS WEEK",
+					"description": "ACTIVITY OVER THE LAST 7 DAYS"
+				},
+				"score": {
+					"title": "SCORE PROGRESSION",
+					"description": "AVERAGE SCORE BY WEEK",
+					"label": "Average Score"
+				}
 			}
 		}
 	},

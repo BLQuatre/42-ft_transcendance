@@ -171,6 +171,62 @@
 				"noRequests": "You don't have any friend requests yet.",
 				"accept": "Accept",
 				"decline": "Decline"
+			},
+
+			"add": {
+				"title": "Add Friends",
+				"description": "Find and add new friends to your network",
+				"search": "Search for users...",
+				"searchPrompt": "Search for users to add as friends",
+				"noUsersFound": "No users found with that username"
+			},
+
+			"blocked": {
+				"title": "Blocked Users",
+				"description": "See all users you blocked",
+				"noBlocked": "You have no blocked users"
+			}
+		},
+
+		"actions": {
+			"addFriend": "Add Friend",
+			"removeFriend": "Remove Friend",
+			"blockUser": "Block User",
+			"unblockUser": "Unblock User"
+		},
+
+		"notifications": {
+			"requestSent": {
+				"title": "Friend Request Sent",
+				"description": "Friend request sent to %user%"
+			},
+			"requestAccepted": {
+				"title": "Friend Request Accepted",
+				"description": "You are now friends with %user%"
+			},
+			"requestRejected": {
+				"title": "Friend Request Rejected",
+				"description": "You have rejected the friend request from %user%"
+			},
+			"requestAlreadySent": {
+				"title": "Friend Request Already Sent",
+				"description": "You have already sent a friend request to %user%"
+			},
+			"friendRemoved": {
+				"title": "Friend Removed",
+				"description": "You have removed %user% as a friend"
+			},
+			"userBlocked": {
+				"title": "User Blocked",
+				"description": "You have blocked %user%"
+			},
+			"userUnblocked": {
+				"title": "User Unblocked",
+				"description": "You have unblocked %user%"
+			},
+			"error": {
+				"title": "Error",
+				"description": "Cannot send friend request to %user%"
 			}
 		}
 	},

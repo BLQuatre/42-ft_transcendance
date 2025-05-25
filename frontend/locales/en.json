@@ -649,6 +649,21 @@
 			"agreeToPrivacy": "I agree to the",
 			"privacyPolicy": "Privacy Policy",
 			"acceptContinue": "Accept & Continue"
+		},
+
+		"multiplayerOptions": {
+			"title": "MULTIPLAYER OPTIONS",
+			"description": "CREATE A NEW ROOM OR JOIN WITH A CODE",
+			"createRoom": "CREATE A ROOM",
+			"joinWithCode": "JOIN WITH CODE",
+			"matchmaking": "MATCHMAKING",
+			"roomCodeLabel": "ROOM CODE:",
+			"enterRoomCode": "ENTER ROOM CODE",
+			"connecting": "CONNECTING...",
+			"createRoomButton": "CREATE ROOM",
+			"joinRoomButton": "JOIN ROOM",
+			"joinMatchmakingButton": "JOIN MATCHMAKING",
+			"selectOption": "SELECT AN OPTION"
 		}
 	},
 

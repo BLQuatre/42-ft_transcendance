@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button"
 import { GameType } from "@/types/game"
 import { getBgColor, getBorderColor } from "@/lib/colors"
 import { cn } from "@/lib/utils"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 type MultiplayerOptionsDialogProps = {
   open: boolean
@@ -35,6 +36,7 @@ export function MultiplayerOptionsDialog({
   const [roomCode, setRoomCode] = useState("")
   const [selectedOption, setSelectedOption] = useState<MultiplayerOption | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const dict = useDictionary()
 
   const handleMultiplayerOption = async (option: MultiplayerOption) => {
     if (isLoading) return
@@ -67,8 +69,8 @@ export function MultiplayerOptionsDialog({
     >
       <DialogContent className="sm:max-w-[700px] p-6">
         <DialogHeader className="animate-fadeIn mb-4">
-          <DialogTitle className="font-pixel text-sm">MULTIPLAYER OPTIONS</DialogTitle>
-          <DialogDescription className="font-pixel text-xs">CREATE A NEW ROOM OR JOIN WITH A CODE</DialogDescription>
+          <DialogTitle className="font-pixel text-sm">{dict?.dialogs?.multiplayerOptions?.title || "MULTIPLAYER OPTIONS"}</DialogTitle>
+          <DialogDescription className="font-pixel text-xs">{dict?.dialogs?.multiplayerOptions?.description || "CREATE A NEW ROOM OR JOIN WITH A CODE"}</DialogDescription>
         </DialogHeader>
 
         <div className="animate-slideUp">
@@ -85,7 +87,7 @@ export function MultiplayerOptionsDialog({
               onClick={() => setSelectedOption(MultiplayerOption.CREATE)}
               disabled={isLoading}
             >
-              CREATE A ROOM
+              {dict?.dialogs?.multiplayerOptions?.createRoom || "CREATE A ROOM"}
             </Button>
 
             <Button
@@ -100,7 +102,7 @@ export function MultiplayerOptionsDialog({
               onClick={() => setSelectedOption(MultiplayerOption.JOIN)}
               disabled={isLoading}
             >
-              JOIN WITH CODE
+              {dict?.dialogs?.multiplayerOptions?.joinWithCode || "JOIN WITH CODE"}
             </Button>
 
             <Button
@@ -115,19 +117,19 @@ export function MultiplayerOptionsDialog({
               onClick={() => setSelectedOption(MultiplayerOption.MATCHMAKING)}
               disabled={isLoading}
             >
-              MATCHMAKING
+              {dict?.dialogs?.multiplayerOptions?.matchmaking || "MATCHMAKING"}
             </Button>
           </div>
 
           {selectedOption === "join" && (
             <div className="mt-4 animate-fadeIn">
-              <label className="font-pixel text-xs block mb-2">ROOM CODE:</label>
+              <label className="font-pixel text-xs block mb-2">{dict?.dialogs?.multiplayerOptions?.roomCodeLabel || "ROOM CODE:"}</label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={roomCode}
                   onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
-                  placeholder="ENTER ROOM CODE"
+                  placeholder={dict?.dialogs?.multiplayerOptions?.enterRoomCode || "ENTER ROOM CODE"}
                   className={cn(
                     "font-pixel text-xs p-2 border-2 border-muted rounded-md w-full bg-background focus:outline-none focus:ring-2",
                     gameType === GameType.PONG
@@ -147,7 +149,7 @@ export function MultiplayerOptionsDialog({
         <DialogFooter className="pt-6 animate-slideUp">
           <DialogClose asChild>
             <Button variant="cancel" className="font-pixel text-xs mr-2" disabled={isLoading}>
-              CANCEL
+              {dict?.common?.cancel || "CANCEL"}
             </Button>
           </DialogClose>
           <Button
@@ -157,14 +159,14 @@ export function MultiplayerOptionsDialog({
             onClick={() => selectedOption && handleMultiplayerOption(selectedOption)}
           >
             {isLoading
-              ? "CONNECTING..."
+              ? dict?.dialogs?.multiplayerOptions?.connecting || "CONNECTING..."
               : selectedOption === MultiplayerOption.CREATE
-                ? "CREATE ROOM"
+                ? dict?.dialogs?.multiplayerOptions?.createRoomButton || "CREATE ROOM"
                 : selectedOption === MultiplayerOption.JOIN
-                  ? "JOIN ROOM"
+                  ? dict?.dialogs?.multiplayerOptions?.joinRoomButton || "JOIN ROOM"
                   : selectedOption === MultiplayerOption.MATCHMAKING
-                    ? "JOIN MATCHMAKING"
-                    : "SELECT AN OPTION"
+                    ? dict?.dialogs?.multiplayerOptions?.joinMatchmakingButton || "JOIN MATCHMAKING"
+                    : dict?.dialogs?.multiplayerOptions?.selectOption || "SELECT AN OPTION"
             }
           </Button>
         </DialogFooter>

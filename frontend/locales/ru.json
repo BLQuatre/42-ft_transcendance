@@ -663,6 +663,20 @@
 			"agreeToPrivacy": "Я соглашаюсь с",
 			"privacyPolicy": "Политикой конфиденциальности",
 			"acceptContinue": "Принять и Продолжить"
+		},
+		"multiplayerOptions": {
+			"title": "НАСТРОЙКИ МУЛЬТИПЛЕЕРА",
+			"description": "СОЗДАЙТЕ НОВУЮ КОМНАТУ ИЛИ ПРИСОЕДИНИТЕСЬ ПО КОДУ",
+			"createRoom": "СОЗДАТЬ КОМНАТУ",
+			"joinWithCode": "ВОЙТИ ПО КОДУ",
+			"matchmaking": "ПОДБОР МАТЧА",
+			"roomCodeLabel": "КОД КОМНАТЫ:",
+			"enterRoomCode": "ВВЕДИТЕ КОД КОМНАТЫ",
+			"connecting": "ПОДКЛЮЧЕНИЕ...",
+			"createRoomButton": "СОЗДАТЬ КОМНАТУ",
+			"joinRoomButton": "ВОЙТИ В КОМНАТУ",
+			"joinMatchmakingButton": "НАЧАТЬ ПОДБОР",
+			"selectOption": "ВЫБЕРИТЕ ОПЦИЮ"
 		}
 	},
 

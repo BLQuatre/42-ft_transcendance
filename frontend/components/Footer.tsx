@@ -26,7 +26,7 @@ export function Footer() {
               )}
             >
               <Languages className="h-5 w-5" />
-              <span className="font-pixel text-xs uppercase">{dict.navbar.language || "Language"}</span>
+              <span className="font-pixel text-xs uppercase">{dict.language?.title || "Language"}</span>
             </div>
           </div>
           <p className="font-pixel text-xs bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent animate-pixelate uppercase">

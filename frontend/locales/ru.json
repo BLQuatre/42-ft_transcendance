@@ -29,7 +29,8 @@
 		"shop": "Магазин",
 		"friends": "Друзья",
 		"dashboard": "Панель управления",
-		"menu": "Меню"
+		"menu": "Меню",
+		"language": "Язык"
 	},
 
 	"connection": {

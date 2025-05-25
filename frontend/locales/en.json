@@ -29,7 +29,8 @@
 		"shop": "Shop",
 		"friends": "Friends",
 		"dashboard": "Dashboard",
-		"menu": "Menu"
+		"menu": "Menu",
+		"language": "Language"
 	},
 
 	"connection": {

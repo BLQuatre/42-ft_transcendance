@@ -105,93 +105,93 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 	}
 
 	return (
-	<Card>
-		<CardHeader>
-			<CardTitle className="font-pixel text-sm uppercase">
-				{dict.dashboard.sections.settings.security.password.title}
-			</CardTitle>
-			<CardDescription className="font-pixel text-xs uppercase">
-				{dict.dashboard.sections.settings.security.password.description}
-			</CardDescription>
-		</CardHeader>
-		<CardContent className="space-y-4">
-			{ googleAuth
-				? (
-					<div className="space-y-0.5">
-						<h3 className="font-pixel text-sm">PASSWORD STATUS</h3>
-						<p className="font-pixel text-xs text-muted-foreground">
-							MANAGE YOUR PASSWORD IN GOOGLE ACCOUNT SETTINGS
-						</p>
-					</div>
-				)
-				: (
-					<form onSubmit={onSubmit} className="space-y-4">
-						<div className="space-y-2">
-							<Label htmlFor="currentPassword" className="font-pixel text-xs uppercase">
-								{dict.dashboard.sections.settings.security.password.current}
-							</Label>
-							<Input
-								id="currentPassword"
-								name="currentPassword"
-								type="password"
-								autoComplete="current-password"
-								value={currentPassword}
-								onChange={handleCurrentPasswordChange}
-								error={passwordError !== null}
-								required
-								className="font-pixel text-sm h-10 bg-muted"
-							/>
-							<p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
+		<Card>
+			<CardHeader>
+				<CardTitle className="font-pixel text-sm uppercase">
+					{dict.dashboard.sections.settings.security.password.title}
+				</CardTitle>
+				<CardDescription className="font-pixel text-xs uppercase">
+					{dict.dashboard.sections.settings.security.password.description}
+				</CardDescription>
+			</CardHeader>
+			<CardContent className="space-y-4">
+				{googleAuth
+					? (
+						<div className="space-y-0.5">
+							<h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.security.password.status}</h3>
+							<p className="font-pixel text-xs text-muted-foreground">
+								{dict.dashboard.sections.settings.security.password.google}
+							</p>
 						</div>
-						<div className="space-y-2">
-							<Label htmlFor="newPassword" className="font-pixel text-xs uppercase">
-								{dict.dashboard.sections.settings.security.password.new}
-							</Label>
-							<Input
-								id="newPassword"
-								name="newPassword"
-								type="password"
-								autoComplete="new-password"
-								value={newPassword}
-								onChange={handleNewPasswordChange}
-								error={newPasswordError !== null}
-								required
-								className="font-pixel text-sm h-10 bg-muted"
-							/>
-							<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="confirmPassword" className="font-pixel text-xs uppercase">
-								{dict.dashboard.sections.settings.security.password.confirm}
-							</Label>
-							<Input
-								id="confirmPassword"
-								name="confirmPassword"
-								type="password"
-								autoComplete="new-password"
-								value={confirmPassword}
-								onChange={handleConfirmPasswordChange}
-								error={newPasswordError !== null}
-								required
-								className="font-pixel text-sm h-10 bg-muted"
-							/>
-							<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
-						</div>
-						<Button
-							type="submit"
-							className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-							disabled={
-								isLoading || !currentPassword || !newPassword || !confirmPassword
-								|| newPasswordError !== null || passwordError !== null
-								|| newPassword !== confirmPassword
-							}
-						>
-							{isLoading ? dict.common.updating : dict.dashboard.sections.settings.security.password.update}
-						</Button>
-					</form>
-				)
-			}
-		</CardContent>
-	</Card>
+					)
+					: (
+						<form onSubmit={onSubmit} className="space-y-4">
+							<div className="space-y-2">
+								<Label htmlFor="currentPassword" className="font-pixel text-xs uppercase">
+									{dict.dashboard.sections.settings.security.password.current}
+								</Label>
+								<Input
+									id="currentPassword"
+									name="currentPassword"
+									type="password"
+									autoComplete="current-password"
+									value={currentPassword}
+									onChange={handleCurrentPasswordChange}
+									error={passwordError !== null}
+									required
+									className="font-pixel text-sm h-10 bg-muted"
+								/>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="newPassword" className="font-pixel text-xs uppercase">
+									{dict.dashboard.sections.settings.security.password.new}
+								</Label>
+								<Input
+									id="newPassword"
+									name="newPassword"
+									type="password"
+									autoComplete="new-password"
+									value={newPassword}
+									onChange={handleNewPasswordChange}
+									error={newPasswordError !== null}
+									required
+									className="font-pixel text-sm h-10 bg-muted"
+								/>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="confirmPassword" className="font-pixel text-xs uppercase">
+									{dict.dashboard.sections.settings.security.password.confirm}
+								</Label>
+								<Input
+									id="confirmPassword"
+									name="confirmPassword"
+									type="password"
+									autoComplete="new-password"
+									value={confirmPassword}
+									onChange={handleConfirmPasswordChange}
+									error={newPasswordError !== null}
+									required
+									className="font-pixel text-sm h-10 bg-muted"
+								/>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
+							</div>
+							<Button
+								type="submit"
+								className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
+								disabled={
+									isLoading || !currentPassword || !newPassword || !confirmPassword
+									|| newPasswordError !== null || passwordError !== null
+									|| newPassword !== confirmPassword
+								}
+							>
+								{isLoading ? dict.common.updating : dict.dashboard.sections.settings.security.password.update}
+							</Button>
+						</form>
+					)
+				}
+			</CardContent>
+		</Card>
 	)
 }

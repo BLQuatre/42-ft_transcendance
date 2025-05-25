@@ -265,6 +265,8 @@
 				"security": {
 					"title": "Security",
 					"password": {
+						"google": "MANAGE YOUR PASSWORD IN GOOGLE ACCOUNT SETTINGS",
+						"status": "Password Status",
 						"title": "Password",
 						"description": "Change your password",
 						"current": "Current Password",

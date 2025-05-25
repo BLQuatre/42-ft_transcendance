@@ -9,3 +9,7 @@ TRADS
 	On delete account dialog text make sure to say will be anonimyzed
 	make sure it's privacy zone instead of security
 	dans le /profile/[id] faire en sorte que le GAME HISTORY -> HISTORY
+
+
+2fa dialog
+game history dialog

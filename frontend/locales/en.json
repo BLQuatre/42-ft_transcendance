@@ -42,7 +42,9 @@
 			"placeholder": "Enter your password",
 			"confirm": "Confirm password",
 			"confirmPlaceholder": "Confirm your password",
-			"forgot": "Forgot your password?"
+			"forgot": "Forgot your password?",
+			"show": "Show password",
+			"hide": "Hide password"
 		},
 		"rememberMe": "Remember me",
 		"dontHaveAccount": "Don't have an account?",
@@ -51,6 +53,11 @@
 		"google": {
 			"login": "Login with Google",
 			"register": "Register with Google"
+		},
+		"errors": {
+			"invalidCredentials": "Invalid username or password",
+			"generic": "An error occurred. Please try again.",
+			"invalidCode": "Invalid verification code"
 		}
 	},
 

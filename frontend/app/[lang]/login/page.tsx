@@ -67,9 +67,9 @@ export default function LoginPage() {
 		} catch (error: any) {
 			console.error("Login error:", error)
 			if (error.response?.status === 401 || error.response?.status === 404) {
-				setLoginError("Invalid username or password")
+				setLoginError(dict.connection.errors?.invalidCredentials || "Invalid username or password")
 			} else {
-				setLoginError("An error occurred. Please try again.")
+				setLoginError(dict.connection.errors?.generic || "An error occurred. Please try again.")
 			}
 			setIsLoading(false)
 		}
@@ -83,7 +83,7 @@ export default function LoginPage() {
 		setIsLoading(true)
 
 		if (!userId.current) {
-			setTwoFactorVerifyError("An error occurred. Please try again.")
+			setTwoFactorVerifyError(dict.connection.errors?.generic || "An error occurred. Please try again.")
 			setIsLoading(false)
 			return
 		}
@@ -98,7 +98,7 @@ export default function LoginPage() {
 			setTwoFactorVerifyDialog(false)
 			router.push("/")
 		} catch (error: any) {
-			setTwoFactorVerifyError("Invalid verification code")
+			setTwoFactorVerifyError(dict.connection.errors?.invalidCode || "Invalid verification code")
 		} finally {
 			setIsLoading(false)
 		}
@@ -229,7 +229,12 @@ export default function LoginPage() {
 										) : (
 											<Eye className="h-4 w-4 text-muted-foreground" />
 										)}
-										<span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+										<span className="sr-only">
+											{showPassword ?
+												(dict.connection.password.hide || "Hide password") :
+												(dict.connection.password.show || "Show password")
+											}
+										</span>
 									</Button>
 								</div>
 								<p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
@@ -239,7 +244,7 @@ export default function LoginPage() {
 								className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
 								disabled={isLoading}
 							>
-								{isLoading ? "Logging in..." : dict.connection.login}
+								{isLoading ? dict.common.loading : dict.connection.login}
 							</Button>
 						</form>
 

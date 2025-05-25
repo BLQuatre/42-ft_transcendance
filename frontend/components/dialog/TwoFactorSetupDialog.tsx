@@ -101,7 +101,7 @@ export function TwoFactorSetupDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-170">
         <DialogHeader>
           <DialogTitle className="font-pixel text-lg uppercase">Setup Two-Factor Authentication</DialogTitle>
           <DialogDescription className="font-pixel text-xs uppercase">

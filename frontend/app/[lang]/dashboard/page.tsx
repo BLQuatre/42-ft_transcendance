@@ -756,7 +756,7 @@ export default function DashboardPage() {
 																className={`w-2 h-2 rounded-full ${isWinner ? "bg-game-green" : "bg-game-red"}`}
 															></div>
 															<p className="font-pixel text-xs">
-																{playerCount} {dict.dashboard.section.history.players} • {gameDate}
+																{playerCount} {dict.dashboard.sections.history.players} • {gameDate}
 															</p>
 														</div>
 														<div>
@@ -800,7 +800,7 @@ export default function DashboardPage() {
 																className={`w-2 h-2 rounded-full ${isWinner ? "bg-game-green" : "bg-game-red"}`}
 															></div>
 															<p className="font-pixel text-xs">
-																{playerCount} {dict.dashboard.section.history.players} • {gameDate}
+																{playerCount} {dict.dashboard.sections.history.players} • {gameDate}
 															</p>
 														</div>
 														<div>

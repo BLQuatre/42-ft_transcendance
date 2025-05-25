@@ -15,12 +15,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  console.log(`Intercepted request: ${config.url} (baseURL: ${config.baseURL})`);
   if (authStore?.accessToken) {
-    console.log(`Injecting access token: ${authStore.accessToken}`);
     config.headers.Authorization = `Bearer ${authStore.accessToken}`;
   }
-  console.log(`Headers: ${JSON.stringify(config.headers)}`);
+  console.log(`Sending request: ${config.url} (accessToken: ${config.headers.Authorization !== undefined})`);
   return config;
 });
 

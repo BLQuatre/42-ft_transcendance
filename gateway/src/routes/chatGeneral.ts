@@ -1,4 +1,3 @@
-import axios, { AxiosError } from "axios";
 import { FastifyPluginAsync } from "fastify";
 import WebSocket from "ws";
 import dotenv from 'dotenv';
@@ -7,54 +6,48 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
 
 interface messageSocket {
-    type: string;
-    userId: string,
-    content: string,
-    name: string
+	type: string;
+	userId: string,
+	content: string,
+	name: string
 }
 
-// interface SchemaId {
-//     user_id: string;
-// }
-
 export const chatGeneralRoutes: FastifyPluginAsync = async (fastify) => {
-    fastify.get('/ws/chat-general', { websocket: true}, async (connection, req) => {
-        
-       
-        const upstream = new WebSocket(`http://${process.env.CHATG_HOST}:${process.env.CHATG_PORT}/ws/chat`,
-        );
+	fastify.get('/ws/chat-general', { websocket: true}, async (connection, req) => {
 
-        upstream.on('open', () => {
-            console.log("Connexion au microservice reussi");
-        });
+		const upstream = new WebSocket(`http://${process.env.CHATG_HOST}:${process.env.CHATG_PORT}/ws/chat`);
 
-        upstream.on('error', (err) => {
-            console.error('Error on connection at microservice');
-        });
+		upstream.on('open', () => {
+			console.log("Connexion au microservice reussi");
+		});
 
-        connection.on('message', (msg: any) => {
-            try {
-                const parsed: messageSocket = JSON.parse(msg.toString());
-                upstream.readyState === 1 && upstream.send(JSON.stringify(parsed));
-            } catch (err) {
-                console.error("Invalid message format", err);
-                connection.send(JSON.stringify({ error: "Invalid message format" }));
-            }
-        });
-        
+		upstream.on('error', (err) => {
+			console.error('Error on connection at microservice');
+		});
 
-        upstream.on('message', (msg: string) => {
-            console.log(`return msg: ${msg}`);
-            connection.send(msg.toString());
-        });
+		connection.on('message', (msg: any) => {
+			try {
+				const parsed: messageSocket = JSON.parse(msg.toString());
+				upstream.readyState === 1 && upstream.send(JSON.stringify(parsed));
+			} catch (err) {
+				console.error("Invalid message format", err);
+				connection.send(JSON.stringify({ error: "Invalid message format" }));
+			}
+		});
 
-        upstream.on('close', (code ,reason) => {
-            const message = `Micro-service fermé. Code: ${code}, Raison: ${reason.toString()}`;
-            connection.send(message);
-            connection.close();
-        })
-        connection.on('close', (code , reason) => {
-            upstream.close()
-        });
-    });
+		upstream.on('message', (msg: string) => {
+			console.log(`return msg: ${msg}`);
+			connection.send(msg.toString());
+		});
+
+		upstream.on('close', (code, reason) => {
+			const message = `Micro-service fermé. Code: ${code}, Raison: ${reason.toString()}`;
+			connection.send(message);
+			connection.close();
+		})
+
+		connection.on('close', (code, reason) => {
+			upstream.close()
+		});
+	});
 }

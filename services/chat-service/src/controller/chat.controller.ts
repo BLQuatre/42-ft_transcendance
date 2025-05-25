@@ -21,7 +21,7 @@ export class ChatController {
 	private chatService = new ChatService();
 
 	async handleConnection(connection: WebSocket, req: FastifyRequest) {
-		const { user_id } = req.query as SchemaId 
+		const { user_id } = req.query as SchemaId
 
 		if (!user_id) {
 			connection.close(4000, 'User ID is required');
@@ -37,14 +37,16 @@ export class ChatController {
 			});
 
 			connection.on('message', async (message: string) => {
-				const {type , data} = JSON.parse(message);
+				console.log('[DEBUG] Received message:', message);
+				const data = JSON.parse(message);
 
-				switch (type) {
+				switch (data.type) {
 					case 'SEND_MESSAGE':
 						await this.handleSendMessage(user_id, data.receiverId, data.content, dataUserId.data.user.name);
 						break;
 					case 'GET_HISTORY':
-						await this.handleGetHistory(user_id, data.otherUserId);
+						console.log('[DEBUG] GET_HISTORY called', JSON.stringify(data));
+						await this.handleGetHistory(user_id, data.receiverId);
 						break;
 					default:
 						connection.send(JSON.stringify({

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { useDictionary } from "@/hooks/UseDictionnary"
+import BackToHomeButton from "@/components/BackToHome"
 
 import { useAuth } from "@/contexts/auth-context"
 import { BaseUser } from "@/types/user"
@@ -301,20 +302,23 @@ export default function DinoGamePage() {
                                 const laneDino = isFrozen ? frozenLanes[index].dino : dino
                                 const laneObstacles = isFrozen ? frozenLanes[index].obstacles : gameState.obstacles
 
-                                return (
-                                    <DinoLane
-                                        key={`dino-lane-${index}`}
-                                        dino={laneDino}
-                                        obstacles={laneObstacles}
-                                        images={images.current}
-                                        frame={isFrozen ? -1 : frame}
-                                    />
-                                )
-                            })}
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-        </div>
-    )
+								return (
+									<DinoLane
+										key={`dino-lane-${index}`}
+										dino={laneDino}
+										obstacles={laneObstacles}
+										images={images.current}
+										frame={isFrozen ? -1 : frame}
+									/>
+								);
+							})}
+						</CardContent>
+					</Card>
+				</div>
+				
+				{/* Back to home button at bottom of page */}
+				{gameFinished && <BackToHomeButton gameType='dino' className="absolute bottom-4 w-[80%]"/>}
+			</div>
+		</div>
+	)
 }

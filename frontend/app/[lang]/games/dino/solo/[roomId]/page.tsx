@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { useDictionary } from "@/hooks/UseDictionnary"
+import BackToHomeButton from "@/components/BackToHome"
+
 import { useAuth } from "@/contexts/auth-context"
 import { BaseUser } from "@/types/user"
 import api from "@/lib/api"
@@ -261,9 +263,13 @@ export default function DinoGamePage() {
 									/>
 								);
 							})}
+							
 						</CardContent>
 					</Card>
 				</div>
+				
+				{/* Back to home button at bottom of page */}
+				{gameFinished && <BackToHomeButton gameType='dino' className="absolute bottom-4 w-[80%]"/>}
 			</div>
 		</div>
 	)

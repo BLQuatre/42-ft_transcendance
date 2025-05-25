@@ -47,14 +47,14 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
     setSelectedMode(mode)
 
     if (mode === GameMode.MULTIPLAYER) {
-		setIsMultiplayerDialogOpen(true)
+        setIsMultiplayerDialogOpen(true)
     } else if (gameType === 'dino' && mode === GameMode.SOLO) {
-		const newRoomCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+        const newRoomCode = Math.random().toString(36).substring(2, 8).toUpperCase()
         window.location.assign(`/games/${gameType}/${mode}/${newRoomCode}`)
-		onOpenChange(false)
-	} else {
-		window.location.assign(`/games/${gameType}/${mode}`)
-		onOpenChange(false)
+        onOpenChange(false)
+    } else {
+        window.location.assign(`/games/${gameType}/${mode}`)
+        onOpenChange(false)
     }
   }
 
@@ -68,7 +68,9 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
           <DialogTitle className="font-pixel text-sm uppercase">
             {dict.common.play} {dict.games[gameType].title}
           </DialogTitle>
-          <DialogDescription className="font-pixel text-xs">SELECT GAME MODE</DialogDescription>
+          <DialogDescription className="font-pixel text-xs">
+            {dict.dialogs.gameMode.selectMode}
+          </DialogDescription>
         </DialogHeader>
 
         <div className={cn(
@@ -99,13 +101,13 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     "font-pixel text-sm mb-2 uppercase",
                     selectedMode === GameMode.AGAINST_AI ? "text-white" : getTextColor(gameType)
                   )}>
-                    Against AI
+                    {dict.dialogs.gameMode.modes.ai.title}
                   </h3>
                   <p className={cn (
                     "font-pixel text-xs uppercase",
                     selectedMode === GameMode.AGAINST_AI ? "text-white/80" : "text-muted-foreground"
                   )}>
-                    Play against the computer
+                    {dict.dialogs.gameMode.modes.ai.description}
                   </p>
                 </div>
               </div>
@@ -135,13 +137,13 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     "font-pixel text-sm mb-2 uppercase",
                     selectedMode === GameMode.SOLO ? "text-white" : getTextColor(gameType)
                   )}>
-                    Solo
+                    {dict.dialogs.gameMode.modes.solo.title}
                   </h3>
                   <p className={cn (
                     "font-pixel text-xs uppercase",
                     selectedMode === GameMode.SOLO ? "text-white/80" : "text-muted-foreground"
                   )}>
-                    Beat your highest score
+                    {dict.dialogs.gameMode.modes.solo.description}
                   </p>
                 </div>
               </div>
@@ -171,13 +173,13 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     "font-pixel text-sm mb-2",
                     selectedMode === GameMode.LOCAL ? "text-white" : getTextColor(gameType)
                   )}>
-                    1V1 LOCAL
+                    {dict.dialogs.gameMode.modes.local.title}
                   </h3>
                   <p className={cn(
                     "font-pixel text-xs",
                     selectedMode === GameMode.LOCAL ? "text-white/80" : "text-muted-foreground"
                   )}>
-                    PLAY WITH A FRIEND LOCALLY
+                    {dict.dialogs.gameMode.modes.local.description}
                   </p>
                 </div>
               </div>
@@ -198,8 +200,8 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
             onClick={() => {
               if (accessToken === null) {
                 toast({
-                  title: "Error",
-                  description: "You need to be logged in to play this game",
+                  title: dict.dialogs.gameMode.loginRequired.title,
+                  description: dict.dialogs.gameMode.loginRequired.description,
                   duration: 3000
                 })
               } else {
@@ -223,7 +225,7 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     ? "text-white"
                     : getTextColor(gameType)
                 )}>
-                  MULTIPLAYER
+                  {dict.dialogs.gameMode.modes.multiplayer.title}
                 </h3>
                 <p className={cn(
                   "font-pixel text-xs",
@@ -231,7 +233,7 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     ? "text-white/80"
                     : "text-muted-foreground"
                 )}>
-                  PLAY WITH FRIENDS
+                  {dict.dialogs.gameMode.modes.multiplayer.description}
                 </p>
               </div>
             </div>
@@ -260,13 +262,13 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                     "font-pixel text-sm mb-2",
                     selectedMode === GameMode.TOURNAMENT ? "text-white" : getTextColor(gameType)
                   )}>
-                    TOURNAMENT
+                    {dict.dialogs.gameMode.modes.tournament.title}
                   </h3>
                   <p className={cn(
                     "font-pixel text-xs",
                     selectedMode === GameMode.TOURNAMENT ? "text-white/80" : "text-muted-foreground"
                   )}>
-                    COMPETE IN A LOCAL TOURNAMENT
+                    {dict.dialogs.gameMode.modes.tournament.description}
                   </p>
                 </div>
               </div>
@@ -286,7 +288,7 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
             disabled={!selectedMode}
             onClick={() => selectedMode && handleModeSelect(selectedMode)}
           >
-            {selectedMode ? `${dict.common.play} ${selectedMode}` : "Select a mode"}
+            {selectedMode ? `${dict.common.play} ${selectedMode}` : dict.dialogs.gameMode.selectPrompt}
           </Button>
         </DialogFooter>
         {/* Multiplayer Options Dialog */}

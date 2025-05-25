@@ -460,8 +460,7 @@
 		"footer": "This privacy policy is effective as of the date last updated above and applies to all users of StreamLine services. By using our services, you acknowledge that you have read and understood this privacy policy."
 	},
 
-	"dialogs":
-	{
+	"dialogs": {
 		"consultData": {
 			"title": "Your Data Overview",
 			"description": "Complete overview of your account data",
@@ -482,6 +481,36 @@
 				"download": "Download Full JSON",
 				"userInfo": "User Information",
 				"summary": "💡 This shows a summary of your data. Click \"Download Full JSON\" above to get the complete dataset."
+			}
+		},
+		"gameMode": {
+			"selectMode": "SELECT GAME MODE",
+			"modes": {
+				"ai": {
+					"title": "Against AI",
+					"description": "Play against the computer"
+				},
+				"solo": {
+					"title": "Solo",
+					"description": "Beat your highest score"
+				},
+				"local": {
+					"title": "1V1 LOCAL",
+					"description": "PLAY WITH A FRIEND LOCALLY"
+				},
+				"multiplayer": {
+					"title": "MULTIPLAYER",
+					"description": "PLAY WITH FRIENDS"
+				},
+				"tournament": {
+					"title": "TOURNAMENT",
+					"description": "COMPETE IN A LOCAL TOURNAMENT"
+				}
+			},
+			"selectPrompt": "Select a mode",
+			"loginRequired": {
+				"title": "Error",
+				"description": "You need to be logged in to play this game"
 			}
 		}
 	},

@@ -58,6 +58,16 @@
 			"invalidCredentials": "Invalid username or password",
 			"generic": "An error occurred. Please try again.",
 			"invalidCode": "Invalid verification code"
+		},
+		"validation": {
+			"username": {
+				"minLength": "6 characters minimum",
+				"taken": "Username already taken"
+			},
+			"password": {
+				"minLength": "8 characters minimum",
+				"match": "Passwords do not match"
+			}
 		}
 	},
 

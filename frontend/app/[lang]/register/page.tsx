@@ -53,7 +53,7 @@ export default function RegisterPage() {
     })
     .catch(error => {
       if (error.status == 409) {
-        setUsernameError("Username already taken")
+        setUsernameError(dict.connection.validation.username.taken)
       } else {
         console.error("Error: " + JSON.stringify(error))
       }
@@ -75,7 +75,7 @@ export default function RegisterPage() {
     setUsername(newUsername);
 
     if (newUsername.length > 0 && newUsername.length < 6) {
-      setUsernameError("6 characters minimum");
+      setUsernameError(dict.connection.validation.username.minLength);
     } else {
       setUsernameError(null);
     }
@@ -86,13 +86,13 @@ export default function RegisterPage() {
     setPassword(newPassword);
 
     if (newPassword.length < 8) {
-      setPasswordError("8 characters minimum");
+      setPasswordError(dict.connection.validation.password.minLength);
     } else {
       setPasswordError(null);
     }
 
     if (newPassword !== confirmPassword && newPassword.length > 0 && confirmPassword.length > 0) {
-      setConfirmPasswordError("Passwords do not match");
+      setConfirmPasswordError(dict.connection.validation.password.match);
     } else {
       setConfirmPasswordError(null);
     }
@@ -103,7 +103,7 @@ export default function RegisterPage() {
     setConfirmPassword(newPassword);
 
     if (password !== newPassword && newPassword.length > 0 && password.length > 0) {
-      setConfirmPasswordError("Passwords do not match");
+      setConfirmPasswordError(dict.connection.validation.password.match);
     } else {
       setConfirmPasswordError(null);
     }

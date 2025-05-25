@@ -486,5 +486,10 @@
 				"summary": "💡 This shows a summary of your data. Click \"Download Full JSON\" above to get the complete dataset."
 			}
 		}
+	},
+
+	"notFound": {
+		"title": "This page could not be found.",
+		"backToHome": "Back to Home"
 	}
 }

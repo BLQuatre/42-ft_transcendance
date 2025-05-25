@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 export default function NotFound() {
+  const dict = useDictionary()
   const containerRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState({ x: 100, y: 100 })
@@ -26,6 +28,8 @@ export default function NotFound() {
   }
 
   useEffect(() => {
+    if (!dict) return // Move the check inside the effect
+
     const container = containerRef.current
     const text = textRef.current
 
@@ -83,7 +87,12 @@ export default function NotFound() {
     return () => {
       cancelAnimationFrame(animationFrameId)
     }
-  }, [velocity])
+  }, [velocity, dict])
+
+  // Conditional rendering instead of early return
+  if (!dict) {
+    return <div className="fixed inset-0 bg-black"></div>
+  }
 
   return (
     <div
@@ -102,12 +111,12 @@ export default function NotFound() {
         }}
       >
         <div className="text-[clamp(2.5rem,8vw,5rem)]">404</div>
-        <div className="text-[clamp(1rem,2vw,1.5rem)]">This page could not be found.</div>
+        <div className="text-[clamp(1rem,2vw,1.5rem)]">{dict.notFound.title}</div>
       </div>
 
       <div className="fixed bottom-8 left-0 right-0 text-center">
         <Link href="/" className="text-white hover:text-gray-300 underline transition-colors font-pixel">
-          Return to Home
+          {dict.notFound.backToHome}
         </Link>
       </div>
     </div>

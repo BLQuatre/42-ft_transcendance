@@ -16,10 +16,13 @@ import axios from "axios"
 import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
+import { useTermsPrivacy } from "@/hooks/UseTermsPrivacy"
+import { TermsPrivacyDialog } from "@/components/dialog/TermsPrivacyDialog"
 
 export default function RegisterPage() {
   const router = useRouter()
   const { setAccessToken } = useAuth();
+  const { showDialog: showTermsDialog, isLoading: termsLoading, handleAccept: handleTermsAccept } = useTermsPrivacy()
 
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -304,6 +307,7 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
+	  <TermsPrivacyDialog open={showTermsDialog} onAccept={handleTermsAccept} />
     </div>
   )
 }

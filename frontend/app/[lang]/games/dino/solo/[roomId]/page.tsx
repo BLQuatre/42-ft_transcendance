@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
-
+import { useDictionary } from "@/hooks/UseDictionnary"
 import { useAuth } from "@/contexts/auth-context"
 import { BaseUser } from "@/types/user"
 import api from "@/lib/api"
@@ -15,6 +15,7 @@ import DinoLane from "@/app/[lang]/games/dino/components/DinoLane"
 
 export default function DinoGamePage() {
 	const { accessToken } = useAuth()
+	const dict = useDictionary()
 
 	const params = useParams()
 	const roomId = params.roomId as string
@@ -241,7 +242,7 @@ export default function DinoGamePage() {
 				<div className="w-full">
 					<Card className="overflow-hidden">
 						<div className="pl-8 py-2 font-pixel text-2xl">
-							SCORE: {gameState?.score || 0}
+							{dict?.games.dino.multi.score || "SCORE"}: {gameState?.score || 0}
 						</div>
 
 						<CardContent className="p-0">

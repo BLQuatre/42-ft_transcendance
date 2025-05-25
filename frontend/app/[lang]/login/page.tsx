@@ -94,7 +94,7 @@ export default function LoginPage() {
 			const response = await api.post(`/auth/tfa/verify/${userId.current}`, { token: code })
 
 			setAccessToken(response.data.accessToken)
-			sessionStorage.setItem("userId", userId.current)
+			localStorage.setItem("userId", userId.current)
 			setTwoFactorVerifyDialog(false)
 			router.push("/")
 		} catch (error: any) {

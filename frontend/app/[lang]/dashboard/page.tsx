@@ -251,7 +251,7 @@ export default function DashboardPage() {
 			.then(() => {
 				console.log("Logout successful")
 				setAccessToken(null)
-				sessionStorage.removeItem("userId")
+				localStorage.removeItem("userId")
 
 				setLogoutDialogOpen(false)
 				window.location.href = "/login"
@@ -279,7 +279,7 @@ export default function DashboardPage() {
 						duration: 3000,
 					})
 					setAccessToken(null)
-					sessionStorage.removeItem("userId")
+					localStorage.removeItem("userId")
 					window.location.href = "/login"
 				})
 				.catch((error) => {

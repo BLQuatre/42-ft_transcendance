@@ -16,7 +16,7 @@ export class ChatService {
 
     async getMessages(limit: number = 50) {
         return await this.chatGeneral.find({
-            order: { created_at: 'DESC'},
+            order: { created_at: 'ASC'},
             take: limit
         });
     }

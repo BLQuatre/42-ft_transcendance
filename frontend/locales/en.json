@@ -287,6 +287,92 @@
 			}
 		}
 	},
+
+	"terms": {
+		"title": "Terms of Service",
+		"description": "Please read our terms of service carefully before using our platform.",
+		"accept": "I Accept",
+		"decline": "I Decline",
+		"lastUpdated": "Last updated: May 25, 2025",
+		"welcome": "Welcome to FT_TRANSCENDANCE! These Terms of Service (\"Terms\") govern your use of our retro gaming platform. By accessing or using our service, you agree to be bound by these Terms. Please read them carefully.",
+		"sections": {
+			"acceptance": {
+				"title": "ACCEPTANCE OF TERMS",
+				"content": [
+					"By creating an account, accessing, or using FT_TRANSCENDANCE, you acknowledge that you have read, understood, and agree to be bound by these Terms and our Privacy Policy.",
+					"If you do not agree to these Terms, you must not access or use our service."
+				]
+			},
+			"service": {
+				"title": "SERVICE DESCRIPTION",
+				"content": "FT_TRANSCENDANCE is an online retro gaming platform that provides:",
+				"items": [
+					"Classic arcade-style games and tournaments",
+					"Player statistics tracking and leaderboards",
+					"Social features including chat and friend systems",
+					"Customizable profiles and avatars"
+				]
+			},
+			"registration": {
+				"title": "ACCOUNT REGISTRATION",
+				"content": "To access certain features, you must create an account. You agree to:",
+				"items": [
+					"Provide accurate and complete information",
+					"Maintain the security of your account credentials",
+					"Be responsible for all activities under your account",
+					"Notify us immediately of any unauthorized access"
+				]
+			},
+			"community": {
+				"title": "COMMUNITY GUIDELINES",
+				"content": "We strive to maintain a positive gaming environment. You agree not to:",
+				"items": [
+					"Engage in harassment, bullying, or toxic behavior",
+					"Use cheats, exploits, or unauthorized third-party software",
+					"Share inappropriate, offensive, or illegal content",
+					"Impersonate other users or create fake accounts",
+					"Attempt to gain unauthorized access to our systems"
+				],
+				"violations": "Violations may result in warnings, temporary suspension, or permanent account termination."
+			},
+			"intellectual": {
+				"title": "INTELLECTUAL PROPERTY",
+				"content": "All content on FT_TRANSCENDANCE, including games, graphics, logos, music, and text, is protected by intellectual property laws. You may not:",
+				"items": [
+					"Copy, distribute, or modify our content without permission",
+					"Use our trademarks or branding in unauthorized ways",
+					"Reverse engineer or attempt to extract source code"
+				]
+			},
+			"privacy": {
+				"title": "PRIVACY & DATA",
+				"content": "Your privacy is important to us. We collect and use your data as described in our Privacy Policy, including:",
+				"items": [
+					"Game statistics and performance data",
+					"Communication and social interaction logs",
+					"Technical information for service improvement"
+				]
+			},
+			"liability": {
+				"title": "LIMITATION OF LIABILITY",
+				"content": "FT_TRANSCENDANCE is provided \"as is\" without warranties. We are not liable for:",
+				"items": [
+					"Service interruptions or technical issues",
+					"Actions of other users on the platform"
+				]
+			},
+			"termination": {
+				"title": "TERMINATION",
+				"content": "Either party may terminate this agreement:",
+				"items": [
+					"You may delete your account at any time",
+					"We may suspend accounts for Terms violations"
+				]
+			}
+		},
+		"footer": "By using FT_TRANSCENDANCE, you acknowledge that you have read and understood these Terms of Service."
+	},
+
 	"dialogs":
 	{
 		"consultData": {

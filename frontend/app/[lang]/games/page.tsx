@@ -37,7 +37,7 @@ export default async function GamesPage({
                       <Gamepad2 className="mr-2 h-4 w-4" />
                       {dict.games.pong.type}
                     </div>
-                    <h3 className="font-pixel text-3xl text-game-blue mb-4 uppercase">{dict.games.pong.title}</h3>
+                    <h3 className="font-pixel text-3xl text-game-blue mb-4 uppercase">PONG</h3>
                     <div className="space-y-4 mb-6">
                       <p className="font-pixel text-sm uppercase">{dict.games.pong.description}</p>
                       <div className="space-y-2">
@@ -63,14 +63,14 @@ export default async function GamesPage({
                     <GameButtons
                       gameType="pong"
                       gameTitle={dict.games.pong.title}
-                      buttonText={`${dict.common.play} ${dict.games.pong.title}`}
+                      buttonText={`${dict.common.play} PONG`}
                       buttonColor="blue"
                       dict={dict}
                     />
                   </div>
                   <div className="aspect-auto overflow-hidden bg-black/5">
                     <Image
-                      src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+                      src="/images/pong.png"
                       alt="Pong Game"
                       width={800}
                       height={600}
@@ -87,7 +87,7 @@ export default async function GamesPage({
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="order-2 md:order-1 aspect-auto overflow-hidden bg-black/5">
                     <Image
-                      src="https://archive.org/download/dino-run/dino-run.jpg"
+                      src="/images/dino.jpg"
                       alt="Dino Game"
                       width={800}
                       height={600}
@@ -99,7 +99,7 @@ export default async function GamesPage({
                       <Gamepad2 className="mr-2 h-4 w-4" />
                       {dict.games.dino.type}
                     </div>
-                    <h3 className="font-pixel text-3xl text-game-orange mb-4 uppercase">{dict.games.dino.title}</h3>
+                    <h3 className="font-pixel text-3xl text-game-orange mb-4 uppercase">DINO RUN</h3>
                     <div className="space-y-4 mb-6">
                       <p className="font-pixel text-sm uppercase">{dict.games.dino.description}</p>
 
@@ -126,7 +126,7 @@ export default async function GamesPage({
                     <GameButtons
                       gameType="dino"
                       gameTitle={dict.games.dino.title}
-                      buttonText={`${dict.common.play} ${dict.games.dino.title}`}
+                      buttonText={`${dict.common.play} DINO RUN`}
                       buttonColor="orange"
                       dict={dict}
                     />

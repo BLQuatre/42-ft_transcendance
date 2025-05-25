@@ -60,7 +60,6 @@
 		"how": "How to play",
 
 		"pong": {
-			"title": "Pong",
 			"description": "Fast-paced table tennis action! Challenge your friends and smash your way to the high score.",
 			"explications": [
 				"Move your paddle up and down using the w/s keys (P1) or up/down arrows (P2)",
@@ -72,7 +71,6 @@
 			"players": "2-8 players"
 		},
 		"dino": {
-			"title": "Dino Run",
 			"description": "A challenging endless runner where you control a dinosaur avoiding obstacles in a prehistoric landscape.",
 			"explications": [
 				"Press space bar or up arrow to jump over cactus and other obstacles",

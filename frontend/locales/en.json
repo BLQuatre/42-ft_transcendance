@@ -151,7 +151,8 @@
 		"remove": "Remove",
 		"save": "Save Changes",
 		"cancel": "Cancel",
-		"close": "CLOSE"
+		"close": "CLOSE",
+		"backToHome": "BACK TO HOME"
 	},
 
 	"profile": {

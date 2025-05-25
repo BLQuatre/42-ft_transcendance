@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Home } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 interface BackToHomeButtonProps {
   gameType?: string
@@ -10,6 +11,7 @@ interface BackToHomeButtonProps {
 
 export default function BackToHomeButton({ gameType, className }: BackToHomeButtonProps) {
   const isPong = gameType === "pong"
+  const dict = useDictionary()
 
   return (
     <Button
@@ -26,7 +28,7 @@ export default function BackToHomeButton({ gameType, className }: BackToHomeButt
     >
       <Link href="/">
         <Home className="h-4 w-4" />
-        BACK TO HOME
+        {dict?.common?.backToHome || "BACK TO HOME"}
       </Link>
     </Button>
   )

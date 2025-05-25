@@ -23,7 +23,6 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 	const [newPasswordError, setNewPasswordError] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(false)
 
-
 	const dict = useDictionary()
 	if (!dict) return null
 
@@ -37,13 +36,13 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 		setNewPassword(password)
 
 		if (password.length < 8) {
-			setNewPasswordError("8 characters minimum");
+			setNewPasswordError(dict.dashboard.sections.settings.security.password.validation.minLength);
 		} else {
 			setNewPasswordError(null);
 		}
 
 		if (password !== confirmPassword && password.length > 0 && confirmPassword.length > 0) {
-			setNewPasswordError("Passwords do not match");
+			setNewPasswordError(dict.dashboard.sections.settings.security.password.validation.match);
 		} else {
 			setNewPasswordError(null);
 		}
@@ -54,7 +53,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 		setConfirmPassword(password)
 
 		if (password !== newPassword && newPassword.length > 0 && password.length > 0) {
-			setNewPasswordError("Passwords do not match");
+			setNewPasswordError(dict.dashboard.sections.settings.security.password.validation.match);
 		} else {
 			setNewPasswordError(null);
 		}
@@ -86,16 +85,16 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 			setNewPasswordError(null)
 
 			toast({
-				title: "Password Updated",
-				description: "Your password has been updated successfully",
+				title: dict.dashboard.sections.settings.security.password.updateSuccess.title,
+				description: dict.dashboard.sections.settings.security.password.updateSuccess.description,
 				duration: 3000,
 			})
 
 		} catch (error: any) {
 			if (error.status == 401) {
-				setPasswordError("Wrong current password")
+				setPasswordError(dict.dashboard.sections.settings.security.password.validation.wrongCurrent)
 			} else if (error.status == 400) {
-				setNewPasswordError("Cannot be the same as the current password")
+				setNewPasswordError(dict.dashboard.sections.settings.security.password.validation.sameCurrent)
 			} else {
 				console.error("Error: " + JSON.stringify(error))
 			}
@@ -141,7 +140,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 									required
 									className="font-pixel text-sm h-10 bg-muted"
 								/>
-								<p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", passwordError ? "" : "select-none")}>{passwordError || " "}</p>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="newPassword" className="font-pixel text-xs uppercase">
@@ -158,7 +157,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 									required
 									className="font-pixel text-sm h-10 bg-muted"
 								/>
-								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="confirmPassword" className="font-pixel text-xs uppercase">
@@ -175,7 +174,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 									required
 									className="font-pixel text-sm h-10 bg-muted"
 								/>
-								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
+								<p className={cn("font-pixel text-xs text-red-500 mt-1", newPasswordError ? "" : "select-none")}>{newPasswordError || " "}</p>
 							</div>
 							<Button
 								type="submit"

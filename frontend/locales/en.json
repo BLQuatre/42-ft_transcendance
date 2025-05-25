@@ -270,7 +270,17 @@
 						"current": "Current Password",
 						"new": "New Password",
 						"confirm": "Confirm New Password",
-						"update": "Update Password"
+						"update": "Update Password",
+						"validation": {
+							"minLength": "8 characters minimum",
+							"match": "Passwords do not match",
+							"wrongCurrent": "Wrong current password",
+							"sameCurrent": "Cannot be the same as the current password"
+						},
+						"updateSuccess": {
+							"title": "Password Updated",
+							"description": "Your password has been updated successfully"
+						}
 					},
 					"twoFactor": {
 						"title": "Two-Factor Authentication",

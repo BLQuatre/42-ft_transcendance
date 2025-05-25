@@ -4,7 +4,7 @@
 		"description": "Défiez vos amis dans des jeux classiques",
 		"play": "Jouer maintenant",
 		"gamerules": "Règles du jeu",
-		"games": "Jeux en vedette",
+		"games": "ft_transcendance",
 
 		"features": {
 			"title": "Fonctionnalités",
@@ -29,7 +29,8 @@
 		"shop": "Boutique",
 		"friends": "Amis",
 		"dashboard": "Tableau de bord",
-		"menu": "Menu"
+		"menu": "Menu",
+		"language": "Langue"
 	},
 
 	"connection": {
@@ -42,7 +43,9 @@
 			"placeholder": "Entrez votre mot de passe",
 			"confirm": "Confirmer le mot de passe",
 			"confirmPlaceholder": "Confirmez votre mot de passe",
-			"forgot": "Mot de passe oublié ?"
+			"forgot": "Mot de passe oublié ?",
+			"show": "Afficher le mot de passe",
+			"hide": "Masquer le mot de passe"
 		},
 		"rememberMe": "Se souvenir de moi",
 		"dontHaveAccount": "Vous n'avez pas de compte ?",
@@ -51,6 +54,21 @@
 		"google": {
 			"login": "Se connecter avec Google",
 			"register": "S'inscrire avec Google"
+		},
+		"errors": {
+			"invalidCredentials": "Nom d'utilisateur ou mot de passe invalide",
+			"generic": "Une erreur s'est produite. Veuillez réessayer.",
+			"invalidCode": "Code de vérification invalide"
+		},
+		"validation": {
+			"username": {
+				"minLength": "6 caractères minimum",
+				"taken": "Nom d'utilisateur déjà pris"
+			},
+			"password": {
+				"minLength": "8 caractères minimum",
+				"match": "Les mots de passe ne correspondent pas"
+			}
 		}
 	},
 
@@ -60,7 +78,6 @@
 		"how": "Comment jouer",
 
 		"pong": {
-			"title": "Pong",
 			"description": "Action rapide de tennis de table ! Défiez vos amis et atteignez le meilleur score.",
 			"explications": [
 				"Déplacez votre raquette avec les touches w/s (J1) ou flèches haut/bas (J2)",
@@ -69,7 +86,12 @@
 				"Le premier à atteindre 10 points gagne la partie"
 			],
 			"type": "Arcade Classique",
-			"players": "2 à 8 joueurs"
+			"players": "2 à 8 joueurs",
+			"pauseInstructions": "Appuyez sur P pour pause/reprise",
+			"moveInstructions": "Utilisez ↑/↓ ou W/S pour déplacer votre raquette",
+			"winner": "GAGNANT !",
+			"leftPaddleInstructions": "Gauche : utilisez W/S pour déplacer votre raquette",
+			"rightPaddleInstructions": "Droite : utilisez ↑/↓ pour déplacer votre raquette"
 		},
 		"dino": {
 			"title": "Dino Run",
@@ -82,7 +104,39 @@
 				"Essayez de battre votre meilleur score à chaque tentative"
 			],
 			"type": "Runner Infini",
-			"players": "1 à 8 joueur(s)"
+			"players": "1 à 8 joueur(s)",
+			"multi": {
+				"score": "SCORE",
+				"waitingRoom": {
+					"title": "LOBBY",
+					"description": "En attente d'autres joueurs...",
+					"ready": "PRÊT",
+					"notReady": "PAS PRÊT",
+					"cancelReady": "ANNULER PRÊT",
+					"startGame": "Commencer la partie",
+					"waitingForPlayers": "En attente de joueur...",
+					"waitingForReady": "PRÊT À COMMENCER",
+					"emptySlot": "Emplacement vide",
+					"open": "OUVERT",
+					"you": "Vous",
+					"autoStart": "La partie démarrera automatiquement quand tous les joueurs seront prêts"
+				},
+				"roomPrefix": "Salle DINO",
+				"errors": {
+					"noToken": "Le jeton d'accès est indéfini ou invalide lors de l'initialisation WebSocket",
+					"noUser": "Données utilisateur pas encore définies",
+					"noRoom": "ID de salle indéfini ou invalide lors de l'initialisation WebSocket",
+					"connectionExists": "La connexion WebSocket existe déjà et est ouverte",
+					"connectionClosed": "Connexion WebSocket fermée",
+					"noRoomData": "Reçu room_update sans données de salle"
+				},
+				"connection": {
+					"connected": "Connecté au serveur de jeu",
+					"creating": "Création d'une nouvelle connexion WebSocket",
+					"cleaning": "Nettoyage de la connexion WebSocket",
+					"gameStarting": "La partie commence !"
+				}
+			}
 		}
 	},
 
@@ -100,7 +154,10 @@
 		"total": "Total",
 		"upload": "Téléverser",
 		"remove": "Supprimer",
-		"save": "Enregistrer les modifications"
+		"save": "Enregistrer les modifications",
+		"cancel": "Annuler",
+		"close": "FERMER",
+		"backToHome": "RETOUR À L'ACCUEIL"
 	},
 
 	"profile": {
@@ -112,12 +169,13 @@
 		"sections": {
 			"overview": {
 				"title": "Aperçu",
+
 				"recentGames": "Parties récentes"
 			},
 			"stats": {
 				"title": "Statistiques",
 				"gamesPlayed": "Parties jouées",
-				"winRate": "Taux de victoire",
+				"winRate": "Taux de victoire PONG",
 				"bestScore": "Meilleur score",
 				"wins": "Victoires",
 				"losses": "Défaites",
@@ -125,7 +183,29 @@
 				"totalDistance": "Distance totale"
 			},
 			"history": {
-				"title": "Historique des parties"
+				"title": "Historique des parties",
+				"pong": {
+					"title": "HISTORIQUE DES MATCHS PONG",
+					"description": "PARTIES RÉCENTES DE PONG"
+				},
+				"dino": {
+					"title": "HISTORIQUE DINO RUN",
+					"description": "TENTATIVES RÉCENTES DE DINO RUN"
+				},
+				"win": "VICTOIRE",
+				"lose": "DÉFAITE",
+				"noGames": "Aucun historique de jeu disponible"
+			},
+			"charts": {
+				"activity": {
+					"title": "PARTIES JOUÉES CETTE SEMAINE",
+					"description": "ACTIVITÉ DES 7 DERNIERS JOURS"
+				},
+				"score": {
+					"title": "PROGRESSION DU SCORE",
+					"description": "SCORE MOYEN PAR SEMAINE",
+					"label": "Score moyen"
+				}
 			}
 		}
 	},
@@ -154,6 +234,62 @@
 				"noRequests": "Vous n'avez pas encore de demandes d'amis.",
 				"accept": "Accepter",
 				"decline": "Refuser"
+			},
+
+			"add": {
+				"title": "Ajouter des amis",
+				"description": "Trouvez et ajoutez de nouveaux amis à votre réseau",
+				"search": "Rechercher des utilisateurs...",
+				"searchPrompt": "Recherchez des utilisateurs à ajouter comme amis",
+				"noUsersFound": "Aucun utilisateur trouvé avec ce nom"
+			},
+
+			"blocked": {
+				"title": "Utilisateurs bloqués",
+				"description": "Voir tous les utilisateurs que vous avez bloqués",
+				"noBlocked": "Vous n'avez aucun utilisateur bloqué"
+			}
+		},
+
+		"actions": {
+			"addFriend": "Ajouter en ami",
+			"removeFriend": "Supprimer l'ami",
+			"blockUser": "Bloquer l'utilisateur",
+			"unblockUser": "Débloquer l'utilisateur"
+		},
+
+		"notifications": {
+			"requestSent": {
+				"title": "Demande d'ami envoyée",
+				"description": "Demande d'ami envoyée à %user%"
+			},
+			"requestAccepted": {
+				"title": "Demande d'ami acceptée",
+				"description": "Vous êtes maintenant ami avec %user%"
+			},
+			"requestRejected": {
+				"title": "Demande d'ami rejetée",
+				"description": "Vous avez rejeté la demande d'ami de %user%"
+			},
+			"requestAlreadySent": {
+				"title": "Demande d'ami déjà envoyée",
+				"description": "Vous avez déjà envoyé une demande d'ami à %user%"
+			},
+			"friendRemoved": {
+				"title": "Ami supprimé",
+				"description": "Vous avez supprimé %user% de vos amis"
+			},
+			"userBlocked": {
+				"title": "Utilisateur bloqué",
+				"description": "Vous avez bloqué %user%"
+			},
+			"userUnblocked": {
+				"title": "Utilisateur débloqué",
+				"description": "Vous avez débloqué %user%"
+			},
+			"error": {
+				"title": "Erreur",
+				"description": "Impossible d'envoyer une demande d'ami à %user%"
 			}
 		}
 	},
@@ -162,12 +298,37 @@
 		"title": "Tableau de bord",
 		"description": "Gérez votre compte",
 
+		"logoutDialog": {
+			"title": "Confirmer la déconnexion",
+			"description": "Êtes-vous sûr de vouloir vous déconnecter de votre compte ?",
+			"confirm": "Déconnexion"
+		},
+
+		"deleteAccountDialog": {
+			"title": "Supprimer le compte",
+			"description": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action vous anonymisera et effacera définitivement toutes vos données.",
+			"confirm": "Supprimer le compte"
+		},
+
+		"removeAvatarDialog": {
+			"title": "Confirmer la suppression de l'avatar",
+			"description": "Êtes-vous sûr de vouloir supprimer votre photo de profil ? L'avatar par défaut sera utilisé à la place.",
+			"confirm": "Supprimer l'avatar"
+		},
+
+		"remove2faDialog": {
+			"title": "Désactiver la 2FA",
+			"description": "Êtes-vous sûr de vouloir désactiver l'authentification à deux facteurs ? Cela supprimera la couche de sécurité supplémentaire de votre compte.",
+			"confirm": "Désactiver la 2FA"
+		},
+
 		"sections": {
 			"overview": {
 				"title": "Aperçu",
-				"totalGames": "Nombre total de parties",
-				"winRate": "Taux de victoire",
-				"highScore": "Score maximal",
+
+				"totalGames": "Total des parties",
+				"winRate": "Taux de victoire PONG",
+				"highScore": "Meilleur score DINO RUN",
 				"charts": {
 					"activity": {
 						"title": "Activité",
@@ -175,9 +336,25 @@
 					},
 					"score": {
 						"title": "Progression du score",
-						"description": "Votre score au fil du temps",
+						"description": "Votre score moyen au fil du temps",
 						"label": "Score"
 					}
+				}
+			},
+
+			"history": {
+				"title": "Historique",
+				"players": "Joueurs",
+
+				"pong": {
+					"title": "Historique des matchs Pong",
+					"description": "Vos parties récentes de Pong",
+					"noGames": "Aucune partie récente de Pong trouvée."
+				},
+				"dino": {
+					"title": "Historique Dino Run",
+					"description": "Vos parties récentes de Dino Run",
+					"noGames": "Aucune partie récente de Dino Run trouvée."
 				}
 			},
 
@@ -186,29 +363,352 @@
 
 				"account": {
 					"title": "Compte",
-					"description": "Gérez les informations publiques de votre profil",
+					"description": "Gérez les informations de votre profil public",
 					"picture": "Photo de profil",
 					"username": "Nom d'utilisateur",
 					"bio": "Biographie",
 
 					"dangerZone": {
-						"title": "Zone de danger",
-						"description": "Une fois votre compte supprimé, cette action est irréversible. Soyez sûr de votre décision.",
+						"title": "Zone de confidentialité",
+						"description": "Une fois votre compte supprimé, il n'y a pas de retour possible. Veuillez être certain.",
+						"consultData": "Consulter les données",
 						"delete": "Supprimer le compte"
 					}
 				},
 				"security": {
 					"title": "Sécurité",
 					"password": {
+						"google": "GÉREZ VOTRE MOT DE PASSE DANS LES PARAMÈTRES DE VOTRE COMPTE GOOGLE",
+						"status": "Statut du mot de passe",
 						"title": "Mot de passe",
-						"description": "Changez votre mot de passe",
+						"description": "Changer votre mot de passe",
 						"current": "Mot de passe actuel",
 						"new": "Nouveau mot de passe",
 						"confirm": "Confirmer le nouveau mot de passe",
-						"update": "Mettre à jour le mot de passe"
+						"update": "Mettre à jour le mot de passe",
+						"validation": {
+							"minLength": "8 caractères minimum",
+							"match": "Les mots de passe ne correspondent pas",
+							"wrongCurrent": "Mot de passe actuel incorrect",
+							"sameCurrent": "Ne peut pas être identique au mot de passe actuel"
+						},
+						"updateSuccess": {
+							"title": "Mot de passe mis à jour",
+							"description": "Votre mot de passe a été mis à jour avec succès"
+						}
+					},
+					"twoFactor": {
+						"title": "Authentification à deux facteurs",
+						"description": "Ajoutez une couche de sécurité supplémentaire à votre compte",
+						"status": "Statut 2FA",
+						"enable": "Activer la 2FA",
+						"disable": "Désactiver la 2FA",
+						"enabled": "L'authentification à deux facteurs est activée",
+						"disabled": "L'authentification à deux facteurs est désactivée"
 					}
 				}
 			}
 		}
+	},
+
+	"terms": {
+		"title": "Conditions d'utilisation",
+		"description": "Veuillez lire attentivement nos conditions d'utilisation avant d'utiliser notre plateforme.",
+		"accept": "J'accepte",
+		"decline": "Je refuse",
+		"lastUpdated": "Dernière mise à jour : 25 mai 2025",
+		"welcome": "Bienvenue sur FT_TRANSCENDANCE ! Ces Conditions d'utilisation (\"Conditions\") régissent votre utilisation de notre plateforme de jeux rétro. En accédant ou en utilisant notre service, vous acceptez d'être lié par ces Conditions. Veuillez les lire attentivement.",
+		"sections": {
+			"acceptance": {
+				"title": "ACCEPTATION DES CONDITIONS",
+				"content": [
+					"En créant un compte, en accédant ou en utilisant FT_TRANSCENDANCE, vous reconnaissez avoir lu, compris et accepté d'être lié par ces Conditions et notre Politique de confidentialité.",
+					"Si vous n'acceptez pas ces Conditions, vous ne devez pas accéder ou utiliser notre service."
+				]
+			},
+			"service": {
+				"title": "DESCRIPTION DU SERVICE",
+				"content": "FT_TRANSCENDANCE est une plateforme de jeux rétro en ligne qui fournit :",
+				"items": [
+					"Des jeux et tournois de style arcade classique",
+					"Suivi des statistiques des joueurs et classements",
+					"Fonctionnalités sociales incluant chat et système d'amis",
+					"Profils et avatars personnalisables"
+				]
+			},
+			"registration": {
+				"title": "INSCRIPTION AU COMPTE",
+				"content": "Pour accéder à certaines fonctionnalités, vous devez créer un compte. Vous acceptez de :",
+				"items": [
+					"Fournir des informations exactes et complètes",
+					"Maintenir la sécurité de vos identifiants de compte",
+					"Être responsable de toutes les activités sous votre compte",
+					"Nous informer immédiatement de tout accès non autorisé"
+				]
+			},
+			"community": {
+				"title": "RÈGLES DE LA COMMUNAUTÉ",
+				"content": "Nous nous efforçons de maintenir un environnement de jeu positif. Vous acceptez de ne pas :",
+				"items": [
+					"Vous livrer à du harcèlement, de l'intimidation ou un comportement toxique",
+					"Utiliser des tricheries, exploits ou logiciels tiers non autorisés",
+					"Partager du contenu inapproprié, offensant ou illégal",
+					"Usurper l'identité d'autres utilisateurs ou créer de faux comptes",
+					"Tenter d'obtenir un accès non autorisé à nos systèmes"
+				],
+				"violations": "Les violations peuvent entraîner des avertissements, une suspension temporaire ou une résiliation permanente du compte."
+			},
+			"intellectual": {
+				"title": "PROPRIÉTÉ INTELLECTUELLE",
+				"content": "Tout le contenu sur FT_TRANSCENDANCE, y compris les jeux, graphiques, logos, musique et texte, est protégé par les lois sur la propriété intellectuelle. Vous ne pouvez pas :",
+				"items": [
+					"Copier, distribuer ou modifier notre contenu sans permission",
+					"Utiliser nos marques commerciales ou notre image de marque de manière non autorisée",
+					"Faire de l'ingénierie inverse ou tenter d'extraire le code source"
+				]
+			},
+			"privacy": {
+				"title": "CONFIDENTIALITÉ ET DONNÉES",
+				"content": "Votre vie privée est importante pour nous. Nous collectons et utilisons vos données comme décrit dans notre Politique de confidentialité, notamment :",
+				"items": [
+					"Statistiques de jeu et données de performance",
+					"Journaux de communication et d'interaction sociale",
+					"Informations techniques pour l'amélioration du service"
+				]
+			},
+			"liability": {
+				"title": "LIMITATION DE RESPONSABILITÉ",
+				"content": "FT_TRANSCENDANCE est fourni \"tel quel\" sans garanties. Nous ne sommes pas responsables pour :",
+				"items": [
+					"Les interruptions de service ou problèmes techniques",
+					"Les actions d'autres utilisateurs sur la plateforme"
+				]
+			},
+			"termination": {
+				"title": "RÉSILIATION",
+				"content": "L'une ou l'autre partie peut résilier cet accord :",
+				"items": [
+					"Vous pouvez supprimer votre compte à tout moment",
+					"Nous pouvons suspendre les comptes pour violation des Conditions"
+				]
+			}
+		},
+		"footer": "En utilisant FT_TRANSCENDANCE, vous reconnaissez avoir lu et compris ces Conditions d'utilisation."
+	},
+
+	"privacy": {
+		"title": "Politique de confidentialité",
+		"lastUpdated": "Dernière mise à jour : 25 mai 2025",
+		"welcome": "Chez StreamLine, nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations lorsque vous utilisez nos services.",
+		"sections": {
+			"collect": {
+				"title": "Informations que nous collectons",
+				"content": "Nous collectons différents types d'informations pour fournir et améliorer nos services :",
+				"items": [
+					"Nom d'utilisateur, adresse e-mail, mot de passe et détails du profil",
+					"Messages et commentaires que vous fournissez"
+				]
+			},
+			"use": {
+				"title": "Comment nous utilisons vos informations",
+				"content": "Nous utilisons vos informations personnelles aux fins suivantes :",
+				"items": [
+					"Fournir, maintenir et améliorer nos services",
+					"Gérer votre compte",
+					"Analyser les modèles d'utilisation pour améliorer l'expérience utilisateur",
+					"Assurer la sécurité et prévenir la fraude",
+					"Se conformer aux obligations légales"
+				]
+			},
+			"sharing": {
+				"title": "Partage et divulgation d'informations",
+				"content": "Nous ne vendons pas vos informations personnelles. Nous pouvons partager vos informations uniquement dans les circonstances suivantes :",
+				"items": [
+					"Lorsque la loi l'exige ou pour protéger nos droits",
+					"Lorsque vous acceptez explicitement de partager vos informations"
+				]
+			},
+			"security": {
+				"title": "Sécurité des données",
+				"content": "Nous mettons en œuvre des mesures de sécurité robustes pour protéger vos informations personnelles :",
+				"items": [
+					"Chiffrement de bout en bout pour la transmission de données",
+					"Contrôles d'accès et mécanismes d'authentification"
+				],
+				"disclaimer": "Bien que nous nous efforcions de protéger vos informations personnelles, aucune méthode de transmission sur Internet n'est sécurisée à 100%. Nous vous encourageons à utiliser des mots de passe forts et à garder confidentielles les informations de votre compte."
+			},
+			"rights": {
+				"title": "Vos droits à la vie privée",
+				"content": "Vous disposez des droits suivants concernant vos informations personnelles :",
+				"items": [
+					"Demander une copie de vos données personnelles que nous détenons",
+					"Corriger toute inexactitude dans vos données personnelles",
+					"Suppression du compte, sur demande, nous supprimerons votre compte et toutes les données associées",
+					"Portabilité, recevoir vos données dans un format structuré et lisible par machine"
+				]
+			},
+			"cookies": {
+				"title": "Cookies et technologies de suivi",
+				"content": "Nous utilisons des cookies et des technologies similaires pour améliorer votre expérience :",
+				"items": [
+					"Cookies essentiels requis pour les fonctionnalités de base et la sécurité",
+					"Cookies fonctionnels pour mémoriser vos préférences et paramètres"
+				]
+			},
+			"retention": {
+				"title": "Conservation des données",
+				"content": "Nous conservons vos informations personnelles aussi longtemps que nécessaire pour atteindre les objectifs décrits dans cette politique :",
+				"items": [
+					"Compte stocké jusqu'à ce que vous supprimiez votre compte",
+					"Données d'utilisation stockées pendant 2 ans pour l'analyse et l'amélioration du service"
+				]
+			},
+			"international": {
+				"title": "Transferts internationaux de données",
+				"content": "Vos informations peuvent être transférées et traitées dans des pays autres que le vôtre. Nous assurons que des garanties appropriées sont en place :",
+				"items": [
+					"Clauses contractuelles types pour les transferts de données de l'UE",
+					"Décisions d'adéquation par les autorités pertinentes de protection des données",
+					"Règles d'entreprise contraignantes pour les transferts intra-groupe",
+					"Schémas de certification et codes de conduite"
+				]
+			},
+			"changes": {
+				"title": "Modifications de cette politique de confidentialité",
+				"content": "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre pour refléter les changements dans nos pratiques ou les lois applicables. Lorsque nous apportons des modifications :",
+				"items": [
+					"Nous mettrons à jour la date de \"Dernière mise à jour\" en haut de cette politique",
+					"L'utilisation continue de nos services constitue l'acceptation de la politique mise à jour"
+				]
+			}
+		},
+		"footer": "Cette politique de confidentialité est en vigueur à compter de la date de dernière mise à jour indiquée ci-dessus et s'applique à tous les utilisateurs des services StreamLine. En utilisant nos services, vous reconnaissez avoir lu et compris cette politique de confidentialité."
+	},
+
+	"dialogs": {
+		"consultData": {
+			"title": "Aperçu de vos données",
+			"description": "Aperçu complet des données de votre compte",
+			"confirm": "Consulter les données",
+			"profile": {
+				"title": "Profil",
+				"description": "informations du profil",
+				"tfaEnabled": "2FA activée",
+				"unknown": "Inconnu",
+				"accountCreated": "Compte créé",
+				"accountUpdated": "Dernière mise à jour",
+				"noCreationDate": "Aucune date de création disponible",
+				"noUpdateDate": "Aucune date de mise à jour disponible"
+			},
+			"rawData": {
+				"title": "Données brutes de l'utilisateur",
+				"description": "Données techniques stockées concernant votre compte",
+				"download": "Télécharger JSON complet",
+				"userInfo": "Informations utilisateur",
+				"summary": "💡 Ceci montre un résumé de vos données. Cliquez sur \"Télécharger JSON complet\" ci-dessus pour obtenir l'ensemble complet des données."
+			}
+		},
+		"gameMode": {
+			"selectMode": "SÉLECTIONNER LE MODE DE JEU",
+			"modes": {
+				"ai": {
+					"title": "Contre l'IA",
+					"description": "Jouer contre l'ordinateur"
+				},
+				"solo": {
+					"title": "Solo",
+					"description": "Battez votre meilleur score"
+				},
+				"local": {
+					"title": "1V1 LOCAL",
+					"description": "JOUEZ AVEC UN AMI LOCALEMENT"
+				},
+				"multiplayer": {
+					"title": "MULTIJOUEUR",
+					"description": "JOUEZ AVEC DES AMIS"
+				},
+				"tournament": {
+					"title": "TOURNOI",
+					"description": "PARTICIPEZ À UN TOURNOI LOCAL"
+				}
+			},
+			"selectPrompt": "Sélectionnez un mode",
+			"loginRequired": {
+				"title": "Erreur",
+				"description": "Vous devez être connecté pour jouer à ce jeu"
+			}
+		},
+		"matchDetails": {
+			"pongTitle": "DÉTAILS DU MATCH PONG",
+			"dinoTitle": "DÉTAILS DINO RUN",
+			"playerScores": "SCORES DES JOUEURS",
+			"loading": "Chargement des détails du joueur...",
+			"bot": "BOT",
+			"score": "SCORE"
+		},
+
+		"termsPrivacy": {
+			"title": "Conditions & Confidentialité",
+			"description": "Avant de continuer, veuillez accepter nos conditions et notre politique de confidentialité.",
+			"agreeToTerms": "J'accepte les",
+			"termsOfService": "Conditions d'utilisation",
+			"agreeToPrivacy": "J'accepte la",
+			"privacyPolicy": "Politique de confidentialité",
+			"acceptContinue": "Accepter & Continuer"
+		},
+
+		"multiplayerOptions": {
+			"title": "OPTIONS MULTIJOUEUR",
+			"description": "CRÉER UNE NOUVELLE SALLE OU REJOINDRE AVEC UN CODE",
+			"createRoom": "CRÉER UNE SALLE",
+			"joinWithCode": "REJOINDRE AVEC UN CODE",
+			"matchmaking": "MATCHMAKING",
+			"roomCodeLabel": "CODE DE SALLE :",
+			"enterRoomCode": "ENTREZ LE CODE DE SALLE",
+			"connecting": "CONNEXION...",
+			"createRoomButton": "CRÉER UNE SALLE",
+			"joinRoomButton": "REJOINDRE LA SALLE",
+			"joinMatchmakingButton": "REJOINDRE LE MATCHMAKING",
+			"selectOption": "SÉLECTIONNEZ UNE OPTION"
+		},
+
+		"twoFactorSetup": {
+			"title": "Configuration de l'authentification à deux facteurs",
+			"description": "Sécurisez votre compte avec une application d'authentification",
+			"scanQrCode": "1. SCANNEZ CE QR CODE AVEC VOTRE APPLICATION D'AUTHENTIFICATION",
+			"qrLoading": "CHARGEMENT DU QR CODE...",
+			"manualCode": "2. OU ENTREZ CE CODE SECRET MANUELLEMENT :",
+			"copyToClipboard": "Copier dans le presse-papiers",
+			"enterCode": "3. ENTREZ LE CODE DE VOTRE APPLICATION D'AUTHENTIFICATION :",
+			"verifyEnable": "Vérifier & Activer",
+			"errors": {
+				"enterCode": "Veuillez entrer le code de vérification",
+				"invalidCode": "Code de vérification invalide. Veuillez réessayer."
+			}
+		},
+
+		"twoFactorVerify": {
+			"title": "Authentification à deux facteurs",
+			"description": "Entrez le code à 6 chiffres de votre application d'authentification",
+			"enterCode": "ENTREZ LE CODE DE VÉRIFICATION :",
+			"verify": "Vérifier",
+			"verifying": "Vérification..."
+		}
+	},
+
+	"notFound": {
+		"title": "Cette page est introuvable.",
+		"backToHome": "Retour à l'accueil"
+	},
+
+	"language": {
+		"title": "Choisir la langue",
+		"description": "Sélectionnez votre langue préférée pour l'interface",
+		"savedPreference": "La préférence de langue sera enregistrée pour les visites futures"
+	},
+
+	"matchmaking": {
+		"lookingForOpponent": "RECHERCHE D'UN ADVERSAIRE",
+		"searchingFurther": "ÉLARGISSEMENT DE LA RECHERCHE"
 	}
 }

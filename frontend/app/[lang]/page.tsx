@@ -48,7 +48,7 @@ export default async function HomePage({
                   />
                 </div>
                 <div className="p-6 flex flex-col h-[200px]">
-                  <h3 className="font-pixel text-xl text-game-blue mb-2 uppercase">{dict.games.pong.title}</h3>
+                  <h3 className="font-pixel text-xl text-game-blue mb-2 uppercase">PONG</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4 uppercase">
                     {dict.games.pong.description}
                   </p>
@@ -85,7 +85,7 @@ export default async function HomePage({
                   />
                 </div>
                 <div className="p-6 flex flex-col h-[200px]">
-                  <h3 className="font-pixel text-xl text-game-orange mb-2 uppercase">{dict.games.dino.title}</h3>
+                  <h3 className="font-pixel text-xl text-game-orange mb-2 uppercase">DINO GAME</h3>
                   <p className="font-pixel text-xs text-muted-foreground mb-4 uppercase">
                     {dict.games.dino.description}
                   </p>

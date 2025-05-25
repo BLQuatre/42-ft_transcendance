@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/Button"
 import { Checkbox } from "@/components/ui/Checkbox"
 import Link from "next/link"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 interface TermsPrivacyDialogProps {
   open: boolean
@@ -14,6 +15,7 @@ interface TermsPrivacyDialogProps {
 export function TermsPrivacyDialog({ open, onAccept }: TermsPrivacyDialogProps) {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
+  const dict = useDictionary()
 
   const canAccept = termsAccepted && privacyAccepted
 
@@ -34,12 +36,14 @@ export function TermsPrivacyDialog({ open, onAccept }: TermsPrivacyDialogProps) 
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="font-pixel text-xl text-center uppercase">Terms & Privacy</DialogTitle>
+          <DialogTitle className="font-pixel text-xl text-center uppercase">
+            {dict?.dialogs?.termsPrivacy?.title || "Terms & Privacy"}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <p className="font-pixel text-sm text-muted-foreground text-center">
-            Before continuing, please accept our terms and privacy policy.
+            {dict?.dialogs?.termsPrivacy?.description || "Before continuing, please accept our terms and privacy policy."}
           </p>
 
           <div className="space-y-3">
@@ -51,14 +55,14 @@ export function TermsPrivacyDialog({ open, onAccept }: TermsPrivacyDialogProps) 
                 className="mt-1"
               />
               <label htmlFor="terms" className="font-pixel text-xs leading-relaxed cursor-pointer">
-                I agree to the{" "}
+                {dict?.dialogs?.termsPrivacy?.agreeToTerms || "I agree to the"}{" "}
                 <Link
                   href="/terms"
                   className="text-game-blue hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Terms of Service
+                  {dict?.dialogs?.termsPrivacy?.termsOfService || "Terms of Service"}
                 </Link>
               </label>
             </div>
@@ -71,14 +75,14 @@ export function TermsPrivacyDialog({ open, onAccept }: TermsPrivacyDialogProps) 
                 className="mt-1"
               />
               <label htmlFor="privacy" className="font-pixel text-xs leading-relaxed cursor-pointer">
-                I agree to the{" "}
+                {dict?.dialogs?.termsPrivacy?.agreeToPrivacy || "I agree to the"}{" "}
                 <Link
                   href="/privacy"
                   className="text-game-blue hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Privacy Policy
+                  {dict?.dialogs?.termsPrivacy?.privacyPolicy || "Privacy Policy"}
                 </Link>
               </label>
             </div>
@@ -90,7 +94,7 @@ export function TermsPrivacyDialog({ open, onAccept }: TermsPrivacyDialogProps) 
               disabled={!canAccept}
               className="w-full font-pixel bg-game-blue hover:bg-game-blue/90 uppercase disabled:opacity-50"
             >
-              Accept & Continue
+              {dict?.dialogs?.termsPrivacy?.acceptContinue || "Accept & Continue"}
             </Button>
           </div>
         </div>

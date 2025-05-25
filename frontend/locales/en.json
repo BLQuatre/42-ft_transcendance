@@ -639,6 +639,16 @@
 			"loading": "Loading player details...",
 			"bot": "BOT",
 			"score": "SCORE"
+		},
+
+		"termsPrivacy": {
+			"title": "Terms & Privacy",
+			"description": "Before continuing, please accept our terms and privacy policy.",
+			"agreeToTerms": "I agree to the",
+			"termsOfService": "Terms of Service",
+			"agreeToPrivacy": "I agree to the",
+			"privacyPolicy": "Privacy Policy",
+			"acceptContinue": "Accept & Continue"
 		}
 	},
 

@@ -9,6 +9,7 @@ import { GameType } from "@/types/game"
 import { useAuth } from "@/contexts/auth-context"
 import api from "@/lib/api"
 import { cn } from "@/lib/utils"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 
 export default function PongGamePage() {
@@ -120,12 +121,19 @@ export default function PongGamePage() {
 	}, [gameType, accessToken, eloRef.current]);
 
 
+	const dict = useDictionary()
+
+
 	return (
 		<div className="min-h-screen bg-background flex flex-col overflow-hidden">
 			<MainNav />
 			<div className="min-h-screen bg-background flex flex-col items-center justify-center">
-				<div className="font-pixel text-lg animate-pulse">LOOKING FOR AN OPPONENT</div>
-				<div className={cn("font-pixel text-base text-white/50", widenNotif ? "" : "select-none")}>{widenNotif ? "SEARCHING FURTHER" : " "}</div>
+				<div className="font-pixel text-lg animate-pulse">
+					{dict?.matchmaking?.lookingForOpponent || "LOOKING FOR AN OPPONENT"}
+				</div>
+				<div className={cn("font-pixel text-base text-white/50", widenNotif ? "" : "select-none")}>
+					{widenNotif ? (dict?.matchmaking?.searchingFurther || "SEARCHING FURTHER") : " "}
+				</div>
 			</div>
 		</div>
 	)

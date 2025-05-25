@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react"
 import { MainNav } from "@/components/Navbar"
 import { Card, CardContent } from "@/components/ui/Card"
 import { ScoreDisplay } from "@/components/ScoreDisplay"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 import { Game } from "@/lib/pong/game"
 import * as CONST from "@/lib/pong/constants"
 
 export default function PongGamePage() {
+  const dict = useDictionary()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [pausedState, setPausedState] = useState<boolean>(true)
   const pausedRef = useRef(pausedState)
@@ -164,10 +166,12 @@ export default function PongGamePage() {
                 {pausedState && !gameFinished && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
                     <div className="text-white text-center">
-                      <h2 className="text-3xl font-bold mb-4 animate-pulse">Press P to play/pause</h2>
+                      <h2 className="text-3xl font-bold mb-4 animate-pulse">
+                        {dict && dict.games && dict.games.pong && dict.games.pong.pauseInstructions}
+                      </h2>
                       <div className="text-sm opacity-80">
-                        <p>Left : use W/S to move your paddle</p>
-                        <p>Right : use ↑/↓ to move your paddle</p>
+                        <p>{dict && dict.games && dict.games.pong && dict.games.pong.leftPaddleInstructions}</p>
+                        <p>{dict && dict.games && dict.games.pong && dict.games.pong.rightPaddleInstructions}</p>
                       </div>
                     </div>
                   </div>

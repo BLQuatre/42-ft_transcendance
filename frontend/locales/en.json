@@ -88,7 +88,9 @@
 			"players": "2-8 players",
 			"pauseInstructions": "Press P to play/pause",
 			"moveInstructions": "Use ↑/↓ or W/S to move your paddle",
-			"winner": "WINNER!"
+			"winner": "WINNER!",
+			"leftPaddleInstructions": "Left: use W/S to move your paddle",
+			"rightPaddleInstructions": "Right: use ↑/↓ to move your paddle"
 		},
 		"dino": {
 			"title": "Dino Run",

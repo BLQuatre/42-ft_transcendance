@@ -88,7 +88,9 @@
 			"players": "2-8 игроков",
 			"pauseInstructions": "Нажмите P для паузы/продолжения",
 			"moveInstructions": "Используйте ↑/↓ или W/S для движения ракетки",
-			"winner": "ПОБЕДИТЕЛЬ!"
+			"winner": "ПОБЕДИТЕЛЬ!",
+			"leftPaddleInstructions": "Левый: используйте W/S для движения ракетки",
+			"rightPaddleInstructions": "Правый: используйте ↑/↓ для движения ракетки"
 		},
 		"dino": {
 			"title": "Дино Ран",

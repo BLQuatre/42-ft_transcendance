@@ -373,6 +373,95 @@
 		"footer": "By using FT_TRANSCENDANCE, you acknowledge that you have read and understood these Terms of Service."
 	},
 
+	"privacy": {
+		"title": "Privacy Policy",
+		"lastUpdated": "Last updated: May 25, 2025",
+		"welcome": "At StreamLine, we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our services.",
+		"sections": {
+			"collect": {
+				"title": "Information We Collect",
+				"content": "We collect different types of information to provide and improve our services:",
+				"items": [
+					"Username, email address, password, and profile details",
+					"Messages and feedback you provide"
+				]
+			},
+			"use": {
+				"title": "How We Use Your Information",
+				"content": "We use your personal information for the following purposes:",
+				"items": [
+					"Provide, maintain, and improve our services",
+					"Manage your account",
+					"Analyze usage patterns to enhance user experience",
+					"Ensure security and prevent fraud",
+					"Comply with legal obligations"
+				]
+			},
+			"sharing": {
+				"title": "Information Sharing and Disclosure",
+				"content": "We do not sell your personal information. We may share your information only in the following circumstances:",
+				"items": [
+					"When required by law or to protect our rights",
+					"When you explicitly agree to share your information"
+				]
+			},
+			"security": {
+				"title": "Data Security",
+				"content": "We implement robust security measures to protect your personal information:",
+				"items": [
+					"End-to-end encryption for data transmission",
+					"Access controls and authentication mechanisms"
+				],
+				"disclaimer": "While we strive to protect your personal information, no method of transmission over the internet is 100% secure. We encourage you to use strong passwords and keep your account information confidential."
+			},
+			"rights": {
+				"title": "Your Privacy Rights",
+				"content": "You have the following rights regarding your personal information:",
+				"items": [
+					"Request a copy of your personal data we hold",
+					"Correct any inaccuracies in your personal data",
+					"Account deletion, on request, we will delete your account and all associated data",
+					"Portability, receive your data in a structured, machine-readable format"
+				]
+			},
+			"cookies": {
+				"title": "Cookies and Tracking Technologies",
+				"content": "We use cookies and similar technologies to enhance your experience:",
+				"items": [
+					"Essential Cookies required for basic functionality and security",
+					"Functional Cookies to remember your preferences and settings"
+				]
+			},
+			"retention": {
+				"title": "Data Retention",
+				"content": "We retain your personal information for as long as necessary to fulfill the purposes outlined in this policy:",
+				"items": [
+					"Account stored until you delete your account",
+					"Usage data stored for 2 years for analytics and service improvement"
+				]
+			},
+			"international": {
+				"title": "International Data Transfers",
+				"content": "Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place:",
+				"items": [
+					"Standard Contractual Clauses for EU data transfers",
+					"Adequacy decisions by relevant data protection authorities",
+					"Binding Corporate Rules for intra-group transfers",
+					"Certification schemes and codes of conduct"
+				]
+			},
+			"changes": {
+				"title": "Changes to This Privacy Policy",
+				"content": "We may update this privacy policy from time to time to reflect changes in our practices or applicable laws. When we make changes:",
+				"items": [
+					"We will update the \"Last updated\" date at the top of this policy",
+					"Continued use of our services constitutes acceptance of the updated policy"
+				]
+			}
+		},
+		"footer": "This privacy policy is effective as of the date last updated above and applies to all users of StreamLine services. By using our services, you acknowledge that you have read and understood this privacy policy."
+	},
+
 	"dialogs":
 	{
 		"consultData": {

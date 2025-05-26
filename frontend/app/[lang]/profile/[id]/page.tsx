@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3, Clock, UserX } from "lucide-react"
+import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3, Clock, UserX, UserCheck } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import Link from "next/link"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
@@ -266,7 +266,7 @@ export default function UserProfilePage() {
     try {
       await api.post(`/friend/${userId}`)
       await updateFriendData()
-      
+
       // Dispatch event to reload chat friends list
       window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -308,6 +308,30 @@ export default function UserProfilePage() {
     })
 
     window.dispatchEvent(chatEvent)
+  }
+
+  const handleUnblockUser = async () => {
+    if (!dict || isOwnProfile) return
+
+    try {
+      await api.delete(`/friend/${userId}`)
+      await updateFriendData()
+
+      // Dispatch event to reload chat friends list
+      window.dispatchEvent(new CustomEvent('friendStatusChanged'))
+
+      toast({
+        title: dict.friends.notifications.userUnblocked.title,
+        description: dict.friends.notifications.userUnblocked.description.replace('%user%', user?.name || user?.username || userId),
+        duration: 3000,
+      })
+    } catch (error: any) {
+      toast({
+        title: dict.friends.notifications.error.title,
+        description: dict.friends.notifications.error.description.replace('%user%', user?.name || user?.username || userId),
+        duration: 3000,
+      })
+    }
   }
 
   const dict = useDictionary()
@@ -366,9 +390,9 @@ export default function UserProfilePage() {
                       {dict.friends?.pendingRequest || "Request Pending"}
                     </Button>
                   ) : friendStatus === FriendRequestStatus.BLOCKED ? (
-                    <Button disabled className="font-pixel bg-red-500 hover:bg-red-500/90 uppercase">
-                      <UserX className="h-4 w-4 mr-2" />
-                      {dict.friends?.blocked || "Blocked"}
+                    <Button className="font-pixel bg-green-500 hover:bg-green-600 uppercase" onClick={handleUnblockUser}>
+                      <UserCheck className="h-4 w-4 mr-2" />
+                      {dict.friends?.actions?.unblockUser || "Unblock User"}
                     </Button>
                   ) : (
                     <Button className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase" onClick={handleAddFriend}>

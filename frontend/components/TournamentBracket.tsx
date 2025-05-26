@@ -6,6 +6,7 @@ import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { useToast } from "@/hooks/UseToast";
 import { ToastVariant } from "@/types/types";
+import { useDictionary } from "@/hooks/UseDictionnary";
 
 type Player = {
 	name: string;
@@ -89,18 +90,21 @@ export function TournamentBracket({
 		validateNames(userNames);
 	};
 
+	const dict = useDictionary()
+	if (!dict) return null
+
 	return (
 		<>
 			<div className="flex items-center justify-between mb-6">
 				<h2 className={`font-pixel text-xl text-game-blue uppercase`}>
-					Tournament Bracket
+					{dict.tournament.bracket}
 				</h2>
 				<div className="px-6">
 					{bracketData.rounds[0].matches.find(
 						(match) => match.player1.name === "" || match.player2.name === ""
 					) && (
 						<Button onClick={checkNames} className="font-pixel uppercase">
-							Start Tournament
+							{dict.tournament.startTournament}
 						</Button>
 					)}
 				</div>
@@ -197,7 +201,7 @@ export function TournamentBracket({
 																	<>
 																		{isEmptySlot(match.player1.name) ? (
 																			<span className="font-pixel text-xs uppercase truncate max-w-[100px] text-white/50">
-																				WAITING FOR SCORE
+																				{dict.tournament.waitingForScore}
 																			</span>
 																		) : (
 																			<span className="font-pixel text-xs uppercase truncate max-w-[100px]">
@@ -266,7 +270,7 @@ export function TournamentBracket({
 																	<>
 																		{isEmptySlot(match.player2.name) ? (
 																			<span className="font-pixel text-xs uppercase truncate max-w-[100px] text-white/50">
-																				WAITING FOR SCORE
+																				{dict.tournament.waitingForScore}
 																			</span>
 																		) : (
 																			<span className="font-pixel text-xs uppercase truncate max-w-[100px]">

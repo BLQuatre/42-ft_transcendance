@@ -181,6 +181,40 @@ export function SimpleChat() {
     }
   }
 
+  // Function to reload friends data
+  const reloadFriendsData = async () => {
+    try {
+      // Clear existing friends
+      friends.current = {}
+
+      const response = await api.get("/friend")
+      if (response.data.friends) {
+        for (const friend of response.data.friends) {
+          const friendId = friend.sender_id === userId ? friend.receiver_id : friend.sender_id
+          try {
+            const userResponse = await api.get(`/user/${friendId}`)
+            const friendData = userResponse.data.user
+            console.log("Friend data:", JSON.stringify(friendData, null, 2))
+            if (friendData) {
+              friends.current[friendId] = {
+                id: friendId,
+                name: friendData.name || "Player",
+                avatar: friendData.avatar,
+                status: friendData.status || UserStatus.OFFLINE
+              }
+            }
+          } catch (error) {
+            console.error(`Error fetching friend data for ${friendId}:`, error)
+          }
+        }
+      }
+      // Force re-render by updating a state that triggers friend list update
+      setSearchQuery(prev => prev) // This will trigger filteredFriends recalculation
+    } catch (error) {
+      console.error("Error reloading friends data:", error)
+    }
+  }
+
   useEffect(() => {
     if (!userId) {
       if (isOpen)
@@ -192,25 +226,22 @@ export function SimpleChat() {
       userRef.current = user
     })
 
-    api.get("/friend").then((response) => {
-      if (response.data.friends) {
-        for (const friend of response.data.friends) {
-          const friendId = friend.sender_id === userId ? friend.receiver_id : friend.sender_id
-          api.get(`/user/${friendId}`).then((response) => {
-            const friendData = response.data.user
-            console.log("Friend data:", JSON.stringify(friendData, null, 2))
-            if (friendData) {
-              friends.current[friendId] = {
-                id: friendId,
-                name: friendData.name || "Player",
-                avatar: friendData.avatar,
-                status: friendData.status || UserStatus.OFFLINE
-              }
-            }
-          });
-        }
-      }
-    })
+    // Initial load of friends data
+    reloadFriendsData()
+  }, [])
+
+  // Listen for friend status changes to reload friends data
+  useEffect(() => {
+    const handleFriendStatusChange = () => {
+      console.log("Friend status changed, reloading friends data...")
+      reloadFriendsData()
+    }
+
+    window.addEventListener('friendStatusChanged', handleFriendStatusChange)
+
+    return () => {
+      window.removeEventListener('friendStatusChanged', handleFriendStatusChange)
+    }
   }, [])
 
   // Scroll to bottom when messages change
@@ -557,6 +588,31 @@ export function SimpleChat() {
     setShowGameInviteModal(false)
     setSelectedGame(null)
   }
+
+  useEffect(() => {
+    const handleOpenPrivateChat = (event: CustomEvent) => {
+      const friendData = event.detail
+      if (friendData && friendData.id) {
+        // Create a friend object from the event data
+        const friend: Friend = {
+          id: friendData.id,
+          name: friendData.name || 'Unknown User',
+          avatar: friendData.avatar || '/placeholder.svg',
+          status: friendData.status || 'online'
+        }
+
+        // Open the chat and set it as active
+        setIsOpen(true)
+        openPrivateChat(friend)
+      }
+    }
+
+    window.addEventListener('openPrivateChat', handleOpenPrivateChat as EventListener)
+
+    return () => {
+      window.removeEventListener('openPrivateChat', handleOpenPrivateChat as EventListener)
+    }
+  }, [])
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end">

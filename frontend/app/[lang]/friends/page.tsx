@@ -65,6 +65,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.put(`/friend/${id}`, { status: "accepted" }).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({
@@ -79,6 +82,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.put(`/friend/${id}`, { status: "refused" }).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({
@@ -93,6 +99,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.delete(`/friend/${id}`).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({
@@ -107,6 +116,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.post(`/friend/${id}`).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({
@@ -136,6 +148,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.post(`/friend/blocked/${id}`).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({
@@ -150,6 +165,9 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.delete(`/friend/${id}`).then(() => {
 			updateData()
+			
+			// Dispatch event to reload chat friends list
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
 			const user = getUserFromId(id)
 			toast({

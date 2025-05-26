@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
-import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3 } from "lucide-react"
+import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3, Clock, UserX } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
 import Link from "next/link"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
@@ -17,14 +17,23 @@ import Loading from "@/components/Loading"
 import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 import api from "@/lib/api"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/Chart"
+import { FriendRequest, FriendRequestStatus } from "@/types/friend"
 
 export default function UserProfilePage() {
   const params = useParams()
   const userId = params.id as string
+  const currentUserId = typeof window !== 'undefined' ? localStorage.getItem("userId") : null
   const [user, setUser] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isFriend, setIsFriend] = useState(false)
+
+  // Friend-related state
+  const [friendStatus, setFriendStatus] = useState<FriendRequestStatus | null>(null)
+  const [friends, setFriends] = useState<FriendRequest[]>([])
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([])
+  const [blockedUsers, setBlockedUsers] = useState<FriendRequest[]>([])
+  const [isOwnProfile, setIsOwnProfile] = useState(false)
+
   const { toast } = useToast()
   const [gameHistory, setGameHistory] = useState<{
     pong: any[];
@@ -59,36 +68,61 @@ export default function UserProfilePage() {
     setDialogOpen(true)
   }
 
+  // Helper function to get friend status
+  const getFriendStatus = (targetUserId: string): FriendRequestStatus | null => {
+    // Check if user is blocked
+    const blocked = blockedUsers.find((blocked) =>
+      blocked.receiver_id === targetUserId || blocked.sender_id === targetUserId
+    )
+    if (blocked) return FriendRequestStatus.BLOCKED
+
+    // Check if users are friends
+    const friend = friends.find((friend) =>
+      friend.sender_id === targetUserId || friend.receiver_id === targetUserId
+    )
+    if (friend) return FriendRequestStatus.ACCEPTED
+
+    // Check if there's a pending request
+    const pending = friendRequests.find((request) =>
+      request.sender_id === targetUserId || request.receiver_id === targetUserId
+    )
+    if (pending) return FriendRequestStatus.PENDING
+
+    return null
+  }
+
+  // Update friend data from API
+  const updateFriendData = async () => {
+    try {
+      const [friendsRes, requestsRes, blockedRes] = await Promise.all([
+        api.get("/friend").catch(() => ({ data: { friends: [] } })),
+        api.get("/friend/pending").catch(() => ({ data: { friends: [] } })),
+        api.get("/friend/blocked").catch(() => ({ data: { friends: [] } }))
+      ])
+
+      setFriends(friendsRes.data?.friends || [])
+      setFriendRequests(requestsRes.data?.friends || [])
+      setBlockedUsers(blockedRes.data?.friends || [])
+    } catch (error) {
+      console.error("Error updating friend data:", error)
+    }
+  }
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true)
 
+        // Check if viewing own profile
+        setIsOwnProfile(userId === currentUserId)
+
         // Fetch user profile data
         const userResponse = await api.get(`/user/${userId}`)
         setUser(userResponse.data.user || userResponse.data)
 
-        // Check if this user is a friend
-        try {
-          const friendsResponse = await api.get('/friend')
-
-          let friendsList = []
-          if (Array.isArray(friendsResponse.data)) {
-            friendsList = friendsResponse.data
-          } else if (friendsResponse.data && typeof friendsResponse.data === 'object') {
-            const possibleArrays = Object.values(friendsResponse.data).filter(val => Array.isArray(val))
-            if (possibleArrays.length > 0) {
-              friendsList = possibleArrays[0]
-            }
-          }
-
-          const isFriend = friendsList.some((friend: any) =>
-            friend.id === userId || friend.userId === userId
-          )
-          setIsFriend(isFriend)
-        } catch (friendErr) {
-          console.error("Error checking friend status:", friendErr)
-          setIsFriend(false)
+        // Update friend data if not viewing own profile
+        if (userId !== currentUserId) {
+          await updateFriendData()
         }
 
         // Fetch game history
@@ -139,6 +173,13 @@ export default function UserProfilePage() {
       fetchUserProfile()
     }
   }, [userId])
+
+  // Update friend status when friend data changes
+  useEffect(() => {
+    if (userId && !isOwnProfile) {
+      setFriendStatus(getFriendStatus(userId))
+    }
+  }, [userId, friends, friendRequests, blockedUsers, isOwnProfile])
 
   // Process game history data for charts (same as dashboard)
   const processGameActivityData = (allHistory: any[]) => {
@@ -220,12 +261,53 @@ export default function UserProfilePage() {
   };
 
   const handleAddFriend = async () => {
-	// CAUVRAY
-	// (Fait en sorte que si le mec va sur son propre profile, il y a pas le bouton "add friend" / message)
+    if (!dict || isOwnProfile) return
+
+    try {
+      await api.post(`/friend/${userId}`)
+      await updateFriendData()
+      
+      // Dispatch event to reload chat friends list
+      window.dispatchEvent(new CustomEvent('friendStatusChanged'))
+
+      toast({
+        title: dict.friends.notifications.requestSent.title,
+        description: dict.friends.notifications.requestSent.description.replace('%user%', user?.name || user?.username || userId),
+        duration: 3000,
+      })
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        toast({
+          title: dict.friends.notifications.requestAlreadySent.title,
+          description: dict.friends.notifications.requestAlreadySent.description.replace('%user%', user?.name || user?.username || userId),
+          duration: 3000,
+        })
+      } else {
+        toast({
+          title: dict.friends.notifications.error.title,
+          description: dict.friends.notifications.error.description.replace('%user%', user?.name || user?.username || userId),
+          duration: 3000,
+        })
+      }
+    }
   }
 
   const handleMessage = async () => {
-	// Open chat ...
+    if (!user) return
+
+    // Trigger the chat to open with this user
+    // The SimpleChat component should handle opening a private chat
+    // We can dispatch a custom event or use a global state management
+    const chatEvent = new CustomEvent('openPrivateChat', {
+      detail: {
+        id: userId,
+        name: user.displayName || user.username || user.name,
+        avatar: user.avatar || "/placeholder.svg",
+        status: 'online' // Default status
+      }
+    })
+
+    window.dispatchEvent(chatEvent)
   }
 
   const dict = useDictionary()
@@ -271,16 +353,30 @@ export default function UserProfilePage() {
             </div>
 
             <div className="flex flex-col gap-2 mt-4 md:mt-0">
-              {!isFriend ? (
-                <Button className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase" onClick={handleAddFriend}>
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  {dict.profile.addFriend}
-                </Button>
-              ) : (
-                <Button className="font-pixel bg-game-green hover:bg-game-green/90 uppercase" onClick={handleMessage}>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  {dict.profile.sendMessage}
-                </Button>
+              {!isOwnProfile && (
+                <>
+                  {friendStatus === FriendRequestStatus.ACCEPTED ? (
+                    <Button className="font-pixel bg-game-green hover:bg-game-green/90 uppercase" onClick={handleMessage}>
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      {dict.profile.sendMessage}
+                    </Button>
+                  ) : friendStatus === FriendRequestStatus.PENDING ? (
+                    <Button disabled className="font-pixel bg-yellow-500 hover:bg-yellow-500/90 uppercase">
+                      <Clock className="h-4 w-4 mr-2" />
+                      {dict.friends?.pendingRequest || "Request Pending"}
+                    </Button>
+                  ) : friendStatus === FriendRequestStatus.BLOCKED ? (
+                    <Button disabled className="font-pixel bg-red-500 hover:bg-red-500/90 uppercase">
+                      <UserX className="h-4 w-4 mr-2" />
+                      {dict.friends?.blocked || "Blocked"}
+                    </Button>
+                  ) : (
+                    <Button className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase" onClick={handleAddFriend}>
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      {dict.profile.addFriend}
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { useAuth } from '../contexts/auth-context';
+import { heartbeatService } from './heartbeat';
 
 let authStore: ReturnType<typeof useAuth> | null = null;
 
@@ -17,6 +18,11 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   if (authStore?.accessToken) {
     config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+
+    // Trigger heartbeat for authenticated requests (except heartbeat itself)
+    if (!config.url?.includes('/heartbeat')) {
+      heartbeatService.triggerHeartbeat();
+    }
   }
   console.log(`Sending request: ${config.url} (accessToken: ${config.headers.Authorization !== undefined})`);
   return config;

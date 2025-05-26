@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/Toaster"
 import { AuthProvider } from "@/contexts/auth-context"
 import InitAuth from "@/hooks/InitAuth"
 import SimpleChatWrapper from "@/components/SimpleChatWrapper"
+import HeartbeatProvider from "@/components/HeartbeatProvider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,10 +22,12 @@ export default function RootLayout({
   return (
     <div className={inter.className}>
       <AuthProvider>
-        <InitAuth />
-        {children}
-        <SimpleChatWrapper />
-        <Toaster />
+        <HeartbeatProvider>
+          <InitAuth />
+          {children}
+          <SimpleChatWrapper />
+          <Toaster />
+        </HeartbeatProvider>
       </AuthProvider>
     </div>
   )

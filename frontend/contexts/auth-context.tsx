@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { usePathname } from 'next/navigation';
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useHeartbeat } from '@/hooks/UseHeartbeat';
 
 type AuthContextType = {
   accessToken: string | null;
@@ -28,6 +29,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
+
+  // Get userId from localStorage
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
+
+  // Initialize heartbeat system
+  useHeartbeat(!!accessToken, userId);
 
   const refreshAccessToken = async () => {
     console.log('Refreshing access token...');

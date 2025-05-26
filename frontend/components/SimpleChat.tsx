@@ -1021,7 +1021,7 @@ export function SimpleChat() {
 										placeholder={dict?.chat?.writeMessage}
 										className="flex-1 font-pixel text-xs h-8"
 										value={newMessage}
-										onChange={(e) => setNewMessage(e.target.value)}
+										onChange={(e) => setNewMessage(e.target.value.slice(0, 500))}
 										onKeyDown={(e) => {
 											if (e.key === "Enter") {
 												handleSendMessage();

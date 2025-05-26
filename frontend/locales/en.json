@@ -345,6 +345,7 @@
 
 			"history": {
 				"title": "History",
+				"player": "Player",
 				"players": "Players",
 
 				"pong": {

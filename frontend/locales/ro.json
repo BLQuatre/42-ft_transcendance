@@ -358,6 +358,7 @@
 
 			"history": {
 				"title": "Istoric",
+				"player": "Jucător",
 				"players": "Jucători",
 
 				"pong": {
@@ -738,10 +739,6 @@
 		"inviteToPlay": "Invită să joace",
 		"aFriend": "un prieten",
 		"copied": "COPIAT!",
-		"join": "ALĂTURĂ-TE",
-		"hiddenMessage": "Mesaj ascuns",
-		"fromBlockedUser": "De la utilizator blocat",
-		"showBlockedMessages": "Arată mesajele blocate",
-		"hideBlockedMessages": "Ascunde mesajele blocate"
+		"join": "ALĂTURĂ-TE"
 	}
 }

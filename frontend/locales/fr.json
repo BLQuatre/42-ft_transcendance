@@ -344,6 +344,7 @@
 
 			"history": {
 				"title": "Historique",
+				"player": "Joueur",
 				"players": "Joueurs",
 
 				"pong": {
@@ -728,10 +729,6 @@
 		"inviteToPlay": "Inviter à jouer",
 		"aFriend": "un ami",
 		"copied": "COPIÉ!",
-		"join": "REJOINDRE",
-		"hiddenMessage": "Message masqué",
-		"fromBlockedUser": "D'un utilisateur bloqué",
-		"showBlockedMessages": "Afficher les messages bloqués",
-		"hideBlockedMessages": "Masquer les messages bloqués"
+		"join": "REJOINDRE"
 	}
 }

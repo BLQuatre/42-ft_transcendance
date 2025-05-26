@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	useHeartbeat(!!accessToken, userId);
 
 	const refreshAccessToken = async () => {
-		console.log("Refreshing access token...");
+		console.log("Refreshing token...");
 
 		try {
 			const response = await axios.get("/api/auth/refresh", {
@@ -40,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			});
 
 			if (response.status === 200) {
-				console.log(`New access token: ${response.data.accessToken}`);
 				setAccessToken(response.data.accessToken);
 				localStorage.setItem("userId", response.data.id);
 

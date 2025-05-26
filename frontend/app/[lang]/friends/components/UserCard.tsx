@@ -23,8 +23,6 @@ export function UserCard({
 	onBlock,
 	onUnblock,
 }: UserCardProps) {
-	console.log(`UserId: ${user.id}, Status: ${status}`);
-
 	const [isLoading, setIsLoading] = useState(false);
 
 	const isBlocked = status === FriendRequestStatus.BLOCKED;

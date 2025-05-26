@@ -91,11 +91,6 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 		setIsLoading(true);
 
 		const userId = localStorage.getItem("userId");
-
-		console.log("Update password submitted");
-		console.log("userId: " + userId);
-
-		console.log("verifying current password...");
 		try {
 			await api.post(`/user/confirmpassword/${userId}`, {
 				password: currentPassword,

@@ -159,8 +159,6 @@ export default function DinoGamePage() {
 		socket.addEventListener("message", (event) => {
 			try {
 				const msg = JSON.parse(event.data);
-				console.log("Received WebSocket message:", msg.type);
-
 				if (msg.type === "state") {
 					const newState = msg.gameState;
 
@@ -170,14 +168,6 @@ export default function DinoGamePage() {
 						newState.dinos.forEach((dino: any, index: number) => {
 							// Check if dino just died (score >= 0, meaning they got a final score) and lane isn't already frozen
 							if (dino.score >= 0 && !(index in currentFrozenLanes)) {
-								console.log(
-									"Freezing lane",
-									index,
-									"with final score:",
-									dino.score
-								);
-
-								// Freeze the lane with current state just before death
 								updatedFrozenLanes[index] = {
 									dino: dino,
 									obstacles: [...newState.obstacles], // snapshot current obstacles

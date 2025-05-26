@@ -45,15 +45,12 @@ export default function RegisterPage() {
 		event.preventDefault();
 		setIsLoading(true);
 
-		console.log("Form submitted");
-
 		axios
 			.post("/api/auth/register", {
 				name: username,
 				password: password,
 			})
 			.then((response) => {
-				console.log("Successfull register: " + JSON.stringify(response.data));
 				setAccessToken(response.data.accessToken);
 				localStorage.setItem("userId", response.data.user.id);
 				router.push("/");

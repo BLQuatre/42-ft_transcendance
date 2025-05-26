@@ -50,15 +50,11 @@ export default function LoginPage() {
 		setIsLoading(true);
 		setLoginError(null);
 
-		console.log("Login submitted");
-
 		try {
 			const response = await axios.post("/api/auth/login", {
 				name: username,
 				password: password,
 			});
-
-			console.log("Login response:", response.status, response.data);
 
 			// Check if 2FA is required (status 200 but no access token)
 			if (response.status === 202) {

@@ -203,7 +203,6 @@ export function SimpleChat() {
 					try {
 						const userResponse = await api.get(`/user/${friendId}`);
 						const friendData = userResponse.data.user;
-						console.log("Friend data:", JSON.stringify(friendData, null, 2));
 						if (friendData) {
 							friends.current[friendId] = {
 								id: friendId,
@@ -233,7 +232,6 @@ export function SimpleChat() {
 					(blocked: any) => blocked.receiver_id
 				);
 				setBlockedUsers(blockedUserIds);
-				console.log("Loaded blocked users:", blockedUserIds);
 			}
 		} catch (error) {
 			console.error("Error loading blocked users:", error);
@@ -281,7 +279,6 @@ export function SimpleChat() {
 	// Listen for friend status changes to reload friends data
 	useEffect(() => {
 		const handleFriendStatusChange = () => {
-			console.log("Friend status changed, reloading friends data...");
 			reloadFriendsData();
 			loadBlockedUsers(); // Also reload blocked users when friend status changes
 		};
@@ -372,11 +369,10 @@ export function SimpleChat() {
 
 		generalSocket.current.onmessage = (event) => {
 			try {
-				console.log("Received message:", event.data);
 				const msg = JSON.parse(event.data);
 
 				switch (
-					msg.type // Fixed missing parenthesis here
+					msg.type
 				) {
 					case "history":
 						setGeneralMessages(msg.messages);
@@ -388,7 +384,7 @@ export function SimpleChat() {
 						]);
 						break;
 					default:
-						console.error(`Unknown message: Type: ${msg.type} - Data:`, msg);
+						console.error(`Unknown message: Type: ${msg.type}`);
 						break;
 				}
 			} catch (error) {
@@ -423,8 +419,6 @@ export function SimpleChat() {
 			friendsSocket.current.readyState !== WebSocket.CLOSED
 		)
 			return;
-
-		console.log(`wss://localhost/api/ws/chat-friend?user_id=${userId}`);
 		friendsSocket.current = new WebSocket(
 			`wss://localhost/api/ws/chat-friend?user_id=${userId}`
 		);
@@ -440,12 +434,10 @@ export function SimpleChat() {
 
 		friendsSocket.current.onmessage = (event) => {
 			try {
-				console.log("Received message:", event.data);
 				const msg = JSON.parse(event.data);
 
 				switch (msg.type) {
 					case "MESSAGE_SENT":
-						console.log("Message sent:", msg);
 						setFriendsMessages((prevMessages) => ({
 							...prevMessages,
 							[msg.data.receiverId]: [
@@ -460,7 +452,6 @@ export function SimpleChat() {
 						}));
 						break;
 					case "NEW_MESSAGE":
-						console.log("New message received:", msg);
 						const friendName =
 							friends.current[msg.data.senderId]?.name || msg.senderName;
 						setFriendsMessages((prevMessages) => ({
@@ -478,12 +469,7 @@ export function SimpleChat() {
 						break;
 					case "SENT_HISTORY":
 						if (!msg.friendId) break;
-						console.log(
-							"Received history for friend: ",
-							msg.friendId,
-							"Messages:",
-							msg.messages
-						);
+
 						const newMessages = msg.messages.map((message: any) => ({
 							id: message.id,
 							userId: message.senderId,
@@ -493,12 +479,6 @@ export function SimpleChat() {
 									: friends.current[message.senderId]?.name || message.name,
 							content: message.content,
 						}));
-						console.log(
-							"New messages for friend:",
-							msg.friendId,
-							"Messages:",
-							newMessages
-						);
 
 						setFriendsMessages((otherMessages) => ({
 							...otherMessages,
@@ -506,7 +486,7 @@ export function SimpleChat() {
 						}));
 						break;
 					default:
-						console.error(`Unknown message: Type: ${msg.type} - Data:`, msg);
+						console.error(`Unknown message: Type: ${msg.type}`);
 						break;
 				}
 			} catch (error) {
@@ -566,8 +546,6 @@ export function SimpleChat() {
 		if (!friendsSocket.current) return;
 
 		setActiveFriend(friend);
-
-		console.log("Opening private chat with:", friend);
 
 		const message = {
 			type: "GET_HISTORY",
@@ -650,8 +628,6 @@ export function SimpleChat() {
 	// 4. Add new functions before the return statement
 	const handleSendGameInvite = async () => {
 		if (!activeFriend || !selectedGame || !friendsSocket.current) return;
-
-		console.log("handleSendGameInvite");
 
 		try {
 			// Generate a room code similar to the multiplayer dialog

@@ -48,7 +48,6 @@ export function GameModeDialog({
 	const [isMultiplayerDialogOpen, setIsMultiplayerDialogOpen] = useState(false);
 
 	function handleModeSelect(mode: GameMode) {
-		console.log(`Selected mode: ${mode} for ${gameType}`);
 		setSelectedMode(mode);
 
 		if (mode === GameMode.MULTIPLAYER) {

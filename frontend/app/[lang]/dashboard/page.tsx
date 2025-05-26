@@ -188,7 +188,7 @@ export default function DashboardPage() {
 						variant: ToastVariant.ERROR,
 						duration: 3000,
 					});
-					console.log("Error updating account", error);
+					console.error("Error updating account", error);
 				}
 			})
 			.finally(() => {
@@ -202,12 +202,9 @@ export default function DashboardPage() {
 	};
 
 	const confirmLogout = () => {
-		console.log("Logging out...");
-
 		axios
 			.get("/api/auth/logout")
 			.then(() => {
-				console.log("Logout successful");
 				setAccessToken(null);
 				localStorage.removeItem("userId");
 
@@ -225,8 +222,6 @@ export default function DashboardPage() {
 	};
 
 	const confirmDeleteAccount = () => {
-		console.log("Deleting account...");
-
 		try {
 			api
 				.delete(`/user/${user?.id}`)
@@ -251,6 +246,7 @@ export default function DashboardPage() {
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
+			console.error("Error deleting account:", err);
 		}
 		setDeleteAccountDialogOpen(false);
 	};
@@ -301,7 +297,6 @@ export default function DashboardPage() {
 	};
 
 	const confirmRemoveAvatar = () => {
-		console.log("Removing avatar...");
 		setRemoveAvatarDialogOpen(false);
 	};
 
@@ -341,7 +336,6 @@ export default function DashboardPage() {
 
 	const updateData = () => {
 		const userId = localStorage.getItem("userId");
-		console.log("userId: " + userId);
 
 		if (userId) {
 			api

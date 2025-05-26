@@ -143,7 +143,7 @@ export default function LoginPage() {
 						<div className="absolute top-0 left-0 right-0 h-1/2">
 							<div className="absolute inset-0 bg-black/30 z-10"></div>
 							<Image
-								src="https://archive.org/download/dino-run/dino-run.jpg"
+								src="/images/dino.jpg"
 								alt="Game character"
 								fill
 								className="object-cover blur-[2px] brightness-75 saturate-150"
@@ -155,7 +155,7 @@ export default function LoginPage() {
 						<div className="absolute bottom-0 left-0 right-0 h-1/2">
 							<div className="absolute inset-0 bg-black/30 z-10"></div>
 							<Image
-								src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png"
+								src="/images/pong.png"
 								alt="Game item"
 								fill
 								className="object-cover blur-[2px] brightness-75 saturate-150"

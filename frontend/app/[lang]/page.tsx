@@ -77,7 +77,7 @@ export default async function HomePage({
               <div className="group relative overflow-hidden rounded-lg pixel-border bg-card transition-all hover:shadow-xl">
                 <div className="aspect-video overflow-hidden">
                   <Image
-                    src="images/dino.jpg"
+                    src="/images/dino.jpg"
                     alt="Dino Game"
                     width={700}
                     height={400}

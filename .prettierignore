@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Package manager files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+example.env
+
+# Docker files
+Dockerfile
+docker-compose.yml
+
+# Generated files
+*.generated.*
+*.min.js
+*.min.css
+
+# Config files that should maintain their formatting
+tsconfig.json
+next.config.mjs
+postcss.config.mjs
+components.json
+
+# Certificates and keys
+**/*.crt
+**/*.key
+**/*.pem
+
+# Nginx config
+nginx.conf
+
+# Shell scripts
+**/*.sh
+
+# Logs
+*.log
+logs/
+
+# Cache directories
+.cache/
+.turbo/
+
+# IDE files
+.vscode/
+.idea/
+
+# Documentation that might have specific formatting
+README.md
+CHANGELOG.md
+
+# Locale files (might have specific formatting requirements)
+**/locales/*.json

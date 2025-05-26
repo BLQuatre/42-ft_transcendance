@@ -1,6 +1,7 @@
 import { TournamentBracket } from "@/components/TournamentBracket";
 import { UpcomingMatches } from "@/components/UpcomingMatches";
 import { Game } from "@/lib/pong/game";
+import { useDictionary } from "@/hooks/UseDictionnary";
 
 type Player = {
 	name: string;
@@ -44,10 +45,14 @@ export default function TournamentView({
 	validateNames,
 	launchGame,
 }: TournamentViewProps) {
+	const dict = useDictionary();
+	if (!dict)
+		return null
+
 	if (!tournamentData) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
-				<div className="font-pixel text-lg animate-pulse">LOADING...</div>
+				<div className="font-pixel text-lg animate-pulse">{dict.common.loading}</div>
 			</div>
 		);
 	}
@@ -61,7 +66,7 @@ export default function TournamentView({
 					<h1
 						className={`font-pixel text-2xl md:text-3xl text-game-blue uppercase mb-6`}
 					>
-						PONG TOURNAMENT
+						{dict.tournament.pongTournament}
 					</h1>
 				</section>
 
@@ -77,7 +82,7 @@ export default function TournamentView({
 				<section className={`mb-12 pb-8 border-b border-game-blue/20`}>
 					<div className="flex items-center justify-between mb-6">
 						<h2 className={`font-pixel text-xl text-game-blue uppercase`}>
-							Upcoming Matches
+							{dict.tournament.upcomingMatches}
 						</h2>
 					</div>
 					<div className={`bg-game-blue/5 rounded-lg p-6`}>

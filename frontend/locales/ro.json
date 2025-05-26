@@ -739,6 +739,10 @@
 		"inviteToPlay": "Invită să joace",
 		"aFriend": "un prieten",
 		"copied": "COPIAT!",
-		"join": "ALĂTURĂ-TE"
+		"join": "ALĂTURĂ-TE",
+		"hiddenMessage": "Mesaj ascunse",
+		"fromBlockedUser": "De la un utilizator blocat",
+		"showBlockedMessages": "Arată mesajele blocate",
+		"hideBlockedMessages": "Ascunde mesajele blocate"
 	}
 }

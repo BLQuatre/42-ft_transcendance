@@ -411,6 +411,54 @@
 					}
 				}
 			}
+		},
+		"notifications": {
+			"account": {
+				"updateSuccess": {
+					"title": "Account Updated",
+					"description": "Your account has been updated successfully"
+				},
+				"updateError": {
+					"title": "Error",
+					"description": "There was an error updating your account"
+				},
+				"deleteSuccess": {
+					"title": "Account Deleted",
+					"description": "Your account has been deleted successfully"
+				},
+				"deleteError": {
+					"title": "Error",
+					"description": "There was an error when deleting your account: %message%"
+				}
+			},
+			"avatar": {
+				"updateSuccess": {
+					"title": "Avatar Updated",
+					"description": "Your avatar has been updated successfully"
+				},
+				"updateError": {
+					"title": "Error",
+					"description": "There was an error updating your avatar: %message%"
+				},
+				"removeSuccess": {
+					"title": "Avatar Removed",
+					"description": "Your avatar has been removed successfully"
+				},
+				"removeError": {
+					"title": "Error",
+					"description": "There was an error removing your avatar: %message%"
+				}
+			},
+			"twoFactor": {
+				"enableSuccess": {
+					"title": "2FA Enabled",
+					"description": "2FA has been enabled successfully"
+				},
+				"disableSuccess": {
+					"title": "2FA Disabled",
+					"description": "2FA has been disabled successfully"
+				}
+			}
 		}
 	},
 

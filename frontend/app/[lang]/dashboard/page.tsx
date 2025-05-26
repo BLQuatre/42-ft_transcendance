@@ -172,19 +172,19 @@ export default function DashboardPage() {
 			.then(() => {
 				updateData();
 				toast({
-					title: "Account Updated",
-					description: "Your account has been updated successfully",
+					title: dict.dashboard.notifications.account.updateSuccess.title,
+					description: dict.dashboard.notifications.account.updateSuccess.description,
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				});
 			})
 			.catch((error) => {
 				if (error.status === 409) {
-					setUsernameError("Username already taken");
+					setUsernameError(dict.connection.validation.username.taken);
 				} else {
 					toast({
-						title: "Error",
-						description: "There was an error updating your account",
+						title: dict.dashboard.notifications.account.updateError.title,
+						description: dict.dashboard.notifications.account.updateError.description,
 						variant: ToastVariant.ERROR,
 						duration: 3000,
 					});
@@ -227,8 +227,8 @@ export default function DashboardPage() {
 				.delete(`/user/${user?.id}`)
 				.then(() => {
 					toast({
-						title: "Account Deleted",
-						description: "Your account has been deleted successfully",
+						title: dict.dashboard.notifications.account.deleteSuccess.title,
+						description: dict.dashboard.notifications.account.deleteSuccess.description,
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					});
@@ -241,8 +241,8 @@ export default function DashboardPage() {
 				});
 		} catch (err: any) {
 			toast({
-				title: "Error",
-				description: `There was an error when deleting your account: ${err.message}`,
+				title: dict.dashboard.notifications.account.deleteError.title,
+				description: dict.dashboard.notifications.account.deleteError.description.replace('%message%', err.message),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -276,16 +276,16 @@ export default function DashboardPage() {
 				.then(() => {
 					updateData();
 					toast({
-						title: "Avatar Updated",
-						description: "Your avatar has been updated successfully",
+						title: dict.dashboard.notifications.avatar.updateSuccess.title,
+						description: dict.dashboard.notifications.avatar.updateSuccess.description,
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					});
 				});
 		} catch (err: any) {
 			toast({
-				title: "Error",
-				description: `There was an error updating your avatar: ${err.message}`,
+				title: dict.dashboard.notifications.avatar.updateError.title,
+				description: dict.dashboard.notifications.avatar.updateError.description.replace('%message%', err.message),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -306,15 +306,15 @@ export default function DashboardPage() {
 
 			updateData();
 			toast({
-				title: "Avatar Removed",
-				description: "Your avatar has been removed successfully",
+				title: dict.dashboard.notifications.avatar.removeSuccess.title,
+				description: dict.dashboard.notifications.avatar.removeSuccess.description,
 				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			});
 		} catch (err: any) {
 			toast({
-				title: "Error",
-				description: `There was an error removing your avatar: ${err.message}`,
+				title: dict.dashboard.notifications.avatar.removeError.title,
+				description: dict.dashboard.notifications.avatar.removeError.description.replace('%message%', err.message),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -324,8 +324,8 @@ export default function DashboardPage() {
 	const handle2FAComplete = () => {
 		updateData();
 		toast({
-			title: "2FA Enabled",
-			description: "2FA has been enabled successfully",
+			title: dict.dashboard.notifications.twoFactor.enableSuccess.title,
+			description: dict.dashboard.notifications.twoFactor.enableSuccess.description,
 			variant: ToastVariant.SUCCESS,
 			duration: 3000,
 		});
@@ -341,15 +341,15 @@ export default function DashboardPage() {
 				setTwoFactorVerifyOpen(false);
 				setRemove2FADialogOpen(false);
 				toast({
-					title: "2FA Disabled",
-					description: "2FA has been disabled successfully",
+					title: dict.dashboard.notifications.twoFactor.disableSuccess.title,
+					description: dict.dashboard.notifications.twoFactor.disableSuccess.description,
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				});
 				updateData();
 			}
 		} catch (error) {
-			setTwoFactorVerifyError("Invalid code");
+			setTwoFactorVerifyError(dict.connection.errors.invalidCode);
 		} finally {
 			setTwoFactorVerifyLoading(false);
 		}

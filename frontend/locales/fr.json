@@ -157,6 +157,7 @@
 		"save": "Enregistrer les modifications",
 		"cancel": "Annuler",
 		"close": "FERMER",
+		"error": "Erreur",
 		"backToHome": "RETOUR À L'ACCUEIL"
 	},
 
@@ -407,6 +408,54 @@
 						"enabled": "L'authentification à deux facteurs est activée",
 						"disabled": "L'authentification à deux facteurs est désactivée"
 					}
+				}
+			}
+		},
+		"notifications": {
+			"account": {
+				"updateSuccess": {
+					"title": "Compte Mis à Jour",
+					"description": "Votre compte a été mis à jour avec succès"
+				},
+				"updateError": {
+					"title": "Erreur",
+					"description": "Une erreur s'est produite lors de la mise à jour de votre compte"
+				},
+				"deleteSuccess": {
+					"title": "Compte Supprimé",
+					"description": "Votre compte a été supprimé avec succès"
+				},
+				"deleteError": {
+					"title": "Erreur",
+					"description": "Une erreur s'est produite lors de la suppression de votre compte: %message%"
+				}
+			},
+			"avatar": {
+				"updateSuccess": {
+					"title": "Avatar Mis à Jour",
+					"description": "Votre avatar a été mis à jour avec succès"
+				},
+				"updateError": {
+					"title": "Erreur",
+					"description": "Une erreur s'est produite lors de la mise à jour de votre avatar: %message%"
+				},
+				"removeSuccess": {
+					"title": "Avatar Supprimé",
+					"description": "Votre avatar a été supprimé avec succès"
+				},
+				"removeError": {
+					"title": "Erreur",
+					"description": "Une erreur s'est produite lors de la suppression de votre avatar: %message%"
+				}
+			},
+			"twoFactor": {
+				"enableSuccess": {
+					"title": "2FA Activée",
+					"description": "La 2FA a été activée avec succès"
+				},
+				"disableSuccess": {
+					"title": "2FA Désactivée",
+					"description": "La 2FA a été désactivée avec succès"
 				}
 			}
 		}

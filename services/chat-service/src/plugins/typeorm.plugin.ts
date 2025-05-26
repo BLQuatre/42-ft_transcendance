@@ -5,9 +5,9 @@ const typeormPlugin: FastifyPluginAsync = async (fastify) => {
 	try {
 		await AppDataSource.initialize();
 
-		fastify.log.info('Connected to database');
+		fastify.log.info("Connected to database");
 
-		fastify.addHook('onClose', async () => {
+		fastify.addHook("onClose", async () => {
 			await AppDataSource.destroy();
 		});
 	} catch (error) {

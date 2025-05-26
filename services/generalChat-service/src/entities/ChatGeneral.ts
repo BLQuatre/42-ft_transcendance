@@ -1,22 +1,28 @@
-import {PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, Entity} from 'typeorm';
+import {
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+	UpdateDateColumn,
+	Entity,
+} from "typeorm";
 
-@Entity('chat_general')
+@Entity("chat_general")
 export class ChatGeneral {
-    @PrimaryGeneratedColumn('uuid')
-    id!: string;
+	@PrimaryGeneratedColumn("uuid")
+	id!: string;
 
-    @Column()
-    content!: string;
+	@Column()
+	content!: string;
 
-    @Column()
-    userId!: string;
+	@Column()
+	userId!: string;
 
-    @Column()
-    name!: string;
+	@Column()
+	name!: string;
 
-    @CreateDateColumn()
-    created_at!: Date;
+	@CreateDateColumn()
+	created_at!: Date;
 
-    @UpdateDateColumn()
-    updated_at!: Date;
+	@UpdateDateColumn()
+	updated_at!: Date;
 }

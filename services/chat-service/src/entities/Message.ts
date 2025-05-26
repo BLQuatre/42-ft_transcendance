@@ -1,14 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	CreateDateColumn,
+} from "typeorm";
 
 @Entity("message")
-export class Message{
+export class Message {
 	@PrimaryGeneratedColumn("uuid")
 	id!: string;
 
 	@Column()
 	senderId!: string;
 
-	@Column!()
+	@(Column!())
 	receiverId!: string;
 
 	@Column()
@@ -18,5 +23,5 @@ export class Message{
 	created_at!: Date;
 
 	@Column({ default: false })
-	isRead!: boolean
+	isRead!: boolean;
 }

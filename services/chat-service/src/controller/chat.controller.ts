@@ -1,11 +1,11 @@
-import { FastifyRequest } from 'fastify';
-import { WebSocket } from '@fastify/websocket';
-import { ChatService } from '../services/chat.service';
-import axios from 'axios';
-import dotenv from 'dotenv';
-import path from 'path';
+import { FastifyRequest } from "fastify";
+import { WebSocket } from "@fastify/websocket";
+import { ChatService } from "../services/chat.service";
+import axios from "axios";
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 interface ActiveConnection {
 	user_id: string;
@@ -13,7 +13,7 @@ interface ActiveConnection {
 }
 
 interface SchemaId {
-	user_id: string
+	user_id: string;
 }
 
 export class ChatController {
@@ -21,97 +21,128 @@ export class ChatController {
 	private chatService = new ChatService();
 
 	async handleConnection(connection: WebSocket, req: FastifyRequest) {
-		const { user_id } = req.query as SchemaId
+		const { user_id } = req.query as SchemaId;
 
 		if (!user_id) {
-			connection.close(4000, 'User ID is required');
+			connection.close(4000, "User ID is required");
 			return;
 		}
 		try {
-			const dataUserId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${user_id}`)
+			const dataUserId = await axios.get(
+				`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${user_id}`
+			);
 
-			this.activeConnections.set(user_id, { user_id: user_id, socket: connection });
+			this.activeConnections.set(user_id, {
+				user_id: user_id,
+				socket: connection,
+			});
 
-			connection.on('close', () => {
+			connection.on("close", () => {
 				this.activeConnections.delete(user_id);
 			});
 
-			connection.on('message', async (message: string) => {
-				console.log('[DEBUG] Received message:', message);
+			connection.on("message", async (message: string) => {
+				console.log("[DEBUG] Received message:", message);
 				const data = JSON.parse(message);
 
 				switch (data.type) {
-					case 'SEND_MESSAGE':
-						await this.handleSendMessage(user_id, data.receiverId, data.content, dataUserId.data.user.name);
+					case "SEND_MESSAGE":
+						await this.handleSendMessage(
+							user_id,
+							data.receiverId,
+							data.content,
+							dataUserId.data.user.name
+						);
 						break;
-					case 'GET_HISTORY':
-						console.log('[DEBUG] GET_HISTORY called', JSON.stringify(data));
+					case "GET_HISTORY":
+						console.log("[DEBUG] GET_HISTORY called", JSON.stringify(data));
 						await this.handleGetHistory(user_id, data.receiverId);
 						break;
 					default:
-						connection.send(JSON.stringify({
-							type: 'ERROR',
-							data: { message: 'Unknow message type' }
-						}));
+						connection.send(
+							JSON.stringify({
+								type: "ERROR",
+								data: { message: "Unknow message type" },
+							})
+						);
 				}
-			})
+			});
 		} catch (err) {
-			connection.send(JSON.stringify({
-				type: 'ERROR',
-				message: 'user not found'
-			}))
+			connection.send(
+				JSON.stringify({
+					type: "ERROR",
+					message: "user not found",
+				})
+			);
 		}
 	}
 
-	private async handleSendMessage(senderId: string, receiverId: string, content: string, senderName: string) {
-		const message = await this.chatService.saveMessage(senderId, receiverId, content);
-		const recId = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${receiverId}`)
-		.catch(() => {
-			this.sendToUser(senderId, {
-				type: 'ERROR',
-				data: { message: 'undefined user'}
-			})
-		})
+	private async handleSendMessage(
+		senderId: string,
+		receiverId: string,
+		content: string,
+		senderName: string
+	) {
+		const message = await this.chatService.saveMessage(
+			senderId,
+			receiverId,
+			content
+		);
+		const recId = await axios
+			.get(
+				`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${receiverId}`
+			)
+			.catch(() => {
+				this.sendToUser(senderId, {
+					type: "ERROR",
+					data: { message: "undefined user" },
+				});
+			});
 
 		if (recId) {
 			this.sendToUser(senderId, {
-				type: 'MESSAGE_SENT',
+				type: "MESSAGE_SENT",
 				data: message,
 				receiverName: recId.data.user.name,
-				senderName
+				senderName,
 			});
 
 			this.sendToUser(receiverId, {
-				type: 'NEW_MESSAGE',
+				type: "NEW_MESSAGE",
 				data: message,
 				receiverName: recId.data.user.name,
-				senderName
+				senderName,
 			});
 		}
 	}
 
 	private async handleGetHistory(userId: string, otherUserId: string) {
-		console.log('[DEBUG] handleGetHistory called', { userId, otherUserId });
+		console.log("[DEBUG] handleGetHistory called", { userId, otherUserId });
 
 		try {
-			const otherIdUser = await axios.get(`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${otherUserId}`);
+			const otherIdUser = await axios.get(
+				`http://${process.env.USER_HOST}:${process.env.USER_PORT}/user/${otherUserId}`
+			);
 
-			const messages = await this.chatService.getMessageBetweenUsers(userId, otherUserId);
-			const msg = messages.map(message => ({
+			const messages = await this.chatService.getMessageBetweenUsers(
+				userId,
+				otherUserId
+			);
+			const msg = messages.map((message) => ({
 				...message,
-				name: otherIdUser.data.user.name
-			}))
+				name: otherIdUser.data.user.name,
+			}));
 			this.sendToUser(userId, {
-				type: 'SENT_HISTORY',
+				type: "SENT_HISTORY",
 				messages: msg,
 				friendId: otherUserId,
 			});
 		} catch (error) {
-			console.error('[ERROR] Error in handleGetHistory:', error);
+			console.error("[ERROR] Error in handleGetHistory:", error);
 
 			this.sendToUser(userId, {
-				type: 'ERROR',
-				data: { message: 'Not found user for this history' }
+				type: "ERROR",
+				data: { message: "Not found user for this history" },
 			});
 		}
 	}

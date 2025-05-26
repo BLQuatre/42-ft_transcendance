@@ -306,13 +306,11 @@ export const getQrCodeSecret = async (
 			statusCode: 404,
 		});
 	}
-	return reply
-		.code(200)
-		.send({
-			message: "request succesfull",
-			statusCode: 200,
-			secret: user.tfaSecret.base32,
-		});
+	return reply.code(200).send({
+		message: "request succesfull",
+		statusCode: 200,
+		secret: user.tfaSecret.base32,
+	});
 };
 
 export const heartbeat = async (req: FastifyRequest, reply: FastifyReply) => {

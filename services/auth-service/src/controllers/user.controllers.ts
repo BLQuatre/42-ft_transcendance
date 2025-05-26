@@ -97,13 +97,11 @@ export const login = async (
 
 	if (response) {
 		if (response.data.user.tfaEnable) {
-			return reply
-				.code(202)
-				.send({
-					message: "We need our otp code to login you",
-					statusCode: 202,
-					id: response.data.user.id,
-				});
+			return reply.code(202).send({
+				message: "We need our otp code to login you",
+				statusCode: 202,
+				id: response.data.user.id,
+			});
 		}
 		const accessToken = jwt.sign(
 			{ id: response.data.user.id, name: response.data.user.name },

@@ -451,7 +451,6 @@ export default function PongGamePage() {
 						tournamentData={tournamentData}
 						validateNames={validateNames}
 						launchGame={launchGame}
-						dict={dict}
 					/>
 
 					{/* Tournament Winner Overlay */}

@@ -173,7 +173,7 @@ export function MultiplayerOptionsDialog({
 						</Button>
 					</DialogClose>
 					<Button
-						variant="default"
+						variant="custom"
 						className={cn("font-pixel text-xs", getBgColor(gameType))}
 						disabled={
 							!selectedOption ||

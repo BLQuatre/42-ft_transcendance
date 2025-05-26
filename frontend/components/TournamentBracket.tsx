@@ -71,8 +71,8 @@ export function TournamentBracket({
 	const checkNames = () => {
 		if (!userNames.every((name) => name !== "")) {
 			toast({
-				title: "Error",
-				description: "You need to enter all the players names",
+				title: dict.common.error,
+				description: dict.tournament.errors.enterAllNames,
 				variant: ToastVariant.WARNING,
 				duration: 3000,
 			});
@@ -80,8 +80,8 @@ export function TournamentBracket({
 		}
 		if (!(userNames.length === new Set(userNames).size)) {
 			toast({
-				title: "Error",
-				description: "You can't have duplicate names",
+				title: dict.common.error,
+				description: dict.tournament.errors.duplicateNames,
 				variant: ToastVariant.WARNING,
 				duration: 3000,
 			});

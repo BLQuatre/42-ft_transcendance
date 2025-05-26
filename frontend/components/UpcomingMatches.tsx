@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { useDictionary } from "@/hooks/UseDictionnary";
 
 type Player = {
 	name: string;
@@ -23,12 +24,15 @@ type UpcomingMatchesProps = {
 };
 
 export function UpcomingMatches({ matches, launchGame }: UpcomingMatchesProps) {
+	const dict = useDictionary();
+	if (!dict) return null;
+
 	return (
 		<div className="space-y-4">
 			{matches.length === 0 ? (
 				<div className="text-center py-8">
 					<p className="font-pixel text-sm text-muted-foreground uppercase">
-						No upcoming matches
+						{dict.tournament.noUpcomingMatches}
 					</p>
 				</div>
 			) : (
@@ -85,7 +89,7 @@ export function UpcomingMatches({ matches, launchGame }: UpcomingMatchesProps) {
 											className={`font-pixel text-xs uppercase bg-game-blue hover:bg-game-blue/90`}
 											onClick={launchGame}
 										>
-											PLAY LOCAL
+											{dict.tournament.playLocal}
 										</Button>
 									</div>
 								)}

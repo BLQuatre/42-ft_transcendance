@@ -1,18 +1,24 @@
-import { Trophy } from "lucide-react"
-import BackToHomeButton from "./BackToHome"
+import { Trophy } from "lucide-react";
+import BackToHomeButton from "./BackToHome";
 
 interface ScoreDisplayProps {
-	leftScore: number
-	rightScore: number
-	winningScore: number
-	gameFinished: boolean
-	isTournament?: boolean
+	leftScore: number;
+	rightScore: number;
+	winningScore: number;
+	gameFinished: boolean;
+	isTournament?: boolean;
 }
 
-export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished, isTournament=false }: ScoreDisplayProps) {
-	const leftWon = leftScore === winningScore
-	const rightWon = rightScore === winningScore
-	const scoreFlames = (leftScore * rightScore) >= 42
+export function ScoreDisplay({
+	leftScore,
+	rightScore,
+	winningScore,
+	gameFinished,
+	isTournament = false,
+}: ScoreDisplayProps) {
+	const leftWon = leftScore === winningScore;
+	const rightWon = rightScore === winningScore;
+	const scoreFlames = leftScore * rightScore >= 42;
 
 	return (
 		<>
@@ -86,44 +92,55 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
 				`}
 			</style>
 
-
 			{/* Scores at the top */}
 			<div className="absolute top-4 left-0 right-0 z-20">
 				{/* Left score positioned in the middle of left half */}
 				<div className="absolute left-1/4 -translate-x-1/2 flex flex-col items-center">
 					<div className="text-[#4A9DFF] font-pixel text-2xl md:text-3xl font-bold fire-container blue-flames">
-						{scoreFlames ? <>
-							<div className="flame-layer" />
-							<div className="flame-layer" />
-							<div className="flame-layer" />
-							<div className="text-[#FFFFFF] relative z-10"> {leftScore} </div>
-						</> : <>
-							<div className="relative z-10"> {leftScore} </div>
-						</>}
+						{scoreFlames ? (
+							<>
+								<div className="flame-layer" />
+								<div className="flame-layer" />
+								<div className="flame-layer" />
+								<div className="text-[#FFFFFF] relative z-10">
+									{" "}
+									{leftScore}{" "}
+								</div>
+							</>
+						) : (
+							<>
+								<div className="relative z-10"> {leftScore} </div>
+							</>
+						)}
 					</div>
 				</div>
 
 				{/* Right score positioned in the middle of right half */}
 				<div className="absolute left-3/4 -translate-x-1/2 flex flex-col items-center">
 					<div className="text-[#FFA500] font-pixel text-2xl md:text-3xl font-bold fire-container orange-flames">
-						{scoreFlames ? <>
-							<div className="flame-layer" />
-							<div className="flame-layer" />
-							<div className="flame-layer" />
-							<div className="text-[#FFFFFF] relative z-10"> {rightScore} </div>
-						</> : <>
-							<div className="relative z-10"> {rightScore} </div>
-						</>}
+						{scoreFlames ? (
+							<>
+								<div className="flame-layer" />
+								<div className="flame-layer" />
+								<div className="flame-layer" />
+								<div className="text-[#FFFFFF] relative z-10">
+									{" "}
+									{rightScore}{" "}
+								</div>
+							</>
+						) : (
+							<>
+								<div className="relative z-10"> {rightScore} </div>
+							</>
+						)}
 					</div>
 				</div>
 			</div>
-
 
 			{/* Trophies in the center of each side */}
 			{gameFinished && (
 				<div className="absolute inset-0 z-30">
 					<div className="pointer-events-none">
-						
 						{/* Left trophy */}
 						{leftWon && (
 							<div className="absolute left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-bounce">
@@ -133,7 +150,7 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
 								</span>
 							</div>
 						)}
-	
+
 						{/* Right trophy */}
 						{rightWon && (
 							<div className="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-bounce">
@@ -146,9 +163,14 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
 					</div>
 
 					{/* Back to home button at bottom of page */}
-					{!isTournament && <BackToHomeButton gameType="pong" className="absolute bottom-4 left-4 right-4"/>}
+					{!isTournament && (
+						<BackToHomeButton
+							gameType="pong"
+							className="absolute bottom-4 left-4 right-4"
+						/>
+					)}
 				</div>
 			)}
 		</>
-	)
+	);
 }

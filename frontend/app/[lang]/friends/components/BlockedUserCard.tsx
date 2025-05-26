@@ -23,7 +23,9 @@ export function BlockedUserCard({ user, onUnblock }: BlockedUserCardProps) {
 				</Avatar>
 				<div>
 					<Link href={`/profile/${user.id}`} className="hover:underline">
-						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{user.name}</p>
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">
+							{user.name}
+						</p>
 					</Link>
 				</div>
 			</div>

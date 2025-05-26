@@ -1,33 +1,35 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 export function useTermsPrivacy() {
-  const [showDialog, setShowDialog] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+	const [showDialog, setShowDialog] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if terms and privacy have been accepted
-    const checkAcceptance = () => {
-      const cookies = document.cookie.split(";")
-      const termsAccepted = cookies.some((cookie) => cookie.trim().startsWith("terms-privacy-accepted=true"))
+	useEffect(() => {
+		// Check if terms and privacy have been accepted
+		const checkAcceptance = () => {
+			const cookies = document.cookie.split(";");
+			const termsAccepted = cookies.some((cookie) =>
+				cookie.trim().startsWith("terms-privacy-accepted=true")
+			);
 
-      if (!termsAccepted) {
-        setShowDialog(true)
-      }
-      setIsLoading(false)
-    }
+			if (!termsAccepted) {
+				setShowDialog(true);
+			}
+			setIsLoading(false);
+		};
 
-    checkAcceptance()
-  }, [])
+		checkAcceptance();
+	}, []);
 
-  const handleAccept = () => {
-    setShowDialog(false)
-  }
+	const handleAccept = () => {
+		setShowDialog(false);
+	};
 
-  return {
-    showDialog,
-    isLoading,
-    handleAccept,
-  }
+	return {
+		showDialog,
+		isLoading,
+		handleAccept,
+	};
 }

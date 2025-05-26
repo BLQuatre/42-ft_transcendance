@@ -14,9 +14,14 @@ interface FriendCardProps {
 	onChat: (friend: BaseUser) => void;
 }
 
-export function FriendCard({ friend, onRemove, onBlock, onChat }: FriendCardProps) {
-	const dict = useDictionary()
-	if (!dict) return null
+export function FriendCard({
+	friend,
+	onRemove,
+	onBlock,
+	onChat,
+}: FriendCardProps) {
+	const dict = useDictionary();
+	if (!dict) return null;
 
 	return (
 		<div className="flex items-center justify-between p-3 bg-muted rounded-lg">
@@ -31,10 +36,14 @@ export function FriendCard({ friend, onRemove, onBlock, onChat }: FriendCardProp
 				</div>
 				<div>
 					<Link href={`/profile/${friend.id}`} className="hover:underline">
-						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{friend.name}</p>
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">
+							{friend.name}
+						</p>
 					</Link>
 					<p className="font-pixel text-xs text-muted-foreground">
-						{friend.status === UserStatus.ONLINE ? dict.userStatus.online : dict.userStatus.offline}
+						{friend.status === UserStatus.ONLINE
+							? dict.userStatus.online
+							: dict.userStatus.offline}
 					</p>
 				</div>
 			</div>
@@ -63,7 +72,6 @@ export function FriendCard({ friend, onRemove, onBlock, onChat }: FriendCardProp
 				>
 					<UserMinus className="h-4 w-4" />
 				</Button>
-
 			</div>
 		</div>
 	);

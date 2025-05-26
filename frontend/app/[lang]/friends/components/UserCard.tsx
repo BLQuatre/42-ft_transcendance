@@ -16,7 +16,13 @@ interface UserCardProps {
 	onUnblock: (id: string) => void;
 }
 
-export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: UserCardProps) {
+export function UserCard({
+	user,
+	status,
+	sendRequest,
+	onBlock,
+	onUnblock,
+}: UserCardProps) {
 	console.log(`UserId: ${user.id}, Status: ${status}`);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +52,9 @@ export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: User
 				</Avatar>
 				<div>
 					<Link href={`/profile/${user.id}`} className="hover:underline">
-						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{user.name}</p>
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">
+							{user.name}
+						</p>
 					</Link>
 				</div>
 			</div>

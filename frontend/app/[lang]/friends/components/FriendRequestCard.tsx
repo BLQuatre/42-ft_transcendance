@@ -13,9 +13,13 @@ interface FriendRequestCardProps {
 	declineRequest: (id: string) => void;
 }
 
-export function FriendRequestCard({ friend, acceptRequest, declineRequest }: FriendRequestCardProps) {
-	const dict = useDictionary()
-	if (!dict) return null
+export function FriendRequestCard({
+	friend,
+	acceptRequest,
+	declineRequest,
+}: FriendRequestCardProps) {
+	const dict = useDictionary();
+	if (!dict) return null;
 
 	return (
 		<div className="flex items-center justify-between p-3 bg-muted rounded-lg">
@@ -30,7 +34,9 @@ export function FriendRequestCard({ friend, acceptRequest, declineRequest }: Fri
 				</div>
 				<div>
 					<Link href={`/profile/${friend.id}`} className="hover:underline">
-						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{friend.name}</p>
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">
+							{friend.name}
+						</p>
 					</Link>
 				</div>
 			</div>

@@ -1,121 +1,140 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useRef, useState } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
-import { MainNav } from "@/components/Navbar"
-import { FcGoogle } from "react-icons/fc"
-import { useDictionary } from "@/hooks/UseDictionnary"
-import { Eye, EyeOff } from 'lucide-react'
-import { useRouter } from "next/navigation"
-import axios from "axios"
-import { cn } from "@/lib/utils"
-import { useAuth } from "@/contexts/auth-context"
-import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
-import { TermsPrivacyDialog } from "@/components/dialog/TermsPrivacyDialog"
-import { useTermsPrivacy } from "@/hooks/UseTermsPrivacy"
-import api from "@/lib/api"
+import { useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { MainNav } from "@/components/Navbar";
+import { FcGoogle } from "react-icons/fc";
+import { useDictionary } from "@/hooks/UseDictionnary";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/auth-context";
+import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog";
+import { TermsPrivacyDialog } from "@/components/dialog/TermsPrivacyDialog";
+import { useTermsPrivacy } from "@/hooks/UseTermsPrivacy";
+import api from "@/lib/api";
 
 export default function LoginPage() {
-	const router = useRouter()
-	const { setAccessToken } = useAuth()
- 	const { showDialog: showTermsDialog, isLoading: termsLoading, handleAccept: handleTermsAccept } = useTermsPrivacy()
+	const router = useRouter();
+	const { setAccessToken } = useAuth();
+	const {
+		showDialog: showTermsDialog,
+		isLoading: termsLoading,
+		handleAccept: handleTermsAccept,
+	} = useTermsPrivacy();
 
-	const [isLoading, setIsLoading] = useState(false)
-	const [showPassword, setShowPassword] = useState(false)
+	const [isLoading, setIsLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 
-	const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
-	const [loginError, setLoginError] = useState<string | null>(null)
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [loginError, setLoginError] = useState<string | null>(null);
 
-	const userId = useRef<string | null>(null)
+	const userId = useRef<string | null>(null);
 
 	// 2FA state
-	const [twoFactorVerifyDialog, setTwoFactorVerifyDialog] = useState(false)
-	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
+	const [twoFactorVerifyDialog, setTwoFactorVerifyDialog] = useState(false);
+	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<
+		string | null
+	>(null);
 
 	async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault()
-		setIsLoading(true)
-		setLoginError(null)
+		event.preventDefault();
+		setIsLoading(true);
+		setLoginError(null);
 
 		console.log("Login submitted");
 
 		try {
-			const response = await axios.post('/api/auth/login', {
+			const response = await axios.post("/api/auth/login", {
 				name: username,
-				password: password
-			})
+				password: password,
+			});
 
-			console.log("Login response:", response.status, response.data)
+			console.log("Login response:", response.status, response.data);
 
 			// Check if 2FA is required (status 200 but no access token)
 			if (response.status === 202) {
-				userId.current = response.data.id
-				setTwoFactorVerifyDialog(true)
-				setIsLoading(false)
+				userId.current = response.data.id;
+				setTwoFactorVerifyDialog(true);
+				setIsLoading(false);
 			} else {
-				setAccessToken(response.data.accessToken)
-				localStorage.setItem("userId", response.data.user.id)
-				router.push("/")
+				setAccessToken(response.data.accessToken);
+				localStorage.setItem("userId", response.data.user.id);
+				router.push("/");
 			}
 		} catch (error: any) {
-			console.error("Login error:", error)
+			console.error("Login error:", error);
 			if (error.response?.status === 401 || error.response?.status === 404) {
-				setLoginError(dict.connection.errors?.invalidCredentials || "Invalid username or password")
+				setLoginError(
+					dict.connection.errors?.invalidCredentials ||
+						"Invalid username or password"
+				);
 			} else {
-				setLoginError(dict.connection.errors?.generic || "An error occurred. Please try again.")
+				setLoginError(
+					dict.connection.errors?.generic ||
+						"An error occurred. Please try again."
+				);
 			}
-			setIsLoading(false)
+			setIsLoading(false);
 		}
 	}
 
 	async function handleGoogleLogin() {
-		window.location.href = '/api/auth/google';
+		window.location.href = "/api/auth/google";
 	}
 
 	const handleVerify2FA = async (code: string) => {
-		setIsLoading(true)
+		setIsLoading(true);
 
 		if (!userId.current) {
-			setTwoFactorVerifyError(dict.connection.errors?.generic || "An error occurred. Please try again.")
-			setIsLoading(false)
-			return
+			setTwoFactorVerifyError(
+				dict.connection.errors?.generic ||
+					"An error occurred. Please try again."
+			);
+			setIsLoading(false);
+			return;
 		}
 
-		setTwoFactorVerifyError(null)
+		setTwoFactorVerifyError(null);
 
 		try {
-			const response = await api.post(`/auth/tfa/verify/${userId.current}`, { token: code })
+			const response = await api.post(`/auth/tfa/verify/${userId.current}`, {
+				token: code,
+			});
 
-			setAccessToken(response.data.accessToken)
-			localStorage.setItem("userId", userId.current)
-			setTwoFactorVerifyDialog(false)
-			router.push("/")
+			setAccessToken(response.data.accessToken);
+			localStorage.setItem("userId", userId.current);
+			setTwoFactorVerifyDialog(false);
+			router.push("/");
 		} catch (error: any) {
-			setTwoFactorVerifyError(dict.connection.errors?.invalidCode || "Invalid verification code")
+			setTwoFactorVerifyError(
+				dict.connection.errors?.invalidCode || "Invalid verification code"
+			);
 		} finally {
-			setIsLoading(false)
+			setIsLoading(false);
 		}
-	}
+	};
 
 	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUsername(event.target.value)
-		setLoginError(null)
-	}
+		setUsername(event.target.value);
+		setLoginError(null);
+	};
 
 	const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setPassword(event.target.value)
-		setLoginError(null)
-	}
+		setPassword(event.target.value);
+		setLoginError(null);
+	};
 
-	const dict = useDictionary()
-	if (!dict) return null
+	const dict = useDictionary();
+	if (!dict) return null;
 
 	return (
 		<div className="min-h-screen bg-background flex flex-col">
@@ -166,8 +185,12 @@ export default function LoginPage() {
 						{/* Center logo/text overlay */}
 						<div className="absolute inset-0 flex items-center justify-center z-20">
 							<div className="bg-black/50 p-4 rounded-lg border border-game-blue/50 backdrop-blur-sm">
-								<h2 className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent text-center">ft_transcendance</h2>
-								<p className="font-pixel text-xs text-center text-white/70 mt-1">RETRO GAMES</p>
+								<h2 className="font-pixel text-xl bg-linear-to-r from-game-blue via-game-orange to-game-red bg-clip-text text-transparent text-center">
+									ft_transcendance
+								</h2>
+								<p className="font-pixel text-xs text-center text-white/70 mt-1">
+									RETRO GAMES
+								</p>
 							</div>
 						</div>
 
@@ -179,7 +202,9 @@ export default function LoginPage() {
 					</div>
 
 					<div className="p-8 flex flex-col justify-center">
-						<h1 className="font-pixel text-3xl text-center mb-8 uppercase">{dict.connection.login}</h1>
+						<h1 className="font-pixel text-3xl text-center mb-8 uppercase">
+							{dict.connection.login}
+						</h1>
 
 						<form onSubmit={onSubmit} className="space-y-6">
 							<div className="space-y-2">
@@ -230,14 +255,20 @@ export default function LoginPage() {
 											<Eye className="h-4 w-4 text-muted-foreground" />
 										)}
 										<span className="sr-only">
-											{showPassword ?
-												(dict.connection.password.hide || "Hide password") :
-												(dict.connection.password.show || "Show password")
-											}
+											{showPassword
+												? dict.connection.password.hide || "Hide password"
+												: dict.connection.password.show || "Show password"}
 										</span>
 									</Button>
 								</div>
-								<p className={cn("font-pixel text-xs text-red-500 mt-1", loginError ? "" : "select-none")}>{loginError || " "}</p>
+								<p
+									className={cn(
+										"font-pixel text-xs text-red-500 mt-1",
+										loginError ? "" : "select-none"
+									)}
+								>
+									{loginError || " "}
+								</p>
 							</div>
 							<Button
 								type="submit"
@@ -253,7 +284,9 @@ export default function LoginPage() {
 								<span className="w-full border-t border-muted" />
 							</div>
 							<div className="relative flex justify-center text-xs">
-								<span className="bg-card px-2 font-pixel text-muted-foreground uppercase">{dict.connection.or}</span>
+								<span className="bg-card px-2 font-pixel text-muted-foreground uppercase">
+									{dict.connection.or}
+								</span>
 							</div>
 						</div>
 
@@ -287,5 +320,5 @@ export default function LoginPage() {
 				error={twoFactorVerifyError}
 			/>
 		</div>
-	)
+	);
 }

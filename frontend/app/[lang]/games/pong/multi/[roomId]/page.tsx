@@ -1,59 +1,61 @@
-"use client"
+"use client";
 
-import { useParams } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
-import { MainNav } from "@/components/Navbar"
-import { Card, CardContent } from "@/components/ui/Card"
-import GameRoom, { GameRoom as GameRoomType, Player } from "@/components/WaitingRoom" // Import your GameRoom component
-import { ScoreDisplay } from "@/components/ScoreDisplay"
+import { useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { MainNav } from "@/components/Navbar";
+import { Card, CardContent } from "@/components/ui/Card";
+import GameRoom, {
+	GameRoom as GameRoomType,
+	Player,
+} from "@/components/WaitingRoom"; // Import your GameRoom component
+import { ScoreDisplay } from "@/components/ScoreDisplay";
 
-import { useAuth } from "@/contexts/auth-context"
-import { BaseUser } from "@/types/user"
-import api from "@/lib/api"
+import { useAuth } from "@/contexts/auth-context";
+import { BaseUser } from "@/types/user";
+import api from "@/lib/api";
 
-import { PongState } from "@/types/types" // Ensure this matches your backend types
-import * as CONST from '@/lib/pong/constants' 
-
+import { PongState } from "@/types/types"; // Ensure this matches your backend types
+import * as CONST from "@/lib/pong/constants";
 
 export default function PongGamePage() {
-	const { accessToken } = useAuth()
+	const { accessToken } = useAuth();
 
-	const params = useParams()
-	const roomId = params.roomId as string
+	const params = useParams();
+	const roomId = params.roomId as string;
 
-	const playerId = localStorage.getItem('userId')
+	const playerId = localStorage.getItem("userId");
 	const [user, setUser] = useState<BaseUser | null>(null);
 	useEffect(() => {
-		api.get(`/user/${playerId}`).then(response => {
+		api.get(`/user/${playerId}`).then((response) => {
 			setUser(response.data.user);
 		});
 	}, []);
-	
 
-	const canvasRef = useRef<HTMLCanvasElement>(null)
-	const [gameState, setGameState] = useState<PongState | null>(null)
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const [gameState, setGameState] = useState<PongState | null>(null);
 
-	const [gameFinished, setGameFinished] = useState<boolean>(false)
-	const gameFinishedRef = useRef(gameFinished)
+	const [gameFinished, setGameFinished] = useState<boolean>(false);
+	const gameFinishedRef = useRef(gameFinished);
 	useEffect(() => {
-		gameFinishedRef.current = gameFinished
-	}, [gameFinished])
+		gameFinishedRef.current = gameFinished;
+	}, [gameFinished]);
 
-	const socketRef = useRef<WebSocket | null>(null)
-	const router = useRouter()
+	const socketRef = useRef<WebSocket | null>(null);
+	const router = useRouter();
 
 	// Waiting room state
-	const [isLoading, setIsLoading] = useState(true)
-	const [room, setRoom] = useState<GameRoomType | null>(null)
-	const [gameInProgress, setGameInProgress] = useState(false)
-	const [scores, setScores] = useState({ left: 0, right: 0 })
-
+	const [isLoading, setIsLoading] = useState(true);
+	const [room, setRoom] = useState<GameRoomType | null>(null);
+	const [gameInProgress, setGameInProgress] = useState(false);
+	const [scores, setScores] = useState({ left: 0, right: 0 });
 
 	// Initialize the socket connection
 	useEffect(() => {
 		if (!accessToken) {
-			console.error("accessToken is undefined or invalid during WebSocket initialization");
+			console.error(
+				"accessToken is undefined or invalid during WebSocket initialization"
+			);
 			return;
 		}
 
@@ -63,12 +65,17 @@ export default function PongGamePage() {
 		}
 
 		if (!roomId) {
-			console.error("roomId is undefined or invalid during WebSocket initialization");
+			console.error(
+				"roomId is undefined or invalid during WebSocket initialization"
+			);
 			return;
 		}
 
 		// Prevent creating multiple connections
-		if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
+		if (
+			socketRef.current &&
+			socketRef.current.readyState !== WebSocket.CLOSED
+		) {
 			console.log("WebSocket connection already exists and is open");
 			return;
 		}
@@ -82,16 +89,20 @@ export default function PongGamePage() {
 			console.log("Connected to game server");
 
 			// After connection, immediately send uuid
-			socket.send(JSON.stringify({
-				type: "assign",
-				uuid: playerId,
-				name: user?.name || 'Player'
-			}));
+			socket.send(
+				JSON.stringify({
+					type: "assign",
+					uuid: playerId,
+					name: user?.name || "Player",
+				})
+			);
 			// Then, send join_room message with roomId
-			socket.send(JSON.stringify({
-				type: "join_room",
-				roomId: roomId
-			}));
+			socket.send(
+				JSON.stringify({
+					type: "join_room",
+					roomId: roomId,
+				})
+			);
 		});
 
 		socket.addEventListener("message", (event) => {
@@ -99,8 +110,7 @@ export default function PongGamePage() {
 				const msg = JSON.parse(event.data);
 				console.log("Received WebSocket message:", msg.type);
 
-				if (msg.type === "state")
-					setGameState(msg.gameState);
+				if (msg.type === "state") setGameState(msg.gameState);
 				else if (msg.type === "room_update") {
 					if (!msg.room) {
 						console.error("Received room_update with no room data");
@@ -119,16 +129,15 @@ export default function PongGamePage() {
 							name: p.name || `Player ${p.id}`,
 							avatar: null,
 							isReady: p.isReady,
-							isYou: p.id === playerId
-						})) as Player[]
+							isYou: p.id === playerId,
+						})) as Player[],
 					};
 					setRoom(transformedRoom);
 					setIsLoading(false);
 				} else if (msg.type === "game_start") {
 					console.log("Game starting!");
 					setGameInProgress(true);
-				} else if (msg.type === "game_end")
-					setGameFinished(true);
+				} else if (msg.type === "game_end") setGameFinished(true);
 			} catch (error) {
 				console.error("Error processing WebSocket message:", error);
 			}
@@ -141,7 +150,7 @@ export default function PongGamePage() {
 			setRoom(null);
 
 			setTimeout(() => {
-				router.push('/');
+				router.push("/");
 			}, 3000);
 		});
 
@@ -159,96 +168,111 @@ export default function PongGamePage() {
 		};
 	}, [roomId, accessToken, user]);
 
-
 	// Handle game rendering
 	useEffect(() => {
-		if (!canvasRef.current || !gameInProgress) return
+		if (!canvasRef.current || !gameInProgress) return;
 
-		const canvas = canvasRef.current
-		const ctx = canvas.getContext("2d")
-		if (!ctx) return
+		const canvas = canvasRef.current;
+		const ctx = canvas.getContext("2d");
+		if (!ctx) return;
 
 		const draw = () => {
-			if (!gameState) return
+			if (!gameState) return;
 
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.fillStyle = "#1E1E1E"
-			ctx.fillRect(0, 0, canvas.width, canvas.height)
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "#1E1E1E";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 			// Center dashed line
-			ctx.strokeStyle = "#333"
-			ctx.setLineDash([10, 10])
-			ctx.beginPath()
-			ctx.moveTo(canvas.width / 2, 0)
-			ctx.lineTo(canvas.width / 2, canvas.height)
-			ctx.stroke()
-			ctx.setLineDash([])
+			ctx.strokeStyle = "#333";
+			ctx.setLineDash([10, 10]);
+			ctx.beginPath();
+			ctx.moveTo(canvas.width / 2, 0);
+			ctx.lineTo(canvas.width / 2, canvas.height);
+			ctx.stroke();
+			ctx.setLineDash([]);
 
 			// Draw paddles
-			const offset = 20
+			const offset = 20;
 
-			ctx.fillStyle = "#4A9DFF"
-			gameState.left_team.players.forEach(player =>
+			ctx.fillStyle = "#4A9DFF";
+			gameState.left_team.players.forEach((player) =>
 				ctx.fillRect(offset, player.top, offset, player.bot - player.top)
-			)
-			ctx.fillStyle = "#FFA500"
-			gameState.right_team.players.forEach(player =>
-				ctx.fillRect(canvas.width - (offset * 2), player.top, offset, player.bot - player.top)
-			)
+			);
+			ctx.fillStyle = "#FFA500";
+			gameState.right_team.players.forEach((player) =>
+				ctx.fillRect(
+					canvas.width - offset * 2,
+					player.top,
+					offset,
+					player.bot - player.top
+				)
+			);
 
 			// Draw ball
-			ctx.beginPath()
-			ctx.fillStyle = "#FFFFFF"
-			ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2)
-			ctx.fill()
-		}
+			ctx.beginPath();
+			ctx.fillStyle = "#FFFFFF";
+			ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, Math.PI * 2);
+			ctx.fill();
+		};
 
 		const gameLoop = () => {
-			draw()
+			draw();
 
 			if (gameState) {
 				setScores({
 					left: gameState.left_team.score,
-					right: gameState.right_team.score
-				})
+					right: gameState.right_team.score,
+				});
 			}
 
-			if (gameFinishedRef.current === false)
-				requestAnimationFrame(gameLoop)
-		}
-		const animId = requestAnimationFrame(gameLoop)
+			if (gameFinishedRef.current === false) requestAnimationFrame(gameLoop);
+		};
+		const animId = requestAnimationFrame(gameLoop);
 
 		const keydown = (e: KeyboardEvent) => {
-			if (!playerId || !socketRef.current) return
-			const socket = socketRef.current
+			if (!playerId || !socketRef.current) return;
+			const socket = socketRef.current;
 
-			if (e.key === "ArrowUp" || e.key === "w") socket.send(JSON.stringify({ type: "move", playerId, direction: "up" }))
-			if (e.key === "ArrowDown" || e.key === "s") socket.send(JSON.stringify({ type: "move", playerId, direction: "down" }))
-		}
+			if (e.key === "ArrowUp" || e.key === "w")
+				socket.send(
+					JSON.stringify({ type: "move", playerId, direction: "up" })
+				);
+			if (e.key === "ArrowDown" || e.key === "s")
+				socket.send(
+					JSON.stringify({ type: "move", playerId, direction: "down" })
+				);
+		};
 		const keyup = (e: KeyboardEvent) => {
-			if (!playerId || !socketRef.current) return
-			const socket = socketRef.current
+			if (!playerId || !socketRef.current) return;
+			const socket = socketRef.current;
 
-			if (e.key === "ArrowUp" || e.key === "w") socket.send(JSON.stringify({ type: "move", playerId, direction: "notup" }))
-			if (e.key === "ArrowDown" || e.key === "s") socket.send(JSON.stringify({ type: "move", playerId, direction: "notdown" }))
-		}
+			if (e.key === "ArrowUp" || e.key === "w")
+				socket.send(
+					JSON.stringify({ type: "move", playerId, direction: "notup" })
+				);
+			if (e.key === "ArrowDown" || e.key === "s")
+				socket.send(
+					JSON.stringify({ type: "move", playerId, direction: "notdown" })
+				);
+		};
 
-		window.addEventListener("keydown", keydown)
-		window.addEventListener("keyup", keyup)
+		window.addEventListener("keydown", keydown);
+		window.addEventListener("keyup", keyup);
 
 		return () => {
-			cancelAnimationFrame(animId)
-			window.removeEventListener("keydown", keydown)
-			window.removeEventListener("keyup", keyup)
-		}
-	}, [gameState, gameInProgress, playerId])
+			cancelAnimationFrame(animId);
+			window.removeEventListener("keydown", keydown);
+			window.removeEventListener("keyup", keyup);
+		};
+	}, [gameState, gameInProgress, playerId]);
 
 	// Toggle ready status
 	const handleToggleReady = () => {
-		if (!socketRef.current) return
+		if (!socketRef.current) return;
 
-		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }))
-	}
+		socketRef.current.send(JSON.stringify({ type: "toggle_ready" }));
+	};
 
 	// If we're still in the waiting room phase
 	if (!gameInProgress) {
@@ -261,7 +285,7 @@ export default function PongGamePage() {
 					onToggleReady={handleToggleReady}
 				/>
 			</div>
-		)
+		);
 	}
 
 	// Game is in progress, show the game view
@@ -274,10 +298,20 @@ export default function PongGamePage() {
 					<div className="space-y-4">
 						<Card className="overflow-hidden relative">
 							<CardContent className="p-0">
-								<canvas ref={canvasRef} width={800} height={500} className="w-full h-auto bg-game-dark pixel-border" />
+								<canvas
+									ref={canvasRef}
+									width={800}
+									height={500}
+									className="w-full h-auto bg-game-dark pixel-border"
+								/>
 
 								{/* Blur overlay applied only to game area */}
-								{gameFinished && <div className="absolute inset-0 z-10" style={{ backdropFilter: "blur(8px)" }}></div>}
+								{gameFinished && (
+									<div
+										className="absolute inset-0 z-10"
+										style={{ backdropFilter: "blur(8px)" }}
+									></div>
+								)}
 
 								{/* Score display component */}
 								<ScoreDisplay
@@ -292,5 +326,5 @@ export default function PongGamePage() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

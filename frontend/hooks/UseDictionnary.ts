@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Language } from '@/types/language';
-import { getDictionary } from '@/lib/dictionnaries';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { Language } from "@/types/language";
+import { getDictionary } from "@/lib/dictionnaries";
+import { usePathname } from "next/navigation";
 
 const supportedLocales = Object.values(Language);
 
 export function useLocale(): Language {
 	const pathname = usePathname();
-	const candidate = pathname.split('/')[1] as Language;
+	const candidate = pathname.split("/")[1] as Language;
 	return supportedLocales.includes(candidate) ? candidate : Language.ENGLISH;
 }
 

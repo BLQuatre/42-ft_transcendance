@@ -1,68 +1,77 @@
-"use client"
+"use client";
 
-import { useParams } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
-import { MainNav } from "@/components/Navbar"
-import { useRouter } from "next/navigation"
-import { GameType } from "@/types/game"
+import { useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { MainNav } from "@/components/Navbar";
+import { useRouter } from "next/navigation";
+import { GameType } from "@/types/game";
 
-import { useAuth } from "@/contexts/auth-context"
-import api from "@/lib/api"
-import { cn } from "@/lib/utils"
-import { useDictionary } from "@/hooks/UseDictionnary"
-
+import { useAuth } from "@/contexts/auth-context";
+import api from "@/lib/api";
+import { cn } from "@/lib/utils";
+import { useDictionary } from "@/hooks/UseDictionnary";
 
 export default function PongGamePage() {
-	const { accessToken } = useAuth()
+	const { accessToken } = useAuth();
 
-	const params = useParams()
-	const gameType = params.gameType as GameType
+	const params = useParams();
+	const gameType = params.gameType as GameType;
 
-	const eloRef = useRef(0)
-	const [widenNotif, setWidenNotif] = useState(false)
+	const eloRef = useRef(0);
+	const [widenNotif, setWidenNotif] = useState(false);
 	useEffect(() => {
 		if (widenNotif === true) {
 			setTimeout(() => {
-				setWidenNotif(false) ;
-			}, 3000)
+				setWidenNotif(false);
+			}, 3000);
 		}
-	}, [widenNotif]) // when widenNotif is set as true, put it back as false after 3 sec
+	}, [widenNotif]); // when widenNotif is set as true, put it back as false after 3 sec
 
-	const socketRef = useRef<WebSocket | null>(null)
-	const router = useRouter()
+	const socketRef = useRef<WebSocket | null>(null);
+	const router = useRouter();
 
-	const playerId = localStorage.getItem('userId')
-
+	const playerId = localStorage.getItem("userId");
 
 	useEffect(() => {
-		api.get(`/history/stats/${playerId}`).then(response => {
-			const userStats = response.data.user
-			eloRef.current = (gameType === 'pong') ? userStats.pong_win_rate : userStats.best_dino_score
-		})
-		.catch(() => eloRef.current = 0)
-	}, [])
-
+		api
+			.get(`/history/stats/${playerId}`)
+			.then((response) => {
+				const userStats = response.data.user;
+				eloRef.current =
+					gameType === "pong"
+						? userStats.pong_win_rate
+						: userStats.best_dino_score;
+			})
+			.catch(() => (eloRef.current = 0));
+	}, []);
 
 	// Initialize the socket connection
 	useEffect(() => {
 		if (!eloRef) return;
 
 		if (!accessToken) {
-			console.error("accessToken is undefined or invalid during WebSocket initialization");
+			console.error(
+				"accessToken is undefined or invalid during WebSocket initialization"
+			);
 			return;
 		}
 
 		if (!gameType) {
-			console.error("roomId is undefined or invalid during WebSocket initialization");
+			console.error(
+				"roomId is undefined or invalid during WebSocket initialization"
+			);
 			return;
 		}
 
 		if (!Object.values(GameType).includes(gameType)) {
-			router.push('/');
+			router.push("/");
 		}
 
 		// Prevent creating multiple connections
-		if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
+		if (
+			socketRef.current &&
+			socketRef.current.readyState !== WebSocket.CLOSED
+		) {
 			console.log("WebSocket connection already exists and is open");
 			return;
 		}
@@ -75,12 +84,14 @@ export default function PongGamePage() {
 			console.log("Connected to game server");
 
 			// After connection, immediately send match message with gameType
-			socket.send(JSON.stringify({
-				type: "match",
-				uuid: playerId,
-				gameType: gameType,
-				elo: eloRef.current
-			}));
+			socket.send(
+				JSON.stringify({
+					type: "match",
+					uuid: playerId,
+					gameType: gameType,
+					elo: eloRef.current,
+				})
+			);
 		});
 
 		socket.addEventListener("message", (event) => {
@@ -90,10 +101,9 @@ export default function PongGamePage() {
 
 				// Handle different message types
 				if (msg.type === "matched") {
-					const newRoomCode = msg.roomId ;
-					window.location.assign(`/games/${gameType}/multi/${newRoomCode}`)
-				} else if (msg.type === "widening")
-					setWidenNotif(true)
+					const newRoomCode = msg.roomId;
+					window.location.assign(`/games/${gameType}/multi/${newRoomCode}`);
+				} else if (msg.type === "widening") setWidenNotif(true);
 			} catch (error) {
 				console.error("Error processing WebSocket message:", error);
 			}
@@ -103,7 +113,7 @@ export default function PongGamePage() {
 			console.log("WebSocket connection closed:", event.code, event.reason);
 			socketRef.current = null;
 
-			router.push('/');
+			router.push("/");
 		});
 
 		socket.addEventListener("error", (error) => {
@@ -120,9 +130,7 @@ export default function PongGamePage() {
 		};
 	}, [gameType, accessToken, eloRef.current]);
 
-
-	const dict = useDictionary()
-
+	const dict = useDictionary();
 
 	return (
 		<div className="min-h-screen bg-background flex flex-col overflow-hidden">
@@ -131,10 +139,17 @@ export default function PongGamePage() {
 				<div className="font-pixel text-lg animate-pulse">
 					{dict?.matchmaking?.lookingForOpponent || "LOOKING FOR AN OPPONENT"}
 				</div>
-				<div className={cn("font-pixel text-base text-white/50", widenNotif ? "" : "select-none")}>
-					{widenNotif ? (dict?.matchmaking?.searchingFurther || "SEARCHING FURTHER") : " "}
+				<div
+					className={cn(
+						"font-pixel text-base text-white/50",
+						widenNotif ? "" : "select-none"
+					)}
+				>
+					{widenNotif
+						? dict?.matchmaking?.searchingFurther || "SEARCHING FURTHER"
+						: " "}
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

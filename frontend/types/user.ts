@@ -3,18 +3,18 @@ import { DinoGameStats, PongGameStats, UserStats } from "./stats";
 
 export enum UserStatus {
 	ONLINE = "online",
-	OFFLINE = "offline"
+	OFFLINE = "offline",
 }
 
 export interface BaseUser {
-	id: string
-	name: string
-	avatar: string
-	status: UserStatus
+	id: string;
+	name: string;
+	avatar: string;
+	status: UserStatus;
 	tfaEnable: boolean;
 	isGoogleSignIn: boolean;
-	created_at: string  // Add creation timestamp
-	updated_at: string  // Add update timestamp
+	created_at: string; // Add creation timestamp
+	updated_at: string; // Add update timestamp
 }
 
 export interface User {
@@ -29,7 +29,7 @@ export interface User {
 		dino: DinoGameStats;
 	};
 	recentGames: Game[];
-	created_at: string;  // Add creation timestamp
-	updated_at: string;  // Add update timestamp
+	created_at: string; // Add creation timestamp
+	updated_at: string; // Add update timestamp
 	tfaEnable: boolean;
 }

@@ -1,23 +1,49 @@
-"use client"
+"use client";
 
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 
-import { useState } from "react"
-import { MainNav } from "@/components/Navbar"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/Chart"
-import { Line, LineChart, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
-import { Separator } from "@/components/ui/Separator"
-import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
-import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog"
-import { BarChartIcon as ChartNoAxesCombined, Gamepad2, LogOut, Origami } from "lucide-react"
-import axios from "axios"
-import { useDictionary } from "@/hooks/UseDictionnary"
+import { useState } from "react";
+import { MainNav } from "@/components/Navbar";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/Card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import {
+	ChartContainer,
+	ChartTooltip,
+	ChartTooltipContent,
+} from "@/components/ui/Chart";
+import {
+	Line,
+	LineChart,
+	BarChart,
+	Bar,
+	XAxis,
+	YAxis,
+	CartesianGrid,
+	Legend,
+	ResponsiveContainer,
+} from "recharts";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Separator } from "@/components/ui/Separator";
+import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog";
+import { TwoFactorSetupDialog } from "@/components/dialog/TwoFactorSetupDialog";
+import {
+	BarChartIcon as ChartNoAxesCombined,
+	Gamepad2,
+	LogOut,
+	Origami,
+} from "lucide-react";
+import axios from "axios";
+import { useDictionary } from "@/hooks/UseDictionnary";
 import {
 	Dialog,
 	DialogContent,
@@ -25,179 +51,181 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/Dialog"
-import { useAuth } from "@/contexts/auth-context"
-import UpdatePassword from "./components/UpdatePassword"
-import type { BaseUser } from "@/types/user"
-import api from "@/lib/api"
-import { GameType } from "@/types/game"
-import { cn, handleImageUpload } from "@/lib/utils"
-import { useToast } from "@/hooks/UseToast"
-import { ToastVariant } from "@/types/types"
-import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
-import { ConsultDataDialog } from "@/components/dialog/ConsultDataDialog"
+} from "@/components/ui/Dialog";
+import { useAuth } from "@/contexts/auth-context";
+import UpdatePassword from "./components/UpdatePassword";
+import type { BaseUser } from "@/types/user";
+import api from "@/lib/api";
+import { GameType } from "@/types/game";
+import { cn, handleImageUpload } from "@/lib/utils";
+import { useToast } from "@/hooks/UseToast";
+import { ToastVariant } from "@/types/types";
+import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog";
+import { ConsultDataDialog } from "@/components/dialog/ConsultDataDialog";
 
 type Player = {
-	id: string
-	user_id: string | null
-	username: string
-	is_bot: boolean
-	avatar?: string
-}
+	id: string;
+	user_id: string | null;
+	username: string;
+	is_bot: boolean;
+	avatar?: string;
+};
 
 type GameResult = {
-	id: string
-	score: number
-	is_winner: boolean
-	player: Player
-}
+	id: string;
+	score: number;
+	is_winner: boolean;
+	player: Player;
+};
 
 type GameSession = {
-	id: string
-	game_type: "PONG" | "DINO"
-	created_at: string
-	results: GameResult[]
-}
+	id: string;
+	game_type: "PONG" | "DINO";
+	created_at: string;
+	results: GameResult[];
+};
 
 type GameHistoryItem = {
-	id: string
-	score: number
-	is_winner: boolean
-	player: Player
-	gameSession: GameSession
-}
+	id: string;
+	score: number;
+	is_winner: boolean;
+	player: Player;
+	gameSession: GameSession;
+};
 
 export default function DashboardPage() {
-	const { setAccessToken } = useAuth()
-	const { toast } = useToast()
+	const { setAccessToken } = useAuth();
+	const { toast } = useToast();
 
-	const [user, setUser] = useState<BaseUser | null>(null)
-	const [isLoading, setIsLoading] = useState(false)
+	const [user, setUser] = useState<BaseUser | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [stats, setStats] = useState({
 		total_games_played: 0,
 		pong_win_rate: 0,
 		best_dino_score: 0,
-	})
+	});
 
 	// Add these new states for game history
-	const [pongGameHistory, setPongGameHistory] = useState<any[]>([])
-	const [dinoGameHistory, setDinoGameHistory] = useState<any[]>([])
+	const [pongGameHistory, setPongGameHistory] = useState<any[]>([]);
+	const [dinoGameHistory, setDinoGameHistory] = useState<any[]>([]);
 
-	const [username, setUsername] = useState("")
-	const [usernameError, setUsernameError] = useState<string | null>(null)
+	const [username, setUsername] = useState("");
+	const [usernameError, setUsernameError] = useState<string | null>(null);
 
 	const [selectedMatch, setSelectedMatch] = useState<null | {
-		type: GameType
-		details: any
-	}>(null)
+		type: GameType;
+		details: any;
+	}>(null);
 
 	// Dialogs
-	const [matchDialogOpen, setMatchDialogOpen] = useState(false)
-	const [logoutDialogOpen, setLogoutDialogOpen] = useState(false)
-	const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
-	const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false)
-	const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false)
-	const [consultDataDialogOpen, setConsultDataDialogOpen] = useState(false)
+	const [matchDialogOpen, setMatchDialogOpen] = useState(false);
+	const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+	const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false);
+	const [removeAvatarDialogOpen, setRemoveAvatarDialogOpen] = useState(false);
+	const [remove2FADialogOpen, setRemove2FADialogOpen] = useState(false);
+	const [consultDataDialogOpen, setConsultDataDialogOpen] = useState(false);
 
-	const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
+	const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false);
 
-	const [twoFactorVerifyOpen, setTwoFactorVerifyOpen] = useState(false)
-	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
-	const [twoFactorVerifyLoading, setTwoFactorVerifyLoading] = useState(false)
+	const [twoFactorVerifyOpen, setTwoFactorVerifyOpen] = useState(false);
+	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<
+		string | null
+	>(null);
+	const [twoFactorVerifyLoading, setTwoFactorVerifyLoading] = useState(false);
 
-	const fileInputRef = React.useRef<HTMLInputElement>(null)
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
 
 	// Add these new states for chart data
-	const [gamePlayData, setGamePlayData] = useState<any[]>([])
-	const [scoreData, setScoreData] = useState<any[]>([])
+	const [gamePlayData, setGamePlayData] = useState<any[]>([]);
+	const [scoreData, setScoreData] = useState<any[]>([]);
 
 	// MATCH DETAILS
 	const handleMatchClick = (type: GameType, details: any) => {
-		setSelectedMatch({ type, details })
-		setMatchDialogOpen(true)
-	}
+		setSelectedMatch({ type, details });
+		setMatchDialogOpen(true);
+	};
 
 	// ACCOUNT
 	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const rawValue = event.target.value
-		const alphanumericValue = rawValue.replace(/[^a-zA-Z0-9]/g, "")
+		const rawValue = event.target.value;
+		const alphanumericValue = rawValue.replace(/[^a-zA-Z0-9]/g, "");
 
-		const newUsername = alphanumericValue.slice(0, 20)
-		setUsername(newUsername)
+		const newUsername = alphanumericValue.slice(0, 20);
+		setUsername(newUsername);
 
 		if (newUsername.length > 0 && newUsername.length < 6) {
-			setUsernameError("6 characters minimum")
+			setUsernameError("6 characters minimum");
 		} else {
-			setUsernameError(null)
+			setUsernameError(null);
 		}
-	}
+	};
 
 	const saveAccountChanges = (event: React.FormEvent) => {
-		event.preventDefault()
-		setIsLoading(true)
+		event.preventDefault();
+		setIsLoading(true);
 
 		api
 			.put(`/user/${user?.id}`, {
 				name: username,
 			})
 			.then(() => {
-				updateData()
+				updateData();
 				toast({
 					title: "Account Updated",
 					description: "Your account has been updated successfully",
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
-				})
+				});
 			})
 			.catch((error) => {
 				if (error.status === 409) {
-					setUsernameError("Username already taken")
+					setUsernameError("Username already taken");
 				} else {
 					toast({
 						title: "Error",
 						description: "There was an error updating your account",
 						variant: ToastVariant.ERROR,
 						duration: 3000,
-					})
-					console.log("Error updating account", error)
+					});
+					console.log("Error updating account", error);
 				}
 			})
 			.finally(() => {
-				setIsLoading(false)
-			})
-	}
+				setIsLoading(false);
+			});
+	};
 
 	// LOGOUT
 	const handleLogout = () => {
-		setLogoutDialogOpen(true)
-	}
+		setLogoutDialogOpen(true);
+	};
 
 	const confirmLogout = () => {
-		console.log("Logging out...")
+		console.log("Logging out...");
 
 		axios
 			.get("/api/auth/logout")
 			.then(() => {
-				console.log("Logout successful")
-				setAccessToken(null)
-				localStorage.removeItem("userId")
+				console.log("Logout successful");
+				setAccessToken(null);
+				localStorage.removeItem("userId");
 
-				setLogoutDialogOpen(false)
-				window.location.href = "/login"
+				setLogoutDialogOpen(false);
+				window.location.href = "/login";
 			})
 			.catch((error) => {
-				console.error("Logout error:", error)
-			})
-	}
+				console.error("Logout error:", error);
+			});
+	};
 
 	// Delete account
 	const handleDeleteAccount = () => {
-		setDeleteAccountDialogOpen(true)
-	}
+		setDeleteAccountDialogOpen(true);
+	};
 
 	const confirmDeleteAccount = () => {
-		console.log("Deleting account...")
+		console.log("Deleting account...");
 
 		try {
 			api
@@ -208,268 +236,287 @@ export default function DashboardPage() {
 						description: "Your account has been deleted successfully",
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
-					})
-					setAccessToken(null)
-					localStorage.removeItem("userId")
-					window.location.href = "/login"
+					});
+					setAccessToken(null);
+					localStorage.removeItem("userId");
+					window.location.href = "/login";
 				})
 				.catch((error) => {
-					console.error("Error deleting account:", error)
-				})
+					console.error("Error deleting account:", error);
+				});
 		} catch (err: any) {
 			toast({
 				title: "Error",
 				description: `There was an error when deleting your account: ${err.message}`,
 				variant: ToastVariant.ERROR,
 				duration: 3000,
-			})
+			});
 		}
-		setDeleteAccountDialogOpen(false)
-	}
+		setDeleteAccountDialogOpen(false);
+	};
 
 	// Consult data
 	const handleConsultData = () => {
-		setConsultDataDialogOpen(true)
-	}
+		setConsultDataDialogOpen(true);
+	};
 
 	// Avatar
 	const handleUploadAvatarBtn = () => {
 		if (fileInputRef.current) {
-			fileInputRef.current.click()
+			fileInputRef.current.click();
 		}
-	}
+	};
 
 	const handleUploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0]
-		if (!file) return
+		const file = e.target.files?.[0];
+		if (!file) return;
 
 		try {
-			const response = await handleImageUpload(file)
+			const response = await handleImageUpload(file);
 			await api
 				.put(`/user/${user?.id}`, {
 					avatar: response,
 				})
 				.then(() => {
-					updateData()
+					updateData();
 					toast({
 						title: "Avatar Updated",
 						description: "Your avatar has been updated successfully",
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
-					})
-				})
+					});
+				});
 		} catch (err: any) {
 			toast({
 				title: "Error",
 				description: `There was an error updating your avatar: ${err.message}`,
 				variant: ToastVariant.ERROR,
 				duration: 3000,
-			})
+			});
 		}
-	}
+	};
 
 	const handleRemoveAvatar = () => {
-		setRemoveAvatarDialogOpen(true)
-	}
+		setRemoveAvatarDialogOpen(true);
+	};
 
 	const confirmRemoveAvatar = () => {
-		console.log("Removing avatar...")
-		setRemoveAvatarDialogOpen(false)
-	}
+		console.log("Removing avatar...");
+		setRemoveAvatarDialogOpen(false);
+	};
 
 	const handle2FAComplete = () => {
-		updateData()
+		updateData();
 		toast({
 			title: "2FA Enabled",
 			description: "2FA has been enabled successfully",
 			variant: ToastVariant.SUCCESS,
 			duration: 3000,
-		})
-	}
+		});
+	};
 
 	const confirmRemove2FA = async (code: string) => {
-		setTwoFactorVerifyLoading(true)
-		setTwoFactorVerifyError(null)
+		setTwoFactorVerifyLoading(true);
+		setTwoFactorVerifyError(null);
 
 		try {
-			const response = await api.post(`/user/tfa-delete`, { token: code })
+			const response = await api.post(`/user/tfa-delete`, { token: code });
 			if (response.data.statusCode === 200) {
-				setTwoFactorVerifyOpen(false)
-				setRemove2FADialogOpen(false)
+				setTwoFactorVerifyOpen(false);
+				setRemove2FADialogOpen(false);
 				toast({
 					title: "2FA Disabled",
 					description: "2FA has been disabled successfully",
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
-				})
-				updateData()
+				});
+				updateData();
 			}
 		} catch (error) {
-			setTwoFactorVerifyError("Invalid code")
+			setTwoFactorVerifyError("Invalid code");
 		} finally {
-			setTwoFactorVerifyLoading(false)
+			setTwoFactorVerifyLoading(false);
 		}
-	}
+	};
 
 	const updateData = () => {
-		const userId = localStorage.getItem("userId")
-		console.log("userId: " + userId)
+		const userId = localStorage.getItem("userId");
+		console.log("userId: " + userId);
 
 		if (userId) {
 			api
 				.get(`/user/${userId}`)
 				.then((response) => {
-					setUser(response.data.user)
-					setUsername(response.data.user.name || "")
+					setUser(response.data.user);
+					setUsername(response.data.user.name || "");
 				})
 				.catch((error) => {
-					console.error("Error fetching user data:", error)
-				})
+					console.error("Error fetching user data:", error);
+				});
 		}
-	}
+	};
 
 	const fetchStats = async () => {
 		try {
-			const userId = localStorage.getItem("userId")
+			const userId = localStorage.getItem("userId");
 			if (userId) {
-				const response = await api.get(`/history/stats/${userId}`)
+				const response = await api.get(`/history/stats/${userId}`);
 				if (response.data && response.data.statusCode === 200) {
 					setStats({
 						total_games_played: response.data.total_games_played,
 						pong_win_rate: response.data.pong_win_rate,
 						best_dino_score: response.data.best_dino_score,
-					})
+					});
 				}
 			}
 		} catch (error) {
-			console.error("Error fetching stats:", error)
+			console.error("Error fetching stats:", error);
 		}
-	}
+	};
 
 	// Add this new function to fetch game history
 	const fetchGameHistory = async () => {
 		try {
-			const userId = localStorage.getItem("userId")
+			const userId = localStorage.getItem("userId");
 			if (userId) {
 				// Fetch all game history
-				const response = await api.get(`/history/${userId}`)
+				const response = await api.get(`/history/${userId}`);
 				if (response.data && response.data.history) {
 					// Filter for Pong games and sort by date (newest first)
 					const pongGames = response.data.history
-						.filter((game: GameHistoryItem) => game.gameSession?.game_type === "PONG")
+						.filter(
+							(game: GameHistoryItem) => game.gameSession?.game_type === "PONG"
+						)
 						.sort((a: GameHistoryItem, b: GameHistoryItem) => {
-							const dateA = new Date(a.gameSession?.created_at || 0).getTime()
-							const dateB = new Date(b.gameSession?.created_at || 0).getTime()
-							return dateB - dateA // Descending order (newest first)
-						})
-					setPongGameHistory(pongGames)
+							const dateA = new Date(a.gameSession?.created_at || 0).getTime();
+							const dateB = new Date(b.gameSession?.created_at || 0).getTime();
+							return dateB - dateA; // Descending order (newest first)
+						});
+					setPongGameHistory(pongGames);
 
 					// Filter for Dino games and sort by date (newest first)
 					const dinoGames = response.data.history
-						.filter((game: GameHistoryItem) => game.gameSession?.game_type === "DINO")
+						.filter(
+							(game: GameHistoryItem) => game.gameSession?.game_type === "DINO"
+						)
 						.sort((a: GameHistoryItem, b: GameHistoryItem) => {
-							const dateA = new Date(a.gameSession?.created_at || 0).getTime()
-							const dateB = new Date(b.gameSession?.created_at || 0).getTime()
-							return dateB - dateA // Descending order (newest first)
-						})
-					setDinoGameHistory(dinoGames)
+							const dateA = new Date(a.gameSession?.created_at || 0).getTime();
+							const dateB = new Date(b.gameSession?.created_at || 0).getTime();
+							return dateB - dateA; // Descending order (newest first)
+						});
+					setDinoGameHistory(dinoGames);
 
 					// Process data for charts using all game history
-					processGameHistoryForCharts(response.data.history)
+					processGameHistoryForCharts(response.data.history);
 				}
 			}
 		} catch (error) {
-			console.error("Error fetching game history:", error)
+			console.error("Error fetching game history:", error);
 		}
-	}
+	};
 
 	// Process game history data for charts
 	const processGameHistoryForCharts = (allHistory: GameHistoryItem[]) => {
-		if (!allHistory.length) return
+		if (!allHistory.length) return;
 
 		// Process activity chart data (games by day)
-		const gamesByDay = new Map()
+		const gamesByDay = new Map();
 		const last7Days = Array.from({ length: 7 }, (_, i) => {
-			const date = new Date()
-			date.setDate(date.getDate() - i)
-			return date.toISOString().split("T")[0]
-		}).reverse()
+			const date = new Date();
+			date.setDate(date.getDate() - i);
+			return date.toISOString().split("T")[0];
+		}).reverse();
 
 		// Initialize the map with zeros for all days
 		last7Days.forEach((day) => {
-			const dayName = new Date(day).toLocaleDateString("en-US", { weekday: "short" })
-			gamesByDay.set(day, { name: dayName, pong: 0, dino: 0 })
-		})
+			const dayName = new Date(day).toLocaleDateString("en-US", {
+				weekday: "short",
+			});
+			gamesByDay.set(day, { name: dayName, pong: 0, dino: 0 });
+		});
 
 		// Count games by day and type
 		allHistory.forEach((game) => {
-			const gameDate = new Date(game.gameSession.created_at).toISOString().split("T")[0]
+			const gameDate = new Date(game.gameSession.created_at)
+				.toISOString()
+				.split("T")[0];
 			if (gamesByDay.has(gameDate)) {
-				const dayData = gamesByDay.get(gameDate)
+				const dayData = gamesByDay.get(gameDate);
 				if (game.gameSession.game_type === "PONG") {
-					dayData.pong += 1
+					dayData.pong += 1;
 				} else if (game.gameSession.game_type === "DINO") {
-					dayData.dino += 1
+					dayData.dino += 1;
 				}
-				gamesByDay.set(gameDate, dayData)
+				gamesByDay.set(gameDate, dayData);
 			}
-		})
+		});
 
 		// Convert map to array for the chart
-		const activityData = Array.from(gamesByDay.values())
-		setGamePlayData(activityData)
+		const activityData = Array.from(gamesByDay.values());
+		setGamePlayData(activityData);
 
 		// Process score progression data
 		// Group games by week and calculate average score
-		const scoreByWeek = new Map()
-		const currentDate = new Date()
+		const scoreByWeek = new Map();
+		const currentDate = new Date();
 
 		// Process games to calculate weekly scores
 		allHistory.forEach((game) => {
-			const gameDate = new Date(game.gameSession.created_at)
-			const weekDiff = Math.floor((currentDate.getTime() - gameDate.getTime()) / (7 * 24 * 60 * 60 * 1000))
-			const weekKey = `Week ${weekDiff + 1}`
+			const gameDate = new Date(game.gameSession.created_at);
+			const weekDiff = Math.floor(
+				(currentDate.getTime() - gameDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+			);
+			const weekKey = `Week ${weekDiff + 1}`;
 
 			if (!scoreByWeek.has(weekKey)) {
-				scoreByWeek.set(weekKey, { scores: [], name: weekKey })
+				scoreByWeek.set(weekKey, { scores: [], name: weekKey });
 			}
 
-			const weekData = scoreByWeek.get(weekKey)
-			weekData.scores.push(game.score)
-			scoreByWeek.set(weekKey, weekData)
-		})
+			const weekData = scoreByWeek.get(weekKey);
+			weekData.scores.push(game.score);
+			scoreByWeek.set(weekKey, weekData);
+		});
 
 		// Calculate average scores per week
 		const scoreProgression = Array.from(scoreByWeek.entries())
 			.map(([week, data]) => ({
 				name: week,
-				score: Math.round(data.scores.reduce((sum: number, score: number) => sum + score, 0) / data.scores.length),
+				score: Math.round(
+					data.scores.reduce((sum: number, score: number) => sum + score, 0) /
+						data.scores.length
+				),
 			}))
 			.sort((a, b) => {
 				// Sort by week number (extract number from "Week X")
-				const weekA = Number.parseInt(a.name.split(" ")[1])
-				const weekB = Number.parseInt(b.name.split(" ")[1])
-				return weekA - weekB
-			})
+				const weekA = Number.parseInt(a.name.split(" ")[1]);
+				const weekB = Number.parseInt(b.name.split(" ")[1]);
+				return weekA - weekB;
+			});
 
-		setScoreData(scoreProgression.length ? scoreProgression : [{ name: "Week 1", score: 0 }])
-	}
+		setScoreData(
+			scoreProgression.length
+				? scoreProgression
+				: [{ name: "Week 1", score: 0 }]
+		);
+	};
 
 	useEffect(() => {
-		updateData()
-		fetchStats()
-		fetchGameHistory()
-	}, [])
+		updateData();
+		fetchStats();
+		fetchGameHistory();
+	}, []);
 
 	useEffect(() => {
 		// If there's no game data, initialize with empty values
 		if (gamePlayData.length === 0) {
-			const emptyData = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => ({
-				name: day,
-				pong: 0,
-				dino: 0,
-			}))
-			setGamePlayData(emptyData)
+			const emptyData = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+				(day) => ({
+					name: day,
+					pong: 0,
+					dino: 0,
+				})
+			);
+			setGamePlayData(emptyData);
 		}
 
 		if (scoreData.length === 0) {
@@ -478,12 +525,12 @@ export default function DashboardPage() {
 				{ name: "Week 2", score: 0 },
 				{ name: "Week 3", score: 0 },
 				{ name: "Week 4", score: 0 },
-			])
+			]);
 		}
-	}, [gamePlayData.length, scoreData.length])
+	}, [gamePlayData.length, scoreData.length]);
 
-	const dict = useDictionary()
-	if (!dict) return null
+	const dict = useDictionary();
+	if (!dict) return null;
 
 	return (
 		<div className="min-h-screen bg-background flex flex-col">
@@ -492,13 +539,20 @@ export default function DashboardPage() {
 			<div className="flex-1 container py-8 px-4 md:px-6">
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
 					<div>
-						<h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">{dict.dashboard.title}</h1>
-						<p className="font-pixel text-xs text-muted-foreground uppercase">{dict.dashboard.description}</p>
+						<h1 className="font-pixel text-2xl md:text-3xl mb-2 uppercase">
+							{dict.dashboard.title}
+						</h1>
+						<p className="font-pixel text-xs text-muted-foreground uppercase">
+							{dict.dashboard.description}
+						</p>
 					</div>
 
 					<div className="flex items-center space-x-4">
 						<Avatar className="h-10 w-10 border-2 border-game-blue">
-							<AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name || "..."} />
+							<AvatarImage
+								src={user?.avatar || "/placeholder.svg"}
+								alt={user?.name || "..."}
+							/>
 							<AvatarFallback className="font-pixel text-xs">
 								{(user?.name || "..").substring(0, 2).toUpperCase()}
 							</AvatarFallback>
@@ -541,7 +595,9 @@ export default function DashboardPage() {
 									<Gamepad2 className="text-game-red h-5 w-5" />
 								</CardHeader>
 								<CardContent>
-									<div className="font-pixel text-2xl">{stats.total_games_played}</div>
+									<div className="font-pixel text-2xl">
+										{stats.total_games_played}
+									</div>
 								</CardContent>
 							</Card>
 
@@ -553,7 +609,9 @@ export default function DashboardPage() {
 									<ChartNoAxesCombined className="text-game-orange h-5 w-5" />
 								</CardHeader>
 								<CardContent>
-									<div className="font-pixel text-2xl">{Math.floor(stats.pong_win_rate)}%</div>
+									<div className="font-pixel text-2xl">
+										{Math.floor(stats.pong_win_rate)}%
+									</div>
 								</CardContent>
 							</Card>
 
@@ -565,7 +623,9 @@ export default function DashboardPage() {
 									<Origami className="text-game-blue h-5 w-5" />
 								</CardHeader>
 								<CardContent>
-									<div className="font-pixel text-2xl">{stats.best_dino_score}</div>
+									<div className="font-pixel text-2xl">
+										{stats.best_dino_score}
+									</div>
 								</CardContent>
 							</Card>
 						</div>
@@ -577,7 +637,10 @@ export default function DashboardPage() {
 										{dict.dashboard.sections.overview.charts.activity.title}
 									</CardTitle>
 									<CardDescription className="font-pixel text-xs uppercase">
-										{dict.dashboard.sections.overview.charts.activity.description}
+										{
+											dict.dashboard.sections.overview.charts.activity
+												.description
+										}
 									</CardDescription>
 								</CardHeader>
 								<CardContent className="h-80">
@@ -600,8 +663,16 @@ export default function DashboardPage() {
 												<YAxis />
 												<ChartTooltip content={<ChartTooltipContent />} />
 												<Legend />
-												<Bar dataKey="pong" fill="var(--color-primary)" name="PONG" />
-												<Bar dataKey="dino" fill="var(--color-secondary)" name="DINO RUN" />
+												<Bar
+													dataKey="pong"
+													fill="var(--color-primary)"
+													name="PONG"
+												/>
+												<Bar
+													dataKey="dino"
+													fill="var(--color-secondary)"
+													name="DINO RUN"
+												/>
 											</BarChart>
 										</ResponsiveContainer>
 									</ChartContainer>
@@ -640,7 +711,9 @@ export default function DashboardPage() {
 													strokeWidth={2}
 													dot={{ r: 4 }}
 													activeDot={{ r: 6 }}
-													name={dict.dashboard.sections.overview.charts.score.label}
+													name={
+														dict.dashboard.sections.overview.charts.score.label
+													}
 												/>
 											</LineChart>
 										</ResponsiveContainer>
@@ -654,46 +727,61 @@ export default function DashboardPage() {
 						<div className="grid gap-6 md:grid-cols-2">
 							<Card>
 								<CardHeader>
-									<CardTitle className="font-pixel text-sm uppercase">{dict.dashboard.sections.history.pong.title}</CardTitle>
-									<CardDescription className="font-pixel text-xs uppercase">{dict.dashboard.sections.history.pong.description}</CardDescription>
+									<CardTitle className="font-pixel text-sm uppercase">
+										{dict.dashboard.sections.history.pong.title}
+									</CardTitle>
+									<CardDescription className="font-pixel text-xs uppercase">
+										{dict.dashboard.sections.history.pong.description}
+									</CardDescription>
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3 h-[480px] overflow-y-auto pr-2 show-scrollbar">
 										{pongGameHistory.length > 0 ? (
 											pongGameHistory.map((gameResult, index) => {
-												const isWinner = gameResult.is_winner || false
-												const result = isWinner ? dict.profile.sections.history.win : dict.profile.sections.history.lose
-												const gameSession = gameResult.gameSession
-												const playerCount = gameSession?.results?.length || 0
-												const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString()
+												const isWinner = gameResult.is_winner || false;
+												const result = isWinner
+													? dict.profile.sections.history.win
+													: dict.profile.sections.history.lose;
+												const gameSession = gameResult.gameSession;
+												const playerCount = gameSession?.results?.length || 0;
+												const gameDate = new Date(
+													gameSession?.created_at || Date.now()
+												).toLocaleDateString();
 
 												return (
 													<div
 														key={index}
 														className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-														onClick={() => handleMatchClick(GameType.PONG, gameSession)}
+														onClick={() =>
+															handleMatchClick(GameType.PONG, gameSession)
+														}
 													>
 														<div className="flex items-center space-x-2">
 															<div
 																className={`w-2 h-2 rounded-full ${isWinner ? "bg-game-green" : "bg-game-red"}`}
 															></div>
 															<p className="font-pixel text-xs">
-																{playerCount} {playerCount > 1
+																{playerCount}{" "}
+																{playerCount > 1
 																	? dict.dashboard.sections.history.players
-																	: dict.dashboard.sections.history.player
-																} • {gameDate}
+																	: dict.dashboard.sections.history.player}{" "}
+																• {gameDate}
 															</p>
 														</div>
 														<div>
-															<p className={`font-pixel text-xs ${isWinner ? "text-game-green" : "text-game-red"}`}>
+															<p
+																className={`font-pixel text-xs ${isWinner ? "text-game-green" : "text-game-red"}`}
+															>
 																{result}
 															</p>
 														</div>
 													</div>
-												)
+												);
 											})
 										) : (
-											<p className="font-pixel text-xs text-center py-4 uppercase">{dict.dashboard.sections.history.pong.noGames}</p>
+											<p className="font-pixel text-xs text-center py-4 uppercase">
+												{dict.dashboard.sections.history.pong.noGames}
+											</p>
 										)}
 									</div>
 								</CardContent>
@@ -701,46 +789,61 @@ export default function DashboardPage() {
 
 							<Card>
 								<CardHeader>
-									<CardTitle className="font-pixel text-sm uppercase">{dict.dashboard.sections.history.dino.title}</CardTitle>
-									<CardDescription className="font-pixel text-xs uppercase">{dict.dashboard.sections.history.dino.description}</CardDescription>
+									<CardTitle className="font-pixel text-sm uppercase">
+										{dict.dashboard.sections.history.dino.title}
+									</CardTitle>
+									<CardDescription className="font-pixel text-xs uppercase">
+										{dict.dashboard.sections.history.dino.description}
+									</CardDescription>
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3 h-[480px] overflow-y-auto pr-2 show-scrollbar">
 										{dinoGameHistory.length > 0 ? (
 											dinoGameHistory.map((gameResult, index) => {
-												const isWinner = gameResult.is_winner || false
-												const result = isWinner ? dict.profile.sections.history.win : dict.profile.sections.history.lose
-												const gameSession = gameResult.gameSession
-												const playerCount = gameSession?.results?.length || 0
-												const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString()
+												const isWinner = gameResult.is_winner || false;
+												const result = isWinner
+													? dict.profile.sections.history.win
+													: dict.profile.sections.history.lose;
+												const gameSession = gameResult.gameSession;
+												const playerCount = gameSession?.results?.length || 0;
+												const gameDate = new Date(
+													gameSession?.created_at || Date.now()
+												).toLocaleDateString();
 
 												return (
 													<div
 														key={index}
 														className="flex justify-between items-center p-2 bg-muted rounded-md cursor-pointer hover:bg-muted/80 transition-colors"
-														onClick={() => handleMatchClick(GameType.DINO, gameSession)}
+														onClick={() =>
+															handleMatchClick(GameType.DINO, gameSession)
+														}
 													>
 														<div className="flex items-center space-x-2">
 															<div
 																className={`w-2 h-2 rounded-full ${isWinner ? "bg-game-green" : "bg-game-red"}`}
 															></div>
 															<p className="font-pixel text-xs">
-																{playerCount} {playerCount > 1
+																{playerCount}{" "}
+																{playerCount > 1
 																	? dict.dashboard.sections.history.players
-																	: dict.dashboard.sections.history.player
-																} • {gameDate}
+																	: dict.dashboard.sections.history.player}{" "}
+																• {gameDate}
 															</p>
 														</div>
 														<div>
-															<p className={`font-pixel text-xs ${isWinner ? "text-game-green" : "text-game-red"}`}>
+															<p
+																className={`font-pixel text-xs ${isWinner ? "text-game-green" : "text-game-red"}`}
+															>
 																{result}
 															</p>
 														</div>
 													</div>
-												)
+												);
 											})
 										) : (
-											<p className="font-pixel text-xs text-center py-4 uppercase">{dict.dashboard.sections.history.dino.noGames}</p>
+											<p className="font-pixel text-xs text-center py-4 uppercase">
+												{dict.dashboard.sections.history.dino.noGames}
+											</p>
 										)}
 									</div>
 								</CardContent>
@@ -772,9 +875,14 @@ export default function DashboardPage() {
 									<CardContent className="space-y-4">
 										<div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
 											<Avatar className="h-20 w-20 border-2 border-game-blue">
-												<AvatarImage src={user?.avatar || "/placeholder.svg"} alt="@player" />
+												<AvatarImage
+													src={user?.avatar || "/placeholder.svg"}
+													alt="@player"
+												/>
 												<AvatarFallback className="font-pixel text-lg">
-													{(user?.name || "Player").substring(0, 2).toUpperCase()}
+													{(user?.name || "Player")
+														.substring(0, 2)
+														.toUpperCase()}
 												</AvatarFallback>
 											</Avatar>
 											<div className="space-y-2">
@@ -812,7 +920,10 @@ export default function DashboardPage() {
 										<form onSubmit={saveAccountChanges} className="space-y-4">
 											<div className="grid gap-4 md:grid-cols-2">
 												<div className="space-y-2">
-													<Label htmlFor="username" className="font-pixel text-xs uppercase">
+													<Label
+														htmlFor="username"
+														className="font-pixel text-xs uppercase"
+													>
 														{dict.dashboard.sections.settings.account.username}
 													</Label>
 													<Input
@@ -825,7 +936,12 @@ export default function DashboardPage() {
 														required
 														className="font-pixel text-sm h-10 bg-muted"
 													/>
-													<p className={cn("font-pixel text-xs text-red-500 mt-1", usernameError ? "" : "select-none")}>
+													<p
+														className={cn(
+															"font-pixel text-xs text-red-500 mt-1",
+															usernameError ? "" : "select-none"
+														)}
+													>
 														{usernameError || " "}
 													</p>
 												</div>
@@ -834,7 +950,11 @@ export default function DashboardPage() {
 											<Button
 												type="submit"
 												className="font-pixel bg-game-blue hover:bg-game-blue/90 uppercase"
-												disabled={isLoading || usernameError !== null || username == user?.name}
+												disabled={
+													isLoading ||
+													usernameError !== null ||
+													username == user?.name
+												}
 											>
 												{isLoading ? dict.common.saving : dict.common.save}
 											</Button>
@@ -844,17 +964,38 @@ export default function DashboardPage() {
 
 										<div className="space-y-2">
 											<h3 className="font-pixel text-sm text-destructive uppercase">
-												{dict.dashboard.sections.settings.account.dangerZone.title}
+												{
+													dict.dashboard.sections.settings.account.dangerZone
+														.title
+												}
 											</h3>
 											<p className="font-pixel text-xs text-muted-foreground uppercase">
-												{dict.dashboard.sections.settings.account.dangerZone.description}.
+												{
+													dict.dashboard.sections.settings.account.dangerZone
+														.description
+												}
+												.
 											</p>
 											<div className="flex gap-2">
-												<Button variant="outline" className="font-pixel uppercase" onClick={handleConsultData}>
-													{dict.dashboard.sections.settings.account.dangerZone.consultData}
+												<Button
+													variant="outline"
+													className="font-pixel uppercase"
+													onClick={handleConsultData}
+												>
+													{
+														dict.dashboard.sections.settings.account.dangerZone
+															.consultData
+													}
 												</Button>
-												<Button variant="destructive" className="font-pixel uppercase" onClick={handleDeleteAccount}>
-													{dict.dashboard.sections.settings.account.dangerZone.delete}
+												<Button
+													variant="destructive"
+													className="font-pixel uppercase"
+													onClick={handleDeleteAccount}
+												>
+													{
+														dict.dashboard.sections.settings.account.dangerZone
+															.delete
+													}
 												</Button>
 											</div>
 										</div>
@@ -867,40 +1008,68 @@ export default function DashboardPage() {
 
 								<Card>
 									<CardHeader>
-										<CardTitle className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.security.twoFactor.title}</CardTitle>
+										<CardTitle className="font-pixel text-sm uppercase">
+											{
+												dict.dashboard.sections.settings.security.twoFactor
+													.title
+											}
+										</CardTitle>
 										<CardDescription className="font-pixel text-xs">
-											{dict.dashboard.sections.settings.security.twoFactor.description}
+											{
+												dict.dashboard.sections.settings.security.twoFactor
+													.description
+											}
 										</CardDescription>
 									</CardHeader>
 									<CardContent className="space-y-4">
 										<div className="flex items-center justify-between">
 											<div className="space-y-0.5">
-												<h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.security.twoFactor.status}</h3>
-												<p className="font-pixel text-xs text-muted-foreground uppercase">
-													{(user?.isGoogleSignIn || false)
-														? "2FA CANNOT BE ENABLED WITH GOOGLE AUTHENTICATION"
-														: (user?.tfaEnable || false)
-															? dict.dashboard.sections.settings.security.twoFactor.enabled
-															: dict.dashboard.sections.settings.security.twoFactor.disabled
+												<h3 className="font-pixel text-sm uppercase">
+													{
+														dict.dashboard.sections.settings.security.twoFactor
+															.status
 													}
+												</h3>
+												<p className="font-pixel text-xs text-muted-foreground uppercase">
+													{user?.isGoogleSignIn || false
+														? "2FA CANNOT BE ENABLED WITH GOOGLE AUTHENTICATION"
+														: user?.tfaEnable || false
+															? dict.dashboard.sections.settings.security
+																	.twoFactor.enabled
+															: dict.dashboard.sections.settings.security
+																	.twoFactor.disabled}
 												</p>
 											</div>
 										</div>
 									</CardContent>
 									<CardFooter>
-										{(!(user?.isGoogleSignIn || false)) &&
-										<CardFooter>
-											{(user?.tfaEnable || false) ? (
-												<Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
-													{dict.dashboard.sections.settings.security.twoFactor.disable}
-												</Button>
-											) : (
-												<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
-													{dict.dashboard.sections.settings.security.twoFactor.enable}
-												</Button>
-											)}
-										</CardFooter>
-									}
+										{!(user?.isGoogleSignIn || false) && (
+											<CardFooter>
+												{user?.tfaEnable || false ? (
+													<Button
+														variant="destructive"
+														className="font-pixel"
+														onClick={() => setRemove2FADialogOpen(true)}
+													>
+														{
+															dict.dashboard.sections.settings.security
+																.twoFactor.disable
+														}
+													</Button>
+												) : (
+													<Button
+														variant="outline"
+														className="font-pixel"
+														onClick={() => setTwoFactorSetupOpen(true)}
+													>
+														{
+															dict.dashboard.sections.settings.security
+																.twoFactor.enable
+														}
+													</Button>
+												)}
+											</CardFooter>
+										)}
 									</CardFooter>
 								</Card>
 							</TabsContent>
@@ -910,7 +1079,11 @@ export default function DashboardPage() {
 			</div>
 
 			{/* Match Details Dialog */}
-			<MatchDetailsDialog open={matchDialogOpen} onOpenChange={setMatchDialogOpen} match={selectedMatch} />
+			<MatchDetailsDialog
+				open={matchDialogOpen}
+				onOpenChange={setMatchDialogOpen}
+				match={selectedMatch}
+			/>
 
 			<TwoFactorVerifyDialog
 				open={twoFactorVerifyOpen}
@@ -931,7 +1104,9 @@ export default function DashboardPage() {
 			<Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="font-pixel text-lg uppercase">{dict.dashboard.logoutDialog.title}</DialogTitle>
+						<DialogTitle className="font-pixel text-lg uppercase">
+							{dict.dashboard.logoutDialog.title}
+						</DialogTitle>
 						<DialogDescription className="font-pixel text-xs uppercase">
 							{dict.dashboard.logoutDialog.description}
 						</DialogDescription>
@@ -958,10 +1133,15 @@ export default function DashboardPage() {
 			</Dialog>
 
 			{/* Delete Account Confirmation Dialog */}
-			<Dialog open={deleteAccountDialogOpen} onOpenChange={setDeleteAccountDialogOpen}>
+			<Dialog
+				open={deleteAccountDialogOpen}
+				onOpenChange={setDeleteAccountDialogOpen}
+			>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="font-pixel text-lg uppercase">{dict.dashboard.deleteAccountDialog.title}</DialogTitle>
+						<DialogTitle className="font-pixel text-lg uppercase">
+							{dict.dashboard.deleteAccountDialog.title}
+						</DialogTitle>
 						<DialogDescription className="font-pixel text-xs uppercase">
 							{dict.dashboard.deleteAccountDialog.description}
 						</DialogDescription>
@@ -988,10 +1168,15 @@ export default function DashboardPage() {
 			</Dialog>
 
 			{/* Remove Avatar Confirmation Dialog */}
-			<Dialog open={removeAvatarDialogOpen} onOpenChange={setRemoveAvatarDialogOpen}>
+			<Dialog
+				open={removeAvatarDialogOpen}
+				onOpenChange={setRemoveAvatarDialogOpen}
+			>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="font-pixel text-lg uppercase">{dict.dashboard.removeAvatarDialog.title}</DialogTitle>
+						<DialogTitle className="font-pixel text-lg uppercase">
+							{dict.dashboard.removeAvatarDialog.title}
+						</DialogTitle>
 						<DialogDescription className="font-pixel text-xs uppercase">
 							{dict.dashboard.removeAvatarDialog.description}
 						</DialogDescription>
@@ -1021,7 +1206,9 @@ export default function DashboardPage() {
 			<Dialog open={remove2FADialogOpen} onOpenChange={setRemove2FADialogOpen}>
 				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle className="font-pixel text-lg uppercase">{dict.dashboard.remove2faDialog.title}</DialogTitle>
+						<DialogTitle className="font-pixel text-lg uppercase">
+							{dict.dashboard.remove2faDialog.title}
+						</DialogTitle>
 						<DialogDescription className="font-pixel text-xs uppercase">
 							{dict.dashboard.remove2faDialog.description}
 						</DialogDescription>
@@ -1057,5 +1244,5 @@ export default function DashboardPage() {
 				dinoGameHistory={dinoGameHistory}
 			/>
 		</div>
-	)
+	);
 }

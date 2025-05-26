@@ -1,21 +1,21 @@
-import { useEffect } from 'react'
-import { heartbeatService } from '@/lib/heartbeat'
+import { useEffect } from "react";
+import { heartbeatService } from "@/lib/heartbeat";
 
 export function useHeartbeat(isAuthenticated: boolean, userId: string | null) {
 	useEffect(() => {
 		if (isAuthenticated && userId) {
 			// Start heartbeat service
-			heartbeatService.start(userId)
+			heartbeatService.start(userId);
 		} else {
 			// Stop heartbeat service
-			heartbeatService.stop()
+			heartbeatService.stop();
 		}
 
 		// Cleanup on unmount or when auth state changes
 		return () => {
 			if (!isAuthenticated) {
-				heartbeatService.stop()
+				heartbeatService.stop();
 			}
-		}
-	}, [isAuthenticated, userId])
+		};
+	}, [isAuthenticated, userId]);
 }

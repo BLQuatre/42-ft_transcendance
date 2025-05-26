@@ -1,13 +1,13 @@
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Pong Multi - Transcendance',
-}
+	title: "Pong Multi - Transcendance",
+};
 
 export default function RegisterLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode
+	children: React.ReactNode;
 }) {
-  return children
+	return children;
 }

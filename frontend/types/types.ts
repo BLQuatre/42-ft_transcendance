@@ -1,13 +1,13 @@
 export interface Range {
-	top: number ;
-	bot: number ;
+	top: number;
+	bot: number;
 }
 
 export interface Ball {
-	x: number ;
-	y: number ;
-	vx: number ;
-	vy: number ;
+	x: number;
+	y: number;
+	vx: number;
+	vy: number;
 }
 
 export interface PongState {
@@ -31,5 +31,5 @@ export enum ToastVariant {
 	ERROR = "error",
 	WARNING = "warning",
 	INFO = "info",
-	DESTRUCTIVE = "destructive"
+	DESTRUCTIVE = "destructive",
 }

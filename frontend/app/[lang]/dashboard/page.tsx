@@ -296,8 +296,29 @@ export default function DashboardPage() {
 		setRemoveAvatarDialogOpen(true);
 	};
 
-	const confirmRemoveAvatar = () => {
+	const confirmRemoveAvatar = async () => {
 		setRemoveAvatarDialogOpen(false);
+
+		try {
+			await api.put(`/user/${user?.id}`, {
+				avatar: null,
+			});
+
+			updateData();
+			toast({
+				title: "Avatar Removed",
+				description: "Your avatar has been removed successfully",
+				variant: ToastVariant.SUCCESS,
+				duration: 3000,
+			});
+		} catch (err: any) {
+			toast({
+				title: "Error",
+				description: `There was an error removing your avatar: ${err.message}`,
+				variant: ToastVariant.ERROR,
+				duration: 3000,
+			});
+		}
 	};
 
 	const handle2FAComplete = () => {

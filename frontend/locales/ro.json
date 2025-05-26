@@ -1,93 +1,147 @@
 {
 	"title": "ft_transcendance",
 	"home": {
-		"description": "Ћележи претиоць дељ прін ћерчиси класиче",
-		"play": "Ћећаџаћ акум",
-		"gamerules": "Регули гьерцеле",
-		"games": "Јоцуриле рећолтате",
+		"description": "Provocă-ți prietenii la jocuri clasice",
+		"play": "Joacă Acum",
+		"gamerules": "Regulile Jocului",
+		"games": "ft_transcendance",
 
 		"features": {
-			"title": "Фећтуре",
+			"title": "Caracteristici",
 			"multiplayer": {
-				"title": "Мултиплаиер",
-				"description": "Ћећаџаћ дељ пріетени локал са умезь"
+				"title": "Multiplayer",
+				"description": "Joacă cu prietenii local sau online"
 			},
 			"stats": {
-				"title": "Статистици",
-				"description": "Монитореа-те прогресул щи историкул гьерцилор"
+				"title": "Statistici",
+				"description": "Urmărește progresul și istoricul jocurilor"
 			},
 			"customization": {
-				"title": "Персонализаре",
-				"description": "Персонализеазе ћерчисеа та де љоац"
+				"title": "Personalizare",
+				"description": "Personalizează experiența ta de joc"
 			}
 		}
 	},
 
 	"navbar": {
-		"home": "Ацом",
-		"games": "Јоцурі",
-		"shop": "Магазин",
-		"friends": "Пріетени",
-		"dashboard": "Панел",
-		"menu": "Меню"
+		"home": "Acasă",
+		"games": "Jocuri",
+		"shop": "Magazin",
+		"friends": "Prieteni",
+		"dashboard": "Tablou de Bord",
+		"menu": "Meniu",
+		"language": "Limbă"
 	},
 
 	"connection": {
-		"login": "Аутенцификаре",
-		"register": "Регистраре",
-		"logout": "Деаутенцификаре",
-		"username": "Нуме ућ",
+		"login": "Conectare",
+		"register": "Înregistrare",
+		"logout": "Deconectare",
+		"username": "Nume de utilizator",
 		"password": {
-			"title": "Парола",
-			"placeholder": "Интроду цеті парола",
-			"confirm": "Цонфірма парола",
-			"confirmPlaceholder": "Цонфірме ћі парола",
-			"forgot": "Аи утат парола?"
+			"title": "Parolă",
+			"placeholder": "Introdu parola ta",
+			"confirm": "Confirmă parola",
+			"confirmPlaceholder": "Confirmă parola ta",
+			"forgot": "Ai uitat parola?",
+			"show": "Arată parola",
+			"hide": "Ascunde parola"
 		},
-		"rememberMe": "Тине-ми-минте",
-		"dontHaveAccount": "Нуаі конто?",
-		"haveAccount": "Аи конто?",
-		"or": "Сау",
+		"rememberMe": "Ține-mă minte",
+		"dontHaveAccount": "Nu ai un cont?",
+		"haveAccount": "Ai deja un cont?",
+		"or": "Sau",
 		"google": {
-			"login": "Аутенцификаре цу Гоогле",
-			"register": "Регистраре цу Гоогле"
+			"login": "Conectare cu Google",
+			"register": "Înregistrare cu Google"
+		},
+		"errors": {
+			"invalidCredentials": "Nume de utilizator sau parolă invalidă",
+			"generic": "A apărut o eroare. Te rugăm să încerci din nou.",
+			"invalidCode": "Cod de verificare invalid"
+		},
+		"validation": {
+			"username": {
+				"minLength": "Minim 6 caractere",
+				"taken": "Numele de utilizator este deja luat"
+			},
+			"password": {
+				"minLength": "Minim 8 caractere",
+				"match": "Parolele nu se potrivesc"
+			}
 		}
 	},
 
 	"games": {
-		"title": "Јоцуріле ноастре",
-		"description": "Експлоаре ћолекција рећетро аркад гьерцилор.\nФиецаре ћерц іоац орфере јоац ѵіца ћеленже.",
-		"how": "Цум се ћеаџаћ",
+		"title": "Jocurile Noastre",
+		"description": "Explorează colecția noastră de jocuri arcade retro.\nFiecare joc oferă gameplay unic și provocări.",
+		"how": "Cum să joci",
 
 		"pong": {
-			"title": "Понг",
-			"description": "Аћтионе рэпиде де тенис де маса! Ћележи претиоць щи стигє ѕцоре уљтім.",
+			"description": "Acțiune rapidă de tenis de masă! Provocă-ți prietenii și atinge cel mai bun scor.",
 			"explications": [
-				"Муве ракету цус тастеле w/s (П1) са сагетиле уп/доун (П2)",
-				"Лове щи пецие мингеа цу ракету ћі трімієо ін аппоусул",
-				"Маркеаза пунте кенд претіоць нує пецие мингеа",
-				"Приму ћерц атінг 10 пунте кащтігă ѓьерца"
+				"Mută paleta sus și jos folosind tastele w/s (J1) sau săgețile sus/jos (J2)",
+				"Lovește mingea cu paleta pentru a o trimite înapoi la adversar",
+				"Marchează puncte când adversarul ratează mingea",
+				"Primul jucător care ajunge la 10 puncte câștigă jocul"
 			],
-			"type": "Аркадă Классікă",
-			"players": "2-8 јуцетори"
+			"type": "Arcade Clasic",
+			"players": "2-8 jucători",
+			"pauseInstructions": "Apasă P pentru pauză/continuare",
+			"moveInstructions": "Folosește ↑/↓ sau W/S pentru a-ți mișca paleta",
+			"winner": "CÂȘTIGĂTOR!",
+			"leftPaddleInstructions": "Stânga: folosește W/S pentru a-ți mișca paleta",
+			"rightPaddleInstructions": "Dreapta: folosește ↑/↓ pentru a-ți mișca paleta"
 		},
 		"dino": {
-			"title": "Діно Рун",
-			"description": "Ун џоац несфіршіт алунде вреа ћетежи ун динозавру скапа ќазакелор інтре ун пейсадж прехисторік.",
+			"title": "Dino Run",
+			"description": "Un runner fără sfârșit provocator unde controlezi un dinozaur care evită obstacolele într-un peisaj preistoric.",
 			"explications": [
-				"Апаса с̦пэйс бар са сагетила уп пентру ари ќактуси ќи алте обстакуле",
-				"Апаса сагетила доун пентру ари суб џурă џерфешті",
-				"Џоацул се ацелереазă пe термен, фăценду ћеленжеа тoт мај муй",
-				"Скореа ћетезе мaj мулт цэт тімп рămîн",
-				"Інцерчe ѕа-ћешті ѕцореа ћі с̦іа"
+				"Apasă bara de spațiu sau săgeata sus pentru a sări peste cactusi și alte obstacole",
+				"Apasă săgeata jos pentru a te ghemui sub pterodactilii zburători",
+				"Jocul se accelerează în timp, devenind din ce în ce mai dificil",
+				"Scorul tău crește cu cât supraviețuiești mai mult",
+				"Încearcă să-ți bați cel mai bun scor la fiecare încercare"
 			],
-			"type": "Алунде несфіршіт",
-			"players": "1-8 јуцетор"
+			"type": "Runner Infinit",
+			"players": "1-8 jucător(i)",
+			"multi": {
+				"score": "SCOR",
+				"waitingRoom": {
+					"title": "LOBBY",
+					"description": "Așteptând alți jucători să se alăture...",
+					"ready": "GATA",
+					"notReady": "NU SUNT GATA",
+					"cancelReady": "ANULEAZĂ GATA",
+					"startGame": "Începe Jocul",
+					"waitingForPlayers": "Așteptând jucător...",
+					"waitingForReady": "GATA SĂ ÎNCEPEM",
+					"emptySlot": "Loc gol",
+					"open": "DESCHIS",
+					"you": "Tu",
+					"autoStart": "Jocul va începe automat când toți jucătorii sunt gata"
+				},
+				"roomPrefix": "Camera DINO",
+				"errors": {
+					"noToken": "Tokenul de acces este nedefinit sau invalid la inițializarea WebSocket",
+					"noUser": "Datele utilizatorului nu sunt încă definite",
+					"noRoom": "ID-ul camerei este nedefinit sau invalid la inițializarea WebSocket",
+					"connectionExists": "Conexiunea WebSocket există deja și este deschisă",
+					"connectionClosed": "Conexiunea WebSocket închisă",
+					"noRoomData": "Primit room_update fără date despre cameră"
+				},
+				"connection": {
+					"connected": "Conectat la serverul de joc",
+					"creating": "Creez o nouă conexiune WebSocket",
+					"cleaning": "Curăț conexiunea WebSocket",
+					"gameStarting": "Jocul începe!"
+				}
+			}
 		}
 	},
 
 	"shop": {
-		"title": "Магазин",
+		"title": "Magazin",
 		"description": "Персонализеазă ћерчисеа та де љоац",
 		"balance": "Балансул тво",
 		"status": {
@@ -102,125 +156,588 @@
 	},
 
 	"footer": {
-		"terms": "Терме",
-		"privacy": "Приватец"
+		"terms": "Termeni",
+		"privacy": "Confidențialitate"
 	},
 
 	"common": {
-		"play": "ЋЕАЏАЋ",
-		"back": "Îнáпої",
-		"loading": "Інцăрца...",
-		"saving": "Салвеаз...",
-		"updating": "Актуализеаз...",
-		"total": "Тоtал",
-		"upload": "Îнкăрца",
-		"remove": "Штерге",
-		"save": "Салвеазе модіфікăрі"
+		"play": "JOACĂ",
+		"back": "Înapoi",
+		"loading": "Se încarcă...",
+		"saving": "Se salvează...",
+		"updating": "Se actualizează...",
+		"total": "Total",
+		"upload": "Încarcă",
+		"remove": "Elimină",
+		"save": "Salvează Modificările",
+		"cancel": "Anulează",
+		"close": "ÎNCHIDE",
+		"backToHome": "ÎNAPOI ACASĂ"
 	},
 
 	"profile": {
-		"notFound": "Ућењ %user% нуа фост гăсіт",
-		"memberSince": "Мембру дін %date%",
-		"addFriend": "Адăўă пріетен",
-		"sendMessage": "Трімите месадж",
+		"notFound": "Utilizatorul %user% nu a fost găsit",
+		"memberSince": "Membru din %date%",
+		"addFriend": "Adaugă Prieten",
+		"sendMessage": "Trimite Mesaj",
 
 		"sections": {
 			"overview": {
-				"title": "Преглед",
-				"recentGames": "Јоцурі рећенте"
+				"title": "Prezentare Generală",
+				"recentGames": "Jocuri Recente"
 			},
 			"stats": {
-				"title": "Статистици",
-				"gamesPlayed": "Јоцурі джуцате",
-				"winRate": "Процент победе",
-				"bestScore": "Май бун ѕцоре",
-				"wins": "Победи",
-				"losses": "Пєрдері",
-				"averageScore": "Медіо ѕцоре",
-				"totalDistance": "Дистанța тоtалă"
+				"title": "Statistici",
+				"gamesPlayed": "Jocuri Jucate",
+				"winRate": "Rata de Victorie PONG",
+				"bestScore": "Cel Mai Bun Scor",
+				"wins": "Victorii",
+				"losses": "Înfrângeri",
+				"averageScore": "Scor Mediu",
+				"totalDistance": "Distanța Totală"
 			},
 			"history": {
-				"title": "Историкул ћерцилор"
+				"title": "Istoricul Jocurilor",
+				"pong": {
+					"title": "ISTORICUL MECIURILOR PONG",
+					"description": "JOCURI RECENTE PONG"
+				},
+				"dino": {
+					"title": "ISTORICUL DINO RUN",
+					"description": "ÎNCERCĂRI RECENTE DINO RUN"
+				},
+				"win": "VICTORIE",
+				"lose": "ÎNFRÂNGERE",
+				"noGames": "Niciun istoric de joc disponibil"
+			},
+			"charts": {
+				"activity": {
+					"title": "JOCURI JUCATE SĂPTĂMÂNA ACEASTA",
+					"description": "ACTIVITATEA DIN ULTIMELE 7 ZILE"
+				},
+				"score": {
+					"title": "PROGRESUL SCORULUI",
+					"description": "SCORUL MEDIU PE SĂPTĂMÂNĂ",
+					"label": "Scor Mediu"
+				}
 			}
 		}
 	},
 
 	"userStatus": {
-		"online": "Онлајн",
-		"offline": "Офлајн"
+		"online": "Online",
+		"offline": "Offline"
 	},
 
 	"friends": {
-		"title": "Пріетени",
-		"description": "Инвитă пріетените ћеаџеаћ ку тине",
+		"title": "Prieteni",
+		"description": "Invită-ți prietenii să joace cu tine",
+
 		"sections": {
 			"myFriends": {
-				"title": "Пріетените мей",
-				"description": "Гестионеазă листа пріетенилор",
-				"search": "Цăутă пріетени...",
-				"noFriends": "Ну ај пріетени деоакум.",
-				"noFriendsFound": "Ну с-а гăсіт пріетени. Ћеарcă алтце."
+				"title": "Prietenii Mei",
+				"description": "Gestionează lista ta de prieteni",
+				"search": "Caută prieteni...",
+				"noFriends": "Nu ai încă prieteni.",
+				"noFriendsFound": "Niciun prieten găsit. Încearcă o căutare diferită."
 			},
+
 			"requests": {
-				"title": "Церері де пріетені",
-				"description": "Гестионеазă церериле де пріетені примите",
-				"noRequests": "Ну ај церері де пріетені деоакум.",
-				"accept": "Ацепță",
-				"decline": "Респинге"
+				"title": "Cereri de Prietenie",
+				"description": "Gestionează cererile de prietenie primite",
+				"noRequests": "Nu ai încă cereri de prietenie.",
+				"accept": "Acceptă",
+				"decline": "Refuză"
+			},
+
+			"add": {
+				"title": "Adaugă Prieteni",
+				"description": "Găsește și adaugă prieteni noi în rețeaua ta",
+				"search": "Caută utilizatori...",
+				"searchPrompt": "Caută utilizatori pentru a-i adăuga ca prieteni",
+				"noUsersFound": "Niciun utilizator găsit cu acel nume"
+			},
+
+			"blocked": {
+				"title": "Utilizatori Blocați",
+				"description": "Vezi toți utilizatorii pe care i-ai blocat",
+				"noBlocked": "Nu ai utilizatori blocați"
+			}
+		},
+
+		"actions": {
+			"addFriend": "Adaugă Prieten",
+			"removeFriend": "Elimină Prieten",
+			"blockUser": "Blochează Utilizator",
+			"unblockUser": "Deblochează Utilizator"
+		},
+
+		"notifications": {
+			"requestSent": {
+				"title": "Cerere de Prietenie Trimisă",
+				"description": "Cerere de prietenie trimisă către %user%"
+			},
+			"requestAccepted": {
+				"title": "Cerere de Prietenie Acceptată",
+				"description": "Acum ești prieten cu %user%"
+			},
+			"requestRejected": {
+				"title": "Cerere de Prietenie Respinsă",
+				"description": "Ai respins cererea de prietenie de la %user%"
+			},
+			"requestAlreadySent": {
+				"title": "Cerere de Prietenie Deja Trimisă",
+				"description": "Ai trimis deja o cerere de prietenie către %user%"
+			},
+			"friendRemoved": {
+				"title": "Prieten Eliminat",
+				"description": "L-ai eliminat pe %user% din prieteni"
+			},
+			"userBlocked": {
+				"title": "Utilizator Blocat",
+				"description": "L-ai blocat pe %user%"
+			},
+			"userUnblocked": {
+				"title": "Utilizator Deblocat",
+				"description": "L-ai deblocat pe %user%"
+			},
+			"error": {
+				"title": "Eroare",
+				"description": "Nu se poate trimite cererea de prietenie către %user%"
 			}
 		}
 	},
 
 	"dashboard": {
-		"title": "Панел",
-		"description": "Гестионеазă конто",
+		"title": "Tablou de Bord",
+		"description": "Gestionează-ți contul",
+
+		"logoutDialog": {
+			"title": "Confirmă Deconectarea",
+			"description": "Ești sigur că vrei să te deconectezi din cont?",
+			"confirm": "Deconectare"
+		},
+
+		"deleteAccountDialog": {
+			"title": "Șterge Contul",
+			"description": "Ești sigur că vrei să-ți ștergi contul? Această acțiune te va anonimiza și va șterge permanent toate datele tale.",
+			"confirm": "Șterge Contul"
+		},
+
+		"removeAvatarDialog": {
+			"title": "Confirmă Eliminarea Avatarului",
+			"description": "Ești sigur că vrei să-ți elimini poza de profil? Avatarul implicit va fi folosit în schimb.",
+			"confirm": "Elimină Avatarul"
+		},
+
+		"remove2faDialog": {
+			"title": "Dezactivează 2FA",
+			"description": "Ești sigur că vrei să dezactivezi Autentificarea cu Doi Factori? Aceasta va elimina stratul suplimentar de securitate de pe contul tău.",
+			"confirm": "Dezactivează 2FA"
+		},
 
 		"sections": {
 			"overview": {
-				"title": "Преглед",
-				"totalGames": "Тоtал јоцурі",
-				"winRate": "Процент победе",
-				"highScore": "Максим ѕцоре",
+				"title": "Prezentare Generală",
+
+				"totalGames": "Total Jocuri",
+				"winRate": "Rata de Victorie PONG",
+				"highScore": "Cel Mai Mare Scor DINO RUN",
 				"charts": {
 					"activity": {
-						"title": "Ацтивитате",
-						"description": "Нумăр де јоцурі джуцате пер зу"
+						"title": "Activitate",
+						"description": "Numărul de jocuri jucate pe zi"
 					},
 					"score": {
-						"title": "Прогрес ѕцоре",
-						"description": "Ѕцореа та де ћермп",
-						"label": "Ѕцоре"
+						"title": "Progresul Scorului",
+						"description": "Scorul tău mediu în timp",
+						"label": "Scor"
 					}
 				}
 			},
 
+			"history": {
+				"title": "Istoric",
+				"players": "Jucători",
+
+				"pong": {
+					"title": "Istoricul Meciurilor Pong",
+					"description": "Jocurile tale recente de Pong",
+					"noGames": "Niciun joc recent de Pong găsit."
+				},
+				"dino": {
+					"title": "Istoricul Dino Run",
+					"description": "Jocurile tale recente de Dino Run",
+					"noGames": "Niciun joc recent de Dino Run găsit."
+				}
+			},
+
 			"settings": {
-				"title": "Сетăрі",
+				"title": "Setări",
+
 				"account": {
-					"title": "Конто",
-					"description": "Гестионеазă профілу публић",
-					"picture": "Профілу фота",
-					"username": "Нуме ућ",
-					"bio": "Біо",
+					"title": "Cont",
+					"description": "Gestionează informațiile profilului tău public",
+					"picture": "Poza de Profil",
+					"username": "Nume de Utilizator",
+					"bio": "Biografie",
 
 					"dangerZone": {
-						"title": "Зона де перікул",
-						"description": "Одăт че стерши конто, ну мєрге реȋпец. Фі веар.",
-						"delete": "Стерге конто"
+						"title": "Zona de Confidențialitate",
+						"description": "Odată ce îți ștergi contul, nu mai există cale de întoarcere. Te rugăm să fii sigur.",
+						"consultData": "Consultă datele",
+						"delete": "Șterge Contul"
 					}
 				},
 				"security": {
-					"title": "Сецуритате",
+					"title": "Securitate",
 					"password": {
-						"title": "Парола",
-						"description": "Шимбă парола",
-						"current": "Парола актуалă",
-						"new": "Парола ноувă",
-						"confirm": "Цонфірмă парола ноувă",
-						"update": "Актуализеазă парола"
+						"google": "GESTIONEAZĂ PAROLA ÎN SETĂRILE CONTULUI GOOGLE",
+						"status": "Starea Parolei",
+						"title": "Parolă",
+						"description": "Schimbă-ți parola",
+						"current": "Parola Curentă",
+						"new": "Parola Nouă",
+						"confirm": "Confirmă Parola Nouă",
+						"update": "Actualizează Parola",
+						"validation": {
+							"minLength": "Minim 8 caractere",
+							"match": "Parolele nu se potrivesc",
+							"wrongCurrent": "Parola curentă greșită",
+							"sameCurrent": "Nu poate fi aceeași cu parola curentă"
+						},
+						"updateSuccess": {
+							"title": "Parola Actualizată",
+							"description": "Parola ta a fost actualizată cu succes"
+						}
+					},
+					"twoFactor": {
+						"title": "Autentificare cu Doi Factori",
+						"description": "Adaugă un strat suplimentar de securitate la contul tău",
+						"status": "Starea 2FA",
+						"enable": "Activează 2FA",
+						"disable": "Dezactivează 2FA",
+						"enabled": "Autentificarea cu Doi Factori este activată",
+						"disabled": "Autentificarea cu Doi Factori este dezactivată"
 					}
 				}
 			}
 		}
+	},
+
+	"terms": {
+		"title": "Termenii Serviciului",
+		"description": "Te rugăm să citești cu atenție termenii nostri de serviciu înainte de a folosi platforma noastră.",
+		"accept": "Accept",
+		"decline": "Refuz",
+		"lastUpdated": "Ultima actualizare: 25 mai 2025",
+		"welcome": "Bun venit la FT_TRANSCENDANCE! Acești Termeni de Serviciu (\"Termeni\") guvernează folosirea platformei noastre de jocuri retro. Prin accesarea sau folosirea serviciului nostru, ești de acord să fii obligat de acești Termeni. Te rugăm să îi citești cu atenție.",
+		"sections": {
+			"acceptance": {
+				"title": "ACCEPTAREA TERMENILOR",
+				"content": [
+					"Prin crearea unui cont, accesarea sau folosirea FT_TRANSCENDANCE, recunoști că ai citit, înțeles și ești de acord să fii obligat de acești Termeni și Politica noastră de Confidențialitate.",
+					"Dacă nu ești de acord cu acești Termeni, nu trebuie să accesezi sau să folosești serviciul nostru."
+				]
+			},
+			"service": {
+				"title": "DESCRIEREA SERVICIULUI",
+				"content": "FT_TRANSCENDANCE este o platformă online de jocuri retro care oferă:",
+				"items": [
+					"Jocuri și turnee în stil arcade clasic",
+					"Urmărirea statisticilor jucătorilor și clasamente",
+					"Caracteristici sociale incluzând chat și sisteme de prietenie",
+					"Profile și avataruri personalizabile"
+				]
+			},
+			"registration": {
+				"title": "ÎNREGISTRAREA CONTULUI",
+				"content": "Pentru a accesa anumite caracteristici, trebuie să creezi un cont. Ești de acord să:",
+				"items": [
+					"Furnizezi informații exacte și complete",
+					"Menții securitatea acreditărilor contului tău",
+					"Fii responsabil pentru toate activitățile de sub contul tău",
+					"Ne anunți imediat despre orice acces neautorizat"
+				]
+			},
+			"community": {
+				"title": "GHIDURILE COMUNITĂȚII",
+				"content": "Ne străduim să menținem un mediu de joc pozitiv. Ești de acord să nu:",
+				"items": [
+					"Te angajezi în hărțuire, intimidare sau comportament toxic",
+					"Folosești coduri de trișare, exploituri sau software neautorizat de la terți",
+					"Împarți conținut neadecvat, ofensator sau ilegal",
+					"Personifici alți utilizatori sau creezi conturi false",
+					"Încerci să obții acces neautorizat la sistemele noastre"
+				],
+				"violations": "Violările pot rezulta în avertismente, suspendare temporară sau terminarea permanentă a contului."
+			},
+			"intellectual": {
+				"title": "PROPRIETATEA INTELECTUALĂ",
+				"content": "Tot conținutul de pe FT_TRANSCENDANCE, incluzând jocuri, grafică, logo-uri, muzică și text, este protejat de legile proprietății intelectuale. Nu poți:",
+				"items": [
+					"Copia, distribui sau modifica conținutul nostru fără permisiune",
+					"Folosi mărcile comerciale sau branding-ul nostru în moduri neautorizate",
+					"Face inginerie inversă sau încerca să extragi codul sursă"
+				]
+			},
+			"privacy": {
+				"title": "CONFIDENȚIALITATEA ȘI DATELE",
+				"content": "Confidențialitatea ta este importantă pentru noi. Colectăm și folosim datele tale după cum este descris în Politica noastră de Confidențialitate, incluzând:",
+				"items": [
+					"Statistici de joc și date de performanță",
+					"Jurnale de comunicare și interacțiune socială",
+					"Informații tehnice pentru îmbunătățirea serviciului"
+				]
+			},
+			"liability": {
+				"title": "LIMITAREA RESPONSABILITĂȚII",
+				"content": "FT_TRANSCENDANCE este furnizat \"așa cum este\" fără garanții. Nu suntem responsabili pentru:",
+				"items": [
+					"Întreruperi de serviciu sau probleme tehnice",
+					"Acțiunile altor utilizatori pe platformă"
+				]
+			},
+			"termination": {
+				"title": "TERMINAREA",
+				"content": "Oricare parte poate termina acest acord:",
+				"items": [
+					"Poți să-ți ștergi contul oricând",
+					"Putem suspenda conturi pentru violarea Termenilor"
+				]
+			}
+		},
+		"footer": "Prin folosirea FT_TRANSCENDANCE, recunoști că ai citit și înțeles acești Termeni de Serviciu."
+	},
+
+	"privacy": {
+		"title": "Politica de Confidențialitate",
+		"lastUpdated": "Ultima actualizare: 25 mai 2025",
+		"welcome": "La StreamLine, respectăm confidențialitatea ta și ne angajăm să protejăm datele tale personale. Această politică de confidențialitate explică cum colectăm, folosim și protejăm informațiile tale când folosești serviciile noastre.",
+		"sections": {
+			"collect": {
+				"title": "Informațiile pe Care le Colectăm",
+				"content": "Colectăm diferite tipuri de informații pentru a furniza și îmbunătăți serviciile noastre:",
+				"items": [
+					"Nume de utilizator, adresă de email, parolă și detalii de profil",
+					"Mesaje și feedback pe care le furnizezi"
+				]
+			},
+			"use": {
+				"title": "Cum Folosim Informațiile Tale",
+				"content": "Folosim informațiile tale personale pentru următoarele scopuri:",
+				"items": [
+					"Furniza, menține și îmbunătăți serviciile noastre",
+					"Gestiona contul tău",
+					"Analiza modelele de folosire pentru a îmbunătăți experiența utilizatorului",
+					"Asigura securitatea și preveni frauda",
+					"Respecta obligațiile legale"
+				]
+			},
+			"sharing": {
+				"title": "Partajarea și Divulgarea Informațiilor",
+				"content": "Nu vindem informațiile tale personale. Putem partaja informațiile tale doar în următoarele circumstanțe:",
+				"items": [
+					"Când este cerut de lege sau pentru a ne proteja drepturile",
+					"Când ești explicit de acord să-ți partajezi informațiile"
+				]
+			},
+			"security": {
+				"title": "Securitatea Datelor",
+				"content": "Implementăm măsuri de securitate robuste pentru a-ți proteja informațiile personale:",
+				"items": [
+					"Criptare end-to-end pentru transmisia datelor",
+					"Controale de acces și mecanisme de autentificare"
+				],
+				"disclaimer": "În timp ce ne străduim să-ți protejăm informațiile personale, nicio metodă de transmisie prin internet nu este 100% sigură. Te încurajăm să folosești parole puternice și să păstrezi confidențiale informațiile contului tău."
+			},
+			"rights": {
+				"title": "Drepturile Tale de Confidențialitate",
+				"content": "Ai următoarele drepturi în privința informațiilor tale personale:",
+				"items": [
+					"Cere o copie a datelor tale personale pe care le deținem",
+					"Corecta orice inexactități din datele tale personale",
+					"Ștergerea contului, la cerere, îți vom șterge contul și toate datele asociate",
+					"Portabilitatea, primi datele tale într-un format structurat, citibil de mașină"
+				]
+			},
+			"cookies": {
+				"title": "Cookie-uri și Tehnologii de Urmărire",
+				"content": "Folosim cookie-uri și tehnologii similare pentru a-ți îmbunătăți experiența:",
+				"items": [
+					"Cookie-uri esențiale necesare pentru funcționalitatea de bază și securitate",
+					"Cookie-uri funcționale pentru a-ți aminti preferințele și setările"
+				]
+			},
+			"retention": {
+				"title": "Păstrarea Datelor",
+				"content": "Păstrăm informațiile tale personale atât timp cât este necesar pentru a îndeplini scopurile prezentate în această politică:",
+				"items": [
+					"Contul stocat până când îți ștergi contul",
+					"Datele de folosire stocate pentru 2 ani pentru analiză și îmbunătățirea serviciului"
+				]
+			},
+			"international": {
+				"title": "Transferuri Internaționale de Date",
+				"content": "Informațiile tale pot fi transferate și procesate în țări altele decât a ta. Ne asigurăm că măsurile de protecție adecvate sunt în vigoare:",
+				"items": [
+					"Clauzele Contractuale Standard pentru transferurile de date UE",
+					"Decizii de adecvare de către autoritățile relevante de protecție a datelor",
+					"Reguli Corporative Obligatorii pentru transferurile intra-grup",
+					"Scheme de certificare și coduri de conduită"
+				]
+			},
+			"changes": {
+				"title": "Modificări la Această Politică de Confidențialitate",
+				"content": "Putem actualiza această politică de confidențialitate din când în când pentru a reflecta modificările în practicile noastre sau legile aplicabile. Când facem modificări:",
+				"items": [
+					"Vom actualiza data \"Ultima actualizare\" din partea de sus a acestei politici",
+					"Folosirea continuă a serviciilor noastre constituie acceptarea politicii actualizate"
+				]
+			}
+		},
+		"footer": "Această politică de confidențialitate este efectivă începând cu data ultimei actualizări indicată mai sus și se aplică tuturor utilizatorilor serviciilor StreamLine. Prin folosirea serviciilor noastre, recunoști că ai citit și înțeles această politică de confidențialitate."
+	},
+
+	"dialogs": {
+		"consultData": {
+			"title": "Prezentarea Datelor Tale",
+			"description": "Prezentare completă a datelor contului tău",
+			"confirm": "Consultă Datele",
+			"profile": {
+				"title": "Profil",
+				"description": "informații profil",
+				"tfaEnabled": "2FA Activat",
+				"unknown": "Necunoscut",
+				"accountCreated": "Cont Creat",
+				"accountUpdated": "Ultima Actualizare",
+				"noCreationDate": "Nicio dată de creare disponibilă",
+				"noUpdateDate": "Nicio dată de actualizare disponibilă"
+			},
+			"rawData": {
+				"title": "Datele Brute ale Utilizatorului",
+				"description": "Date tehnice stocate despre contul tău",
+				"download": "Descarcă JSON Complet",
+				"userInfo": "Informații Utilizator",
+				"summary": "💡 Aceasta arată un rezumat al datelor tale. Apasă \"Descarcă JSON Complet\" mai sus pentru a obține setul complet de date."
+			}
+		},
+		"gameMode": {
+			"selectMode": "SELECTEAZĂ MODUL DE JOC",
+			"modes": {
+				"ai": {
+					"title": "Împotriva AI",
+					"description": "Joacă împotriva computerului"
+				},
+				"solo": {
+					"title": "Solo",
+					"description": "Bate cel mai mare scor al tău"
+				},
+				"local": {
+					"title": "1V1 LOCAL",
+					"description": "JOACĂ CU UN PRIETEN LOCAL"
+				},
+				"multiplayer": {
+					"title": "MULTIPLAYER",
+					"description": "JOACĂ CU PRIETENII"
+				},
+				"tournament": {
+					"title": "TURNEU",
+					"description": "CONCUREAZĂ ÎNTR-UN TURNEU LOCAL"
+				}
+			},
+			"selectPrompt": "Selectează un mod",
+			"loginRequired": {
+				"title": "Eroare",
+				"description": "Trebuie să fii conectat pentru a juca acest joc"
+			}
+		},
+		"matchDetails": {
+			"pongTitle": "DETALIILE MECIULUI PONG",
+			"dinoTitle": "DETALIILE DINO RUN",
+			"playerScores": "SCORURILE JUCĂTORILOR",
+			"loading": "Se încarcă detaliile jucătorului...",
+			"bot": "BOT",
+			"score": "SCOR"
+		},
+		"termsPrivacy": {
+			"title": "Termeni și Confidențialitate",
+			"description": "Înainte de a continua, te rugăm să accepți termenii și politica noastră de confidențialitate.",
+			"agreeToTerms": "Sunt de acord cu",
+			"termsOfService": "Termenii de Serviciu",
+			"agreeToPrivacy": "Sunt de acord cu",
+			"privacyPolicy": "Politica de Confidențialitate",
+			"acceptContinue": "Acceptă și Continuă"
+		},
+		"multiplayerOptions": {
+			"title": "OPȚIUNI MULTIPLAYER",
+			"description": "CREEAZĂ O CAMERĂ NOUĂ SAU ALĂTURĂ-TE CU UN COD",
+			"createRoom": "CREEAZĂ O CAMERĂ",
+			"joinWithCode": "ALĂTURĂ-TE CU COD",
+			"matchmaking": "MATCHMAKING",
+			"roomCodeLabel": "CODUL CAMEREI:",
+			"enterRoomCode": "INTRODU CODUL CAMEREI",
+			"connecting": "SE CONECTEAZĂ...",
+			"createRoomButton": "CREEAZĂ CAMERĂ",
+			"joinRoomButton": "ALĂTURĂ-TE CAMEREI",
+			"joinMatchmakingButton": "ALĂTURĂ-TE MATCHMAKING",
+			"selectOption": "SELECTEAZĂ O OPȚIUNE"
+		},
+		"twoFactorSetup": {
+			"title": "Configurarea Autentificării cu Doi Factori",
+			"description": "Securizează-ți contul cu o aplicație de autentificare",
+			"scanQrCode": "1. SCANEAZĂ ACEST COD QR CU APLICAȚIA TA DE AUTENTIFICARE",
+			"qrLoading": "COD QR SE ÎNCARCĂ...",
+			"manualCode": "2. SAU INTRODU MANUAL ACEST COD SECRET:",
+			"copyToClipboard": "Copiază în clipboard",
+			"enterCode": "3. INTRODU CODUL DIN APLICAȚIA TA DE AUTENTIFICARE:",
+			"verifyEnable": "Verifică și Activează",
+			"errors": {
+				"enterCode": "Te rugăm să introduci codul de verificare",
+				"invalidCode": "Cod de verificare invalid. Te rugăm să încerci din nou."
+			}
+		},
+		"twoFactorVerify": {
+			"title": "Autentificare cu Doi Factori",
+			"description": "Introdu codul de 6 cifre din aplicația ta de autentificare",
+			"enterCode": "INTRODU CODUL DE VERIFICARE:",
+			"verify": "Verifică",
+			"verifying": "Se verifică..."
+		}
+	},
+
+	"notFound": {
+		"title": "Această pagină nu a putut fi găsită.",
+		"backToHome": "Înapoi Acasă"
+	},
+
+	"language": {
+		"title": "Alege Limba",
+		"description": "Selectează limba ta preferată pentru interfață",
+		"savedPreference": "Preferința de limbă va fi salvată pentru vizitele viitoare"
+	},
+
+	"matchmaking": {
+		"lookingForOpponent": "CAUT UN ADVERSAR",
+		"searchingFurther": "CAUT MAI DEPARTE"
+	},
+
+	"chat": {
+		"generalChat": "CHAT GENERAL",
+		"privateMessages": "MESAJE PRIVATE",
+		"global": "Global",
+		"friends": "Prieteni",
+		"searchFriends": "Caută prieteni...",
+		"noFriends": "Nu ai încă prieteni",
+		"noFriendsFound": "Niciun prieten găsit",
+		"writeMessage": "Scrie mesajul tău...",
+		"send": "Trimite",
+		"inviteFriendToPlay": "Invită pe %friend% să joace",
+		"chooseGame": "Alege un joc pentru a-ți invita prietenul",
+		"sendInvitation": "Trimite invitația",
+		"inviteToPlay": "Invită să joace",
+		"aFriend": "un prieten",
+		"copied": "COPIAT!",
+		"join": "ALĂTURĂ-TE"
 	}
 }

@@ -53,7 +53,7 @@
 		"or": "Или",
 		"google": {
 			"login": "Войти через Google",
-			"register": "Зарегистрироваться через Google"
+			"register": "Зар через Google"
 		},
 		"errors": {
 			"invalidCredentials": "Неверное имя пользователя или пароль",

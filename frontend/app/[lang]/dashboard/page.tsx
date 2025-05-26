@@ -655,7 +655,7 @@ export default function DashboardPage() {
 										{pongGameHistory.length > 0 ? (
 											pongGameHistory.map((gameResult, index) => {
 												const isWinner = gameResult.is_winner || false
-												const result = isWinner ? "WIN" : "LOOSE"
+												const result = isWinner ? dict.profile.sections.history.win : dict.profile.sections.history.lose
 												const gameSession = gameResult.gameSession
 												const playerCount = gameSession?.results?.length || 0
 												const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString()
@@ -699,7 +699,7 @@ export default function DashboardPage() {
 										{dinoGameHistory.length > 0 ? (
 											dinoGameHistory.map((gameResult, index) => {
 												const isWinner = gameResult.is_winner || false
-												const result = isWinner ? "WIN" : "LOOSE"
+												const result = isWinner ? dict.profile.sections.history.win : dict.profile.sections.history.lose
 												const gameSession = gameResult.gameSession
 												const playerCount = gameSession?.results?.length || 0
 												const gameDate = new Date(gameSession?.created_at || Date.now()).toLocaleDateString()

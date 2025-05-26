@@ -33,6 +33,7 @@ import api from "@/lib/api"
 import { GameType } from "@/types/game"
 import { cn, handleImageUpload } from "@/lib/utils"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import { TwoFactorVerifyDialog } from "@/components/dialog/TwoFactorVerifyDialog"
 import { ConsultDataDialog } from "@/components/dialog/ConsultDataDialog"
 
@@ -145,6 +146,7 @@ export default function DashboardPage() {
 				toast({
 					title: "Account Updated",
 					description: "Your account has been updated successfully",
+					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				})
 			})
@@ -155,6 +157,7 @@ export default function DashboardPage() {
 					toast({
 						title: "Error",
 						description: "There was an error updating your account",
+						variant: ToastVariant.ERROR,
 						duration: 3000,
 					})
 					console.log("Error updating account", error)
@@ -203,6 +206,7 @@ export default function DashboardPage() {
 					toast({
 						title: "Account Deleted",
 						description: "Your account has been deleted successfully",
+						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					})
 					setAccessToken(null)
@@ -216,6 +220,7 @@ export default function DashboardPage() {
 			toast({
 				title: "Error",
 				description: `There was an error when deleting your account: ${err.message}`,
+				variant: ToastVariant.ERROR,
 				duration: 3000,
 			})
 		}
@@ -249,6 +254,7 @@ export default function DashboardPage() {
 					toast({
 						title: "Avatar Updated",
 						description: "Your avatar has been updated successfully",
+						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					})
 				})
@@ -256,6 +262,7 @@ export default function DashboardPage() {
 			toast({
 				title: "Error",
 				description: `There was an error updating your avatar: ${err.message}`,
+				variant: ToastVariant.ERROR,
 				duration: 3000,
 			})
 		}
@@ -275,6 +282,7 @@ export default function DashboardPage() {
 		toast({
 			title: "2FA Enabled",
 			description: "2FA has been enabled successfully",
+			variant: ToastVariant.SUCCESS,
 			duration: 3000,
 		})
 	}
@@ -291,6 +299,7 @@ export default function DashboardPage() {
 				toast({
 					title: "2FA Disabled",
 					description: "2FA has been disabled successfully",
+					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				})
 				updateData()

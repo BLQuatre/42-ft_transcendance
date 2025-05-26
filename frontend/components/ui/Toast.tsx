@@ -31,8 +31,14 @@ const toastVariants = cva(
           "bg-game-dark text-white shadow-slate-600/50",
         destructive:
           "minecraft-border-red bg-game-dark text-white shadow-red-600/50",
+        error:
+          "minecraft-border-red bg-game-dark text-white shadow-red-600/50",
         success:
           "minecraft-border-green bg-game-dark text-white shadow-green-600/50",
+        warning:
+          "minecraft-border-yellow bg-game-dark text-white shadow-yellow-600/50",
+        info:
+          "minecraft-border-blue bg-game-dark text-white shadow-blue-600/50",
       },
     },
     defaultVariants: {

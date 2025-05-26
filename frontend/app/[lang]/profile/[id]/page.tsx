@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
 import { Button } from "@/components/ui/Button"
 import { UserPlus, MessageSquare, Trophy, GamepadIcon, BarChart3, Clock, UserX, UserCheck } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import Link from "next/link"
 import { MatchDetailsDialog } from "@/components/dialog/MatchDetailsDialog"
 import { useDictionary } from "@/hooks/UseDictionnary"
@@ -273,6 +274,7 @@ export default function UserProfilePage() {
       toast({
         title: dict.friends.notifications.requestSent.title,
         description: dict.friends.notifications.requestSent.description.replace('%user%', user?.name || user?.username || userId),
+        variant: ToastVariant.SUCCESS,
         duration: 3000,
       })
     } catch (error: any) {
@@ -280,12 +282,14 @@ export default function UserProfilePage() {
         toast({
           title: dict.friends.notifications.requestAlreadySent.title,
           description: dict.friends.notifications.requestAlreadySent.description.replace('%user%', user?.name || user?.username || userId),
+          variant: ToastVariant.WARNING,
           duration: 3000,
         })
       } else {
         toast({
           title: dict.friends.notifications.error.title,
           description: dict.friends.notifications.error.description.replace('%user%', user?.name || user?.username || userId),
+          variant: ToastVariant.ERROR,
           duration: 3000,
         })
       }
@@ -323,12 +327,14 @@ export default function UserProfilePage() {
       toast({
         title: dict.friends.notifications.userUnblocked.title,
         description: dict.friends.notifications.userUnblocked.description.replace('%user%', user?.name || user?.username || userId),
+        variant: ToastVariant.SUCCESS,
         duration: 3000,
       })
     } catch (error: any) {
       toast({
         title: dict.friends.notifications.error.title,
         description: dict.friends.notifications.error.description.replace('%user%', user?.name || user?.username || userId),
+        variant: ToastVariant.ERROR,
         duration: 3000,
       })
     }

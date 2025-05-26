@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { getBgColor, getHoverBgColor } from "@/lib/colors"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import { useDictionary } from "@/hooks/UseDictionnary"
 
 type GameButtonsProps = {
@@ -42,6 +43,7 @@ export function GameButtons({ gameType, buttonText }: GameButtonsProps) {
             toast({
               title: dict?.dialogs?.gameMode?.loginRequired?.title || "Error",
               description: dict?.dialogs?.gameMode?.loginRequired?.description || "You need to be logged in to play this game",
+              variant: ToastVariant.WARNING,
               duration: 3000
             })
           } else {

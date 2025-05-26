@@ -24,3 +24,12 @@ export interface PongState {
 		y: number;
 	};
 }
+
+export enum ToastVariant {
+	DEFAULT = "default",
+	SUCCESS = "success",
+	ERROR = "error",
+	WARNING = "warning",
+	INFO = "info",
+	DESTRUCTIVE = "destructive"
+}

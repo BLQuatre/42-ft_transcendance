@@ -20,6 +20,7 @@ import { getBorderColor, getBgColor, getTextColor } from "@/lib/colors"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 
 type GameModeDialogProps = {
   open: boolean
@@ -202,6 +203,7 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
                 toast({
                   title: dict.dialogs.gameMode.loginRequired.title,
                   description: dict.dialogs.gameMode.loginRequired.description,
+                  variant: ToastVariant.WARNING,
                   duration: 3000
                 })
               } else {

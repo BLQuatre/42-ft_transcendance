@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { Search } from "lucide-react"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { BaseUser } from "@/types/user"
 import { FriendRequest, FriendRequestStatus } from "@/types/friend"
@@ -65,7 +66,7 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.put(`/friend/${id}`, { status: "accepted" }).then(() => {
 			updateData()
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -73,6 +74,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.requestAccepted.title,
 				description: dict.friends.notifications.requestAccepted.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			})
 		})
@@ -82,7 +84,7 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.put(`/friend/${id}`, { status: "refused" }).then(() => {
 			updateData()
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -90,6 +92,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.requestRejected.title,
 				description: dict.friends.notifications.requestRejected.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.WARNING,
 				duration: 3000,
 			})
 		})
@@ -99,7 +102,7 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.delete(`/friend/${id}`).then(() => {
 			updateData()
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -107,6 +110,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.friendRemoved.title,
 				description: dict.friends.notifications.friendRemoved.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.WARNING,
 				duration: 3000,
 			})
 		})
@@ -117,7 +121,7 @@ export default function FriendsPage() {
 		try {
 			await api.post(`/friend/${id}`);
 			updateData();
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'));
 
@@ -125,6 +129,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.requestSent.title,
 				description: dict.friends.notifications.requestSent.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			});
 		} catch (error: any) {
@@ -133,12 +138,14 @@ export default function FriendsPage() {
 				toast({
 					title: dict.friends.notifications.requestAlreadySent.title,
 					description: dict.friends.notifications.requestAlreadySent.description.replace('%user%', user?.name || id),
+					variant: ToastVariant.WARNING,
 					duration: 3000,
 				});
 			} else if (error.response?.status === 400) {
 				toast({
 					title: dict.friends.notifications.error.title,
 					description: dict.friends.notifications.error.description.replace('%user%', user?.name || id),
+					variant: ToastVariant.ERROR,
 					duration: 3000,
 				});
 			}
@@ -149,7 +156,7 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.post(`/friend/blocked/${id}`).then(() => {
 			updateData()
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -157,6 +164,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.userBlocked.title,
 				description: dict.friends.notifications.userBlocked.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.WARNING,
 				duration: 3000,
 			})
 		})
@@ -166,7 +174,7 @@ export default function FriendsPage() {
 		if (!dict) return;
 		api.delete(`/friend/${id}`).then(() => {
 			updateData()
-			
+
 			// Dispatch event to reload chat friends list
 			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
 
@@ -174,6 +182,7 @@ export default function FriendsPage() {
 			toast({
 				title: dict.friends.notifications.userUnblocked.title,
 				description: dict.friends.notifications.userUnblocked.description.replace('%user%', user?.name || id),
+				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			})
 		})

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { TournamentBracket } from "@/components/TournamentBracket"
 import { UpcomingMatches } from "@/components/UpcomingMatches"
 import { useToast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import { MainNav } from "@/components/Navbar"
 
 type Player = {
@@ -229,6 +230,7 @@ export default function TournamentPage({
     toast({
       title: "Local Player Added",
       description: `Added ${playerName} to match #${matchId}`,
+      variant: ToastVariant.SUCCESS,
       duration: 3000,
     })
   }

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { useDictionary } from "@/hooks/UseDictionnary"
 import { toast } from "@/hooks/UseToast"
+import { ToastVariant } from "@/types/types"
 import api from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
@@ -87,6 +88,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 			toast({
 				title: dict.dashboard.sections.settings.security.password.updateSuccess.title,
 				description: dict.dashboard.sections.settings.security.password.updateSuccess.description,
+				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			})
 

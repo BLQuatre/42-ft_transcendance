@@ -112,37 +112,38 @@ export default function FriendsPage() {
 		})
 	}
 
-	const handleSendFriendRequest = (id: string) => {
+	const handleSendFriendRequest = async (id: string) => {
 		if (!dict) return;
-		api.post(`/friend/${id}`).then(() => {
-			updateData()
+		try {
+			await api.post(`/friend/${id}`);
+			updateData();
 			
 			// Dispatch event to reload chat friends list
-			window.dispatchEvent(new CustomEvent('friendStatusChanged'))
+			window.dispatchEvent(new CustomEvent('friendStatusChanged'));
 
-			const user = getUserFromId(id)
+			const user = getUserFromId(id);
 			toast({
 				title: dict.friends.notifications.requestSent.title,
 				description: dict.friends.notifications.requestSent.description.replace('%user%', user?.name || id),
 				duration: 3000,
-			})
-		}).catch((error) => {
-			const user = getUserFromId(id)
+			});
+		} catch (error: any) {
+			const user = getUserFromId(id);
 			if (error.response?.status === 409) {
 				toast({
 					title: dict.friends.notifications.requestAlreadySent.title,
 					description: dict.friends.notifications.requestAlreadySent.description.replace('%user%', user?.name || id),
 					duration: 3000,
-				})
+				});
 			} else if (error.response?.status === 400) {
 				toast({
 					title: dict.friends.notifications.error.title,
 					description: dict.friends.notifications.error.description.replace('%user%', user?.name || id),
 					duration: 3000,
-				})
+				});
 			}
-		})
-	}
+		}
+	};
 
 	const handleBlockUser = (id: string) => {
 		if (!dict) return;

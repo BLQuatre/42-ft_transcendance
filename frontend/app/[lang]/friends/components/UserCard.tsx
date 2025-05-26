@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { FriendRequestStatus } from "@/types/friend";
 import { BaseUser } from "@/types/user";
-import { User, UserCheck, UserLock, UserPlus } from "lucide-react";
+import { User, UserCheck, UserLock, UserPlus, Clock } from "lucide-react";
 
 interface UserCardProps {
 	user: BaseUser;
@@ -17,10 +18,21 @@ interface UserCardProps {
 export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: UserCardProps) {
 	console.log(`UserId: ${user.id}, Status: ${status}`);
 
+	const [isLoading, setIsLoading] = useState(false);
 
 	const isBlocked = status === FriendRequestStatus.BLOCKED;
 	const isRefused = status === FriendRequestStatus.REFUSED;
 	const isPending = status === FriendRequestStatus.PENDING;
+
+	const handleSendRequest = async () => {
+		setIsLoading(true);
+		try {
+			await sendRequest(user.id);
+		} finally {
+			// Keep loading state for a bit to show the icon change
+			setTimeout(() => setIsLoading(false), 1000);
+		}
+	};
 
 	return (
 		<div className="flex items-center justify-between p-3 bg-muted rounded-lg">
@@ -62,9 +74,14 @@ export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: User
 						variant="outline"
 						size="sm"
 						className="h-8 w-8 font-pixel text-xs"
-						onClick={() => sendRequest(user.id)}
+						onClick={handleSendRequest}
+						disabled={isLoading}
 					>
-						<UserPlus className="h-4 w-4" />
+						{isLoading ? (
+							<Clock className="h-4 w-4 animate-spin" />
+						) : (
+							<UserPlus className="h-4 w-4" />
+						)}
 					</Button>
 				) : (
 					<Button

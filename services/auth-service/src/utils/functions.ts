@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../../.env.dev')});
+dotenv.config({ path: path.resolve(__dirname, "../../../../.env.dev") });
 
 interface UserEntity {
 	id: string;
@@ -11,12 +11,11 @@ interface UserEntity {
 	updated_at: Date;
 }
 
-export type PublicUser = Omit<UserEntity, 'password'>;
+export type PublicUser = Omit<UserEntity, "password">;
 
-export function removePassword(user: UserEntity): PublicUser{
-	if (!user)
-		return user;
-	const { password, ...rest} = user;
+export function removePassword(user: UserEntity): PublicUser {
+	if (!user) return user;
+	const { password, ...rest } = user;
 	return rest;
 }
 

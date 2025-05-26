@@ -1,14 +1,14 @@
 import { UserEntity } from "../entities/User";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import path from "path";
 import { PublicUser } from "./types";
 
 export enum UserStatus {
 	ONLINE = "online",
-	OFFLINE = "offline"
+	OFFLINE = "offline",
 }
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 function isOnline(lastSeenAt: Date | null): boolean {
 	if (!lastSeenAt) return false;
@@ -19,9 +19,8 @@ function isOnline(lastSeenAt: Date | null): boolean {
 	return diff < 180 * 1000;
 }
 
-export function removePassword(user: UserEntity): PublicUser{
-	if (!user)
-		return user;
+export function removePassword(user: UserEntity): PublicUser {
+	if (!user) return user;
 	return {
 		id: user.id,
 		name: user.name,
@@ -30,14 +29,13 @@ export function removePassword(user: UserEntity): PublicUser{
 		tfaEnable: user.tfaEnable,
 		email: user.email,
 		isGoogleSignIn: user.isGoogleSignIn,
-		created_at: user.created_at,  // Add creation timestamp
-		updated_at: user.updated_at  // Add update timestamp
-	}
+		created_at: user.created_at, // Add creation timestamp
+		updated_at: user.updated_at, // Add update timestamp
+	};
 }
 
 export function getEnv(key: string): string {
 	const value = process.env[key];
-	if (!value)
-		throw new Error(`Missing environment variable: ${key}`);
+	if (!value) throw new Error(`Missing environment variable: ${key}`);
 	return value;
 }

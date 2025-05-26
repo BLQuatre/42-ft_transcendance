@@ -1,45 +1,46 @@
-import Fastify from 'fastify';
-import { WebSocketServer, WebSocket } from 'ws';
-import dotenv from 'dotenv';
-import path from 'path';
+import Fastify from "fastify";
+import { WebSocketServer, WebSocket } from "ws";
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev') });
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 const fastify = Fastify({
-	logger: process.env.DEBUG === 'true',
+	logger: process.env.DEBUG === "true",
 });
 
-
-const PONG_RANGE_WIDE	= 10
-const PONG_HARD_CAP		= 50
-const DINO_RANGE_WIDE	= 200
-const DINO_HARD_CAP		= 1000
+const PONG_RANGE_WIDE = 10;
+const PONG_HARD_CAP = 50;
+const DINO_RANGE_WIDE = 200;
+const DINO_HARD_CAP = 1000;
 
 interface Player {
 	id: string;
-	game: 'pong' | 'dino';
+	game: "pong" | "dino";
 	socket: WebSocket;
-	elo: number // either win-rate for pong or best score for dino run
-	range: number // how distant from its elo a player can match another
+	elo: number; // either win-rate for pong or best score for dino run
+	range: number; // how distant from its elo a player can match another
 }
 
-const queues: Map<'pong' | 'dino', Player[]> = new Map();
-queues.set('pong', []);
-queues.set('dino', []);
+const queues: Map<"pong" | "dino", Player[]> = new Map();
+queues.set("pong", []);
+queues.set("dino", []);
 
 const widenTimers = new Map<string, NodeJS.Timeout>();
 
-
 function widenRange(player: Player) {
 	const interval = setTimeout(() => {
-		player.range += (player.game === 'pong' ? PONG_RANGE_WIDE : DINO_RANGE_WIDE);
+		player.range += player.game === "pong" ? PONG_RANGE_WIDE : DINO_RANGE_WIDE;
 
-		const hardCap = player.game === 'pong' ? PONG_HARD_CAP : DINO_HARD_CAP;
+		const hardCap = player.game === "pong" ? PONG_HARD_CAP : DINO_HARD_CAP;
 		if (player.range < hardCap) {
 			widenRange(player);
-			
-			try			{ player.socket.send(JSON.stringify({ type: 'widening' })); }
-			catch (err)	{ console.error("Failed to send match payload:", err); }
+
+			try {
+				player.socket.send(JSON.stringify({ type: "widening" }));
+			} catch (err) {
+				console.error("Failed to send match payload:", err);
+			}
 		} else {
 			widenTimers.delete(player.id); // Done widening
 		}
@@ -55,7 +56,6 @@ function clearWidenRange(playerId: string) {
 		widenTimers.delete(playerId);
 	}
 }
-
 
 function matchmakingSweep() {
 	for (const [game, queue] of queues.entries()) {
@@ -74,8 +74,14 @@ function matchmakingSweep() {
 				const eloDiff = Math.abs(a.elo - b.elo);
 				if (eloDiff <= a.range && eloDiff <= b.range) {
 					// Found a match
-					const newRoomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-					const payload = JSON.stringify({ type: 'matched', roomId: newRoomId });
+					const newRoomId = Math.random()
+						.toString(36)
+						.substring(2, 8)
+						.toUpperCase();
+					const payload = JSON.stringify({
+						type: "matched",
+						roomId: newRoomId,
+					});
 
 					try {
 						a.socket.send(payload);
@@ -96,69 +102,83 @@ function matchmakingSweep() {
 		}
 
 		// Remove matched players from queue
-		queues.set(game, queue.filter(p => !matched.has(p.id)));
+		queues.set(
+			game,
+			queue.filter((p) => !matched.has(p.id))
+		);
 	}
 }
 
 const start = async () => {
 	await fastify.listen({
 		host: process.env.MATCHMAKING_HOST,
-		port: parseInt(process.env.MATCHMAKING_PORT || "0", 10)
+		port: parseInt(process.env.MATCHMAKING_PORT || "0", 10),
 	});
 
-	console.log(`Server running on http://${process.env.MATCHMAKING_HOST}:${process.env.MATCHMAKING_PORT}`);
-
+	console.log(
+		`Server running on http://${process.env.MATCHMAKING_HOST}:${process.env.MATCHMAKING_PORT}`
+	);
 
 	const wss = new WebSocketServer({ server: fastify.server });
 
 	setInterval(matchmakingSweep, 5000); // check for matchs every 5 seconds
 
-	wss.on('connection', (ws) => {
-		console.log('Client connected');
+	wss.on("connection", (ws) => {
+		console.log("Client connected");
 
 		let assignedPlayer: Player | null = null;
 
-		ws.on('message', (message) => {
+		ws.on("message", (message) => {
 			const data = JSON.parse(message.toString());
 
-			if (data.type === 'match') {
-				if (typeof data.uuid !== 'string' ||
-					typeof data.elo !== 'number' ||
-					(data.gameType !== 'pong' && data.gameType !== 'dino')
+			if (data.type === "match") {
+				if (
+					typeof data.uuid !== "string" ||
+					typeof data.elo !== "number" ||
+					(data.gameType !== "pong" && data.gameType !== "dino")
 				) {
-					console.log('close because wrong data')
-					console.log(`data.uuid = ${data.uuid}, data.elo = ${data.elo}, data.gameType = ${data.gameType}`)
+					console.log("close because wrong data");
+					console.log(
+						`data.uuid = ${data.uuid}, data.elo = ${data.elo}, data.gameType = ${data.gameType}`
+					);
 					ws.close();
 					return;
 				}
-				
+
 				const uuid: string = data.uuid;
-				const gameType: 'pong' | 'dino' = data.gameType;
+				const gameType: "pong" | "dino" = data.gameType;
 				const elo: number = data.elo;
-				
+
 				const queue = queues.get(gameType);
-				if (!queue || queue.some(p => p.id === data.uuid)) { // Prevent same player from queuing twice in the same game
-					console.log('close because already in queue')
+				if (!queue || queue.some((p) => p.id === data.uuid)) {
+					// Prevent same player from queuing twice in the same game
+					console.log("close because already in queue");
 					ws.close();
 					return;
 				}
 
-				assignedPlayer = { id: uuid, game: gameType, socket: ws, elo: elo, range: (gameType === 'pong' ? PONG_RANGE_WIDE : DINO_RANGE_WIDE) };
+				assignedPlayer = {
+					id: uuid,
+					game: gameType,
+					socket: ws,
+					elo: elo,
+					range: gameType === "pong" ? PONG_RANGE_WIDE : DINO_RANGE_WIDE,
+				};
 
-				widenRange(assignedPlayer) ;
+				widenRange(assignedPlayer);
 
 				queue.push(assignedPlayer);
 				console.log(`Player ${assignedPlayer.id} added to ${gameType} queue`);
 			}
 		});
 
-		ws.on('close', () => {
-			console.log('Client disconnected');
+		ws.on("close", () => {
+			console.log("Client disconnected");
 
 			if (assignedPlayer) {
 				const queue = queues.get(assignedPlayer.game);
 				if (queue) {
-					const index = queue.findIndex(p => p.id === assignedPlayer!.id);
+					const index = queue.findIndex((p) => p.id === assignedPlayer!.id);
 					if (index !== -1) queue.splice(index, 1);
 				}
 				clearWidenRange(assignedPlayer.id);

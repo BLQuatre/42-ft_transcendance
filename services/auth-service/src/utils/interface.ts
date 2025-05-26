@@ -1,18 +1,18 @@
 import { FastifyRequest } from "fastify";
-import { JwtPayload} from 'jsonwebtoken'
+import { JwtPayload } from "jsonwebtoken";
 
 export interface LoginUser {
 	name: string;
-	password: string
+	password: string;
 }
 
 export interface AuthRequest extends FastifyRequest {
 	headers: {
-		authorization? : string
-	}
+		authorization?: string;
+	};
 }
 
 export interface MyJwtPayload extends JwtPayload {
 	id: string;
-	name:string;
+	name: string;
 }

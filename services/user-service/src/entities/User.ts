@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from "typeorm"
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	CreateDateColumn,
+} from "typeorm";
 import { SimpleTfaSecret } from "../utils/interface";
 
 @Entity("user")
@@ -10,40 +15,40 @@ export class UserEntity {
 	name!: string;
 
 	@Column({
-		nullable: true
+		nullable: true,
 	})
-	password!: string
+	password!: string;
 
 	@Column({
 		unique: true,
-		nullable: true
+		nullable: true,
 	})
-	email!: string
+	email!: string;
 
 	@Column({
-		default: false
+		default: false,
 	})
-	isGoogleSignIn!: Boolean
+	isGoogleSignIn!: Boolean;
 	@Column({
-		default: false
+		default: false,
 	})
-	tfaEnable!: Boolean
+	tfaEnable!: Boolean;
 
 	@Column({
-		type: 'jsonb',
-		nullable: true
+		type: "jsonb",
+		nullable: true,
 	})
-	tfaSecret!: SimpleTfaSecret
+	tfaSecret!: SimpleTfaSecret;
 
 	@Column({ nullable: true })
-	avatar!: string
+	avatar!: string;
 
 	@CreateDateColumn()
-	created_at!: Date
+	created_at!: Date;
 
 	@CreateDateColumn()
-	updated_at!: Date
+	updated_at!: Date;
 
-	@Column({ type: 'timestamp', nullable: true })
-	lastSeenAt!: Date
+	@Column({ type: "timestamp", nullable: true })
+	lastSeenAt!: Date;
 }

@@ -3,18 +3,18 @@ import { GameResult } from "./GameResult";
 
 @Entity()
 export class Player {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
+	@PrimaryGeneratedColumn("uuid")
+	id!: string;
 
-  @Column({ type: "uuid", nullable: true })
-  user_id!: string | null; // ID venant du micro-service user
+	@Column({ type: "uuid", nullable: true })
+	user_id!: string | null; // ID venant du micro-service user
 
-  @Column()
-  username!: string;
+	@Column()
+	username!: string;
 
-  @Column({ default: false })
-  is_bot!: boolean;
+	@Column({ default: false })
+	is_bot!: boolean;
 
-  @OneToMany(() => GameResult, result => result.player)
-  results!: GameResult[];
+	@OneToMany(() => GameResult, (result) => result.player)
+	results!: GameResult[];
 }

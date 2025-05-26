@@ -1,50 +1,49 @@
-import { Team, Ball, State } from './types' ;
-import { Player } from './player' ;
-import * as CONST from './constants' ;
+import { Team, Ball, State } from "./types";
+import { Player } from "./player";
+import * as CONST from "./constants";
 
-import axios from 'axios' ;
-import dotenv from 'dotenv';
-import path from 'path';
+import axios from "axios";
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
-
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 export class Game {
-	private left_team: Team ; private right_team: Team ;
-	private ball: Ball = {} as Ball ;
-	private finished: boolean ;
+	private left_team: Team;
+	private right_team: Team;
+	private ball: Ball = {} as Ball;
+	private finished: boolean;
 
-	private intervalID: NodeJS.Timeout | null = null ;
+	private intervalID: NodeJS.Timeout | null = null;
 
 	constructor() {
-		this.left_team	= { players: [] , score: 0 } ;
-		this.right_team	= { players: [] , score: 0 } ;
-		this.finished = false ;
-		this.resetBall() ;
+		this.left_team = { players: [], score: 0 };
+		this.right_team = { players: [], score: 0 };
+		this.finished = false;
+		this.resetBall();
 	}
 
 	startUpdating() {
-		if (this.intervalID !== null) return ;
+		if (this.intervalID !== null) return;
 
-		const interval = 1000 / CONST.FPS ;
+		const interval = 1000 / CONST.FPS;
 
-		this.intervalID = setInterval(() => this.update(), interval) ;
+		this.intervalID = setInterval(() => this.update(), interval);
 	}
 
 	stopUpdating() {
 		if (this.intervalID !== null) {
-			clearInterval(this.intervalID) ;
-			this.intervalID = null ; // optional, but good practice
+			clearInterval(this.intervalID);
+			this.intervalID = null; // optional, but good practice
 		}
 	}
 
-
 	getNumberPlayer(): number {
-		return (this.left_team.players.length + this.right_team.players.length) ;
+		return this.left_team.players.length + this.right_team.players.length;
 	}
 
 	isFinished(): boolean {
-		return (this.finished) ;
+		return this.finished;
 	}
 
 	getState(): State {
@@ -67,27 +66,33 @@ export class Game {
 				x: this.ball.x,
 				y: this.ball.y,
 			},
-		} ;
+		};
 	}
 
 	addPlayer(player: Player) {
-		let team = (this.left_team.players.length > this.right_team.players.length) ? this.right_team : this.left_team ;
+		let team =
+			this.left_team.players.length > this.right_team.players.length
+				? this.right_team
+				: this.left_team;
 
-		team.players.push(player) ;
+		team.players.push(player);
 
-		const	areaSize	= CONST.BOARD_HEIGHT / team.players.length ;
-		let		areaBegin	= 0 ;
+		const areaSize = CONST.BOARD_HEIGHT / team.players.length;
+		let areaBegin = 0;
 
-		team.players.forEach(player => {
-			player.resizeZone(areaBegin, (areaBegin + areaSize)) ;
+		team.players.forEach((player) => {
+			player.resizeZone(areaBegin, areaBegin + areaSize);
 
-			const areaCenter = (player.getZone().top + player.getZone().bot) / 2 ;
-			const playerPaddleSize = (CONST.PADDLE_SIZE / team.players.length) ;
+			const areaCenter = (player.getZone().top + player.getZone().bot) / 2;
+			const playerPaddleSize = CONST.PADDLE_SIZE / team.players.length;
 
-			player.resizePaddle((areaCenter - (playerPaddleSize / 2)), (areaCenter + (playerPaddleSize / 2))) ;
+			player.resizePaddle(
+				areaCenter - playerPaddleSize / 2,
+				areaCenter + playerPaddleSize / 2
+			);
 
-			areaBegin += areaSize ;
-		}) ;
+			areaBegin += areaSize;
+		});
 	}
 
 	private update() {
@@ -101,67 +106,68 @@ export class Game {
 		}
 
 		// Paddle collision for left team
-		this.left_team.players.forEach(player => {
+		this.left_team.players.forEach((player) => {
 			if (this.ball.x <= CONST.PADDLE_WIDTH && this.ball.vx < 0)
-				this.paddleCollision(player) ;
-		}) ;
+				this.paddleCollision(player);
+		});
 
 		// Paddle collision for right team
-		this.right_team.players.forEach(player => {
-			if (this.ball.x >= (CONST.BOARD_LENGTH - CONST.PADDLE_WIDTH) && this.ball.vx > 0)
-				this.paddleCollision(player) ;
-		}) ;
+		this.right_team.players.forEach((player) => {
+			if (
+				this.ball.x >= CONST.BOARD_LENGTH - CONST.PADDLE_WIDTH &&
+				this.ball.vx > 0
+			)
+				this.paddleCollision(player);
+		});
 
 		// Scoring
-		if (this.ball.x < 0)
-			this.scoring(this.right_team) ;
-		if (this.ball.x > 800)
-			this.scoring(this.left_team) ;
+		if (this.ball.x < 0) this.scoring(this.right_team);
+		if (this.ball.x > 800) this.scoring(this.left_team);
 	}
 
 	private paddleCollision(player: Player) {
-		const paddle = player.getPaddle() ;
+		const paddle = player.getPaddle();
 		if (this.ball.y > paddle.top && this.ball.y < paddle.bot) {
-			const paddleCenter = (paddle.top + paddle.bot) / 2 ;
-			const distanceFromCenter = this.ball.y - paddleCenter ;
-			const normalizedOffset = distanceFromCenter / ((paddle.bot - paddle.top) / 2) ;
+			const paddleCenter = (paddle.top + paddle.bot) / 2;
+			const distanceFromCenter = this.ball.y - paddleCenter;
+			const normalizedOffset =
+				distanceFromCenter / ((paddle.bot - paddle.top) / 2);
 
 			// 1. Determine new direction
-			const angle = normalizedOffset * (Math.PI / 4) ; // max ±45°
-			const direction = this.ball.vx > 0 ? Math.PI - angle : angle ; // Reflect X
+			const angle = normalizedOffset * (Math.PI / 4); // max ±45°
+			const direction = this.ball.vx > 0 ? Math.PI - angle : angle; // Reflect X
 
 			// 2. Increase total speed
-			let speed = Math.sqrt(this.ball.vx ** 2 + this.ball.vy ** 2) ;
-			speed *= 1.05 ;
+			let speed = Math.sqrt(this.ball.vx ** 2 + this.ball.vy ** 2);
+			speed *= 1.05;
 
 			// 3. Set new velocity vector with same speed, new angle
-			this.ball.vx = Math.cos(direction) * speed ;
-			this.ball.vy = Math.sin(direction) * speed ;
+			this.ball.vx = Math.cos(direction) * speed;
+			this.ball.vy = Math.sin(direction) * speed;
 		}
 	}
 
 	private scoring(team: Team) {
-		team.score += 1 ;
-		if (team.score === CONST.SCORE_WIN)
-			this.endGame() ;
-		this.resetBall() ;
+		team.score += 1;
+		if (team.score === CONST.SCORE_WIN) this.endGame();
+		this.resetBall();
 	}
 
 	private resetBall() {
-		let angle: number ;
+		let angle: number;
 
 		// Avoid angles too close to horizontal or vertical (e.g., 0°, 90°, 180°, 270°)
 		do {
 			angle = Math.random() * 2 * Math.PI;
 		} while (
 			Math.abs(Math.cos(angle)) < 0.3 || // too vertical
-			Math.abs(Math.sin(angle)) < 0.3		// too horizontal
-		) ;
+			Math.abs(Math.sin(angle)) < 0.3 // too horizontal
+		);
 
-		this.ball.x = CONST.BOARD_LENGTH / 2 ;
-		this.ball.y = CONST.BOARD_HEIGHT / 2 ;
-		this.ball.vx = Math.cos(angle) * CONST.BALL_SPD ;
-		this.ball.vy = Math.sin(angle) * CONST.BALL_SPD ;
+		this.ball.x = CONST.BOARD_LENGTH / 2;
+		this.ball.y = CONST.BOARD_HEIGHT / 2;
+		this.ball.vx = Math.cos(angle) * CONST.BALL_SPD;
+		this.ball.vy = Math.sin(angle) * CONST.BALL_SPD;
 	}
 
 	private endGame() {
@@ -170,26 +176,29 @@ export class Game {
 		setTimeout(() => {
 			this.finished = true;
 		}, 100);
-		
+
 		const allPlayers = [...this.left_team.players, ...this.right_team.players];
-		
+
 		const payload = {
-			game_type: 'PONG',
+			game_type: "PONG",
 			players: allPlayers.map((pl) => {
-			const isLeftTeam = this.left_team.players.includes(pl) ;
-			const score = isLeftTeam ? this.left_team.score : this.right_team.score ;
-			const isWinner = score === CONST.SCORE_WIN ;
-		
-			return {
-				user_id: pl.getId(),
-				username: pl.getName(),
-				is_bot: false,
-				score: score,
-				is_winner: isWinner,
-			} ;
+				const isLeftTeam = this.left_team.players.includes(pl);
+				const score = isLeftTeam ? this.left_team.score : this.right_team.score;
+				const isWinner = score === CONST.SCORE_WIN;
+
+				return {
+					user_id: pl.getId(),
+					username: pl.getName(),
+					is_bot: false,
+					score: score,
+					is_winner: isWinner,
+				};
 			}),
-		} ;
-		
-		axios.post(`http://${process.env.GAMEH_HOST}:${process.env.GAMEH_PORT}/history`, payload) ;
+		};
+
+		axios.post(
+			`http://${process.env.GAMEH_HOST}:${process.env.GAMEH_PORT}/history`,
+			payload
+		);
 	}
 }

@@ -9,12 +9,16 @@ export class FriendEntity {
 	@PrimaryColumn({ nullable: false })
 	receiver_id!: string;
 
-	@Column({ type: "enum", enum: FriendRequestStatus, default: FriendRequestStatus.PENDING })
-	status!: FriendRequestStatus
+	@Column({
+		type: "enum",
+		enum: FriendRequestStatus,
+		default: FriendRequestStatus.PENDING,
+	})
+	status!: FriendRequestStatus;
 
 	@CreateDateColumn()
-	created_at!: Date
+	created_at!: Date;
 
 	@CreateDateColumn()
-	updated_at!: Date
+	updated_at!: Date;
 }

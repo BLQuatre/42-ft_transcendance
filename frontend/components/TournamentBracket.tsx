@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { useToast } from "@/hooks/UseToast";
+import { ToastVariant } from "@/types/types";
 
 type Player = {
 	name: string;
@@ -71,6 +72,7 @@ export function TournamentBracket({
 			toast({
 				title: "Error",
 				description: "You need to enter all the players names",
+				variant: ToastVariant.WARNING,
 				duration: 3000,
 			});
 			return;
@@ -79,6 +81,7 @@ export function TournamentBracket({
 			toast({
 				title: "Error",
 				description: "You can't have duplicate names",
+				variant: ToastVariant.WARNING,
 				duration: 3000,
 			});
 			return;

@@ -283,7 +283,7 @@ export function GameModeDialog({ open, onOpenChange, gameType }: GameModeDialogP
             </Button>
           </DialogClose>
           <Button
-            variant="default"
+            variant="custom"
             className={cn("font-pixel text-xs uppercase", getBgColor(gameType))}
             disabled={!selectedMode}
             onClick={() => selectedMode && handleModeSelect(selectedMode)}

@@ -354,7 +354,7 @@ export function SimpleChat() {
 			return;
 
 		generalSocket.current = new WebSocket(
-			"wss://localhost/api/ws/chat-general"
+			`wss://${window.location.host}/api/ws/chat-general`
 		);
 
 		if (!generalSocket.current) {

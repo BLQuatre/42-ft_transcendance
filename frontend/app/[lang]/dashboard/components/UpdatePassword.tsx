@@ -43,7 +43,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 	const handleNewPasswordChange = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
-		const password = event.target.value;
+		const password = event.target.value.slice(0, 50);
 		setNewPassword(password);
 
 		if (password.length < 8) {
@@ -70,7 +70,7 @@ export default function UpdatePassword({ googleAuth }: UpdatePasswordProps) {
 	const handleConfirmPasswordChange = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
-		const password = event.target.value;
+		const password = event.target.value.slice(0, 50);
 		setConfirmPassword(password);
 
 		if (

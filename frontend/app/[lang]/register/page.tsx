@@ -86,7 +86,7 @@ export default function RegisterPage() {
 	};
 
 	const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newPassword = event.target.value;
+		const newPassword = event.target.value.slice(0, 50);
 		setPassword(newPassword);
 
 		if (newPassword.length < 8) {
@@ -109,7 +109,7 @@ export default function RegisterPage() {
 	const handleConfirmPasswordChange = (
 		event: React.ChangeEvent<HTMLInputElement>
 	) => {
-		const newPassword = event.target.value;
+		const newPassword = event.target.value.slice(0, 50);
 		setConfirmPassword(newPassword);
 
 		if (

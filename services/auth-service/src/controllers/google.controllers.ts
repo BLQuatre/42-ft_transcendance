@@ -8,7 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../../../.env.dev") });
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
-const GOOGLE_REDIRECT_URI = "https://localhost/api/auth/google/callback";
+const GOOGLE_REDIRECT_URI = `https://${process.env.HOST}/api/auth/google/callback`;
 
 export const googleRedir = async (req: FastifyRequest, reply: FastifyReply) => {
 	const params = new URLSearchParams({

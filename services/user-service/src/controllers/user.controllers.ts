@@ -319,10 +319,15 @@ export const findbyEmail = async (req: FastifyRequest, reply: FastifyReply) => {
 export const createUserByGoogle = async (req: FastifyRequest, reply: FastifyReply) => {
 	const { email } = req.body as { email: string, name: string };
 
+	const splitEmail = email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+	const reversedDate = Date.now().toString().split('').reverse().join('');
+
+	const newUsername = `${splitEmail}${reversedDate}`.slice(0, 20);
+
 	const newUser = await User.save({
 		email: email,
 		isGoogleSignIn: true,
-		name: `${email.split('@')[0].slice(0, 10)}${Date.now()}`.slice(0, 20)
+		name: newUsername,
 	});
 
 	return reply.code(201).send({

@@ -11,6 +11,8 @@ export interface BaseUser {
 	name: string
 	avatar: string
 	status: UserStatus
+	tfaEnable: boolean;
+	isGoogleSignIn: boolean;
 	created_at: string  // Add creation timestamp
 	updated_at: string  // Add update timestamp
 }

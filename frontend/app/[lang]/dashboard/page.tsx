@@ -100,7 +100,6 @@ export default function DashboardPage() {
 	const [consultDataDialogOpen, setConsultDataDialogOpen] = useState(false)
 
 	const [twoFactorSetupOpen, setTwoFactorSetupOpen] = useState(false)
-	const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
 
 	const [twoFactorVerifyOpen, setTwoFactorVerifyOpen] = useState(false)
 	const [twoFactorVerifyError, setTwoFactorVerifyError] = useState<string | null>(null)
@@ -313,7 +312,6 @@ export default function DashboardPage() {
 				.then((response) => {
 					setUser(response.data.user)
 					setUsername(response.data.user.name || "")
-					setTwoFactorEnabled(response.data.user.tfaEnable || false)
 				})
 				.catch((error) => {
 					console.error("Error fetching user data:", error)
@@ -850,7 +848,7 @@ export default function DashboardPage() {
 							</TabsContent>
 
 							<TabsContent value="security" className="space-y-4">
-								<UpdatePassword googleAuth={false} />
+								<UpdatePassword googleAuth={user?.isGoogleSignIn || false} />
 
 								<Card>
 									<CardHeader>
@@ -864,23 +862,30 @@ export default function DashboardPage() {
 											<div className="space-y-0.5">
 												<h3 className="font-pixel text-sm uppercase">{dict.dashboard.sections.settings.security.twoFactor.status}</h3>
 												<p className="font-pixel text-xs text-muted-foreground uppercase">
-													{twoFactorEnabled
-														? dict.dashboard.sections.settings.security.twoFactor.enabled
-														: dict.dashboard.sections.settings.security.twoFactor.disabled}
+													{(user?.isGoogleSignIn || false)
+														? "2FA CANNOT BE ENABLED WITH GOOGLE AUTHENTICATION"
+														: (user?.tfaEnable || false)
+															? dict.dashboard.sections.settings.security.twoFactor.enabled
+															: dict.dashboard.sections.settings.security.twoFactor.disabled
+													}
 												</p>
 											</div>
 										</div>
 									</CardContent>
 									<CardFooter>
-										{twoFactorEnabled ? (
-											<Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
-												{dict.dashboard.sections.settings.security.twoFactor.disable}
-											</Button>
-										) : (
-											<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
-												{dict.dashboard.sections.settings.security.twoFactor.enable}
-											</Button>
-										)}
+										{(!(user?.isGoogleSignIn || false)) &&
+										<CardFooter>
+											{(user?.tfaEnable || false) ? (
+												<Button variant="destructive" className="font-pixel" onClick={() => setRemove2FADialogOpen(true)}>
+													{dict.dashboard.sections.settings.security.twoFactor.disable}
+												</Button>
+											) : (
+												<Button variant="outline" className="font-pixel" onClick={() => setTwoFactorSetupOpen(true)}>
+													{dict.dashboard.sections.settings.security.twoFactor.enable}
+												</Button>
+											)}
+										</CardFooter>
+									}
 									</CardFooter>
 								</Card>
 							</TabsContent>

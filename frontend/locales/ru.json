@@ -722,5 +722,24 @@
 	"matchmaking": {
 		"lookingForOpponent": "ПОИСК СОПЕРНИКА",
 		"searchingFurther": "РАСШИРЕННЫЙ ПОИСК"
+	},
+
+	"chat": {
+		"generalChat": "ОБЩИЙ ЧАТ",
+		"privateMessages": "ЛИЧНЫЕ СООБЩЕНИЯ",
+		"global": "Общий",
+		"friends": "Друзья",
+		"searchFriends": "Поиск друзей...",
+		"noFriends": "У вас пока нет друзей",
+		"noFriendsFound": "Друзья не найдены",
+		"writeMessage": "Введите сообщение...",
+		"send": "Отправить",
+		"inviteFriendToPlay": "Пригласить %friend% играть",
+		"chooseGame": "Выберите игру, чтобы пригласить друга",
+		"sendInvitation": "Отправить приглашение",
+		"inviteToPlay": "Пригласить играть",
+		"aFriend": "друга",
+		"copied": "СКОПИРОВАНО!",
+		"join": "ПРИСОЕДИНИТЬСЯ"
 	}
 }

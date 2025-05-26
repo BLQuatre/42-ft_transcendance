@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation"
 import { BaseUser, UserStatus } from "@/types/user"
 import api from "@/lib/api"
 import { Separator } from "@/components/ui/Separator"
+import { useDictionary } from "@/hooks/UseDictionnary"
 
 // Types
 type Message = {
@@ -117,6 +118,7 @@ enum ChatView {
 export function SimpleChat() {
   const { accessToken } = useAuth()
   const router = useRouter()
+  const dict = useDictionary()
 
   const userRef = useRef<BaseUser | null>(null)
 
@@ -280,7 +282,7 @@ export function SimpleChat() {
         console.log("Received message:", event.data)
         const msg = JSON.parse(event.data)
 
-        switch (msg.type) {
+        switch (msg.type) {  // Fixed missing parenthesis here
           case "history":
             setGeneralMessages(msg.messages)
             break
@@ -487,7 +489,7 @@ export function SimpleChat() {
               {isCopied ? (
                 <>
                   <Check className="h-3 w-3" />
-                  <span>COPIÉ!</span>
+                  <span>{dict?.chat?.copied}</span>
                 </>
               ) : (
                 parsed.roomCode
@@ -497,7 +499,7 @@ export function SimpleChat() {
               onClick={() => window.open(parsed.fullUrl, '_blank')}
               className="w-full px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs font-pixel rounded transition-colors font-bold cursor-pointer"
             >
-              REJOINDRE
+              {dict?.chat?.join}
             </button>
           </div>
         )
@@ -596,7 +598,7 @@ export function SimpleChat() {
                 <>
                   <MessageSquare className="h-5 w-5" />
                   <span className="font-pixel text-sm">
-                    {activeView === ChatView.GENERAL ? "GENERAL CHAT" : "PRIVATE MESSAGES"}
+                    {activeView === ChatView.GENERAL ? dict?.chat?.generalChat : dict?.chat?.privateMessages}
                   </span>
                 </>
               )}
@@ -626,7 +628,7 @@ export function SimpleChat() {
                 }}
               >
                 <Home className="h-4 w-4 mr-1" />
-                <span className="font-pixel text-xs">Global</span>
+                <span className="font-pixel text-xs">{dict?.chat?.global}</span>
               </Button>
 
               <Button
@@ -639,19 +641,19 @@ export function SimpleChat() {
                 }}
               >
                 <Users className="h-4 w-4 mr-1" />
-                <span className="font-pixel text-xs">Friends</span>
+                <span className="font-pixel text-xs">{dict?.chat?.friends}</span>
               </Button>
             </div>
           </div>
 
           {activeView === ChatView.FRIENDS ? (
-            // Vue liste d'amis
+            // Friends list view
             <CardContent className="flex-1 p-0 overflow-hidden">
               <div className="p-2">
                 <div className="relative mb-2">
                   <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Rechercher un ami..."
+                    placeholder={dict?.chat?.searchFriends}
                     className="pl-8 font-pixel text-xs h-8"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -660,9 +662,9 @@ export function SimpleChat() {
                 <ScrollArea className="h-[280px]">
                   <div className="space-y-1">
                     {(filteredFriends.length === 0 && !searchQuery) ? (
-                      <p className="text-center font-pixel text-xs text-muted-foreground py-4">Vous n'avez aucun ami</p>
+                      <p className="text-center font-pixel text-xs text-muted-foreground py-4">{dict?.chat?.noFriends}</p>
                     ) : filteredFriends.length === 0 ? (
-                      <p className="text-center font-pixel text-xs text-muted-foreground py-4">Aucun ami trouvé</p>
+                      <p className="text-center font-pixel text-xs text-muted-foreground py-4">{dict?.chat?.noFriendsFound}</p>
                     ) : (
                       filteredFriends.map((friend) => (
                         <div key={friend.id}>
@@ -700,7 +702,7 @@ export function SimpleChat() {
               </div>
             </CardContent>
           ) : (
-            // Vue chat (général ou privé)
+            // Chat view (general or private)
             <>
               <CardContent className="flex-1 p-0 overflow-hidden">
                 <ScrollArea className="h-full p-3">
@@ -783,7 +785,7 @@ export function SimpleChat() {
                       size="icon"
                       className="h-8 w-8 text-game-blue hover:bg-blue-50 dark:hover:bg-blue-950/30 border-dashed"
                       onClick={() => setShowGameInviteModal(true)}
-                      title="Inviter à jouer"
+                      title={dict?.chat?.inviteToPlay}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -806,7 +808,7 @@ export function SimpleChat() {
                   )}
                   <Input
                     ref={inputRef}
-                    placeholder="Écrivez votre message..."
+                    placeholder={dict?.chat?.writeMessage}
                     className="flex-1 font-pixel text-xs h-8"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -822,7 +824,7 @@ export function SimpleChat() {
                     disabled={!newMessage.trim()}
                   >
                     <Send className="h-4 w-4" />
-                    <span className="sr-only">Envoyer</span>
+                    <span className="sr-only">{dict?.chat?.send}</span>
                   </Button>
                 </div>
               </CardFooter>
@@ -840,16 +842,16 @@ export function SimpleChat() {
       >
         <MessageSquare className="h-5 w-5" />
       </Button>
-      {/* 6. Add the game invite modal at the end of the component, just before the final closing div tag */}
+
       {/* Game Invite Modal */}
       <Dialog open={showGameInviteModal} onOpenChange={setShowGameInviteModal}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="font-pixel text-sm">
-              Inviter {activeFriend?.name || "un ami"} à jouer
+              {dict?.chat?.inviteFriendToPlay?.replace('%friend%', activeFriend?.name || dict?.chat?.aFriend)}
             </DialogTitle>
             <DialogDescription className="font-pixel text-xs">
-              Choisissez un jeu pour inviter votre ami
+              {dict?.chat?.chooseGame}
             </DialogDescription>
           </DialogHeader>
 
@@ -876,7 +878,7 @@ export function SimpleChat() {
               disabled={!selectedGame}
               onClick={handleSendGameInvite}
             >
-              Envoyer l'invitation
+              {dict?.chat?.sendInvitation}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -711,5 +711,24 @@
 	"matchmaking": {
 		"lookingForOpponent": "LOOKING FOR AN OPPONENT",
 		"searchingFurther": "SEARCHING FURTHER"
+	},
+
+	"chat": {
+		"generalChat": "GENERAL CHAT",
+		"privateMessages": "PRIVATE MESSAGES",
+		"global": "Global",
+		"friends": "Friends",
+		"searchFriends": "Search friends...",
+		"noFriends": "You don't have any friends yet",
+		"noFriendsFound": "No friends found",
+		"writeMessage": "Write your message...",
+		"send": "Send",
+		"inviteFriendToPlay": "Invite %friend% to play",
+		"chooseGame": "Choose a game to invite your friend",
+		"sendInvitation": "Send invitation",
+		"inviteToPlay": "Invite to play",
+		"aFriend": "a friend",
+		"copied": "COPIED!",
+		"join": "JOIN"
 	}
 }

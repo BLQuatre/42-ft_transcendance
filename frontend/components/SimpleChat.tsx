@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/Dialog"
-import { MessageSquare, Send, X, ChevronLeft, Search, Users, Home, Gamepad2, BadgePercent, User2, Check } from "lucide-react"
+import { MessageSquare, Send, X, ChevronLeft, Search, Users, Home, Gamepad2, BadgePercent, User2, Check, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
@@ -163,6 +163,10 @@ export function SimpleChat() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null)
   const [copiedRoomCode, setCopiedRoomCode] = useState<string | null>(null)
 
+  // State for blocked users
+  const [blockedUsers, setBlockedUsers] = useState<string[]>([])
+  const [showBlockedMessages, setShowBlockedMessages] = useState<boolean>(false)
+
   const filteredFriends = Object.values(friends.current).filter((friend) =>
     (friend.name || "").toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -215,6 +219,39 @@ export function SimpleChat() {
     }
   }
 
+  // Function to load blocked users
+  const loadBlockedUsers = async () => {
+    try {
+      const response = await api.get("/friend/blocked")
+      if (response.data.friends) {
+        const blockedUserIds = response.data.friends.map((blocked: any) => blocked.receiver_id)
+        setBlockedUsers(blockedUserIds)
+        console.log("Loaded blocked users:", blockedUserIds)
+      }
+    } catch (error) {
+      console.error("Error loading blocked users:", error)
+    }
+  }
+
+  // Function to filter messages from blocked users
+  const filterBlockedMessages = (messages: Message[]) => {
+    return messages.map(message => {
+      // If the message is from a blocked user and we're not showing blocked messages
+      if (blockedUsers.includes(message.userId) && message.userId !== userId && !showBlockedMessages) {
+        return {
+          ...message,
+          content: JSON.stringify({
+            type: "BLOCKED_MESSAGE",
+            originalContent: message.content,
+            originalName: message.name
+          }),
+          name: "Hidden User"
+        }
+      }
+      return message
+    })
+  }
+
   useEffect(() => {
     if (!userId) {
       if (isOpen)
@@ -226,8 +263,9 @@ export function SimpleChat() {
       userRef.current = user
     })
 
-    // Initial load of friends data
+    // Initial load of friends data and blocked users
     reloadFriendsData()
+    loadBlockedUsers()
   }, [])
 
   // Listen for friend status changes to reload friends data
@@ -235,6 +273,7 @@ export function SimpleChat() {
     const handleFriendStatusChange = () => {
       console.log("Friend status changed, reloading friends data...")
       reloadFriendsData()
+      loadBlockedUsers() // Also reload blocked users when friend status changes
     }
 
     window.addEventListener('friendStatusChanged', handleFriendStatusChange)
@@ -534,6 +573,19 @@ export function SimpleChat() {
             </button>
           </div>
         )
+      } else if (parsed.type === "BLOCKED_MESSAGE") {
+        // Special styling for blocked messages to prevent spoofing
+        return (
+          <div className="p-2 rounded-md font-pixel text-center">
+            <div className="text-red-600 dark:text-red-400 text-xs font-bold mb-1 flex items-center justify-center gap-1">
+              <EyeOff className="h-3 w-3" />
+              {dict?.chat?.hiddenMessage || "Hidden message"}
+            </div>
+            <div className="text-red-500 dark:text-red-400 text-[10px] opacity-70">
+              {dict?.chat?.fromBlockedUser || "From blocked user"}
+            </div>
+          </div>
+        )
       }
     } catch (e) {
       // If parsing fails, treat as regular message
@@ -661,6 +713,22 @@ export function SimpleChat() {
             </div>
             {/* 5. Modify the CardHeader component to add the game invite button */}
             <div className="flex items-center space-x-1">
+              {/* Eye/EyeOff toggle button - only show in general chat */}
+              {activeView === ChatView.GENERAL && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => setShowBlockedMessages(!showBlockedMessages)}
+                  title={showBlockedMessages ? dict?.chat?.hideBlockedMessages : dict?.chat?.showBlockedMessages}
+                >
+                  {showBlockedMessages ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              )}
               <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsOpen(false)} title="Fermer">
                 <X className="h-4 w-4" />
               </Button>
@@ -764,7 +832,7 @@ export function SimpleChat() {
                 <ScrollArea className="h-full p-3">
                   <div className="space-y-3">
                     {activeView === ChatView.GENERAL
-                      ? generalMessages.map((message) => (
+                      ? filterBlockedMessages(generalMessages).map((message) => (
                         <div
                           key={message.id}
                           className={cn(

@@ -729,6 +729,10 @@
 		"inviteToPlay": "Invite to play",
 		"aFriend": "a friend",
 		"copied": "COPIED!",
-		"join": "JOIN"
+		"join": "JOIN",
+		"hiddenMessage": "Hidden message",
+		"fromBlockedUser": "From blocked user",
+		"showBlockedMessages": "Show blocked messages",
+		"hideBlockedMessages": "Hide blocked messages"
 	}
 }

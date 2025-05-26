@@ -4,15 +4,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { useDictionary } from "@/hooks/UseDictionnary";
 import { BaseUser, UserStatus } from "@/types/user";
-import { UserLock, UserMinus } from "lucide-react";
+import { UserLock, UserMinus, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 interface FriendCardProps {
 	friend: BaseUser;
 	onRemove: (id: string) => void;
 	onBlock: (id: string) => void;
+	onChat: (friend: BaseUser) => void;
 }
 
-export function FriendCard({ friend, onRemove, onBlock }: FriendCardProps) {
+export function FriendCard({ friend, onRemove, onBlock, onChat }: FriendCardProps) {
 	const dict = useDictionary()
 	if (!dict) return null
 
@@ -28,7 +30,9 @@ export function FriendCard({ friend, onRemove, onBlock }: FriendCardProps) {
 					</Avatar>
 				</div>
 				<div>
-					<p className="font-pixel text-sm">{friend.name}</p>
+					<Link href={`/profile/${friend.id}`} className="hover:underline">
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{friend.name}</p>
+					</Link>
 					<p className="font-pixel text-xs text-muted-foreground">
 						{friend.status === UserStatus.ONLINE ? dict.userStatus.online : dict.userStatus.offline}
 					</p>
@@ -38,26 +42,19 @@ export function FriendCard({ friend, onRemove, onBlock }: FriendCardProps) {
 				<Button
 					variant="outline"
 					size="icon"
+					className="h-8 w-8"
+					onClick={() => onChat(friend)}
+				>
+					<MessageSquare className="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
 					className="h-8 w-8 text-destructive"
 					onClick={() => onBlock(friend.id)}
 				>
 					<UserLock className="h-4 w-4" />
 				</Button>
-				{/* TODO: Add chat functionality */}
-				{/* <Button
-					variant="outline"
-					size="icon"
-					className="h-8 w-8"
-					onClick={() => {
-						toast({
-							title: "Message Sent",
-							description: `Opening chat with ${friend.name}`,
-							duration: 3000,
-						});
-					}}
-				>
-					<MessageSquare className="h-4 w-4" />
-				</Button> */}
 				<Button
 					variant="outline"
 					size="icon"

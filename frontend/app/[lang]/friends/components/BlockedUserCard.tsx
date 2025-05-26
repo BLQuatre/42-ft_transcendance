@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { BaseUser } from "@/types/user";
 import { UserLock } from "lucide-react";
+import Link from "next/link";
 
 interface BlockedUserCardProps {
 	user: BaseUser;
@@ -21,7 +22,9 @@ export function BlockedUserCard({ user, onUnblock }: BlockedUserCardProps) {
 					</AvatarFallback>
 				</Avatar>
 				<div>
-					<p className="font-pixel text-sm">{user.name}</p>
+					<Link href={`/profile/${user.id}`} className="hover:underline">
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{user.name}</p>
+					</Link>
 				</div>
 			</div>
 

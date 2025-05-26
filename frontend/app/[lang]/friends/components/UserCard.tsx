@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { FriendRequestStatus } from "@/types/friend";
 import { BaseUser } from "@/types/user";
 import { User, UserCheck, UserLock, UserPlus, Clock } from "lucide-react";
+import Link from "next/link";
 
 interface UserCardProps {
 	user: BaseUser;
@@ -44,7 +45,9 @@ export function UserCard({ user, status, sendRequest, onBlock, onUnblock }: User
 					</AvatarFallback>
 				</Avatar>
 				<div>
-					<p className="font-pixel text-sm">{user.name}</p>
+					<Link href={`/profile/${user.id}`} className="hover:underline">
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{user.name}</p>
+					</Link>
 				</div>
 			</div>
 

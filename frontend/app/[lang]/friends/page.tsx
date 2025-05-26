@@ -36,6 +36,19 @@ export default function FriendsPage() {
 		updateData();
 	}, [dict]);
 
+	const handleOpenChat = (friend: BaseUser) => {
+		const event = new CustomEvent('openPrivateChat', {
+			detail: {
+				id: friend.id,
+				name: friend.name,
+				avatar: friend.avatar,
+				status: friend.status
+			}
+		})
+
+		window.dispatchEvent(event)
+	}
+
 	const updateData = () => {
 		api.get("/user").then((response) => {
 			if (response.data && response.data.Users) {
@@ -293,6 +306,7 @@ export default function FriendsPage() {
 												friend={friend}
 												onRemove={(id) => handleRemoveFriend(id)}
 												onBlock={(id) => handleBlockUser(id)}
+												onChat={(friend) => handleOpenChat(friend)}
 											/>)
 										})
 									)}

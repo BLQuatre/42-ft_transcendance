@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { useDictionary } from "@/hooks/UseDictionnary";
 import { BaseUser } from "@/types/user";
 import { Check, X } from "lucide-react";
+import Link from "next/link";
 
 interface FriendRequestCardProps {
 	friend: BaseUser;
@@ -28,7 +29,9 @@ export function FriendRequestCard({ friend, acceptRequest, declineRequest }: Fri
 					</Avatar>
 				</div>
 				<div>
-					<p className="font-pixel text-sm">{friend.name}</p>
+					<Link href={`/profile/${friend.id}`} className="hover:underline">
+						<p className="font-pixel text-sm cursor-pointer hover:text-game-blue transition-colors">{friend.name}</p>
+					</Link>
 				</div>
 			</div>
 			<div className="flex space-x-2">

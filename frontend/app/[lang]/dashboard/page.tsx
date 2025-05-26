@@ -681,7 +681,7 @@ export default function DashboardPage() {
 												)
 											})
 										) : (
-											<p className="font-pixel text-xs text-center py-4">{dict.dashboard.sections.history.pong.noGames}</p>
+											<p className="font-pixel text-xs text-center py-4 uppercase">{dict.dashboard.sections.history.pong.noGames}</p>
 										)}
 									</div>
 								</CardContent>
@@ -725,7 +725,7 @@ export default function DashboardPage() {
 												)
 											})
 										) : (
-											<p className="font-pixel text-xs text-center py-4">{dict.dashboard.sections.history.dino.noGames}</p>
+											<p className="font-pixel text-xs text-center py-4 uppercase">{dict.dashboard.sections.history.dino.noGames}</p>
 										)}
 									</div>
 								</CardContent>

@@ -121,7 +121,7 @@ export default function PongGamePage() {
 		// update upcomingMatches every time bracketData is updated
 		if (!tournamentRef.current) return;
 		const updateUpcomingMatches = () => {
-			const upcomingMatches = [];
+			const upcomingMatches: any[] = [];
 
 			for (const round of tournamentRef.current!.bracketData.rounds) {
 				for (const match of round.matches) {

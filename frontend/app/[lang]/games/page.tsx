@@ -5,6 +5,7 @@ import { Gamepad2, Users } from "lucide-react";
 import { getDictionary } from "@/lib/dictionnaries";
 import { Language } from "@/types/language";
 import { GameButtons } from "@/components/GameButtons";
+import { GameType } from "@/types/game";
 
 export default async function GamesPage({
 	params,
@@ -75,11 +76,8 @@ export default async function GamesPage({
 										</div>
 
 										<GameButtons
-											gameType="pong"
-											gameTitle={dict.games.pong.title}
+											gameType={GameType.PONG}
 											buttonText={`${dict.common.play} PONG`}
-											buttonColor="blue"
-											dict={dict}
 										/>
 									</div>
 									<div className="aspect-auto overflow-hidden bg-black/5">
@@ -148,11 +146,8 @@ export default async function GamesPage({
 										</div>
 
 										<GameButtons
-											gameType="dino"
-											gameTitle={dict.games.dino.title}
+											gameType={GameType.DINO}
 											buttonText={`${dict.common.play} DINO RUN`}
-											buttonColor="orange"
-											dict={dict}
 										/>
 									</div>
 								</div>

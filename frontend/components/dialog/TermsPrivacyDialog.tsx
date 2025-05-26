@@ -60,8 +60,8 @@ export function TermsPrivacyDialog({
 							<Checkbox
 								id="terms"
 								checked={termsAccepted}
-								onCheckedChange={(checked) =>
-									setTermsAccepted(checked as boolean)
+								onCheckedChange={(checked: boolean) =>
+									setTermsAccepted(checked)
 								}
 								className="mt-1"
 							/>
@@ -86,8 +86,8 @@ export function TermsPrivacyDialog({
 							<Checkbox
 								id="privacy"
 								checked={privacyAccepted}
-								onCheckedChange={(checked) =>
-									setPrivacyAccepted(checked as boolean)
+								onCheckedChange={(checked: boolean) =>
+									setPrivacyAccepted(checked)
 								}
 								className="mt-1"
 							/>

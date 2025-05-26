@@ -1,21 +1,21 @@
 import fastify from "fastify";
-import websocket from '@fastify/websocket';
-import WebSocket from 'ws';
-import { usersRoutes } from './routes/users';
+import websocket from "@fastify/websocket";
+import WebSocket from "ws";
+import { usersRoutes } from "./routes/users";
 import authRoutes from "./routes/auth";
 import { friendRoutes } from "./routes/friend";
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
 import { chatRoutes } from "./routes/chat";
-import { chatGeneralRoutes} from "./routes/chatGeneral";
+import { chatGeneralRoutes } from "./routes/chatGeneral";
 import { historyRoutes } from "./routes/history";
 import { dinoRoutes } from "./routes/dino";
 import { pongRoutes } from "./routes/pong";
 import { matchmakingRoutes } from "./routes/matchmaking";
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 const app = fastify({
-	logger: process.env.DEBUG === 'true',
+	logger: process.env.DEBUG === "true",
 });
 
 // app.register(userRoutes);
@@ -30,11 +30,15 @@ app.register(dinoRoutes);
 app.register(pongRoutes);
 app.register(matchmakingRoutes);
 
-
-app.listen({
-	host: process.env.GATEWAY_HOST,
-	port: parseInt(process.env.GATEWAY_PORT || '0', 10)
-}, (err, address) => {
-	if (err) throw err;
-	console.log(`[GATEWAY] Running on http://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT} (${address})`);
-})
+app.listen(
+	{
+		host: process.env.GATEWAY_HOST,
+		port: parseInt(process.env.GATEWAY_PORT || "0", 10),
+	},
+	(err, address) => {
+		if (err) throw err;
+		console.log(
+			`[GATEWAY] Running on http://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT} (${address})`
+		);
+	}
+);

@@ -1,15 +1,15 @@
 import { FastifyPluginAsync } from "fastify";
 import httpProxy from "@fastify/http-proxy";
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env.dev')});
+dotenv.config({ path: path.resolve(__dirname, "../../../.env.dev") });
 
 const authRoutes: FastifyPluginAsync = async (fastify) => {
 	fastify.register(httpProxy, {
 		upstream: `http://${process.env.AUTH_HOST}:${process.env.AUTH_PORT}`,
-		prefix: '/auth',
-		rewritePrefix: '/auth'
+		prefix: "/auth",
+		rewritePrefix: "/auth",
 	});
 };
 

@@ -27,6 +27,9 @@ JWT_REFRESH=jwt_refresh
 
 COOKIE_SECRET=cookie_secret
 
+MAIN_HOST=localhost
+MAIN_PORT=5000
+
 FRONTEND_HOST=frontend
 FRONTEND_PORT=3000
 
@@ -91,6 +94,9 @@ JWT_REFRESH=jwt_refresh
 
 COOKIE_SECRET=cookie_secret
 
+MAIN_HOST=localhost
+MAIN_PORT=5000
+
 FRONTEND_HOST=localhost
 FRONTEND_PORT=3000
 
@@ -122,6 +128,9 @@ PONG_PORT=3008
 
 DINO_HOST=localhost
 DINO_PORT=3009
+
+MATCHMAKING_HOST=localhost
+MATCHMAKING_PORT=3010
 
 DEBUG=false
 

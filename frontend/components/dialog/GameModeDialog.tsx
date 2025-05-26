@@ -22,6 +22,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/UseToast";
 import { ToastVariant } from "@/types/types";
 
+
 type GameModeDialogProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -54,9 +55,9 @@ export function GameModeDialog({
 			setIsMultiplayerDialogOpen(true);
 		} else if (gameType === "dino" && mode === GameMode.SOLO) {
 			const newRoomCode = Math.random()
-				.toString(36)
-				.substring(2, 8)
-				.toUpperCase();
+			.toString(36)
+			.substring(2, 8)
+			.toUpperCase();
 			window.location.assign(`/games/${gameType}/${mode}/${newRoomCode}`);
 			onOpenChange(false);
 		} else {
@@ -376,7 +377,7 @@ export function GameModeDialog({
 						onClick={() => selectedMode && handleModeSelect(selectedMode)}
 					>
 						{selectedMode
-							? `${dict.common.play} ${selectedMode}`
+							? `${dict.common.play} ${dict.dialogs.gameMode.modes[selectedMode].title}`
 							: dict.dialogs.gameMode.selectPrompt}
 					</Button>
 				</DialogFooter>

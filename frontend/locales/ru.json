@@ -747,5 +747,29 @@
 		"fromBlockedUser": "От заблокированного пользователя",
 		"showBlockedMessages": "Показать заблокированные сообщения",
 		"hideBlockedMessages": "Скрыть заблокированные сообщения"
+	},
+
+	"tournament": {
+		"quarterFinals": "Четвертьфинал",
+		"semiFinals": "Полуфинал",
+		"final": "Финал",
+		"wonTournament": "ВЫИГРАЛ ТУРНИР!",
+		"bracket": "Сетка Турнира",
+		"upcomingMatches": "Предстоящие Матчи",
+		"startTournament": "Начать Турнир",
+		"playLocal": "ИГРАТЬ ЛОКАЛЬНО",
+		"waitingForScore": "ОЖИДАНИЕ СЧЁТА",
+		"noUpcomingMatches": "Нет предстоящих матчей",
+		"pongTournament": "ТУРНИР ПОНГ",
+		"errors": {
+			"enterAllNames": "Вы должны ввести имена всех игроков",
+			"duplicateNames": "У вас не может быть одинаковых имён"
+		}
+	},
+
+	"game": {
+		"pauseInstructions": "Нажмите P для паузы/продолжения",
+		"leftControls": "Левый: используйте W/S для движения ракетки",
+		"rightControls": "Правый: используйте ↑/↓ для движения ракетки"
 	}
 }

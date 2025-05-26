@@ -735,5 +735,29 @@
 		"fromBlockedUser": "From blocked user",
 		"showBlockedMessages": "Show blocked messages",
 		"hideBlockedMessages": "Hide blocked messages"
+	},
+
+	"tournament": {
+		"quarterFinals": "Quarter-finals",
+		"semiFinals": "Semi-finals",
+		"final": "Final",
+		"wonTournament": "WON THE TOURNAMENT!",
+		"bracket": "Tournament Bracket",
+		"upcomingMatches": "Upcoming Matches",
+		"startTournament": "Start Tournament",
+		"playLocal": "PLAY LOCAL",
+		"waitingForScore": "WAITING FOR SCORE",
+		"noUpcomingMatches": "No upcoming matches",
+		"pongTournament": "PONG TOURNAMENT",
+		"errors": {
+			"enterAllNames": "You need to enter all the players names",
+			"duplicateNames": "You can't have duplicate names"
+		}
+	},
+
+	"game": {
+		"pauseInstructions": "Press P to play/pause",
+		"leftControls": "Left : use W/S to move your paddle",
+		"rightControls": "Right : use ↑/↓ to move your paddle"
 	}
 }

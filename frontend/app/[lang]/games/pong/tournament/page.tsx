@@ -7,11 +7,14 @@ import BackToHomeButton from "@/components/BackToHome";
 import { ScoreDisplay } from "@/components/ScoreDisplay";
 import TournamentView, { TournamentData } from "@/components/TournamentView";
 import { Trophy } from "lucide-react";
+import { useDictionary } from "@/hooks/UseDictionnary";
 
 import { Game } from "@/lib/pong/game";
 import * as CONST from "@/lib/pong/constants";
 
 export default function PongGamePage() {
+	const dict = useDictionary();
+
 	const [tournamentData, setTournamentData] = useState<TournamentData | null>(
 		null
 	);
@@ -37,11 +40,13 @@ export default function PongGamePage() {
 	const frameRef = useRef<number | null>(null);
 
 	useEffect(() => {
+		if (!dict?.tournament) return;
+
 		setTournamentData({
 			bracketData: {
 				rounds: [
 					{
-						name: "Quarter-finals",
+						name: dict?.tournament?.quarterFinals || "Quarter-finals",
 						matches: [
 							{
 								id: 1,
@@ -78,7 +83,7 @@ export default function PongGamePage() {
 						],
 					},
 					{
-						name: "Semi-finals",
+						name: dict?.tournament?.semiFinals || "Semi-finals",
 						matches: [
 							{
 								id: 5,
@@ -99,7 +104,7 @@ export default function PongGamePage() {
 						],
 					},
 					{
-						name: "Final",
+						name: dict?.tournament?.final || "Final",
 						matches: [
 							{
 								id: 7,
@@ -115,7 +120,7 @@ export default function PongGamePage() {
 			},
 			upcomingMatches: [],
 		});
-	}, []);
+	}, [dict]);
 
 	useEffect(() => {
 		// update upcomingMatches every time bracketData is updated
@@ -446,6 +451,7 @@ export default function PongGamePage() {
 						tournamentData={tournamentData}
 						validateNames={validateNames}
 						launchGame={launchGame}
+						dict={dict}
 					/>
 
 					{/* Tournament Winner Overlay */}
@@ -470,7 +476,7 @@ export default function PongGamePage() {
 										{tournamentWinner.toUpperCase()}
 									</div>
 									<div className="font-pixel text-2xl text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)] mb-8">
-										WON THE TOURNAMENT!
+										{dict?.tournament?.wonTournament || "WON THE TOURNAMENT!"}
 									</div>
 								</div>
 
@@ -527,11 +533,11 @@ export default function PongGamePage() {
 									<div className="absolute inset-0 flex flex-col items-center justify-center z-20">
 										<div className="text-white text-center">
 											<h2 className="text-3xl font-bold mb-4 animate-pulse">
-												Press P to play/pause
+												{dict?.game?.pauseInstructions || "Press P to play/pause"}
 											</h2>
 											<div className="text-sm opacity-80">
-												<p>Left : use W/S to move your paddle</p>
-												<p>Right : use ↑/↓ to move your paddle</p>
+												<p>{dict?.game?.leftControls || "Left : use W/S to move your paddle"}</p>
+												<p>{dict?.game?.rightControls || "Right : use ↑/↓ to move your paddle"}</p>
 											</div>
 										</div>
 									</div>

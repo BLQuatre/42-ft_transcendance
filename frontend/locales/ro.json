@@ -744,5 +744,29 @@
 		"fromBlockedUser": "De la un utilizator blocat",
 		"showBlockedMessages": "Arată mesajele blocate",
 		"hideBlockedMessages": "Ascunde mesajele blocate"
+	},
+
+	"tournament": {
+		"quarterFinals": "Sferturile de finală",
+		"semiFinals": "Semifinalele",
+		"final": "Finala",
+		"wonTournament": "A CÂȘTIGAT TURNEUL!",
+		"bracket": "Diagrama Turneului",
+		"upcomingMatches": "Meciuri Viitoare",
+		"startTournament": "Începe Turneul",
+		"playLocal": "JOACĂ LOCAL",
+		"waitingForScore": "AȘTEPTÂND SCORUL",
+		"noUpcomingMatches": "Niciun meci viitor",
+		"pongTournament": "TURNEU PONG",
+		"errors": {
+			"enterAllNames": "Trebuie să introduci numele tuturor jucătorilor",
+			"duplicateNames": "Nu poți avea nume duplicate"
+		}
+	},
+
+	"game": {
+		"pauseInstructions": "Apasă P pentru pauză/continuare",
+		"leftControls": "Stânga : folosește W/S pentru a-ți mișca paleta",
+		"rightControls": "Dreapta : folosește ↑/↓ pentru a-ți mișca paleta"
 	}
 }

@@ -734,5 +734,29 @@
 		"fromBlockedUser": "D'un utilisateur bloqué",
 		"showBlockedMessages": "Afficher les messages bloqués",
 		"hideBlockedMessages": "Masquer les messages bloqués"
+	},
+
+	"tournament": {
+		"quarterFinals": "Quarts de finale",
+		"semiFinals": "Demi-finales",
+		"final": "Finale",
+		"wonTournament": "A REMPORTÉ LE TOURNOI !",
+		"bracket": "Tableau du Tournoi",
+		"upcomingMatches": "Matchs à Venir",
+		"startTournament": "Commencer le Tournoi",
+		"playLocal": "JOUER EN LOCAL",
+		"waitingForScore": "EN ATTENTE DU SCORE",
+		"noUpcomingMatches": "Aucun match à venir",
+		"pongTournament": "TOURNOI PONG",
+		"errors": {
+			"enterAllNames": "Vous devez entrer tous les noms des joueurs",
+			"duplicateNames": "Vous ne pouvez pas avoir de noms en double"
+		}
+	},
+
+	"game": {
+		"pauseInstructions": "Appuyez sur P pour pause/reprise",
+		"leftControls": "Gauche : utilisez W/S pour déplacer votre raquette",
+		"rightControls": "Droite : utilisez ↑/↓ pour déplacer votre raquette"
 	}
 }

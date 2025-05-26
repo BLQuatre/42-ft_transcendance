@@ -2,188 +2,221 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { UserPlus } from "lucide-react"
-import { Button } from "@/components/ui/Button"
-import { InvitePlayerDialog } from "./dialog/InvitePlayerDialog"
+import { Input } from "./ui/Input"
+import { Button } from "./ui/Button"
+import { useToast } from "@/hooks/UseToast"
 
 type Player = {
-  name: string
-  score: number | null
+	name: string
+	score: number | null
 }
 
 type Match = {
-  id: number
-  player1: Player
-  player2: Player
-  winner: string | null
-  completed: boolean
+	id: number
+	player1: Player
+	player2: Player
+	winner: string | null
+	completed: boolean
 }
 
 type Round = {
-  name: string
-  matches: Match[]
+	name: string
+	matches: Match[]
 }
 
 type BracketData = {
-  rounds: Round[]
+	rounds: Round[]
 }
 
 type TournamentBracketProps = {
-  bracketData: BracketData
-  gameType: "pong" | "dino"
-  onInvitePlayer?: (matchId: number, slotNumber: 1 | 2, playerId: string) => void
+	bracketData: BracketData
+	validateNames: (names: string[]) => void
 }
 
-export function TournamentBracket({
-  bracketData,
-  gameType,
-  onInvitePlayer = () => {},
-}: TournamentBracketProps) {
-  const [hoveredMatch, setHoveredMatch] = useState<number | null>(null)
-  const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
-  const [currentInvite, setCurrentInvite] = useState<{ matchId: number; slotNumber: 1 | 2 } | null>(null)
+export function TournamentBracket({ bracketData, validateNames }: TournamentBracketProps) {
+	const [userNames, setUserNames] = useState<string[]>(['', '', '', '', '', '', '', ''])
+	const { toast } = useToast()
 
-  const gameColor = gameType === "pong" ? "game-blue" : "game-orange"
+	const isEmptySlot = (playerName: string) => {
+		return (playerName === "")
+	}
 
-  const handleOpenInviteDialog = (matchId: number, slotNumber: 1 | 2) => {
-    setCurrentInvite({ matchId, slotNumber })
-    setInviteDialogOpen(true)
-  }
+	const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>, matchIndex: number, player: 1 | 2) => {
+		const newUserNames = [...userNames];
+		newUserNames[(matchIndex * 2) + (player - 1)] = event.target.value.replace(/[^a-zA-Z0-9]/g, "").slice(0, 12).toUpperCase();
+		setUserNames(newUserNames);
+	}
 
-  const isEmptySlot = (playerName: string) => {
-    return playerName === "TBD" || playerName === "" || playerName === "Empty"
-  }
+	const checkNames = () => {
+		if (!userNames.every((name) => name !== '')) {
+			toast({
+				title: "Error",
+				description: "You need to enter all the players names",
+				duration: 3000
+			})
+			return;
+		}
+		if (!(userNames.length === (new Set(userNames).size))) {
+			toast({
+				title: "Error",
+				description: "You can't have duplicate names",
+				duration: 3000
+			})
+			return;
+		}
+		validateNames(userNames)
+	}
 
-  return (
-    <>
-      <div className="flex justify-between">
-        {bracketData.rounds.map((round, roundIndex) => (
-          <div
-            key={roundIndex}
-            className={cn(
-              "flex flex-col",
-              roundIndex > 0 && "ml-6",
-              roundIndex < bracketData.rounds.length - 1 && "mr-6",
-            )}
-            style={{
-              flex: 1,
-              position: "relative",
-              zIndex: 10 - roundIndex, // Ensure later rounds are on top for connector lines
-            }}
-          >
-            <div className={`font-pixel text-xs text-${gameColor} uppercase mb-3 text-center`}>{round.name}</div>
+	return (
+		<>
+			<div className="flex items-center justify-between mb-6">
+				<h2 className={`font-pixel text-xl text-game-blue uppercase`}>Tournament Bracket</h2>
+				<div className="px-6">
+					{bracketData.rounds[0].matches.find((match) => (match.player1.name === '' || match.player2.name === '')) &&
+						<Button onClick={checkNames} className="font-pixel uppercase" >Start Tournament</Button>
+					}
+				</div>
+			</div>
+			<div className={`bg-game-blue/5 rounded-lg p-6`}>
+				<div className="overflow-x-auto pb-4">
+					<div className="min-w-[600px] max-w-[800px] mx-auto">
+						<div className="flex justify-between">
+							{bracketData.rounds.map((round, roundIndex) => (
+								<div
+									key={roundIndex}
+									className={cn(
+										"flex flex-col",
+										roundIndex > 0 && "ml-6",
+										roundIndex < bracketData.rounds.length - 1 && "mr-6",
+									)}
+									style={{
+										flex: 1,
+										position: "relative",
+										zIndex: 10 - roundIndex, // Ensure later rounds are on top for connector lines
+									}}
+								>
+									<div className={`font-pixel text-xs text-game-blue uppercase mb-3 text-center`}>{round.name}</div>
 
-            <div
-              className="flex flex-col justify-around h-full"
-              style={{
-                gap: `${Math.pow(2, roundIndex) * 16}px`,
-                marginTop: `${Math.pow(2, roundIndex - 1) * 8}px`,
-                marginBottom: `${Math.pow(2, roundIndex - 1) * 8}px`,
-              }}
-            >
-              {round.matches.map((match, matchIndex) => (
-                <div
-                  key={match.id}
-                  className={cn(
-                    "relative",
-                    roundIndex < bracketData.rounds.length - 1 && "connector-right",
-                    roundIndex > 0 && "connector-left",
-                  )}
-                  onMouseEnter={() => setHoveredMatch(match.id)}
-                  onMouseLeave={() => setHoveredMatch(null)}
-                >
-                  <div
-                    className={cn(
-                      "pixel-border border-2 rounded-md overflow-hidden transition-all",
-                      hoveredMatch === match.id ? `border-${gameColor}` : "border-muted",
-                      match.completed ? "opacity-100" : "opacity-80",
-                    )}
-                  >
-                    {/* Player 1 */}
-                    <div
-                      className={cn(
-                        "flex justify-between items-center p-1.5",
-                        match.winner === "player1" ? `bg-${gameColor} text-white` : "bg-muted/50",
-                        match.completed && match.winner !== "player1" && "text-muted-foreground",
-                        isEmptySlot(match.player1.name) && "bg-muted/30",
-                      )}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-pixel text-xs uppercase truncate max-w-[100px]">
-                          {isEmptySlot(match.player1.name) ? "EMPTY SLOT" : match.player1.name}
-                        </span>
+									<div
+										className="flex flex-col justify-around h-full"
+										style={{
+											gap: `${Math.pow(2, roundIndex) * 16}px`,
+											marginTop: `${Math.pow(2, roundIndex - 1) * 8}px`,
+											marginBottom: `${Math.pow(2, roundIndex - 1) * 8}px`,
+										}}
+									>
+										{round.matches.map((match, matchIndex) => (
+											<div
+												key={match.id}
+												className={cn(
+													"relative",
+													roundIndex < bracketData.rounds.length - 1 && "connector-right",
+													roundIndex > 0 && "connector-left",
+												)}
+											>
+												<div
+													className={cn(
+														"pixel-border border-2 rounded-md overflow-hidden transition-all border-muted",
+														match.completed ? "opacity-100" : "opacity-80",
+													)}
+												>
+													{/* Player 1 */}
+													<div
+														className={cn(
+															"flex justify-between items-center p-1.5",
+															match.winner === match.player1.name ? `bg-game-blue text-white` : "bg-muted/50",
+															match.completed && match.winner !== match.player1.name && "text-muted-foreground",
+															isEmptySlot(match.player1.name) && "bg-muted/30",
+														)}
+													>
+														<div className="flex items-center justify-between w-full">
+															<div className="">
+																{roundIndex === 0 ? ( <>
+																	{(isEmptySlot(match.player1.name)) ? (
+																		<Input
+																			id="username"
+																			type="text"
+																			autoComplete="username"
+																			value={userNames[(matchIndex * 2)]}
+																			onChange={(event) => handleUsernameChange(event, matchIndex, 1)}
+																			required
+																			className="font-pixel text-sm h-10 bg-muted"
+																		/>
+																	) : (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px]"> { match.player1.name } </span>
+																	)}
+																</> ) : ( <>
+																	{(isEmptySlot(match.player1.name)) ? (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px] text-white/50">WAITING FOR SCORE</span>
+																	) : (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px]"> { match.player1.name } </span>
+																	)}
+																</> )}
+															</div>
 
-                        {isEmptySlot(match.player1.name) ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className={`h-6 px-2 font-pixel text-[10px] uppercase text-${gameColor}`}
-                            onClick={() => handleOpenInviteDialog(match.id, 1)}
-                          >
-                            <UserPlus className="h-3 w-3 mr-1" />
-                            ADD PLAYER
-                          </Button>
-                        ) : (
-                          <span className="font-pixel text-xs font-bold ml-2">
-                            {match.player1.score !== null ? match.player1.score : "-"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+															{!isEmptySlot(match.player1.name) && (
+																<span className="font-pixel text-xs font-bold ml-2">
+																	{match.player1.score !== null ? match.player1.score : "-"}
+																</span>
+															)}
+														</div>
+													</div>
 
-                    {/* Divider */}
-                    <div className="h-[1px] bg-muted w-full"></div>
+													{/* Divider */}
+													<div className="h-[1px] bg-muted w-full"></div>
 
-                    {/* Player 2 */}
-                    <div
-                      className={cn(
-                        "flex justify-between items-center p-1.5",
-                        match.winner === "player2" ? `bg-${gameColor} text-white` : "bg-muted/50",
-                        match.completed && match.winner !== "player2" && "text-muted-foreground",
-                        isEmptySlot(match.player2.name) && "bg-muted/30",
-                      )}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-pixel text-xs uppercase truncate max-w-[100px]">
-                          {isEmptySlot(match.player2.name) ? "EMPTY SLOT" : match.player2.name}
-                        </span>
+													{/* Player 2 */}
+													<div
+														className={cn(
+															"flex justify-between items-center p-1.5",
+															match.winner === match.player2.name ? `bg-game-blue text-white` : "bg-muted/50",
+															match.completed && match.winner !== match.player2.name && "text-muted-foreground",
+															isEmptySlot(match.player2.name) && "bg-muted/30",
+														)}
+													>
+														<div className="flex items-center justify-between w-full">
+															<div className="">
+																{roundIndex === 0 ? ( <>
+																	{(isEmptySlot(match.player2.name)) ? (
+																		<Input
+																			id="username"
+																			type="text"
+																			autoComplete="username"
+																			value={userNames[(matchIndex * 2) + 1]}
+																			onChange={(event) => handleUsernameChange(event, matchIndex, 2)}
+																			required
+																			className="font-pixel text-sm h-10 bg-muted"
+																		/>
+																	) : (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px]"> { match.player2.name } </span>
+																	)}
+																</> ) : ( <>
+																	{(isEmptySlot(match.player2.name)) ? (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px] text-white/50">WAITING FOR SCORE</span>
+																	) : (
+																		<span className="font-pixel text-xs uppercase truncate max-w-[100px]"> { match.player2.name } </span>
+																	)}
+																</> )}
+															</div>
 
-                        {isEmptySlot(match.player2.name) ? (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className={`h-6 px-2 font-pixel text-[10px] uppercase text-${gameColor}`}
-                            onClick={() => handleOpenInviteDialog(match.id, 2)}
-                          >
-                            <UserPlus className="h-3 w-3 mr-1" />
-                            ADD PLAYER
-                          </Button>
-                        ) : (
-                          <span className="font-pixel text-xs font-bold ml-2">
-                            {match.player2.score !== null ? match.player2.score : "-"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Invite Player Dialog */}
-      {currentInvite && (
-        <InvitePlayerDialog
-          open={inviteDialogOpen}
-          onOpenChange={setInviteDialogOpen}
-          matchId={currentInvite.matchId}
-          slotNumber={currentInvite.slotNumber}
-          gameType={gameType}
-          onInvite={onInvitePlayer}
-        />
-      )}
-    </>
-  )
+															{!isEmptySlot(match.player2.name) && (
+																<span className="font-pixel text-xs font-bold ml-2">
+																	{match.player2.score !== null ? match.player2.score : "-"}
+																</span>
+															)}
+														</div>
+													</div>
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</>
+	)
 }

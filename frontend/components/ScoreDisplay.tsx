@@ -6,9 +6,10 @@ interface ScoreDisplayProps {
 	rightScore: number
 	winningScore: number
 	gameFinished: boolean
+	isTournament?: boolean
 }
 
-export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished }: ScoreDisplayProps) {
+export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished, isTournament=false }: ScoreDisplayProps) {
 	const leftWon = leftScore === winningScore
 	const rightWon = rightScore === winningScore
 	const scoreFlames = (leftScore * rightScore) >= 42
@@ -145,7 +146,7 @@ export function ScoreDisplay({ leftScore, rightScore, winningScore, gameFinished
 					</div>
 
 					{/* Back to home button at bottom of page */}
-					<BackToHomeButton gameType="pong" className="absolute bottom-4 left-4 right-4"/>
+					{!isTournament && <BackToHomeButton gameType="pong" className="absolute bottom-4 left-4 right-4"/>}
 				</div>
 			)}
 		</>

@@ -210,7 +210,7 @@ export default function FriendsPage() {
 					<p className="font-pixel text-xs text-muted-foreground uppercase">{dict.friends.description}</p>
 				</div>
 
-				<Tabs defaultValue="friends" className="space-y-4">
+				<Tabs defaultValue="friends" className="space-y-4" onValueChange={() => updateData()}>
 					<TabsList className="font-pixel text-xs w-full flex-nowrap">
 						<TabsTrigger className="uppercase" value="friends">
 							{dict.friends.sections.myFriends.title}

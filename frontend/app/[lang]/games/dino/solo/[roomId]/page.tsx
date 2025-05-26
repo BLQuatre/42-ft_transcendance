@@ -113,7 +113,7 @@ export default function DinoGamePage() {
 
 		console.log("Creating new WebSocket connection");
 
-		const socket = new WebSocket("wss://localhost/api/ws/dino");
+		const socket = new WebSocket(`wss://${window.location.host}/api/ws/dino`);
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {

@@ -420,7 +420,7 @@ export function SimpleChat() {
 		)
 			return;
 		friendsSocket.current = new WebSocket(
-			`wss://localhost/api/ws/chat-friend?user_id=${userId}`
+			`wss://${window.location.host}/api/ws/chat-friend?user_id=${userId}`
 		);
 
 		if (!friendsSocket.current) {

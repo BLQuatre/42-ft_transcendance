@@ -168,7 +168,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${PORT}:${PORT}"
+      - "${MAIN_PORT}:${MAIN_PORT}"
     depends_on:
       - frontend
       - gateway

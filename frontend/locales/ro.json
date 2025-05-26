@@ -128,7 +128,7 @@
 					"noRoom": "ID-ul camerei este nedefinit sau invalid la inițializarea WebSocket",
 					"connectionExists": "Conexiunea WebSocket există deja și este deschisă",
 					"connectionClosed": "Conexiunea WebSocket închisă",
-					"noRoomData": "Primit room_update fără date despre cameră"
+					"noRoomData": "Primit room fără date despre cameră"
 				},
 				"connection": {
 					"connected": "Conectat la serverul de joc",

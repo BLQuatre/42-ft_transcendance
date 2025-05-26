@@ -181,10 +181,7 @@ export default function DinoGamePage() {
 					setGameState(newState);
 				} else if (msg.type === "room_update") {
 					if (!msg.room) {
-						console.error(
-							dict?.games.dino.multi.errors.noRoomData ||
-								"No room data received"
-						);
+						console.error("No room data received");
 						return;
 					}
 

@@ -128,7 +128,7 @@
 					"noRoom": "Room ID is undefined or invalid during WebSocket initialization",
 					"connectionExists": "WebSocket connection already exists and is open",
 					"connectionClosed": "WebSocket connection closed",
-					"noRoomData": "Received room_update with no room data"
+					"noRoomData": "Room full or Game launched !"
 				},
 				"connection": {
 					"connected": "Connected to game server",

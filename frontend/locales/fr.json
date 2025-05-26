@@ -128,7 +128,7 @@
 					"noRoom": "ID de salle indéfini ou invalide lors de l'initialisation WebSocket",
 					"connectionExists": "La connexion WebSocket existe déjà et est ouverte",
 					"connectionClosed": "Connexion WebSocket fermée",
-					"noRoomData": "Reçu room_update sans données de salle"
+					"noRoomData": "Salle pleine ou partie lancée!"
 				},
 				"connection": {
 					"connected": "Connecté au serveur de jeu",

@@ -774,7 +774,7 @@ export function SimpleChat() {
                         >
                           <div
                             className={cn(
-                              "max-w-[80%] p-2 shadow-sm",
+                              "max-w-[80%] p-2 shadow-sm break-words",
                               message.userId === userId
                                 ? "bg-game-blue text-white border border-game-blue/30 rounded-tl-lg rounded-tr-lg rounded-bl-lg"
                                 : "bg-muted border border-border/50 rounded-tl-lg rounded-tr-lg rounded-br-lg",
@@ -782,7 +782,7 @@ export function SimpleChat() {
                           >
                             {message.userId !== userId && (
                               <p
-                                className="font-pixel text-[10px] font-bold cursor-pointer hover:underline"
+                                className="font-pixel text-[10px] font-bold cursor-pointer hover:underline break-words"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                   navigateToProfile(message.userId)
@@ -791,7 +791,7 @@ export function SimpleChat() {
                                 {message.name}
                               </p>
                             )}
-                            <div className="font-pixel text-xs mt-0.5">{renderMessageContent(message.content)}</div>
+                            <div className="font-pixel text-xs mt-0.5 break-words whitespace-pre-wrap">{renderMessageContent(message.content)}</div>
                           </div>
                         </div>
                       ))
@@ -806,7 +806,7 @@ export function SimpleChat() {
                           >
                             <div
                               className={cn(
-                                "max-w-[80%] p-2 shadow-sm",
+                                "max-w-[80%] p-2 shadow-sm break-words",
                                 message.userId === userId
                                   ? "bg-game-blue text-white border border-game-blue/30 rounded-tl-lg rounded-tr-lg rounded-bl-lg"
                                   : "bg-muted border border-border/50 rounded-tl-lg rounded-tr-lg rounded-br-lg",
@@ -814,7 +814,7 @@ export function SimpleChat() {
                             >
                               {message.userId !== userId && (
                                 <p
-                                  className="font-pixel text-[10px] font-bold cursor-pointer hover:underline"
+                                  className="font-pixel text-[10px] font-bold cursor-pointer hover:underline break-words"
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     navigateToProfile(message.userId)
@@ -823,7 +823,7 @@ export function SimpleChat() {
                                   {message.name}
                                 </p>
                               )}
-                              <div className="font-pixel text-xs mt-0.5">{renderMessageContent(message.content)}</div>
+                              <div className="font-pixel text-xs mt-0.5 break-words whitespace-pre-wrap">{renderMessageContent(message.content)}</div>
                             </div>
                           </div>
                         ),

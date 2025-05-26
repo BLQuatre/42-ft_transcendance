@@ -179,7 +179,10 @@ export const updateUser = async (
 
 	// Handle avatar updates: null/empty string removes avatar, undefined keeps current avatar
 	if (req.body.avatar !== undefined) {
-		updated.avatar = req.body.avatar === "" || req.body.avatar === null ? null : req.body.avatar;
+		updated.avatar =
+			req.body.avatar === "" || req.body.avatar === null
+				? null
+				: req.body.avatar;
 	}
 
 	await User.update(userFind.id, updated as any);

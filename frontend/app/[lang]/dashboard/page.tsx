@@ -173,7 +173,8 @@ export default function DashboardPage() {
 				updateData();
 				toast({
 					title: dict.dashboard.notifications.account.updateSuccess.title,
-					description: dict.dashboard.notifications.account.updateSuccess.description,
+					description:
+						dict.dashboard.notifications.account.updateSuccess.description,
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				});
@@ -184,7 +185,8 @@ export default function DashboardPage() {
 				} else {
 					toast({
 						title: dict.dashboard.notifications.account.updateError.title,
-						description: dict.dashboard.notifications.account.updateError.description,
+						description:
+							dict.dashboard.notifications.account.updateError.description,
 						variant: ToastVariant.ERROR,
 						duration: 3000,
 					});
@@ -228,7 +230,8 @@ export default function DashboardPage() {
 				.then(() => {
 					toast({
 						title: dict.dashboard.notifications.account.deleteSuccess.title,
-						description: dict.dashboard.notifications.account.deleteSuccess.description,
+						description:
+							dict.dashboard.notifications.account.deleteSuccess.description,
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					});
@@ -242,7 +245,11 @@ export default function DashboardPage() {
 		} catch (err: any) {
 			toast({
 				title: dict.dashboard.notifications.account.deleteError.title,
-				description: dict.dashboard.notifications.account.deleteError.description.replace('%message%', err.message),
+				description:
+					dict.dashboard.notifications.account.deleteError.description.replace(
+						"%message%",
+						err.message
+					),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -277,7 +284,8 @@ export default function DashboardPage() {
 					updateData();
 					toast({
 						title: dict.dashboard.notifications.avatar.updateSuccess.title,
-						description: dict.dashboard.notifications.avatar.updateSuccess.description,
+						description:
+							dict.dashboard.notifications.avatar.updateSuccess.description,
 						variant: ToastVariant.SUCCESS,
 						duration: 3000,
 					});
@@ -285,7 +293,11 @@ export default function DashboardPage() {
 		} catch (err: any) {
 			toast({
 				title: dict.dashboard.notifications.avatar.updateError.title,
-				description: dict.dashboard.notifications.avatar.updateError.description.replace('%message%', err.message),
+				description:
+					dict.dashboard.notifications.avatar.updateError.description.replace(
+						"%message%",
+						err.message
+					),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -307,14 +319,19 @@ export default function DashboardPage() {
 			updateData();
 			toast({
 				title: dict.dashboard.notifications.avatar.removeSuccess.title,
-				description: dict.dashboard.notifications.avatar.removeSuccess.description,
+				description:
+					dict.dashboard.notifications.avatar.removeSuccess.description,
 				variant: ToastVariant.SUCCESS,
 				duration: 3000,
 			});
 		} catch (err: any) {
 			toast({
 				title: dict.dashboard.notifications.avatar.removeError.title,
-				description: dict.dashboard.notifications.avatar.removeError.description.replace('%message%', err.message),
+				description:
+					dict.dashboard.notifications.avatar.removeError.description.replace(
+						"%message%",
+						err.message
+					),
 				variant: ToastVariant.ERROR,
 				duration: 3000,
 			});
@@ -325,7 +342,8 @@ export default function DashboardPage() {
 		updateData();
 		toast({
 			title: dict.dashboard.notifications.twoFactor.enableSuccess.title,
-			description: dict.dashboard.notifications.twoFactor.enableSuccess.description,
+			description:
+				dict.dashboard.notifications.twoFactor.enableSuccess.description,
 			variant: ToastVariant.SUCCESS,
 			duration: 3000,
 		});
@@ -342,7 +360,8 @@ export default function DashboardPage() {
 				setRemove2FADialogOpen(false);
 				toast({
 					title: dict.dashboard.notifications.twoFactor.disableSuccess.title,
-					description: dict.dashboard.notifications.twoFactor.disableSuccess.description,
+					description:
+						dict.dashboard.notifications.twoFactor.disableSuccess.description,
 					variant: ToastVariant.SUCCESS,
 					duration: 3000,
 				});

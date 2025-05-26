@@ -90,8 +90,8 @@ export function TournamentBracket({
 		validateNames(userNames);
 	};
 
-	const dict = useDictionary()
-	if (!dict) return null
+	const dict = useDictionary();
+	if (!dict) return null;
 
 	return (
 		<>

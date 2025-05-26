@@ -46,13 +46,14 @@ export default function TournamentView({
 	launchGame,
 }: TournamentViewProps) {
 	const dict = useDictionary();
-	if (!dict)
-		return null
+	if (!dict) return null;
 
 	if (!tournamentData) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
-				<div className="font-pixel text-lg animate-pulse">{dict.common.loading}</div>
+				<div className="font-pixel text-lg animate-pulse">
+					{dict.common.loading}
+				</div>
 			</div>
 		);
 	}

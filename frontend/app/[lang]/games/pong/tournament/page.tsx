@@ -533,11 +533,18 @@ export default function PongGamePage() {
 									<div className="absolute inset-0 flex flex-col items-center justify-center z-20">
 										<div className="text-white text-center">
 											<h2 className="text-3xl font-bold mb-4 animate-pulse">
-												{dict?.game?.pauseInstructions || "Press P to play/pause"}
+												{dict?.game?.pauseInstructions ||
+													"Press P to play/pause"}
 											</h2>
 											<div className="text-sm opacity-80">
-												<p>{dict?.game?.leftControls || "Left : use W/S to move your paddle"}</p>
-												<p>{dict?.game?.rightControls || "Right : use ↑/↓ to move your paddle"}</p>
+												<p>
+													{dict?.game?.leftControls ||
+														"Left : use W/S to move your paddle"}
+												</p>
+												<p>
+													{dict?.game?.rightControls ||
+														"Right : use ↑/↓ to move your paddle"}
+												</p>
 											</div>
 										</div>
 									</div>

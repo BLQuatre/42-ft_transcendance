@@ -77,7 +77,9 @@ export default function PongGamePage() {
 		}
 
 		console.log("Creating new WebSocket connection");
-		const socket = new WebSocket(`wss://${window.location.host}/api/ws/matchmaking`);
+		const socket = new WebSocket(
+			`wss://${window.location.host}/api/ws/matchmaking`
+		);
 		socketRef.current = socket;
 
 		socket.addEventListener("open", () => {
